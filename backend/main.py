@@ -41,7 +41,24 @@ def broadcast(event_type: str, data: dict):
     clients.difference_update(dead)
 
 
-LAST_ADDR_FILE = Path(__file__).parent / ".last_device"
+LAST_ADDR_FILE  = Path(__file__).parent / ".last_device"
+CAL_FILE        = Path(__file__).parent / ".calibration.json"
+
+DEFAULT_CAL = {"top_speed": 50, "bot_speed": 50, "oscillation": 128, "height": 128, "rotation": 128, "wait_ms": 1500}
+
+
+def _load_cal() -> dict:
+    try:
+        return json.loads(CAL_FILE.read_text())
+    except Exception:
+        return DEFAULT_CAL.copy()
+
+
+def _save_cal(data: dict):
+    try:
+        CAL_FILE.write_text(json.dumps(data))
+    except Exception:
+        pass
 
 
 def _load_last_addr() -> str:
@@ -136,6 +153,21 @@ async def _handle(msg: dict, ws: WebSocket):
 
     elif action == "stop_drill":
         robot.stop_drill()
+
+
+# ── REST — kalibracja ─────────────────────────────────────────────────────────
+
+@app.get("/api/calibration")
+def get_calibration():
+    return _load_cal()
+
+
+@app.put("/api/calibration")
+def save_calibration(body: dict):
+    allowed = {"top_speed", "bot_speed", "oscillation", "height", "rotation", "wait_ms"}
+    cal = {k: v for k, v in body.items() if k in allowed}
+    _save_cal(cal)
+    return cal
 
 
 # ── REST — scenariusze ─────────────────────────────────────────────────────────

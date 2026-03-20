@@ -131,22 +131,69 @@
 
   <!-- ── Kalibracja ───────────────────────────────────────────────────── -->
   <div class="page" v-show="page === 'calibration'">
+
+    <!-- instrukcja -->
+    <div class="card" style="margin-bottom:12px">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;cursor:pointer" @click="helpOpen=!helpOpen">
+        <span class="section-title" style="margin-bottom:0">Jak kalibrować?</span>
+        <span style="color:var(--muted);font-size:12px;margin-left:auto">{{ helpOpen ? '▲ zwiń' : '▼ rozwiń' }}</span>
+      </div>
+      <div v-if="helpOpen" style="font-size:13px;line-height:1.8;color:var(--text2)">
+        <p style="margin-bottom:8px"><strong style="color:var(--text)">Silniki (Góra / Dół):</strong> zakres <code>-99…99</code></p>
+        <ul style="padding-left:16px;margin-bottom:10px">
+          <li><code>50 / 50</code> — brak spinu, prosta piłka</li>
+          <li><code>70 / 30</code> — topspin (górny silnik szybciej)</li>
+          <li><code>30 / 70</code> — backspin (dolny silnik szybciej)</li>
+          <li>Wartości ujemne odwracają kierunek silnika (mocniejszy spin)</li>
+          <li>Im wyższe cyfry, tym szybsza piłka</li>
+        </ul>
+        <p style="margin-bottom:8px"><strong style="color:var(--text)">Oscylacja:</strong> zakres <code>0…255</code>, środek = <code>128</code></p>
+        <ul style="padding-left:16px;margin-bottom:10px">
+          <li><code>128</code> — głowica stoi w miejscu</li>
+          <li><code>0</code> lub <code>255</code> — maksymalne wahania boczne</li>
+          <li>Im dalej od 128, tym szybsze wahania</li>
+        </ul>
+        <p style="margin-bottom:8px"><strong style="color:var(--text)">Wysokość:</strong> zakres <code>0…255</code>, środek = <code>128</code></p>
+        <ul style="padding-left:16px;margin-bottom:10px">
+          <li><code>128</code> — środkowa pozycja głowicy</li>
+          <li><code>80</code> — wyżej (piłka w górę)</li>
+          <li><code>180</code> — niżej (piłka nisko)</li>
+        </ul>
+        <p style="margin-bottom:8px"><strong style="color:var(--text)">Rotacja:</strong> zakres <code>0…255</code>, środek = <code>128</code></p>
+        <ul style="padding-left:16px;margin-bottom:10px">
+          <li><code>128</code> — głowica skierowana prosto</li>
+          <li>Odchylenie od 128 obraca głowicę w lewo / prawo</li>
+        </ul>
+        <p style="margin-bottom:4px"><strong style="color:var(--text)">Czas oczekiwania (ms):</strong></p>
+        <ul style="padding-left:16px">
+          <li><code>1500</code> — domyślny odstęp między piłkami</li>
+          <li>Min <code>200</code> ms, max <code>10000</code> ms</li>
+        </ul>
+        <div style="margin-top:10px;padding:8px 12px;background:rgba(91,124,247,.08);border-radius:8px;font-size:12px;color:var(--muted)">
+          <strong>Procedura:</strong> Wyślij → poczekaj ~1.5 s na rozpędzenie silników → Rzut → oceń wynik → popraw → powtórz. Gdy zadowolony — Zapisz preset.
+        </div>
+      </div>
+    </div>
+
     <div class="safety-warn">
-      ⚠ Wyślij parametry → poczekaj na rozpędzenie silników → dopiero Rzut. Zawsze miej pod ręką Stop.
+      ⚠ Wyślij parametry → poczekaj ~1.5 s → Rzut. Przycisk Rzut jest aktywny dopiero po wysłaniu.
     </div>
 
     <div class="card">
-      <h2 style="margin-bottom:14px">Kalibracja — pojedyncza piłka</h2>
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:14px">
+        <h2 style="flex:1">Parametry piłki</h2>
+        <button class="btn btn-ghost" style="padding:7px 14px;font-size:12px" @click="calReset">↺ Reset</button>
+      </div>
 
       <div class="cal-grid">
         <div class="cal-section">
           <h3>Silniki</h3>
           <div class="field">
-            <label>Góra <small style="text-transform:none;letter-spacing:0;font-size:10px">-99…99</small></label>
+            <label>Góra &nbsp;<small style="text-transform:none;letter-spacing:0">-99…99</small></label>
             <input type="number" v-model.number="cal.top_speed" min="-99" max="99" @change="clampCal('top_speed',-99,99)">
           </div>
           <div class="field" style="margin-bottom:0">
-            <label>Dół <small style="text-transform:none;letter-spacing:0;font-size:10px">-99…99</small></label>
+            <label>Dół &nbsp;<small style="text-transform:none;letter-spacing:0">-99…99</small></label>
             <input type="number" v-model.number="cal.bot_speed" min="-99" max="99" @change="clampCal('bot_speed',-99,99)">
           </div>
         </div>
@@ -154,22 +201,22 @@
         <div class="cal-section">
           <h3>Głowica</h3>
           <div class="field">
-            <label>Oscylacja <small style="text-transform:none;letter-spacing:0;font-size:10px">0–255</small></label>
+            <label>Oscylacja &nbsp;<small style="text-transform:none;letter-spacing:0">0–255, 128=stop</small></label>
             <input type="number" v-model.number="cal.oscillation" min="0" max="255" @change="clampCal('oscillation',0,255)">
           </div>
           <div class="field">
-            <label>Wysokość <small style="text-transform:none;letter-spacing:0;font-size:10px">128=środek</small></label>
+            <label>Wysokość &nbsp;<small style="text-transform:none;letter-spacing:0">0–255, 128=środek</small></label>
             <input type="number" v-model.number="cal.height" min="0" max="255" @change="clampCal('height',0,255)">
           </div>
           <div class="field" style="margin-bottom:0">
-            <label>Rotacja <small style="text-transform:none;letter-spacing:0;font-size:10px">128=środek</small></label>
+            <label>Rotacja &nbsp;<small style="text-transform:none;letter-spacing:0">0–255, 128=środek</small></label>
             <input type="number" v-model.number="cal.rotation" min="0" max="255" @change="clampCal('rotation',0,255)">
           </div>
         </div>
       </div>
 
       <div class="field" style="margin-top:14px">
-        <label>Czas oczekiwania ms <small style="text-transform:none;letter-spacing:0;font-size:10px">200–10000</small></label>
+        <label>Czas oczekiwania ms &nbsp;<small style="text-transform:none;letter-spacing:0">200–10000</small></label>
         <input type="number" v-model.number="cal.wait_ms" min="200" max="10000" @change="clampCal('wait_ms',200,10000)">
       </div>
 
@@ -178,6 +225,10 @@
         <button class="btn btn-success"  :disabled="!connected || !calSent" @click="calThrow">🏓 Rzut</button>
         <button class="btn btn-danger"   :disabled="!connected" @click="calStop">⏹ Stop</button>
       </div>
+
+      <button class="btn btn-ghost" style="width:100%;margin-top:10px;font-size:13px" @click="calSave">
+        💾 Zapisz preset kalibracji
+      </button>
 
       <div class="log-box" ref="logBox">
         <div v-for="(l, i) in robotLog" :key="i">{{ l }}</div>
@@ -305,6 +356,7 @@ createApp({
 
     const cal     = reactive({ top_speed: 50, bot_speed: 50, oscillation: 128, height: 128, rotation: 128, wait_ms: 1500 })
     const calSent = ref(false)
+    const helpOpen = ref(false)
 
     const camActive = ref(false)
     const camMsg    = ref('Kliknij ▶ Uruchom aby włączyć podgląd.')
@@ -409,6 +461,19 @@ createApp({
     }
 
     // ── Calibration ────────────────────────────────────────────────
+    async function loadCal() {
+      const r = await fetch('/api/calibration')
+      const j = await r.json()
+      Object.assign(cal, j)
+    }
+    async function calSave() {
+      await fetch('/api/calibration', { method:'PUT', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ ...cal }) })
+      showToast('💾 Preset zapisany')
+    }
+    function calReset() {
+      Object.assign(cal, { top_speed: 50, bot_speed: 50, oscillation: 128, height: 128, rotation: 128, wait_ms: 1500 })
+      calSent.value = false
+    }
     function calSend() {
       Object.keys(cal).forEach(k => {
         const limits = { top_speed:[-99,99], bot_speed:[-99,99], oscillation:[0,255], height:[0,255], rotation:[0,255], wait_ms:[200,10000] }
@@ -454,19 +519,19 @@ createApp({
       return 'piłek'
     }
 
-    onMounted(() => { wsConnect(); loadScenarios() })
+    onMounted(() => { wsConnect(); loadScenarios(); loadCal() })
 
     return {
       page, connected, firmware, device, scanning, devices, scenarios,
       toast, robotLog, logBox,
       drillRunning, drillScenario, drillBall, drillTotal, drillRun, drillMaxRepeat,
       editId, editName, editDesc, editRepeat, editBalls,
-      cal, calSent,
+      cal, calSent, helpOpen,
       camActive, camMsg, camSrc,
       scan, connect, disconnect,
       runScenario, stopDrill, deleteScenario, openEditor, addBall, removeBall, saveScenario,
       clamp, clampCal,
-      calSend, calThrow, calStop,
+      calSend, calThrow, calStop, calSave, calReset, loadCal,
       toggleCam, camError,
       ballWord,
     }
