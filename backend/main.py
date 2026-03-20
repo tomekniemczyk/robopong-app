@@ -148,5 +148,5 @@ app.mount("/static", StaticFiles(directory=str(FRONTEND)), name="static")
 
 
 @app.get("/{full_path:path}")
-def spa(_full_path: str):
+def spa(full_path: str = ""):
     return FileResponse(FRONTEND / "index.html")
