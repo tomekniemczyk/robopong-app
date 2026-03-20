@@ -8,11 +8,12 @@ Celem jest stworzenie własnego klienta, który komunikuje się z robotem i daje
 ## Zasady pracy
 
 ### Zarządzanie zadaniami (OBOWIĄZKOWE)
-- Gdy użytkownik mówi "dodaj zadanie", "nowe zadanie", "task:", "TODO:" lub prosi o dodanie czegoś do listy zadań — **zawsze** dodaj wpis do `TASKS.md`
-- Format nowego zadania: `| TXXX | Tytuł | Priorytet | Opis |` gdzie XXX to kolejny numer
-- Priorytety: `Wysoki`, `Średni`, `Niski`
-- Nowe zadania trafiają do sekcji **Backlog**
-- Przenoś zadania między sekcjami (Backlog → W toku → Gotowe) gdy użytkownik o tym mówi
+- Gdy użytkownik mówi "dodaj zadanie", "nowe zadanie", "task:", "TODO:" lub prosi o dodanie czegoś do listy zadań — **zawsze** twórz GitHub Issue
+- Repozytorium: `tomekniemczyk/robopong-app`
+- Komenda: `gh issue create --repo tomekniemczyk/robopong-app --title "..." --body "..." --label "backlog,PRIORYTET"`
+- Priorytety (etykiety): `wysoki`, `sredni`, `niski` — domyślnie `sredni`
+- Nowe zadania zawsze dostają etykietę `backlog`
+- Zmiana statusu: zamień etykietę na `w-toku` lub `gotowe` (przez `gh issue edit --add-label / --remove-label`)
 
 ### Komunikacja z robotem
 - Protokół komunikacji z Robopong 3050XL jest **do zbadania** — nie zakładaj niczego
