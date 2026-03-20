@@ -20,7 +20,7 @@
       <span style="font-size:9px;color:var(--muted);font-family:monospace">{{ lastAddr }}</span>
     </div>
     <span class="ble-pill" :class="{ on: connected }" v-else>
-      {{ connected ? (firmware ? `FW ${firmware}` : 'BLE') : 'Offline' }}
+      {{ connected ? (transport === 'usb' ? '🔌 USB' : firmware ? `FW ${firmware}` : 'BLE') : 'Offline' }}
     </span>
   </div>
 
@@ -272,14 +272,35 @@
           </div>
           <div style="font-size:11px;color:var(--muted);margin-top:2px;font-family:monospace">{{ lastAddr }}</div>
         </div>
-        <button class="btn btn-primary" v-if="!connected" @click="connect(lastAddr)">Połącz</button>
+        <button class="btn btn-primary" v-if="!connected" @click="reconnectLast">Połącz</button>
         <button class="btn btn-danger"  v-else @click="disconnect">Rozłącz</button>
       </div>
     </div>
 
+    <!-- USB -->
+    <div class="card" style="margin-bottom:8px">
+      <div class="row" style="margin-bottom:10px">
+        <span style="font-size:13px;font-weight:600">🔌 USB (kabel)</span>
+        <div class="spacer"></div>
+        <button class="btn btn-primary" :disabled="usbScanning || connected" @click="usbScan">
+          {{ usbScanning ? '🔍…' : '🔍 Szukaj' }}
+        </button>
+      </div>
+      <ul class="device-list" v-if="usbPorts.length">
+        <li v-for="p in usbPorts" :key="p">
+          <div style="flex:1;font-family:monospace;font-size:13px">{{ p }}</div>
+          <button class="btn btn-primary" :disabled="connected" @click="usbConnect(p)">Połącz</button>
+        </li>
+      </ul>
+      <div v-else-if="!usbScanning" style="font-size:12px;color:var(--muted);padding:6px 0">
+        Podłącz robot kablem USB, kliknij Szukaj.
+      </div>
+    </div>
+
+    <!-- BLE -->
     <div class="card">
       <div class="row" style="margin-bottom:10px">
-        <span style="font-size:13px;font-weight:600">Wyszukaj robot</span>
+        <span style="font-size:13px;font-weight:600">📡 Bluetooth (BLE)</span>
         <div class="spacer"></div>
         <button class="btn btn-primary" :disabled="scanning || connected" @click="scan">
           {{ scanning ? '🔍 Skanowanie…' : '🔍 Skanuj' }}
@@ -378,6 +399,9 @@ createApp({
     const robotNameEdit = ref('')
     const camErr        = ref(false)
     const camSrc        = `http://${window.location.hostname}:8081`
+    const transport     = ref('ble')
+    const usbPorts      = ref([])
+    const usbScanning   = ref(false)
 
 
     // ── WebSocket ──────────────────────────────────────────────────
@@ -396,6 +420,13 @@ createApp({
         connected.value = m.connected
         firmware.value  = m.firmware
         device.value    = m.device
+        transport.value = m.transport || 'ble'
+      } else if (m.type === 'usb_ports') {
+        usbScanning.value = false
+        usbPorts.value = m.ports
+        if (!m.ports.length) showToast('Nie znaleziono portów USB')
+      } else if (m.type === 'usb_connected') {
+        showToast(`🔌 USB: ${m.port}`)
       } else if (m.type === 'scan_result') {
         scanning.value = false
         devices.value  = m.devices.filter(d => ROBOT_FILTER.test(d.name || ''))
@@ -427,6 +458,19 @@ createApp({
       send({ action: 'connect', address })
     }
     function disconnect() { send({ action: 'disconnect' }) }
+    function usbScan() { usbScanning.value = true; usbPorts.value = []; send({ action: 'usb_scan' }) }
+    function usbConnect(port) {
+      lastAddr.value = `USB:${port}`
+      localStorage.setItem('lastAddr', `USB:${port}`)
+      send({ action: 'usb_connect', port })
+    }
+    function reconnectLast() {
+      if (lastAddr.value.startsWith('USB:')) {
+        usbConnect(lastAddr.value.slice(4))
+      } else {
+        connect(lastAddr.value)
+      }
+    }
     function saveName() {
       robotName.value = robotNameEdit.value.trim() || robotName.value
       localStorage.setItem('robotName', robotName.value)
@@ -544,7 +588,8 @@ createApp({
       editId, editName, editDesc, editRepeat, editBalls,
       cal, calSent, helpOpen,
       lastAddr, robotName, editingName, robotNameEdit, camErr, camSrc,
-      scan, connect, disconnect, saveName,
+      transport, usbPorts, usbScanning,
+      scan, connect, disconnect, saveName, usbScan, usbConnect, reconnectLast,
       runScenario, stopDrill, deleteScenario, openEditor, addBall, removeBall, saveScenario,
       clamp, clampCal,
       calSend, calThrow, calStop, calSave, calReset, loadCal,

@@ -123,6 +123,19 @@ async def _handle(msg: dict, ws: WebSocket):
         _save_last_addr("")
         await robot.disconnect()
 
+    elif action == "usb_scan":
+        ports = robot.usb_ports()
+        await ws.send_text(json.dumps({"type": "usb_ports", "ports": ports}))
+
+    elif action == "usb_connect":
+        ok = await robot.connect_usb(msg["port"])
+        if ok:
+            _save_last_addr(f"USB:{msg['port']}")
+
+    elif action == "usb_disconnect":
+        _save_last_addr("")
+        await robot.disconnect()
+
     elif action == "set_ball":
         b = msg["ball"]
         await robot.set_ball(
