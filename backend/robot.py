@@ -14,10 +14,13 @@ MLDP_CTRL_CHAR = "00035b03-58e6-07dd-021a-08123a0003ff"
 
 class Robot:
     def __init__(self, on_event: Optional[Callable] = None):
-        self._client:   Optional[BleakClient] = None
-        self._drill:    Optional[asyncio.Task] = None
-        self.firmware:  int = 0
-        self.device:    str = ""
+        self._client:      Optional[BleakClient] = None
+        self._drill:       Optional[asyncio.Task] = None
+        self._reconnect:   Optional[asyncio.Task] = None
+        self.firmware:     int = 0
+        self.device:       str = ""
+        self._last_addr:   str = ""   # zapamiętany adres do auto-reconnect
+        self._auto_reconnect: bool = False
         self._emit = on_event or (lambda *_: None)
 
     # ── discovery ─────────────────────────────────────────────────────────────
@@ -32,6 +35,11 @@ class Robot:
     # ── connection ────────────────────────────────────────────────────────────
 
     async def connect(self, address: str) -> bool:
+        self._last_addr = address
+        self._auto_reconnect = True
+        return await self._do_connect(address)
+
+    async def _do_connect(self, address: str) -> bool:
         try:
             self._client = BleakClient(
                 address,
@@ -50,7 +58,10 @@ class Robot:
             return False
 
     async def disconnect(self):
+        self._auto_reconnect = False
         self._stop_drill_nowait()
+        if self._reconnect and not self._reconnect.done():
+            self._reconnect.cancel()
         if self._client and self._client.is_connected:
             try:
                 await self._write("H")
@@ -171,7 +182,11 @@ class Robot:
     def _on_disconnect(self, _client):
         self._client = None
         self.firmware = 0
+        self.device = ""
         self._push_status()
+        if self._auto_reconnect and self._last_addr:
+            logger.info("rozłączono — próba ponownego połączenia z %s", self._last_addr)
+            self._reconnect = asyncio.create_task(self._reconnect_loop())
 
     def _push_status(self):
         self._emit("status", {
@@ -179,6 +194,23 @@ class Robot:
             "firmware":  self.firmware,
             "device":    self.device,
         })
+
+    async def _reconnect_loop(self):
+        delays = [5, 10, 15, 30, 30, 60]
+        for delay in delays:
+            await asyncio.sleep(delay)
+            if not self._auto_reconnect:
+                return
+            if self.is_connected:
+                return
+            logger.info("auto-reconnect → %s", self._last_addr)
+            self._emit("reconnecting", {"address": self._last_addr})
+            ok = await self._do_connect(self._last_addr)
+            if ok:
+                logger.info("auto-reconnect OK")
+                return
+        logger.warning("auto-reconnect wyczerpał próby")
+        self._emit("error", {"message": "Nie udało się ponownie połączyć z robotem"})
 
     def _stop_drill_nowait(self):
         if self._drill and not self._drill.done():

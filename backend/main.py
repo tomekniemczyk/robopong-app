@@ -7,6 +7,7 @@ from pathlib import Path
 from typing import Set
 
 from fastapi import FastAPI, HTTPException, WebSocket, WebSocketDisconnect
+from fastapi.background import BackgroundTask
 from fastapi.responses import FileResponse, StreamingResponse
 from fastapi.staticfiles import StaticFiles
 
@@ -40,11 +41,32 @@ def broadcast(event_type: str, data: dict):
     clients.difference_update(dead)
 
 
+LAST_ADDR_FILE = Path(__file__).parent / ".last_device"
+
+
+def _load_last_addr() -> str:
+    try:
+        return LAST_ADDR_FILE.read_text().strip()
+    except Exception:
+        return ""
+
+
+def _save_last_addr(addr: str):
+    try:
+        LAST_ADDR_FILE.write_text(addr)
+    except Exception:
+        pass
+
+
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     global robot
     db.init()
     robot = Robot(on_event=broadcast)
+    last = _load_last_addr()
+    if last:
+        logger.info("auto-connect przy starcie → %s", last)
+        asyncio.create_task(robot.connect(last))
     yield
     if robot.is_connected:
         await robot.disconnect()
@@ -82,10 +104,13 @@ async def _handle(msg: dict, ws: WebSocket):
 
     elif action == "connect":
         ok = await robot.connect(msg["address"])
-        if not ok:
+        if ok:
+            _save_last_addr(msg["address"])
+        else:
             await ws.send_text(json.dumps({"type": "error", "message": "Nie można połączyć z robotem"}))
 
     elif action == "disconnect":
+        _save_last_addr("")
         await robot.disconnect()
 
     elif action == "set_ball":
@@ -150,8 +175,22 @@ def delete_scenario(id: int):
 
 
 # ── Camera stream ──────────────────────────────────────────────────────────────
+# Próbujemy: 1) motion na :8081, 2) OpenCV jako fallback
 
-def _mjpeg_frames():
+MOTION_URL = "http://127.0.0.1:8081"
+
+
+async def _motion_available() -> bool:
+    import httpx
+    try:
+        async with httpx.AsyncClient(timeout=2.0) as c:
+            r = await c.get(MOTION_URL)
+            return r.status_code < 500
+    except Exception:
+        return False
+
+
+def _cv2_stream():
     if not _CV2:
         return
     cap = cv2.VideoCapture(0)
@@ -169,20 +208,35 @@ def _mjpeg_frames():
 
 
 @app.get("/api/camera")
-def camera_stream():
-    if not _CV2:
-        raise HTTPException(503, "opencv-python not installed")
-    return StreamingResponse(_mjpeg_frames(), media_type="multipart/x-mixed-replace; boundary=frame")
+async def camera_stream():
+    import httpx
+    # Preferuj motion — ma własny wydajny MJPEG serwer
+    try:
+        client = httpx.AsyncClient(timeout=None)
+        req = client.stream("GET", MOTION_URL)
+        response = await req.__aenter__()
+        if response.status_code == 200:
+            ct = response.headers.get("content-type", "multipart/x-mixed-replace; boundary=BoundaryString")
+            return StreamingResponse(response.aiter_raw(), media_type=ct,
+                                     background=BackgroundTask(response.aclose))
+    except Exception:
+        pass
+    # Fallback: OpenCV
+    if _CV2:
+        return StreamingResponse(_cv2_stream(), media_type="multipart/x-mixed-replace; boundary=frame")
+    raise HTTPException(503, "Brak źródła kamery")
 
 
 @app.get("/api/camera/available")
-def camera_available():
-    if not _CV2:
-        return {"available": False}
-    cap = cv2.VideoCapture(0)
-    ok = cap.isOpened()
-    cap.release()
-    return {"available": ok}
+async def camera_available():
+    if await _motion_available():
+        return {"available": True, "source": "motion"}
+    if _CV2:
+        cap = cv2.VideoCapture(0)
+        ok = cap.isOpened()
+        cap.release()
+        return {"available": ok, "source": "opencv"}
+    return {"available": False}
 
 
 # ── Frontend ───────────────────────────────────────────────────────────────────

@@ -335,6 +335,8 @@ createApp({
         drillMaxRepeat.value = m.max_repeat
       } else if (m.type === 'drill_ended') {
         drillRunning.value = false
+      } else if (m.type === 'reconnecting') {
+        showToast(`🔄 Ponowne łączenie z ${m.address}…`)
       } else if (m.type === 'robot_response') {
         addLog(`← ${m.data}`)
       } else if (m.type === 'error') {
