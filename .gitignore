@@ -9,3 +9,8 @@ venv/
 dist/
 build/
 .env
+re/extracted/
+re/cabinet/
+re/*.msi
+re/*.cab
+.firecrawl/
