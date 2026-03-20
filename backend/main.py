@@ -1,25 +1,18 @@
 import asyncio
 import json
 import logging
-import threading
 from contextlib import asynccontextmanager
 from pathlib import Path
 from typing import Set
 
 from fastapi import FastAPI, HTTPException, WebSocket, WebSocketDisconnect
-from starlette.background import BackgroundTask
-from fastapi.responses import FileResponse, StreamingResponse
+from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 
 import db
 from models import Ball, ScenarioIn
 from robot import Robot
 
-try:
-    import cv2
-    _CV2 = True
-except ImportError:
-    _CV2 = False
 
 logging.basicConfig(level=logging.INFO, format="%(levelname)s  %(name)s  %(message)s")
 logger = logging.getLogger(__name__)
@@ -205,70 +198,6 @@ def delete_scenario(id: int):
         raise HTTPException(404)
     db.delete_scenario(id)
 
-
-# ── Camera stream ──────────────────────────────────────────────────────────────
-# Próbujemy: 1) motion na :8081, 2) OpenCV jako fallback
-
-MOTION_URL = "http://127.0.0.1:8081"
-
-
-async def _motion_available() -> bool:
-    import httpx
-    try:
-        async with httpx.AsyncClient(timeout=2.0) as c:
-            r = await c.get(MOTION_URL)
-            return r.status_code < 500
-    except Exception:
-        return False
-
-
-def _cv2_stream():
-    if not _CV2:
-        return
-    cap = cv2.VideoCapture(0)
-    cap.set(cv2.CAP_PROP_FRAME_WIDTH, 640)
-    cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 480)
-    try:
-        while True:
-            ok, frame = cap.read()
-            if not ok:
-                break
-            _, buf = cv2.imencode(".jpg", frame, [cv2.IMWRITE_JPEG_QUALITY, 70])
-            yield (b"--frame\r\nContent-Type: image/jpeg\r\n\r\n" + buf.tobytes() + b"\r\n")
-    finally:
-        cap.release()
-
-
-@app.get("/api/camera")
-async def camera_stream():
-    import httpx
-    # Preferuj motion — ma własny wydajny MJPEG serwer
-    try:
-        client = httpx.AsyncClient(timeout=None)
-        req = client.stream("GET", MOTION_URL)
-        response = await req.__aenter__()
-        if response.status_code == 200:
-            ct = response.headers.get("content-type", "multipart/x-mixed-replace; boundary=BoundaryString")
-            return StreamingResponse(response.aiter_raw(), media_type=ct,
-                                     background=BackgroundTask(response.aclose))
-    except Exception:
-        pass
-    # Fallback: OpenCV
-    if _CV2:
-        return StreamingResponse(_cv2_stream(), media_type="multipart/x-mixed-replace; boundary=frame")
-    raise HTTPException(503, "Brak źródła kamery")
-
-
-@app.get("/api/camera/available")
-async def camera_available():
-    if await _motion_available():
-        return {"available": True, "source": "motion"}
-    if _CV2:
-        cap = cv2.VideoCapture(0)
-        ok = cap.isOpened()
-        cap.release()
-        return {"available": ok, "source": "opencv"}
-    return {"available": False}
 
 
 # ── Frontend ───────────────────────────────────────────────────────────────────

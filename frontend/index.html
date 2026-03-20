@@ -236,30 +236,7 @@
     </div>
   </div>
 
-  <!-- ── Kamera ────────────────────────────────────────────────────────── -->
-  <div class="page" v-show="page === 'camera'">
-    <div class="card">
-      <div class="row" style="margin-bottom:14px">
-        <span class="section-title" style="margin-bottom:0">Podgląd kamery</span>
-        <div class="spacer"></div>
-        <button class="btn btn-ghost" style="padding:8px 14px;font-size:13px" @click="toggleCam">
-          {{ camActive ? '⏹ Stop' : '▶ Uruchom' }}
-        </button>
-      </div>
-
-      <div class="cam-wrap">
-        <img v-if="camActive" :src="camSrc" alt="kamera" @error="camError">
-        <div class="cam-off" v-else>
-          <div style="font-size:40px;margin-bottom:8px">📷</div>
-          {{ camMsg }}
-        </div>
-      </div>
-
-      <p style="font-size:12px;color:var(--muted)">Strumień MJPEG z kamery w garażu.</p>
-    </div>
-  </div>
-
-  <!-- ── Połącz ─────────────────────────────────────────────────────────── -->
+<!-- ── Połącz ─────────────────────────────────────────────────────────── -->
   <div class="page" v-show="page === 'connect'">
     <div class="card">
       <h2 style="margin-bottom:6px">Połączenie BLE</h2>
@@ -311,9 +288,6 @@
     <button :class="{ active: page === 'calibration' }" @click="page='calibration'">
       <span class="nav-icon">🎯</span>Kalibr.
     </button>
-    <button :class="{ active: page === 'camera' }" @click="page='camera'">
-      <span class="nav-icon">📷</span>Kamera
-    </button>
     <button :class="{ active: page === 'connect' }" @click="page='connect'">
       <span class="nav-icon">📡</span>BLE
     </button>
@@ -358,9 +332,6 @@ createApp({
     const calSent = ref(false)
     const helpOpen = ref(false)
 
-    const camActive = ref(false)
-    const camMsg    = ref('Kliknij ▶ Uruchom aby włączyć podgląd.')
-    const camSrc    = ref('')
 
     // ── WebSocket ──────────────────────────────────────────────────
     let ws = null
@@ -487,20 +458,6 @@ createApp({
     function calThrow() { send({ action:'throw' }); addLog('→ T (rzut)'); calSent.value = false; showToast('🏓 Rzut!') }
     function calStop()  { send({ action:'stop' });  addLog('→ H (stop)'); calSent.value = false; showToast('⏹ Stop') }
 
-    // ── Camera ─────────────────────────────────────────────────────
-    async function toggleCam() {
-      if (camActive.value) {
-        camActive.value = false; camSrc.value = ''; camMsg.value = 'Kliknij ▶ Uruchom aby włączyć podgląd.'
-        return
-      }
-      const r = await fetch('/api/camera/available')
-      const j = await r.json()
-      if (!j.available) { camMsg.value = 'Kamera niedostępna na tym urządzeniu.'; return }
-      camSrc.value = `/api/camera?t=${Date.now()}`
-      camActive.value = true
-    }
-    function camError() { camActive.value = false; camMsg.value = 'Błąd strumienia.'; showToast('⚠ Kamera: błąd') }
-
     // ── helpers ────────────────────────────────────────────────────
     function addLog(line) {
       robotLog.value.push(line)
@@ -527,12 +484,10 @@ createApp({
       drillRunning, drillScenario, drillBall, drillTotal, drillRun, drillMaxRepeat,
       editId, editName, editDesc, editRepeat, editBalls,
       cal, calSent, helpOpen,
-      camActive, camMsg, camSrc,
       scan, connect, disconnect,
       runScenario, stopDrill, deleteScenario, openEditor, addBall, removeBall, saveScenario,
       clamp, clampCal,
       calSend, calThrow, calStop, calSave, calReset, loadCal,
-      toggleCam, camError,
       ballWord,
     }
   }
