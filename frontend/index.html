@@ -15,7 +15,11 @@
 
   <div class="topbar">
     <h1>🏓 RoboPong</h1>
-    <span class="ble-pill" :class="{ on: connected }">
+    <div style="display:flex;flex-direction:column;align-items:flex-end;gap:1px" v-if="connected && lastAddr">
+      <span class="ble-pill on" style="font-size:10px">{{ robotName || 'Robopong' }}</span>
+      <span style="font-size:9px;color:var(--muted);font-family:monospace">{{ lastAddr }}</span>
+    </div>
+    <span class="ble-pill" :class="{ on: connected }" v-else>
       {{ connected ? (firmware ? `FW ${firmware}` : 'BLE') : 'Offline' }}
     </span>
   </div>
@@ -236,34 +240,67 @@
     </div>
   </div>
 
-<!-- ── Połącz ─────────────────────────────────────────────────────────── -->
-  <div class="page" v-show="page === 'connect'">
+  <!-- ── Kamera ────────────────────────────────────────────────────────── -->
+  <div class="page" v-show="page === 'camera'">
     <div class="card">
-      <h2 style="margin-bottom:6px">Połączenie BLE</h2>
-      <p class="desc">{{ connected ? `Połączono z ${device}` : 'Nie połączono z robotem.' }}</p>
+      <div class="cam-wrap">
+        <img id="cam-img" :src="`http://${location.hostname}:8081`" alt="kamera" @error="camErr=true" v-if="!camErr">
+        <div class="cam-off" v-else>
+          <div style="font-size:36px;margin-bottom:6px">📷</div>
+          <p>Kamera niedostępna (motion :8081)</p>
+        </div>
+      </div>
+      <p style="font-size:11px;color:var(--muted)">Stream motion — port 8081</p>
+    </div>
+  </div>
 
-      <div class="row">
-        <button class="btn btn-primary" :disabled="scanning || connected" @click="scan" style="flex:1">
-          {{ scanning ? '🔍 Skanowanie…' : '🔍 Skanuj urządzenia' }}
+  <!-- ── Połącz ─────────────────────────────────────────────────────────── -->
+  <div class="page" v-show="page === 'connect'">
+
+    <!-- ostatnie urządzenie -->
+    <div class="card" v-if="lastAddr" style="margin-bottom:8px">
+      <div style="display:flex;align-items:center;gap:10px">
+        <div style="flex:1;min-width:0">
+          <div style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin-bottom:3px">Ostatnie urządzenie</div>
+          <div v-if="!editingName" style="display:flex;align-items:center;gap:8px">
+            <span style="font-weight:600;font-size:14px">{{ robotName || 'Robopong' }}</span>
+            <button class="btn btn-ghost btn-icon" style="padding:3px 7px;font-size:11px" @click="editingName=true">✏️</button>
+          </div>
+          <div v-else style="display:flex;gap:6px">
+            <input type="text" v-model="robotNameEdit" style="flex:1;padding:5px 8px;font-size:13px" @keyup.enter="saveName" @keyup.escape="editingName=false">
+            <button class="btn btn-primary" style="padding:5px 10px;font-size:12px" @click="saveName">OK</button>
+          </div>
+          <div style="font-size:11px;color:var(--muted);margin-top:2px;font-family:monospace">{{ lastAddr }}</div>
+        </div>
+        <button class="btn btn-primary" v-if="!connected" @click="connect(lastAddr)">Połącz</button>
+        <button class="btn btn-danger"  v-else @click="disconnect">Rozłącz</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="row" style="margin-bottom:10px">
+        <span style="font-size:13px;font-weight:600">Wyszukaj robot</span>
+        <div class="spacer"></div>
+        <button class="btn btn-primary" :disabled="scanning || connected" @click="scan">
+          {{ scanning ? '🔍 Skanowanie…' : '🔍 Skanuj' }}
         </button>
-        <button class="btn btn-danger" v-if="connected" @click="disconnect">Rozłącz</button>
       </div>
 
       <ul class="device-list" v-if="devices.length">
         <li v-for="d in devices" :key="d.address">
-          <div>
+          <div style="min-width:0;flex:1">
             <div class="dev-name">{{ d.name }}</div>
             <div class="dev-addr">{{ d.address }}</div>
           </div>
-          <button class="btn btn-primary" style="white-space:nowrap;padding:9px 16px;font-size:13px"
-            :disabled="connected" @click="connect(d.address)">Połącz</button>
+          <button class="btn btn-primary" :disabled="connected" @click="connect(d.address)">Połącz</button>
         </li>
       </ul>
 
-      <div class="empty" v-else-if="!scanning" style="padding:24px 0">
-        <p>Kliknij "Skanuj urządzenia".</p>
+      <div class="empty" v-else-if="!scanning" style="padding:16px 0">
+        <p style="font-size:13px">Kliknij Skanuj — widoczne będą tylko roboty Donic/Newgy.</p>
       </div>
     </div>
+
   </div>
 
   <!-- ── Runner overlay ──────────────────────────────────────────────────── -->
@@ -287,6 +324,9 @@
     </button>
     <button :class="{ active: page === 'calibration' }" @click="page='calibration'">
       <span class="nav-icon">🎯</span>Kalibr.
+    </button>
+    <button :class="{ active: page === 'camera' }" @click="page='camera'">
+      <span class="nav-icon">📷</span>Kamera
     </button>
     <button :class="{ active: page === 'connect' }" @click="page='connect'">
       <span class="nav-icon">📡</span>BLE
@@ -332,6 +372,12 @@ createApp({
     const calSent = ref(false)
     const helpOpen = ref(false)
 
+    const lastAddr      = ref(localStorage.getItem('lastAddr') || '')
+    const robotName     = ref(localStorage.getItem('robotName') || '')
+    const editingName   = ref(false)
+    const robotNameEdit = ref('')
+    const camErr        = ref(false)
+
 
     // ── WebSocket ──────────────────────────────────────────────────
     let ws = null
@@ -351,7 +397,7 @@ createApp({
         device.value    = m.device
       } else if (m.type === 'scan_result') {
         scanning.value = false
-        devices.value  = m.devices
+        devices.value  = m.devices.filter(d => ROBOT_FILTER.test(d.name || ''))
       } else if (m.type === 'drill_progress') {
         drillRunning.value   = true
         drillBall.value      = m.ball
@@ -370,9 +416,21 @@ createApp({
     }
 
     // ── BLE ────────────────────────────────────────────────────────
-    function scan()           { scanning.value = true; devices.value = []; send({ action: 'scan' }) }
-    function connect(address) { send({ action: 'connect', address }) }
-    function disconnect()     { send({ action: 'disconnect' }) }
+    // Filtrujemy tylko roboty Donic/Newgy po nazwie BLE
+    const ROBOT_FILTER = /robopong|newgy|donic|rp3|rp\d/i
+
+    function scan() { scanning.value = true; devices.value = []; send({ action: 'scan' }) }
+    function connect(address) {
+      lastAddr.value = address
+      localStorage.setItem('lastAddr', address)
+      send({ action: 'connect', address })
+    }
+    function disconnect() { send({ action: 'disconnect' }) }
+    function saveName() {
+      robotName.value = robotNameEdit.value.trim() || robotName.value
+      localStorage.setItem('robotName', robotName.value)
+      editingName.value = false
+    }
 
     // ── Scenarios ──────────────────────────────────────────────────
     async function loadScenarios() {
@@ -484,7 +542,8 @@ createApp({
       drillRunning, drillScenario, drillBall, drillTotal, drillRun, drillMaxRepeat,
       editId, editName, editDesc, editRepeat, editBalls,
       cal, calSent, helpOpen,
-      scan, connect, disconnect,
+      lastAddr, robotName, editingName, robotNameEdit, camErr,
+      scan, connect, disconnect, saveName,
       runScenario, stopDrill, deleteScenario, openEditor, addBall, removeBall, saveScenario,
       clamp, clampCal,
       calSend, calThrow, calStop, calSave, calReset, loadCal,
