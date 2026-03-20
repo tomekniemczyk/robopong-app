@@ -1,17 +1,24 @@
 import asyncio
 import json
 import logging
+import threading
 from contextlib import asynccontextmanager
 from pathlib import Path
 from typing import Set
 
 from fastapi import FastAPI, HTTPException, WebSocket, WebSocketDisconnect
-from fastapi.responses import FileResponse
+from fastapi.responses import FileResponse, StreamingResponse
 from fastapi.staticfiles import StaticFiles
 
 import db
 from models import Ball, ScenarioIn
 from robot import Robot
+
+try:
+    import cv2
+    _CV2 = True
+except ImportError:
+    _CV2 = False
 
 logging.basicConfig(level=logging.INFO, format="%(levelname)s  %(name)s  %(message)s")
 logger = logging.getLogger(__name__)
@@ -140,6 +147,42 @@ def delete_scenario(id: int):
     if not db.get_scenario(id):
         raise HTTPException(404)
     db.delete_scenario(id)
+
+
+# ── Camera stream ──────────────────────────────────────────────────────────────
+
+def _mjpeg_frames():
+    if not _CV2:
+        return
+    cap = cv2.VideoCapture(0)
+    cap.set(cv2.CAP_PROP_FRAME_WIDTH, 640)
+    cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 480)
+    try:
+        while True:
+            ok, frame = cap.read()
+            if not ok:
+                break
+            _, buf = cv2.imencode(".jpg", frame, [cv2.IMWRITE_JPEG_QUALITY, 70])
+            yield (b"--frame\r\nContent-Type: image/jpeg\r\n\r\n" + buf.tobytes() + b"\r\n")
+    finally:
+        cap.release()
+
+
+@app.get("/api/camera")
+def camera_stream():
+    if not _CV2:
+        raise HTTPException(503, "opencv-python not installed")
+    return StreamingResponse(_mjpeg_frames(), media_type="multipart/x-mixed-replace; boundary=frame")
+
+
+@app.get("/api/camera/available")
+def camera_available():
+    if not _CV2:
+        return {"available": False}
+    cap = cv2.VideoCapture(0)
+    ok = cap.isOpened()
+    cap.release()
+    return {"available": ok}
 
 
 # ── Frontend ───────────────────────────────────────────────────────────────────

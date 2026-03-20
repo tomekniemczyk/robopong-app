@@ -7,6 +7,13 @@
   <title>RoboPong</title>
   <link rel="stylesheet" href="/static/style.css">
   <link rel="manifest" href="/static/manifest.json">
+  <style>
+    .cam-wrap { position: relative; background: #000; border-radius: var(--radius); overflow: hidden; margin-bottom: 14px; }
+    .cam-wrap img { width: 100%; display: block; max-height: 360px; object-fit: contain; }
+    .cam-off { padding: 32px; text-align: center; color: var(--muted); font-size: 13px; }
+    .safety-warn { background: rgba(245,158,11,.12); border: 1px solid rgba(245,158,11,.4); border-radius: 7px; padding: 10px 14px; font-size: 13px; color: var(--warning); margin-bottom: 14px; }
+    .limit-badge { font-size: 11px; color: var(--muted); margin-left: 6px; }
+  </style>
 </head>
 <body>
 <div id="app">
@@ -17,10 +24,11 @@
   </div>
 
   <nav class="nav">
-    <button :class="{ active: page === 'scenarios' }" @click="page='scenarios'">Scenariusze</button>
-    <button :class="{ active: page === 'editor' }"    @click="openEditor(null)">Edytor</button>
+    <button :class="{ active: page === 'scenarios' }"  @click="page='scenarios'">Scenariusze</button>
+    <button :class="{ active: page === 'editor' }"     @click="openEditor(null)">Edytor</button>
     <button :class="{ active: page === 'calibration' }" @click="page='calibration'">Kalibracja</button>
-    <button :class="{ active: page === 'connect' }"   @click="page='connect'">Połącz</button>
+    <button :class="{ active: page === 'camera' }"     @click="page='camera'">Kamera</button>
+    <button :class="{ active: page === 'connect' }"    @click="page='connect'">Połącz</button>
   </nav>
 
   <!-- ── Scenariusze ─────────────────────────────────────────────────── -->
@@ -74,11 +82,9 @@
         <label>Opis (opcjonalny)</label>
         <input type="text" v-model="editDesc" placeholder="Krótki opis">
       </div>
-      <div class="row">
-        <div class="field" style="flex:1;margin-bottom:0">
-          <label>Powtórzenia (0 = ∞)</label>
-          <input type="number" v-model.number="editRepeat" min="0" max="999">
-        </div>
+      <div class="field" style="margin-bottom:0">
+        <label>Powtórzenia (0 = ∞)</label>
+        <input type="number" v-model.number="editRepeat" min="0" max="999">
       </div>
     </div>
 
@@ -98,26 +104,26 @@
           <thead>
             <tr>
               <th>#</th>
-              <th>Góra</th>
-              <th>Dół</th>
-              <th>Osc.</th>
-              <th>Wys.</th>
-              <th>Obr.</th>
-              <th>Czek. ms</th>
+              <th>Góra<span class="limit-badge">±99</span></th>
+              <th>Dół<span class="limit-badge">±99</span></th>
+              <th>Osc.<span class="limit-badge">0–255</span></th>
+              <th>Wys.<span class="limit-badge">0–255</span></th>
+              <th>Obr.<span class="limit-badge">0–255</span></th>
+              <th>Czek.ms<span class="limit-badge">200–10000</span></th>
               <th></th>
             </tr>
           </thead>
           <tbody>
             <tr v-for="(b, i) in editBalls" :key="i">
               <td style="color:var(--muted);font-size:12px">{{ i+1 }}</td>
-              <td><input type="number" v-model.number="b.top_speed"   min="-99" max="99"></td>
-              <td><input type="number" v-model.number="b.bot_speed"   min="-99" max="99"></td>
-              <td><input type="number" v-model.number="b.oscillation" min="0"   max="255"></td>
-              <td><input type="number" v-model.number="b.height"      min="0"   max="255"></td>
-              <td><input type="number" v-model.number="b.rotation"    min="0"   max="255"></td>
-              <td><input type="number" v-model.number="b.wait_ms"     min="200" max="10000" style="width:80px"></td>
+              <td><input type="number" v-model.number="b.top_speed"   min="-99"  max="99"    @change="clamp(b,'top_speed',-99,99)"></td>
+              <td><input type="number" v-model.number="b.bot_speed"   min="-99"  max="99"    @change="clamp(b,'bot_speed',-99,99)"></td>
+              <td><input type="number" v-model.number="b.oscillation" min="0"    max="255"   @change="clamp(b,'oscillation',0,255)"></td>
+              <td><input type="number" v-model.number="b.height"      min="0"    max="255"   @change="clamp(b,'height',0,255)"></td>
+              <td><input type="number" v-model.number="b.rotation"    min="0"    max="255"   @change="clamp(b,'rotation',0,255)"></td>
+              <td><input type="number" v-model.number="b.wait_ms"     min="200"  max="10000" @change="clamp(b,'wait_ms',200,10000)" style="width:80px"></td>
               <td>
-                <button class="btn btn-ghost btn-icon" style="padding:4px 8px" @click="removeBall(i)" title="Usuń">✕</button>
+                <button class="btn btn-ghost btn-icon" style="padding:4px 8px" @click="removeBall(i)">✕</button>
               </td>
             </tr>
           </tbody>
@@ -135,54 +141,81 @@
 
   <!-- ── Kalibracja ──────────────────────────────────────────────────── -->
   <div class="page" v-show="page === 'calibration'">
+
+    <div class="safety-warn">
+      ⚠ Wartości są ograniczone sprzętowo. Wyślij parametry, poczekaj na rozpędzenie silników, dopiero potem kliknij Rzut.
+      Zawsze miej pod ręką Stop.
+    </div>
+
     <div class="card">
       <h2>Kalibracja — pojedyncza piłka</h2>
-      <p class="desc">Ustaw parametry i wyślij do robota, następnie użyj Rzut.</p>
+      <p class="desc">Ustaw parametry → Wyślij → odczekaj ~1.5 s → Rzut</p>
 
       <div class="cal-grid">
         <div class="cal-section">
           <h3>Prędkości silników</h3>
           <div class="field">
-            <label>Góra (-99 … 99)</label>
-            <input type="number" v-model.number="cal.top_speed" min="-99" max="99">
+            <label>Góra &nbsp;<small style="color:var(--muted)">-99 … 99 (ujemne = topspin)</small></label>
+            <input type="number" v-model.number="cal.top_speed" min="-99" max="99" @change="clampCal('top_speed',-99,99)">
           </div>
           <div class="field">
-            <label>Dół (-99 … 99)</label>
-            <input type="number" v-model.number="cal.bot_speed" min="-99" max="99">
+            <label>Dół &nbsp;<small style="color:var(--muted)">-99 … 99</small></label>
+            <input type="number" v-model.number="cal.bot_speed" min="-99" max="99" @change="clampCal('bot_speed',-99,99)">
           </div>
         </div>
 
         <div class="cal-section">
           <h3>Ruch głowicy</h3>
           <div class="field">
-            <label>Oscylacja (0–255, 128=stop)</label>
-            <input type="number" v-model.number="cal.oscillation" min="0" max="255">
+            <label>Oscylacja &nbsp;<small style="color:var(--muted)">0–255, 128=stop</small></label>
+            <input type="number" v-model.number="cal.oscillation" min="0" max="255" @change="clampCal('oscillation',0,255)">
           </div>
           <div class="field">
-            <label>Wysokość (0–255, 128=środek)</label>
-            <input type="number" v-model.number="cal.height" min="0" max="255">
+            <label>Wysokość &nbsp;<small style="color:var(--muted)">0–255, 128=środek</small></label>
+            <input type="number" v-model.number="cal.height" min="0" max="255" @change="clampCal('height',0,255)">
           </div>
           <div class="field">
-            <label>Rotacja (0–255, 128=środek)</label>
-            <input type="number" v-model.number="cal.rotation" min="0" max="255">
+            <label>Rotacja &nbsp;<small style="color:var(--muted)">0–255, 128=środek</small></label>
+            <input type="number" v-model.number="cal.rotation" min="0" max="255" @change="clampCal('rotation',0,255)">
           </div>
         </div>
       </div>
 
       <div class="field" style="margin-top:14px">
-        <label>Czas oczekiwania ms (200–10000)</label>
-        <input type="number" v-model.number="cal.wait_ms" min="200" max="10000">
+        <label>Czas oczekiwania ms &nbsp;<small style="color:var(--muted)">200–10000</small></label>
+        <input type="number" v-model.number="cal.wait_ms" min="200" max="10000" @change="clampCal('wait_ms',200,10000)">
       </div>
 
       <div class="cal-actions">
         <button class="btn btn-primary" :disabled="!connected" @click="calSend">📡 Wyślij</button>
-        <button class="btn btn-success" :disabled="!connected" @click="calThrow">🏓 Rzut</button>
+        <button class="btn btn-success" :disabled="!connected || !calSent" @click="calThrow" :title="calSent ? '' : 'Najpierw wyślij parametry'">🏓 Rzut</button>
         <button class="btn btn-danger"  :disabled="!connected" @click="calStop">⏹ Stop</button>
       </div>
 
       <div class="log-box" ref="logBox">
         <div v-for="(l, i) in robotLog" :key="i">{{ l }}</div>
       </div>
+    </div>
+  </div>
+
+  <!-- ── Kamera ──────────────────────────────────────────────────────── -->
+  <div class="page" v-show="page === 'camera'">
+    <div class="card">
+      <div class="row" style="margin-bottom:12px">
+        <h2>Podgląd kamery</h2>
+        <div class="spacer"></div>
+        <button class="btn btn-ghost" @click="toggleCam">{{ camActive ? '⏹ Zatrzymaj' : '▶ Uruchom' }}</button>
+      </div>
+
+      <div class="cam-wrap">
+        <img v-if="camActive" :src="camSrc" alt="kamera" @error="camError">
+        <div class="cam-off" v-else>
+          <div style="font-size:32px;margin-bottom:8px">📷</div>
+          {{ camMsg }}
+        </div>
+      </div>
+
+      <p style="font-size:12px;color:var(--muted)">Strumień MJPEG z kamery laptopa w garażu. Odświeżanie ciągłe.</p>
     </div>
   </div>
 
@@ -264,7 +297,13 @@ createApp({
     const editBalls  = ref([])
 
     // calibration
-    const cal = reactive({ top_speed: 50, bot_speed: 50, oscillation: 128, height: 128, rotation: 128, wait_ms: 1500 })
+    const cal     = reactive({ top_speed: 50, bot_speed: 50, oscillation: 128, height: 128, rotation: 128, wait_ms: 1500 })
+    const calSent = ref(false)  // blokada Rzut dopóki nie wyslano parametrów
+
+    // camera
+    const camActive = ref(false)
+    const camMsg    = ref('Kliknij ▶ Uruchom aby włączyć podgląd.')
+    const camSrc    = ref('')
 
     // ── WebSocket ────────────────────────────────────────────────────
     let ws = null
@@ -303,12 +342,12 @@ createApp({
       }
     }
 
-    // ── BLE actions ──────────────────────────────────────────────────
-    function scan()               { scanning.value = true; devices.value = []; send({ action: 'scan' }) }
-    function connect(address)     { send({ action: 'connect', address }) }
-    function disconnect()         { send({ action: 'disconnect' }) }
+    // ── BLE ──────────────────────────────────────────────────────────
+    function scan()           { scanning.value = true; devices.value = []; send({ action: 'scan' }) }
+    function connect(address) { send({ action: 'connect', address }) }
+    function disconnect()     { send({ action: 'disconnect' }) }
 
-    // ── Scenario actions ─────────────────────────────────────────────
+    // ── Scenarios ────────────────────────────────────────────────────
     async function loadScenarios() {
       const r = await fetch('/api/scenarios')
       scenarios.value = await r.json()
@@ -324,9 +363,7 @@ createApp({
       send({ action: 'run_scenario', id: s.id })
     }
 
-    function stopDrill() {
-      send({ action: 'stop_drill' })
-    }
+    function stopDrill() { send({ action: 'stop_drill' }) }
 
     async function deleteScenario(id) {
       await fetch(`/api/scenarios/${id}`, { method: 'DELETE' })
@@ -354,17 +391,27 @@ createApp({
       editBalls.value.push({ top_speed: 50, bot_speed: 50, oscillation: 128, height: 128, rotation: 128, wait_ms: 1500 })
     }
 
-    function removeBall(i) {
-      editBalls.value.splice(i, 1)
+    function removeBall(i) { editBalls.value.splice(i, 1) }
+
+    function clamp(obj, key, min, max) {
+      const v = Number(obj[key])
+      if (isNaN(v)) { obj[key] = min; return }
+      obj[key] = Math.min(max, Math.max(min, v))
     }
 
+    function clampCal(key, min, max) { clamp(cal, key, min, max) }
+
     async function saveScenario() {
-      const body = {
-        name:        editName.value,
-        description: editDesc.value,
-        balls:       editBalls.value,
-        repeat:      editRepeat.value,
-      }
+      // clamp all balls before saving
+      editBalls.value.forEach(b => {
+        clamp(b, 'top_speed',   -99,  99)
+        clamp(b, 'bot_speed',   -99,  99)
+        clamp(b, 'oscillation',   0, 255)
+        clamp(b, 'height',        0, 255)
+        clamp(b, 'rotation',      0, 255)
+        clamp(b, 'wait_ms',     200, 10000)
+      })
+      const body = { name: editName.value, description: editDesc.value, balls: editBalls.value, repeat: editRepeat.value }
       if (editId.value) {
         await fetch(`/api/scenarios/${editId.value}`, { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) })
       } else {
@@ -376,17 +423,59 @@ createApp({
     }
 
     // ── Calibration ──────────────────────────────────────────────────
-    function calSend()  { send({ action: 'set_ball', ball: { ...cal } }); addLog(`→ set_ball`) }
-    function calThrow() { send({ action: 'throw' }); addLog('→ T') }
-    function calStop()  { send({ action: 'stop' });  addLog('→ H') }
+    function calSend() {
+      clampCal('top_speed',   -99,  99)
+      clampCal('bot_speed',   -99,  99)
+      clampCal('oscillation',   0, 255)
+      clampCal('height',        0, 255)
+      clampCal('rotation',      0, 255)
+      clampCal('wait_ms',     200, 10000)
+      send({ action: 'set_ball', ball: { ...cal } })
+      addLog(`→ set_ball top=${cal.top_speed} bot=${cal.bot_speed} osc=${cal.oscillation} h=${cal.height} r=${cal.rotation} ms=${cal.wait_ms}`)
+      calSent.value = true
+    }
+
+    function calThrow() {
+      send({ action: 'throw' })
+      addLog('→ T (rzut)')
+      calSent.value = false  // po rzucie trzeba ponownie wysłać
+    }
+
+    function calStop() {
+      send({ action: 'stop' })
+      addLog('→ H (stop)')
+      calSent.value = false
+    }
+
+    // ── Camera ───────────────────────────────────────────────────────
+    async function toggleCam() {
+      if (camActive.value) {
+        camActive.value = false
+        camSrc.value    = ''
+        camMsg.value    = 'Kliknij ▶ Uruchom aby włączyć podgląd.'
+        return
+      }
+      const r = await fetch('/api/camera/available')
+      const j = await r.json()
+      if (!j.available) {
+        camMsg.value = 'Kamera niedostępna na tym urządzeniu.'
+        return
+      }
+      camSrc.value    = `/api/camera?t=${Date.now()}`
+      camActive.value = true
+    }
+
+    function camError() {
+      camActive.value = false
+      camMsg.value    = 'Błąd strumienia kamery.'
+      showToast('⚠ Kamera: błąd strumienia')
+    }
 
     // ── helpers ──────────────────────────────────────────────────────
     function addLog(line) {
       robotLog.value.push(line)
-      if (robotLog.value.length > 50) robotLog.value.shift()
-      nextTick(() => {
-        if (logBox.value) logBox.value.scrollTop = logBox.value.scrollHeight
-      })
+      if (robotLog.value.length > 60) robotLog.value.shift()
+      nextTick(() => { if (logBox.value) logBox.value.scrollTop = logBox.value.scrollHeight })
     }
 
     let toastTimer = null
@@ -402,20 +491,20 @@ createApp({
       return 'piłek'
     }
 
-    onMounted(() => {
-      wsConnect()
-      loadScenarios()
-    })
+    onMounted(() => { wsConnect(); loadScenarios() })
 
     return {
       page, connected, firmware, device, scanning, devices, scenarios,
       toast, robotLog, logBox,
       drillRunning, drillScenario, drillBall, drillTotal, drillRun, drillMaxRepeat,
       editId, editName, editDesc, editRepeat, editBalls,
-      cal,
+      cal, calSent,
+      camActive, camMsg, camSrc,
       scan, connect, disconnect,
       runScenario, stopDrill, deleteScenario, openEditor, addBall, removeBall, saveScenario,
+      clamp, clampCal,
       calSend, calThrow, calStop,
+      toggleCam, camError,
       ballWord,
     }
   }
