@@ -244,7 +244,7 @@
   <div class="page" v-show="page === 'camera'">
     <div class="card">
       <div class="cam-wrap">
-        <img id="cam-img" :src="`http://${location.hostname}:8081`" alt="kamera" @error="camErr=true" v-if="!camErr">
+        <img id="cam-img" :src="camSrc" alt="kamera" @error="camErr=true" v-if="!camErr">
         <div class="cam-off" v-else>
           <div style="font-size:36px;margin-bottom:6px">📷</div>
           <p>Kamera niedostępna (motion :8081)</p>
@@ -377,6 +377,7 @@ createApp({
     const editingName   = ref(false)
     const robotNameEdit = ref('')
     const camErr        = ref(false)
+    const camSrc        = `http://${window.location.hostname}:8081`
 
 
     // ── WebSocket ──────────────────────────────────────────────────
@@ -542,7 +543,7 @@ createApp({
       drillRunning, drillScenario, drillBall, drillTotal, drillRun, drillMaxRepeat,
       editId, editName, editDesc, editRepeat, editBalls,
       cal, calSent, helpOpen,
-      lastAddr, robotName, editingName, robotNameEdit, camErr,
+      lastAddr, robotName, editingName, robotNameEdit, camErr, camSrc,
       scan, connect, disconnect, saveName,
       runScenario, stopDrill, deleteScenario, openEditor, addBall, removeBall, saveScenario,
       clamp, clampCal,
