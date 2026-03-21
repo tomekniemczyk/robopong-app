@@ -227,9 +227,25 @@
         <button class="btn btn-danger"   :disabled="!connected" @click="calStop">⏹ Stop</button>
       </div>
 
-      <button class="btn btn-ghost" style="width:100%;margin-top:10px;font-size:13px" @click="calSave">
-        💾 Zapisz preset kalibracji
-      </button>
+      <div style="margin-top:12px">
+        <div class="row" style="margin-bottom:8px">
+          <span style="font-size:12px;font-weight:600;color:var(--muted)">PRESETY</span>
+          <div class="spacer"></div>
+          <button class="btn btn-primary" style="font-size:12px;padding:6px 12px" @click="savePreset">+ Zapisz jako…</button>
+        </div>
+        <ul class="device-list" v-if="presets.length">
+          <li v-for="p in presets" :key="p.id" style="align-items:center">
+            <div style="flex:1;min-width:0">
+              <span style="font-weight:600;font-size:13px">{{ p.name }}</span>
+              <span v-if="p.is_default" style="margin-left:6px;font-size:10px;color:var(--accent);text-transform:uppercase">domyślny</span>
+            </div>
+            <button class="btn btn-ghost btn-icon" style="font-size:11px;padding:4px 8px" @click="loadPreset(p)" title="Wczytaj">↓</button>
+            <button class="btn btn-ghost btn-icon" style="font-size:11px;padding:4px 8px" @click="setDefaultPreset(p.id)" title="Ustaw domyślny" v-if="!p.is_default">★</button>
+            <button class="btn btn-ghost btn-icon" style="font-size:11px;padding:4px 8px;color:var(--danger)" @click="deletePreset(p.id)" title="Usuń">✕</button>
+          </li>
+        </ul>
+        <div v-else style="font-size:12px;color:var(--muted);padding:6px 0">Brak zapisanych presetów.</div>
+      </div>
 
       <div class="log-box" ref="logBox">
         <div v-for="(l, i) in robotLog" :key="i">{{ l }}</div>
@@ -389,6 +405,7 @@ createApp({
     const cal      = reactive({ top_speed: 50, bot_speed: 50, oscillation: 128, height: 128, rotation: 128, wait_ms: 1500 })
     const calDirty = ref(true)   // true = parametry nie zostały jeszcze wysłane
     const helpOpen = ref(false)
+    const presets  = ref([])
 
     const lastAddr      = ref(localStorage.getItem('lastAddr') || '')
     const robotName     = ref(localStorage.getItem('robotName') || '')
@@ -537,9 +554,33 @@ createApp({
       const j = await r.json()
       Object.assign(cal, j)
     }
-    async function calSave() {
-      await fetch('/api/calibration', { method:'PUT', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ ...cal }) })
-      showToast('💾 Preset zapisany')
+    async function loadPresets() {
+      const r = await fetch('/api/presets')
+      presets.value = await r.json()
+    }
+    async function savePreset() {
+      const name = prompt('Nazwa presetu:')
+      if (!name) return
+      await fetch('/api/presets', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name, ...cal, is_default: presets.value.length === 0 }),
+      })
+      await loadPresets()
+      showToast('💾 Preset zapisany: ' + name)
+    }
+    function loadPreset(p) {
+      Object.assign(cal, { top_speed: p.top_speed, bot_speed: p.bot_speed, oscillation: p.oscillation, height: p.height, rotation: p.rotation, wait_ms: p.wait_ms })
+      calDirty.value = true
+      showToast('Wczytano: ' + p.name)
+    }
+    async function setDefaultPreset(id) {
+      await fetch(`/api/presets/${id}/default`, { method: 'PUT' })
+      await loadPresets()
+    }
+    async function deletePreset(id) {
+      await fetch(`/api/presets/${id}`, { method: 'DELETE' })
+      await loadPresets()
     }
     function calReset() {
       Object.assign(cal, { top_speed: 50, bot_speed: 50, oscillation: 128, height: 128, rotation: 128, wait_ms: 1500 })
@@ -588,7 +629,7 @@ createApp({
       return 'piłek'
     }
 
-    onMounted(() => { wsConnect(); loadScenarios(); loadCal() })
+    onMounted(() => { wsConnect(); loadScenarios(); loadCal(); loadPresets() })
 
     return {
       page, connected, firmware, device, scanning, devices, scenarios,
@@ -601,7 +642,8 @@ createApp({
       scan, connect, disconnect, saveName, usbScan, usbConnect, reconnectLast,
       runScenario, stopDrill, deleteScenario, openEditor, addBall, removeBall, saveScenario,
       clamp, clampCal,
-      calSend, calThrow, calStop, calSave, calReset, loadCal,
+      calSend, calThrow, calStop, calReset, loadCal,
+      presets, savePreset, loadPreset, setDefaultPreset, deletePreset,
       ballWord,
     }
   }

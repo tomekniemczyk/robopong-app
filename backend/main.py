@@ -10,6 +10,7 @@ from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 
 import db
+import presets
 from models import Ball, ScenarioIn
 from robot import Robot
 
@@ -70,8 +71,12 @@ def _save_last_addr(addr: str):
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    global robot
+    global robot, DEFAULT_CAL
     db.init()
+    presets.init_presets()
+    default = presets.get_default_preset()
+    if default:
+        DEFAULT_CAL = {k: default[k] for k in ("top_speed", "bot_speed", "oscillation", "height", "rotation", "wait_ms")}
     robot = Robot(on_event=broadcast)
     last = _load_last_addr()
     if last:
@@ -174,6 +179,31 @@ def save_calibration(body: dict):
     cal = {k: v for k, v in body.items() if k in allowed}
     _save_cal(cal)
     return cal
+
+
+# ── REST — presety kalibracji ─────────────────────────────────────────────────
+
+@app.get("/api/presets")
+def list_presets():
+    return presets.get_presets()
+
+
+@app.post("/api/presets", status_code=201)
+def create_preset(body: dict):
+    allowed = {"top_speed", "bot_speed", "oscillation", "height", "rotation", "wait_ms"}
+    data = {k: v for k, v in body.items() if k in allowed}
+    new_id = presets.save_preset(body["name"], data, body.get("is_default", False))
+    return {"id": new_id, "name": body["name"], **data, "is_default": body.get("is_default", False)}
+
+
+@app.put("/api/presets/{preset_id}/default", status_code=204)
+def set_default_preset(preset_id: int):
+    presets.set_default(preset_id)
+
+
+@app.delete("/api/presets/{preset_id}", status_code=204)
+def remove_preset(preset_id: int):
+    presets.delete_preset(preset_id)
 
 
 # ── REST — scenariusze ─────────────────────────────────────────────────────────
