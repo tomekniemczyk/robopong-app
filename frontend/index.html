@@ -416,7 +416,7 @@ createApp({
     const editRepeat = ref(1)
     const editBalls  = ref([])
 
-    const cal           = reactive({ top_speed: 50, bot_speed: 50, oscillation: 128, height: 128, rotation: 128, wait_ms: 1500 })
+    const cal           = reactive({ top_speed: 75, bot_speed: 75, oscillation: 150, height: 170, rotation: 150, wait_ms: 1500 })
     const calDirty      = ref(true)
     const calMotorLocked = ref(true)   // domyślnie zablokowane — kalibracja = pozycja głowicy
     const helpOpen      = ref(false)
@@ -478,7 +478,7 @@ createApp({
 
     // ── BLE ────────────────────────────────────────────────────────
     // Filtrujemy tylko roboty Donic/Newgy po nazwie BLE
-    const ROBOT_FILTER = /robopong|newgy|donic|rp3|rp\d/i
+    const ROBOT_FILTER = /robopong|newgy|nwgy|donic|rp3|rp\d/i
 
     function scan() { scanning.value = true; devices.value = []; send({ action: 'scan' }) }
     function connect(address) {
@@ -536,7 +536,7 @@ createApp({
       page.value = 'editor'
     }
     function addBall() {
-      editBalls.value.push({ top_speed: 50, bot_speed: 50, oscillation: 128, height: 128, rotation: 128, wait_ms: 1500 })
+      editBalls.value.push({ top_speed: 75, bot_speed: 75, oscillation: 150, height: 170, rotation: 150, wait_ms: 1500 })
     }
     function removeBall(i) { editBalls.value.splice(i, 1) }
 
@@ -598,7 +598,7 @@ createApp({
       await loadPresets()
     }
     function calReset() {
-      Object.assign(cal, { top_speed: 50, bot_speed: 50, oscillation: 128, height: 128, rotation: 128, wait_ms: 1500 })
+      Object.assign(cal, { top_speed: 75, bot_speed: 75, oscillation: 150, height: 170, rotation: 150, wait_ms: 1500 })
       calDirty.value = true
     }
     function _clampAllCal() {

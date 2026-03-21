@@ -1,6 +1,7 @@
 import asyncio
 import glob
 import logging
+import subprocess
 import threading
 import time
 from typing import Callable, Dict, List, Optional
@@ -13,6 +14,78 @@ logger = logging.getLogger(__name__)
 MLDP_SERVICE   = "00035b03-58e6-07dd-021a-08123a000300"
 MLDP_DATA_CHAR = "00035b03-58e6-07dd-021a-08123a000301"
 MLDP_CTRL_CHAR = "00035b03-58e6-07dd-021a-08123a0003ff"
+
+
+# ─── BLE system helpers ─────────────────────────────────────────────────────
+
+def _bt_cmd(*args, timeout=5) -> str:
+    try:
+        r = subprocess.run(["bluetoothctl", *args], capture_output=True, text=True, timeout=timeout)
+        return r.stdout + r.stderr
+    except Exception as e:
+        logger.warning("bluetoothctl %s: %s", args, e)
+        return ""
+
+def _bt_disconnect(address: str):
+    _bt_cmd("disconnect", address)
+
+def _bt_is_paired(address: str) -> bool:
+    return "Paired: yes" in _bt_cmd("info", address)
+
+def _bt_pair_dbus(address: str) -> bool:
+    try:
+        import dbus, dbus.mainloop.glib, dbus.service
+        from gi.repository import GLib
+
+        OBJ_PATH, AGENT_IF = "/robopong/agent", "org.bluez.Agent1"
+        dbus.mainloop.glib.DBusGMainLoop(set_as_default=True)
+        bus = dbus.SystemBus()
+
+        class Agent(dbus.service.Object):
+            @dbus.service.method(AGENT_IF, in_signature="", out_signature="")
+            def Release(self): pass
+            @dbus.service.method(AGENT_IF, in_signature="os", out_signature="")
+            def AuthorizeService(self, device, uuid): pass
+            @dbus.service.method(AGENT_IF, in_signature="o", out_signature="s")
+            def RequestPinCode(self, device): return "0000"
+            @dbus.service.method(AGENT_IF, in_signature="o", out_signature="u")
+            def RequestPasskey(self, device): return dbus.UInt32(0)
+            @dbus.service.method(AGENT_IF, in_signature="ouq", out_signature="")
+            def DisplayPasskey(self, device, passkey, entered): pass
+            @dbus.service.method(AGENT_IF, in_signature="ou", out_signature="")
+            def RequestConfirmation(self, device, passkey): pass
+            @dbus.service.method(AGENT_IF, in_signature="o", out_signature="")
+            def RequestAuthorization(self, device): pass
+            @dbus.service.method(AGENT_IF, in_signature="", out_signature="")
+            def Cancel(self): pass
+
+        agent = Agent(bus, OBJ_PATH)
+        mgr = dbus.Interface(bus.get_object("org.bluez", "/org/bluez"), "org.bluez.AgentManager1")
+        mgr.RegisterAgent(OBJ_PATH, "NoInputNoOutput")
+        mgr.RequestDefaultAgent(OBJ_PATH)
+
+        result = {"ok": False}
+        mainloop = GLib.MainLoop()
+
+        def do_pair():
+            dev_path = f"/org/bluez/hci0/dev_{address.replace(':', '_')}"
+            try:
+                props = dbus.Interface(bus.get_object("org.bluez", dev_path), "org.freedesktop.DBus.Properties")
+                props.Set("org.bluez.Device1", "Trusted", dbus.Boolean(True))
+                dbus.Interface(bus.get_object("org.bluez", dev_path), "org.bluez.Device1").Pair()
+                result["ok"] = bool(props.Get("org.bluez.Device1", "Paired"))
+            except Exception as e:
+                logger.error("dbus pair: %s", e)
+            GLib.idle_add(mainloop.quit)
+
+        threading.Thread(target=do_pair, daemon=True).start()
+        mainloop.run()
+        try: mgr.UnregisterAgent(OBJ_PATH)
+        except Exception: pass
+        return result["ok"]
+    except Exception as e:
+        logger.error("_bt_pair_dbus: %s", e)
+        return False
 
 
 # ─── USB transport (FTDI via pyserial) ────────────────────────────────────────
@@ -143,6 +216,8 @@ class Robot:
         self.device:       str = ""
         self._last_addr:   str = ""
         self._auto_reconnect: bool = False
+        self._health_task: Optional[asyncio.Task] = None
+        self._last_notify: float = 0
 
         # USB
         self._usb = _USBTransport()
@@ -169,16 +244,38 @@ class Robot:
         return await self._do_connect(address)
 
     async def _do_connect(self, address: str) -> bool:
+        if self._client:
+            try: await self._client.disconnect()
+            except Exception: pass
+            self._client = None
+        await asyncio.to_thread(_bt_disconnect, address)
+        await asyncio.sleep(1)
+
+        if not await asyncio.to_thread(_bt_is_paired, address):
+            logger.info("parowanie z %s ...", address)
+            self._emit("pairing", {"address": address})
+            try: await BleakScanner.find_device_by_address(address, timeout=10)
+            except Exception: pass
+            if not await asyncio.to_thread(_bt_pair_dbus, address):
+                self._emit("error", {"message": "Parowanie BLE nie powiodło się"})
+                return False
+            logger.info("sparowano z %s", address)
+            await asyncio.to_thread(_bt_disconnect, address)
+            await asyncio.sleep(2)
+
         try:
-            self._client = BleakClient(
-                address,
-                disconnected_callback=self._on_disconnect,
-            )
+            dev = await BleakScanner.find_device_by_address(address, timeout=12)
+            if not dev:
+                self._emit("error", {"message": f"Nie znaleziono {address} w skanie BLE"})
+                return False
+            self._client = BleakClient(dev, disconnected_callback=self._on_disconnect)
             await self._client.connect(timeout=15.0)
             await self._client.start_notify(MLDP_DATA_CHAR, self._on_notify)
             self.device = address
+            self._last_notify = asyncio.get_event_loop().time()
             self._push_status()
             await self._handshake()
+            self._start_health_monitor()
             return True
         except (BleakError, Exception) as e:
             logger.error("BLE connect: %s", e)
@@ -197,9 +294,29 @@ class Robot:
             self._emit("error", {"message": f"Nie udało się połączyć USB na {port}"})
         return ok
 
+    async def reset_ble(self):
+        logger.info("reset BLE dla %s", self._last_addr)
+        self._emit("ble_reset", {"address": self._last_addr})
+        addr = self._last_addr
+        self._stop_health_monitor()
+        if self._client:
+            try: await self._client.disconnect()
+            except Exception: pass
+            self._client = None
+        self.firmware = 0
+        self.device = ""
+        self._push_status()
+        await asyncio.to_thread(_bt_disconnect, addr)
+        await asyncio.sleep(2)
+        if self._auto_reconnect and addr:
+            if not await self._do_connect(addr):
+                await asyncio.sleep(5)
+                await self._do_connect(addr)
+
     async def disconnect(self):
         self._auto_reconnect = False
         self._stop_drill_nowait()
+        self._stop_health_monitor()
         if self._reconnect and not self._reconnect.done():
             self._reconnect.cancel()
         # BLE
@@ -286,6 +403,31 @@ class Robot:
         self._stop_drill_nowait()
         asyncio.create_task(self._write("H"))
 
+    # ── health monitor ────────────────────────────────────────────────────────
+
+    def _start_health_monitor(self):
+        self._stop_health_monitor()
+        self._health_task = asyncio.create_task(self._health_loop())
+
+    def _stop_health_monitor(self):
+        if self._health_task and not self._health_task.done():
+            self._health_task.cancel()
+
+    async def _health_loop(self):
+        try:
+            while True:
+                await asyncio.sleep(10)
+                if not self.is_connected or self._usb.is_connected:
+                    break
+                await self._write("Z")
+                await asyncio.sleep(3)
+                if asyncio.get_event_loop().time() - self._last_notify > 30:
+                    logger.warning("brak odpowiedzi >30s — reset BLE")
+                    await self.reset_ble()
+                    break
+        except asyncio.CancelledError:
+            pass
+
     # ── internal ──────────────────────────────────────────────────────────────
 
     async def _handshake(self):
@@ -296,6 +438,8 @@ class Robot:
         await asyncio.sleep(0.4)
         await self._write("F")
         await asyncio.sleep(0.5)
+        await self._write("J02")
+        await asyncio.sleep(0.3)
 
     async def _write(self, cmd: str):
         # USB takes priority if connected
@@ -321,6 +465,7 @@ class Robot:
         text = data.decode("utf-8", errors="ignore").strip()
         if not text:
             return
+        self._last_notify = asyncio.get_event_loop().time()
         self._emit("robot_response", {"data": text})
         try:
             v = int(text)
@@ -334,6 +479,7 @@ class Robot:
         self._client = None
         self.firmware = 0
         self.device = ""
+        self._stop_health_monitor()
         self._push_status()
         if self._auto_reconnect and self._last_addr:
             logger.info("BLE rozłączono — ponawiam z %s", self._last_addr)
@@ -348,15 +494,17 @@ class Robot:
         })
 
     async def _reconnect_loop(self):
-        delays = [5, 10, 15, 30, 30, 60]
+        delays = [2, 3, 5, 10, 15, 30, 30, 60]
         for delay in delays:
             await asyncio.sleep(delay)
             if not self._auto_reconnect:
                 return
             if self.is_connected:
                 return
-            logger.info("auto-reconnect BLE → %s", self._last_addr)
+            logger.info("auto-reconnect BLE → %s (za %ds)", self._last_addr, delay)
             self._emit("reconnecting", {"address": self._last_addr})
+            await asyncio.to_thread(_bt_disconnect, self._last_addr)
+            await asyncio.sleep(1)
             ok = await self._do_connect(self._last_addr)
             if ok:
                 logger.info("auto-reconnect OK")

@@ -38,7 +38,7 @@ def broadcast(event_type: str, data: dict):
 LAST_ADDR_FILE  = Path(__file__).parent / ".last_device"
 CAL_FILE        = Path(__file__).parent / ".calibration.json"
 
-DEFAULT_CAL = {"top_speed": 50, "bot_speed": 50, "oscillation": 128, "height": 128, "rotation": 128, "wait_ms": 1500}
+DEFAULT_CAL = {"top_speed": 75, "bot_speed": 75, "oscillation": 150, "height": 170, "rotation": 150, "wait_ms": 1500}
 
 
 def _load_cal() -> dict:
@@ -164,6 +164,9 @@ async def _handle(msg: dict, ws: WebSocket):
 
     elif action == "stop_drill":
         robot.stop_drill()
+
+    elif action == "reset_ble":
+        asyncio.create_task(robot.reset_ble())
 
 
 # ── REST — kalibracja ─────────────────────────────────────────────────────────
