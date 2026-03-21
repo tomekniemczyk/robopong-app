@@ -179,9 +179,6 @@
       </div>
     </div>
 
-    <div class="safety-warn">
-      ⚠ Wyślij parametry → poczekaj ~1.5 s → Rzut. Przycisk Rzut jest aktywny dopiero po wysłaniu.
-    </div>
 
     <div class="card">
       <div style="display:flex;align-items:center;gap:8px;margin-bottom:14px">
@@ -194,11 +191,11 @@
           <h3>Silniki</h3>
           <div class="field">
             <label>Góra &nbsp;<small style="text-transform:none;letter-spacing:0">-99…99</small></label>
-            <input type="number" v-model.number="cal.top_speed" min="-99" max="99" @change="clampCal('top_speed',-99,99)">
+            <input type="number" v-model.number="cal.top_speed" min="-99" max="99" @change="clampCal('top_speed',-99,99);calDirty=true">
           </div>
           <div class="field" style="margin-bottom:0">
             <label>Dół &nbsp;<small style="text-transform:none;letter-spacing:0">-99…99</small></label>
-            <input type="number" v-model.number="cal.bot_speed" min="-99" max="99" @change="clampCal('bot_speed',-99,99)">
+            <input type="number" v-model.number="cal.bot_speed" min="-99" max="99" @change="clampCal('bot_speed',-99,99);calDirty=true">
           </div>
         </div>
 
@@ -206,27 +203,27 @@
           <h3>Głowica</h3>
           <div class="field">
             <label>Oscylacja &nbsp;<small style="text-transform:none;letter-spacing:0">0–255, 128=stop</small></label>
-            <input type="number" v-model.number="cal.oscillation" min="0" max="255" @change="clampCal('oscillation',0,255)">
+            <input type="number" v-model.number="cal.oscillation" min="0" max="255" @change="clampCal('oscillation',0,255);calDirty=true">
           </div>
           <div class="field">
             <label>Wysokość &nbsp;<small style="text-transform:none;letter-spacing:0">0–255, 128=środek</small></label>
-            <input type="number" v-model.number="cal.height" min="0" max="255" @change="clampCal('height',0,255)">
+            <input type="number" v-model.number="cal.height" min="0" max="255" @change="clampCal('height',0,255);calDirty=true">
           </div>
           <div class="field" style="margin-bottom:0">
             <label>Rotacja &nbsp;<small style="text-transform:none;letter-spacing:0">0–255, 128=środek</small></label>
-            <input type="number" v-model.number="cal.rotation" min="0" max="255" @change="clampCal('rotation',0,255)">
+            <input type="number" v-model.number="cal.rotation" min="0" max="255" @change="clampCal('rotation',0,255);calDirty=true">
           </div>
         </div>
       </div>
 
       <div class="field" style="margin-top:14px">
         <label>Czas oczekiwania ms &nbsp;<small style="text-transform:none;letter-spacing:0">200–10000</small></label>
-        <input type="number" v-model.number="cal.wait_ms" min="200" max="10000" @change="clampCal('wait_ms',200,10000)">
+        <input type="number" v-model.number="cal.wait_ms" min="200" max="10000" @change="clampCal('wait_ms',200,10000);calDirty=true">
       </div>
 
       <div class="cal-actions">
-        <button class="btn btn-primary"  :disabled="!connected" @click="calSend">📡 Wyślij</button>
-        <button class="btn btn-success"  :disabled="!connected || !calSent" @click="calThrow">🏓 Rzut</button>
+        <button class="btn btn-primary"  :disabled="!connected" @click="calSend" :style="calDirty ? 'opacity:1' : 'opacity:.45'">📡 Wyślij</button>
+        <button class="btn btn-success"  :disabled="!connected" @click="calThrow">🏓 {{ calDirty ? 'Wyślij + Rzut' : 'Rzut' }}</button>
         <button class="btn btn-danger"   :disabled="!connected" @click="calStop">⏹ Stop</button>
       </div>
 
@@ -389,8 +386,8 @@ createApp({
     const editRepeat = ref(1)
     const editBalls  = ref([])
 
-    const cal     = reactive({ top_speed: 50, bot_speed: 50, oscillation: 128, height: 128, rotation: 128, wait_ms: 1500 })
-    const calSent = ref(false)
+    const cal      = reactive({ top_speed: 50, bot_speed: 50, oscillation: 128, height: 128, rotation: 128, wait_ms: 1500 })
+    const calDirty = ref(true)   // true = parametry nie zostały jeszcze wysłane
     const helpOpen = ref(false)
 
     const lastAddr      = ref(localStorage.getItem('lastAddr') || '')
@@ -546,20 +543,32 @@ createApp({
     }
     function calReset() {
       Object.assign(cal, { top_speed: 50, bot_speed: 50, oscillation: 128, height: 128, rotation: 128, wait_ms: 1500 })
-      calSent.value = false
+      calDirty.value = true
+    }
+    function _clampAllCal() {
+      const limits = { top_speed:[-99,99], bot_speed:[-99,99], oscillation:[0,255], height:[0,255], rotation:[0,255], wait_ms:[200,10000] }
+      Object.keys(limits).forEach(k => clampCal(k, ...limits[k]))
     }
     function calSend() {
-      Object.keys(cal).forEach(k => {
-        const limits = { top_speed:[-99,99], bot_speed:[-99,99], oscillation:[0,255], height:[0,255], rotation:[0,255], wait_ms:[200,10000] }
-        if (limits[k]) clampCal(k, ...limits[k])
-      })
+      _clampAllCal()
       send({ action: 'set_ball', ball: { ...cal } })
       addLog(`→ top=${cal.top_speed} bot=${cal.bot_speed} osc=${cal.oscillation} h=${cal.height} r=${cal.rotation} ms=${cal.wait_ms}`)
-      calSent.value = true
+      calDirty.value = false
       showToast('📡 Wysłano')
     }
-    function calThrow() { send({ action:'throw' }); addLog('→ T (rzut)'); calSent.value = false; showToast('🏓 Rzut!') }
-    function calStop()  { send({ action:'stop' });  addLog('→ H (stop)'); calSent.value = false; showToast('⏹ Stop') }
+    function calThrow() {
+      if (calDirty.value) {
+        _clampAllCal()
+        send({ action: 'set_ball', ball: { ...cal } })
+        addLog(`→ top=${cal.top_speed} bot=${cal.bot_speed} osc=${cal.oscillation} h=${cal.height} r=${cal.rotation} ms=${cal.wait_ms}`)
+        calDirty.value = false
+        // daj chwilę robotowi na ustawienie silników przed rzutem
+        setTimeout(() => { send({ action:'throw' }); addLog('→ T (rzut)'); showToast('🏓 Rzut!') }, 300)
+      } else {
+        send({ action:'throw' }); addLog('→ T (rzut)'); showToast('🏓 Rzut!')
+      }
+    }
+    function calStop()  { send({ action:'stop' }); addLog('→ H (stop)'); showToast('⏹ Stop') }
 
     // ── helpers ────────────────────────────────────────────────────
     function addLog(line) {
@@ -586,7 +595,7 @@ createApp({
       toast, robotLog, logBox,
       drillRunning, drillScenario, drillBall, drillTotal, drillRun, drillMaxRepeat,
       editId, editName, editDesc, editRepeat, editBalls,
-      cal, calSent, helpOpen,
+      cal, calDirty, helpOpen,
       lastAddr, robotName, editingName, robotNameEdit, camErr, camSrc,
       transport, usbPorts, usbScanning,
       scan, connect, disconnect, saveName, usbScan, usbConnect, reconnectLast,
