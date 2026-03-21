@@ -188,14 +188,28 @@
 
       <div class="cal-grid">
         <div class="cal-section">
-          <h3>Silniki</h3>
+          <div style="display:flex;align-items:center;gap:6px;margin-bottom:8px">
+            <h3 style="margin:0">Silniki</h3>
+            <button class="btn btn-ghost btn-icon" style="padding:2px 8px;font-size:10px;margin-left:auto"
+              @click="calMotorLocked=!calMotorLocked"
+              :title="calMotorLocked ? 'Odblokuj silniki' : 'Zablokuj silniki'">
+              {{ calMotorLocked ? '🔒' : '🔓' }}
+            </button>
+          </div>
+          <div v-if="calMotorLocked" style="font-size:11px;color:var(--muted);margin-bottom:8px">
+            Zmień prędkość w presetach lub odblokuj 🔓
+          </div>
           <div class="field">
             <label>Góra &nbsp;<small style="text-transform:none;letter-spacing:0">-99…99</small></label>
-            <input type="number" v-model.number="cal.top_speed" min="-99" max="99" @change="clampCal('top_speed',-99,99);calDirty=true">
+            <input type="number" v-model.number="cal.top_speed" min="-99" max="99"
+              :disabled="calMotorLocked"
+              @change="clampCal('top_speed',-99,99);calDirty=true">
           </div>
           <div class="field" style="margin-bottom:0">
             <label>Dół &nbsp;<small style="text-transform:none;letter-spacing:0">-99…99</small></label>
-            <input type="number" v-model.number="cal.bot_speed" min="-99" max="99" @change="clampCal('bot_speed',-99,99);calDirty=true">
+            <input type="number" v-model.number="cal.bot_speed" min="-99" max="99"
+              :disabled="calMotorLocked"
+              @change="clampCal('bot_speed',-99,99);calDirty=true">
           </div>
         </div>
 
@@ -374,7 +388,7 @@
 
 <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
 <script>
-const { createApp, ref, reactive, onMounted, nextTick } = Vue
+const { createApp, ref, reactive, watch, onMounted, nextTick } = Vue
 
 createApp({
   setup() {
@@ -402,9 +416,10 @@ createApp({
     const editRepeat = ref(1)
     const editBalls  = ref([])
 
-    const cal      = reactive({ top_speed: 50, bot_speed: 50, oscillation: 128, height: 128, rotation: 128, wait_ms: 1500 })
-    const calDirty = ref(true)   // true = parametry nie zostały jeszcze wysłane
-    const helpOpen = ref(false)
+    const cal           = reactive({ top_speed: 50, bot_speed: 50, oscillation: 128, height: 128, rotation: 128, wait_ms: 1500 })
+    const calDirty      = ref(true)
+    const calMotorLocked = ref(true)   // domyślnie zablokowane — kalibracja = pozycja głowicy
+    const helpOpen      = ref(false)
     const presets  = ref([])
 
     const lastAddr      = ref(localStorage.getItem('lastAddr') || '')
@@ -611,6 +626,16 @@ createApp({
     }
     function calStop()  { send({ action:'stop' }); addLog('→ H (stop)'); showToast('⏹ Stop') }
 
+    // auto-rozgrzewka silników po wejściu w kalibrację
+    watch(page, (newPage, oldPage) => {
+      if (newPage === 'calibration' && oldPage !== 'calibration' && connected.value) {
+        _clampAllCal()
+        send({ action: 'set_ball', ball: { ...cal } })
+        calDirty.value = false
+        showToast('🔥 Silniki rozgrzewanie…')
+      }
+    })
+
     // ── helpers ────────────────────────────────────────────────────
     function addLog(line) {
       robotLog.value.push(line)
@@ -636,7 +661,7 @@ createApp({
       toast, robotLog, logBox,
       drillRunning, drillScenario, drillBall, drillTotal, drillRun, drillMaxRepeat,
       editId, editName, editDesc, editRepeat, editBalls,
-      cal, calDirty, helpOpen,
+      cal, calDirty, calMotorLocked, helpOpen,
       lastAddr, robotName, editingName, robotNameEdit, camErr, camSrc,
       transport, usbPorts, usbScanning,
       scan, connect, disconnect, saveName, usbScan, usbConnect, reconnectLast,
