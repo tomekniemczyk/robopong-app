@@ -124,7 +124,10 @@
 <div id="app">
 
   <div class="topbar">
-    <h1>🏓 RoboPong</h1>
+    <div>
+      <h1 style="margin:0">🏓 RoboPong</h1>
+      <div v-if="deployTime" style="font-size:9px;color:var(--muted);font-family:monospace;margin-top:-2px">deploy: {{ deployTime }}</div>
+    </div>
     <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;justify-content:flex-end">
       <!-- robot name -->
       <div v-if="connected && lastAddr" style="display:flex;flex-direction:column;align-items:flex-end;gap:1px">
@@ -648,6 +651,7 @@ createApp({
     const camErr        = ref(false)
     const camSrc        = `http://${window.location.hostname}:8081`
     const transport     = ref('ble')
+    const deployTime    = ref('')
     const usbPorts      = ref([])
     const usbScanning   = ref(false)
 
@@ -964,7 +968,10 @@ createApp({
       return 'piłek'
     }
 
-    onMounted(() => { wsConnect(); loadScenarios(); loadCal(); loadPresets() })
+    onMounted(() => {
+      wsConnect(); loadScenarios(); loadCal(); loadPresets()
+      fetch('/api/deploy-time').then(r=>r.json()).then(d => { deployTime.value = d.deploy_time }).catch(()=>{})
+    })
 
     return {
       page, connected, firmware, device, scanning, devices, scenarios,
@@ -973,7 +980,7 @@ createApp({
       editId, editName, editDesc, editRepeat, editBalls,
       cal, calDirty, calMotorLocked, helpOpen,
       lastAddr, robotName, editingName, robotNameEdit, camErr, camSrc,
-      transport, usbPorts, usbScanning,
+      transport, deployTime, usbPorts, usbScanning,
       myRole, mySessionId, sessionsList, showSessions,
       takeoverReq, takeoverCountdown, takeoverCooldown,
       scan, connect, disconnect, saveName, usbScan, usbConnect, reconnectLast,

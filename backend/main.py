@@ -217,6 +217,12 @@ async def lifespan(app: FastAPI):
 
 app = FastAPI(title="robopong-app", lifespan=lifespan)
 
+_DEPLOY_TIME = time.strftime("%Y-%m-%d %H:%M:%S")
+
+@app.get("/api/deploy-time")
+def deploy_time():
+    return {"deploy_time": _DEPLOY_TIME}
+
 
 # ── WebSocket ──────────────────────────────────────────────────────────────────
 
