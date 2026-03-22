@@ -69,6 +69,22 @@ def _save_last_addr(addr: str):
         pass
 
 
+async def _do_connect(addr: str) -> bool:
+    if addr.startswith("USB:"):
+        return await robot.connect_usb(addr[4:])
+    return await robot.connect(addr)
+
+
+async def _reconnect_loop():
+    while True:
+        await asyncio.sleep(15)
+        if clients and not robot.is_connected:
+            last = _load_last_addr()
+            if last:
+                logger.info("auto-reconnect → %s", last)
+                await _do_connect(last)
+
+
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     global robot, DEFAULT_CAL
@@ -81,7 +97,8 @@ async def lifespan(app: FastAPI):
     last = _load_last_addr()
     if last:
         logger.info("auto-connect przy starcie → %s", last)
-        asyncio.create_task(robot.connect(last))
+        asyncio.create_task(_do_connect(last))
+    asyncio.create_task(_reconnect_loop())
     yield
     if robot.is_connected:
         await robot.disconnect()
