@@ -350,18 +350,22 @@ class Robot:
         leds  = self._spin_leds(top, bot)
 
         if self.firmware >= 701:
-            await self._write(f"wTA{wait_ms // 10:03d}")
+            wta = f"wTA{wait_ms // 10:03d}"
+            await self._write(wta)
             await asyncio.sleep(0.08)
             cmd = f"A{dir_t}{spd_t:03d}{dir_b}{spd_b:03d}{osc:03d}{height:03d}{rotation:03d}{leds}"
         else:
             cmd = f"B{dir_t}{spd_t:03d}{dir_b}{spd_b:03d}{osc:03d}{height:03d}{rotation:03d}{leds}"
 
+        logger.debug("→ %s (top=%d bot=%d osc=%d h=%d rot=%d leds=%d)", cmd[:1], top, bot, osc, height, rotation, leds)
         await self._write(cmd)
 
     async def throw(self):
+        logger.debug("→ T")
         await self._write("T")
 
     async def stop(self):
+        logger.debug("→ H (stop)")
         self._stop_drill_nowait()
         await self._write("H")
 
@@ -444,13 +448,16 @@ class Robot:
     async def _write(self, cmd: str):
         # USB takes priority if connected
         if self._usb.is_connected:
+            logger.debug("USB → %s", cmd)
             loop = asyncio.get_event_loop()
             await loop.run_in_executor(None, self._usb.write, cmd)
             return
         # BLE fallback
         if not self._client or not self._client.is_connected:
+            logger.warning("_write(%s) — brak połączenia", cmd)
             return
         data = (cmd if cmd.endswith("\r") else cmd + "\r").encode()
+        logger.debug("BLE → %r (%d bytes)", cmd, len(data))
         try:
             if len(data) <= 20:
                 await self._client.write_gatt_char(MLDP_DATA_CHAR, data, response=False)
@@ -458,6 +465,7 @@ class Robot:
                 await self._client.write_gatt_char(MLDP_DATA_CHAR, data[:20], response=False)
                 await asyncio.sleep(0.2)
                 await self._client.write_gatt_char(MLDP_DATA_CHAR, data[20:], response=False)
+                logger.debug("BLE → chunk2 (%d bytes)", len(data) - 20)
         except BleakError as e:
             logger.error("BLE write: %s", e)
 

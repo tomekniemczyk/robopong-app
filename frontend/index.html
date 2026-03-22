@@ -102,6 +102,22 @@
 
     /* ── Cooldown hint ──────────────────────────────────────── */
     .cooldown-hint { font-size:11px; color:var(--muted); }
+
+    /* ── Server logs ─────────────────────────────────────────── */
+    .server-log-box {
+      background:var(--bg); border:1px solid var(--border); border-radius:9px;
+      padding:8px 10px; font-size:11px; font-family:'SF Mono','Fira Code',monospace;
+      color:var(--muted); height:calc(100vh - 180px); overflow-y:auto; line-height:1.5;
+    }
+    .slog-line { display:flex; gap:6px; padding:1px 0; border-bottom:1px solid rgba(255,255,255,.03); }
+    .slog-ts   { color:var(--muted); flex-shrink:0; opacity:.6; }
+    .slog-lvl  { flex-shrink:0; width:36px; font-weight:700; text-align:center; border-radius:3px; }
+    .slog-name { color:var(--accent); flex-shrink:0; max-width:120px; overflow:hidden; text-overflow:ellipsis; opacity:.7; }
+    .slog-msg  { flex:1; min-width:0; word-break:break-all; }
+    .slog-debug .slog-lvl { color:#8e8e93; }
+    .slog-info .slog-lvl  { color:#34c759; }
+    .slog-warning .slog-lvl { color:#ff9f0a; }
+    .slog-error .slog-lvl, .slog-critical .slog-lvl { color:#ff453a; }
   </style>
 </head>
 <body>
@@ -399,6 +415,32 @@
     </div>
   </div>
 
+  <!-- ── Logi serwera ──────────────────────────────────────────────────── -->
+  <div class="page" v-show="page === 'logs'">
+    <div class="row" style="margin-bottom:10px">
+      <span class="section-title" style="margin-bottom:0">Logi serwera</span>
+      <div class="spacer"></div>
+      <select v-model="logLevel" style="background:var(--surface);color:var(--text);border:1px solid var(--border);border-radius:8px;padding:4px 8px;font-size:11px">
+        <option value="DEBUG">DEBUG</option>
+        <option value="INFO">INFO</option>
+        <option value="WARNING">WARNING</option>
+        <option value="ERROR">ERROR</option>
+      </select>
+      <button class="btn btn-ghost" style="font-size:11px;padding:4px 10px;margin-left:6px" @click="serverLogs=[]">Wyczyść</button>
+    </div>
+    <div class="server-log-box" ref="serverLogBox">
+      <div v-for="(l, i) in filteredServerLogs" :key="i" class="slog-line" :class="'slog-' + l.level.toLowerCase()">
+        <span class="slog-ts">{{ l.ts }}</span>
+        <span class="slog-lvl">{{ l.level.substring(0,4) }}</span>
+        <span class="slog-name">{{ l.name }}</span>
+        <span class="slog-msg">{{ l.message }}</span>
+      </div>
+      <div v-if="!filteredServerLogs.length" style="color:var(--muted);font-size:12px;padding:20px;text-align:center">
+        Brak logów{{ logLevel !== 'DEBUG' ? ' (filtr: ' + logLevel + ')' : '' }}
+      </div>
+    </div>
+  </div>
+
   <!-- ── Kamera ────────────────────────────────────────────────────────── -->
   <div class="page" v-show="page === 'camera'">
     <div class="card">
@@ -528,6 +570,9 @@
     <button :class="{ active: page === 'connect' }" @click="page='connect'">
       <span class="nav-icon">📡</span>BLE
     </button>
+    <button :class="{ active: page === 'logs' }" @click="page='logs'">
+      <span class="nav-icon">🖥</span>Logi
+    </button>
   </nav>
 
   <!-- ── Toast ────────────────────────────────────────────────────────────── -->
@@ -551,6 +596,14 @@ createApp({
     const toast     = ref('')
     const robotLog  = ref([])
     const logBox    = ref(null)
+    const serverLogs   = ref([])
+    const serverLogBox = ref(null)
+    const logLevel     = ref('DEBUG')
+    const LOG_LEVELS   = { DEBUG: 0, INFO: 1, WARNING: 2, ERROR: 3, CRITICAL: 4 }
+    const filteredServerLogs = Vue.computed(() => {
+      const min = LOG_LEVELS[logLevel.value] || 0
+      return serverLogs.value.filter(l => (LOG_LEVELS[l.level] || 0) >= min)
+    })
 
     const drillRunning   = ref(false)
     const drillScenario  = ref('')
@@ -702,6 +755,10 @@ createApp({
         calDirty.value = false
       } else if (m.type === 'info') {
         showToast(m.message)
+      } else if (m.type === 'server_log') {
+        serverLogs.value.push({ ts: m.ts, level: m.level, name: m.name, message: m.message })
+        if (serverLogs.value.length > 500) serverLogs.value.splice(0, serverLogs.value.length - 500)
+        nextTick(() => { if (serverLogBox.value) serverLogBox.value.scrollTop = serverLogBox.value.scrollHeight })
       }
     }
 
@@ -882,7 +939,7 @@ createApp({
 
     return {
       page, connected, firmware, device, scanning, devices, scenarios,
-      toast, robotLog, logBox,
+      toast, robotLog, logBox, serverLogs, serverLogBox, logLevel, filteredServerLogs,
       drillRunning, drillScenario, drillBall, drillTotal, drillRun, drillMaxRepeat,
       editId, editName, editDesc, editRepeat, editBalls,
       cal, calDirty, calMotorLocked, helpOpen,
