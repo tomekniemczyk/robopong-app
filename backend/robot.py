@@ -131,9 +131,9 @@ class _USBTransport:
             s.rts = True
             s.dtr = True
             time.sleep(0.1)
-            s.write(b"Z\r\n")
+            s.write(b"\x5a")  # raw byte wake-up, NOT "Z\r\n"
             time.sleep(0.25)
-            s.write(b"Z\r\n")
+            s.write(b"\x5a")
             time.sleep(0.25)
             s.close()
 
@@ -518,11 +518,20 @@ class Robot:
 
     @staticmethod
     def _spin_leds(top: int, bot: int) -> int:
-        diff = abs(top) - abs(bot)
-        for val, leds in ((60, 9), (40, 7), (20, 5), (10, 3), (1, 1)):
-            if abs(diff) >= val:
-                return leds
-        return 0
+        """LEDS enum: None=0, 1-4=Bottom, 5-8=Top (oryginał: ratio=|diff|/360)"""
+        diff = top - bot
+        if diff == 0:
+            return 0
+        ratio = abs(diff) / 360.0
+        if ratio <= 0.10:
+            level = 1
+        elif ratio <= 0.50:
+            level = 2
+        elif ratio <= 0.75:
+            level = 3
+        else:
+            level = 4
+        return level + 4 if diff > 0 else level  # top: 5-8, bottom: 1-4
 
     @property
     def is_connected(self) -> bool:

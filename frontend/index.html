@@ -285,22 +285,22 @@
           <li>Wartości ujemne odwracają kierunek silnika (mocniejszy spin)</li>
           <li>Im wyższe cyfry, tym szybsza piłka</li>
         </ul>
-        <p style="margin-bottom:8px"><strong style="color:var(--text)">Oscylacja:</strong> zakres <code>0…255</code>, środek = <code>128</code></p>
+        <p style="margin-bottom:8px"><strong style="color:var(--text)">Oscylacja:</strong> zakres <code>127–173</code>, środek = <code>150</code></p>
         <ul style="padding-left:16px;margin-bottom:10px">
-          <li><code>128</code> — głowica stoi w miejscu</li>
-          <li><code>0</code> lub <code>255</code> — maksymalne wahania boczne</li>
-          <li>Im dalej od 128, tym szybsze wahania</li>
+          <li><code>150</code> — głowica stoi w miejscu (centrum)</li>
+          <li><code>173</code> — pełne wychylenie w lewo</li>
+          <li><code>127</code> — pełne wychylenie w prawo</li>
         </ul>
-        <p style="margin-bottom:8px"><strong style="color:var(--text)">Wysokość:</strong> zakres <code>0…255</code>, środek = <code>128</code></p>
+        <p style="margin-bottom:8px"><strong style="color:var(--text)">Wysokość:</strong> zakres <code>75–210</code>, środek = <code>150</code></p>
         <ul style="padding-left:16px;margin-bottom:10px">
-          <li><code>128</code> — środkowa pozycja głowicy</li>
-          <li><code>80</code> — wyżej (piłka w górę)</li>
-          <li><code>180</code> — niżej (piłka nisko)</li>
+          <li><code>150</code> — środkowa pozycja głowicy</li>
+          <li><code>75</code> — najniżej</li>
+          <li><code>210</code> — najwyżej</li>
         </ul>
-        <p style="margin-bottom:8px"><strong style="color:var(--text)">Rotacja:</strong> zakres <code>0…255</code>, środek = <code>128</code></p>
+        <p style="margin-bottom:8px"><strong style="color:var(--text)">Rotacja:</strong> zakres <code>90–210</code>, środek = <code>150</code></p>
         <ul style="padding-left:16px;margin-bottom:10px">
-          <li><code>128</code> — głowica skierowana prosto</li>
-          <li>Odchylenie od 128 obraca głowicę w lewo / prawo</li>
+          <li><code>150</code> — głowica skierowana prosto</li>
+          <li><code>90</code> — max w lewo, <code>210</code> — max w prawo</li>
         </ul>
         <p style="margin-bottom:4px"><strong style="color:var(--text)">Czas oczekiwania (ms):</strong></p>
         <ul style="padding-left:16px">
@@ -349,15 +349,15 @@
         <div class="cal-section">
           <h3>Głowica</h3>
           <div class="field">
-            <label>Oscylacja &nbsp;<small style="text-transform:none;letter-spacing:0">0–255, 128=stop</small></label>
+            <label>Oscylacja &nbsp;<small style="text-transform:none;letter-spacing:0">127–173, 150=środek</small></label>
             <input type="number" v-model.number="cal.oscillation" min="0" max="255" @change="clampCal('oscillation',0,255);calDirty=true">
           </div>
           <div class="field">
-            <label>Wysokość &nbsp;<small style="text-transform:none;letter-spacing:0">0–255, 128=środek</small></label>
+            <label>Wysokość &nbsp;<small style="text-transform:none;letter-spacing:0">75–210, 150=środek</small></label>
             <input type="number" v-model.number="cal.height" min="0" max="255" @change="clampCal('height',0,255);calDirty=true">
           </div>
           <div class="field" style="margin-bottom:0">
-            <label>Rotacja &nbsp;<small style="text-transform:none;letter-spacing:0">0–255, 128=środek</small></label>
+            <label>Rotacja &nbsp;<small style="text-transform:none;letter-spacing:0">90–210, 150=środek</small></label>
             <input type="number" v-model.number="cal.rotation" min="0" max="255" @change="clampCal('rotation',0,255);calDirty=true">
           </div>
         </div>

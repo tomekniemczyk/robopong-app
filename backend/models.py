@@ -4,11 +4,11 @@ from typing import List
 
 class Ball(BaseModel):
     top_speed:   int = Field(default=80,   ge=-249, le=249)
-    bot_speed:   int = Field(default=80,   ge=-249, le=249)
-    oscillation: int = Field(default=128,  ge=0,    le=255)
-    height:      int = Field(default=128,  ge=0,    le=255)
-    rotation:    int = Field(default=128,  ge=0,    le=255)
-    wait_ms:     int = Field(default=1500, ge=200,  le=10000)
+    bot_speed:   int = Field(default=0,    ge=-249, le=249)
+    oscillation: int = Field(default=150,  ge=0,    le=255)
+    height:      int = Field(default=150,  ge=0,    le=255)
+    rotation:    int = Field(default=150,  ge=0,    le=255)
+    wait_ms:     int = Field(default=1000, ge=200,  le=10000)
 
 
 class ScenarioIn(BaseModel):
