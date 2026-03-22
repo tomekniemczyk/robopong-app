@@ -86,19 +86,35 @@ def _broadcast_sessions():
 LAST_ADDR_FILE = Path(__file__).parent / ".last_device"
 CAL_FILE       = Path(__file__).parent / ".calibration.json"
 
-DEFAULT_CAL = {"top_speed": 50, "bot_speed": 50, "oscillation": 128, "height": 128, "rotation": 128, "wait_ms": 1500}
+# Domyślne wartości kalibracji z MSI (FillRobot: Top=80, Bot=0, h/osc/rot=128)
+# Używamy bot=80 (nie 0) bo kalibracja wymaga obu silników do oceny lotu piłki.
+# Zakres prędkości zmieniony na -249..249 — SpeedCAL target w MSI = Top=170 (raw 682).
+DEFAULT_CAL = {"top_speed": 160, "bot_speed": 0, "oscillation": 150, "height": 183, "rotation": 150, "wait_ms": 1000}
 
 
-def _load_cal() -> dict:
+def _load_cal(addr: str = "") -> dict:
     try:
-        return json.loads(CAL_FILE.read_text())
+        raw = json.loads(CAL_FILE.read_text())
+        # Stary format płaski → automatyczna migracja
+        if "top_speed" in raw:
+            return raw
+        return raw.get(addr) or raw.get("_default_") or DEFAULT_CAL.copy()
     except Exception:
         return DEFAULT_CAL.copy()
 
 
-def _save_cal(data: dict):
+def _save_cal(data: dict, addr: str = ""):
     try:
-        CAL_FILE.write_text(json.dumps(data))
+        try:
+            raw = json.loads(CAL_FILE.read_text())
+            if "top_speed" in raw:
+                raw = {"_default_": raw}  # migracja
+        except Exception:
+            raw = {}
+        key = addr or "_default_"
+        raw[key] = data
+        raw["_default_"] = data   # zawsze aktualizuj domyślny przy zapisie
+        CAL_FILE.write_text(json.dumps(raw))
     except Exception:
         pass
 
@@ -225,6 +241,7 @@ async def _handle(msg: dict, ws: WebSocket):
         if ok:
             _save_last_addr(msg["address"])
             _last_activity = time.monotonic()
+            broadcast("calibration_loaded", {"cal": _load_cal(msg["address"])})
         else:
             await _send(ws, "error", {"message": "Nie można połączyć z robotem"})
 
@@ -239,8 +256,10 @@ async def _handle(msg: dict, ws: WebSocket):
     elif action == "usb_connect":
         ok = await robot.connect_usb(msg["port"])
         if ok:
-            _save_last_addr(f"USB:{msg['port']}")
+            addr = f"USB:{msg['port']}"
+            _save_last_addr(addr)
             _last_activity = time.monotonic()
+            broadcast("calibration_loaded", {"cal": _load_cal(addr)})
 
     elif action == "usb_disconnect":
         _save_last_addr("")
@@ -323,14 +342,16 @@ async def _handle(msg: dict, ws: WebSocket):
 
 @app.get("/api/calibration")
 def get_calibration():
-    return _load_cal()
+    addr = _load_last_addr() if robot.is_connected else ""
+    return _load_cal(addr)
 
 
 @app.put("/api/calibration")
 def save_calibration(body: dict):
     allowed = {"top_speed", "bot_speed", "oscillation", "height", "rotation", "wait_ms"}
     cal = {k: v for k, v in body.items() if k in allowed}
-    _save_cal(cal)
+    addr = _load_last_addr() if robot.is_connected else ""
+    _save_cal(cal, addr)
     return cal
 
 

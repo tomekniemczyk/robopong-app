@@ -565,7 +565,7 @@ createApp({
     const editRepeat = ref(1)
     const editBalls  = ref([])
 
-    const cal            = reactive({ top_speed: 80, bot_speed: 80, oscillation: 128, height: 128, rotation: 128, wait_ms: 1000 })
+    const cal            = reactive({ top_speed: 160, bot_speed: 0, oscillation: 150, height: 183, rotation: 150, wait_ms: 1000 })
     const calDirty       = ref(true)
     const calMotorLocked = ref(true)
     const helpOpen       = ref(false)
@@ -827,7 +827,7 @@ createApp({
       await loadPresets()
     }
     function calReset() {
-      Object.assign(cal, { top_speed: 80, bot_speed: 80, oscillation: 128, height: 128, rotation: 128, wait_ms: 1000 })
+      Object.assign(cal, { top_speed: 160, bot_speed: 0, oscillation: 150, height: 183, rotation: 150, wait_ms: 1000 })
       calDirty.value = true
     }
     function _clampAllCal() {
