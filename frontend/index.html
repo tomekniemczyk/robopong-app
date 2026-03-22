@@ -331,63 +331,79 @@
 
     <div class="card" :class="{ 'observer-lock': myRole !== 'controller' }">
       <div style="display:flex;align-items:center;gap:8px;margin-bottom:14px">
-        <h2 style="flex:1">Parametry piłki</h2>
+        <h2 style="flex:1">Kalibracja</h2>
         <button class="btn btn-ghost" style="padding:7px 14px;font-size:12px" @click="calReset" :disabled="myRole !== 'controller'">↺ Reset</button>
       </div>
 
-      <div class="cal-grid">
-        <div class="cal-section">
-          <div style="display:flex;align-items:center;gap:6px;margin-bottom:8px">
-            <h3 style="margin:0">Silniki</h3>
-            <button class="btn btn-ghost btn-icon" style="padding:2px 8px;font-size:10px;margin-left:auto"
-              @click="calMotorLocked=!calMotorLocked"
-              :title="calMotorLocked ? 'Odblokuj silniki' : 'Zablokuj silniki'">
-              {{ calMotorLocked ? '🔒' : '🔓' }}
-            </button>
+      <!-- ── Etap 1: Pozycja głowicy (silniki OFF) ── -->
+      <div style="margin-bottom:16px">
+        <h3 style="margin-bottom:10px">1. Pozycja głowicy <small style="color:var(--muted);font-weight:400">(silniki wyłączone)</small></h3>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px">
+          <!-- Rotacja -->
+          <div style="text-align:center">
+            <div style="font-size:11px;color:var(--muted);margin-bottom:4px">Rotacja</div>
+            <div style="display:flex;align-items:center;justify-content:center;gap:4px">
+              <button class="btn btn-ghost" style="padding:6px 10px;font-size:16px" :disabled="!connected || myRole!=='controller'" @click="calStep('rotation',-2)">◀</button>
+              <span style="font-size:18px;font-weight:700;min-width:40px;display:inline-block;text-align:center">{{ cal.rotation }}</span>
+              <button class="btn btn-ghost" style="padding:6px 10px;font-size:16px" :disabled="!connected || myRole!=='controller'" @click="calStep('rotation',2)">▶</button>
+            </div>
+            <div style="font-size:10px;color:var(--muted)">90 ◀ 150 ▶ 210</div>
           </div>
-          <div v-if="calMotorLocked" style="font-size:11px;color:var(--muted);margin-bottom:8px">
-            Zmień prędkość w presetach lub odblokuj 🔓
+          <!-- Wysokość -->
+          <div style="text-align:center">
+            <div style="font-size:11px;color:var(--muted);margin-bottom:4px">Wysokość</div>
+            <div style="display:flex;align-items:center;justify-content:center;gap:4px">
+              <button class="btn btn-ghost" style="padding:6px 10px;font-size:16px" :disabled="!connected || myRole!=='controller'" @click="calStep('height',-2)">▼</button>
+              <span style="font-size:18px;font-weight:700;min-width:40px;display:inline-block;text-align:center">{{ cal.height }}</span>
+              <button class="btn btn-ghost" style="padding:6px 10px;font-size:16px" :disabled="!connected || myRole!=='controller'" @click="calStep('height',2)">▲</button>
+            </div>
+            <div style="font-size:10px;color:var(--muted)">75 ▼ 150 ▲ 210</div>
           </div>
-          <div class="field">
-            <label>Góra &nbsp;<small style="text-transform:none;letter-spacing:0">-249…249</small></label>
-            <input type="number" v-model.number="cal.top_speed" min="-249" max="249"
-              :disabled="calMotorLocked"
-              @change="clampCal('top_speed',-249,249);calDirty=true">
-          </div>
-          <div class="field" style="margin-bottom:0">
-            <label>Dół &nbsp;<small style="text-transform:none;letter-spacing:0">-249…249</small></label>
-            <input type="number" v-model.number="cal.bot_speed" min="-249" max="249"
-              :disabled="calMotorLocked"
-              @change="clampCal('bot_speed',-249,249);calDirty=true">
-          </div>
-        </div>
-
-        <div class="cal-section">
-          <h3>Głowica</h3>
-          <div class="field">
-            <label>Oscylacja &nbsp;<small style="text-transform:none;letter-spacing:0">127–173, 150=środek</small></label>
-            <input type="number" v-model.number="cal.oscillation" min="0" max="255" @change="clampCal('oscillation',0,255);calDirty=true">
-          </div>
-          <div class="field">
-            <label>Wysokość &nbsp;<small style="text-transform:none;letter-spacing:0">75–210, 150=środek</small></label>
-            <input type="number" v-model.number="cal.height" min="0" max="255" @change="clampCal('height',0,255);calDirty=true">
-          </div>
-          <div class="field" style="margin-bottom:0">
-            <label>Rotacja &nbsp;<small style="text-transform:none;letter-spacing:0">90–210, 150=środek</small></label>
-            <input type="number" v-model.number="cal.rotation" min="0" max="255" @change="clampCal('rotation',0,255);calDirty=true">
+          <!-- Oscylacja -->
+          <div style="text-align:center">
+            <div style="font-size:11px;color:var(--muted);margin-bottom:4px">Oscylacja</div>
+            <div style="display:flex;align-items:center;justify-content:center;gap:4px">
+              <button class="btn btn-ghost" style="padding:6px 10px;font-size:16px" :disabled="!connected || myRole!=='controller'" @click="calStep('oscillation',-2)">◀</button>
+              <span style="font-size:18px;font-weight:700;min-width:40px;display:inline-block;text-align:center">{{ cal.oscillation }}</span>
+              <button class="btn btn-ghost" style="padding:6px 10px;font-size:16px" :disabled="!connected || myRole!=='controller'" @click="calStep('oscillation',2)">▶</button>
+            </div>
+            <div style="font-size:10px;color:var(--muted)">173 ◀ 150 ▶ 127</div>
           </div>
         </div>
       </div>
 
-      <div class="field" style="margin-top:14px">
-        <label>Czas oczekiwania ms &nbsp;<small style="text-transform:none;letter-spacing:0">200–10000</small></label>
-        <input type="number" v-model.number="cal.wait_ms" min="200" max="10000" @change="clampCal('wait_ms',200,10000);calDirty=true">
-      </div>
-
-      <div class="cal-actions">
-        <button class="btn"              :disabled="!connected || myRole !== 'controller'" @click="calSend" style="background:var(--accent);color:#fff">📡 Wyślij</button>
-        <button class="btn btn-success"  :disabled="!connected || myRole !== 'controller'" @click="calThrow">🏓 Rzut</button>
-        <button class="btn btn-danger"   :disabled="!connected || myRole !== 'controller'" @click="calStop">⏹ Stop</button>
+      <!-- ── Etap 2: Silniki + Rzut ── -->
+      <div style="margin-bottom:14px">
+        <h3 style="margin-bottom:10px">2. Silniki + Rzut</h3>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px">
+          <div class="field" style="margin:0">
+            <label>Góra <small>-249…249</small></label>
+            <div style="display:flex;align-items:center;gap:4px">
+              <button class="btn btn-ghost" style="padding:4px 8px" :disabled="!connected || myRole!=='controller'" @click="calStep('top_speed',-10)">−</button>
+              <input type="number" v-model.number="cal.top_speed" min="-249" max="249" style="flex:1;text-align:center"
+                @change="clampCal('top_speed',-249,249);calDirty=true">
+              <button class="btn btn-ghost" style="padding:4px 8px" :disabled="!connected || myRole!=='controller'" @click="calStep('top_speed',10)">+</button>
+            </div>
+          </div>
+          <div class="field" style="margin:0">
+            <label>Dół <small>-249…249</small></label>
+            <div style="display:flex;align-items:center;gap:4px">
+              <button class="btn btn-ghost" style="padding:4px 8px" :disabled="!connected || myRole!=='controller'" @click="calStep('bot_speed',-10)">−</button>
+              <input type="number" v-model.number="cal.bot_speed" min="-249" max="249" style="flex:1;text-align:center"
+                @change="clampCal('bot_speed',-249,249);calDirty=true">
+              <button class="btn btn-ghost" style="padding:4px 8px" :disabled="!connected || myRole!=='controller'" @click="calStep('bot_speed',10)">+</button>
+            </div>
+          </div>
+        </div>
+        <div class="field" style="margin-bottom:10px">
+          <label>Czas oczekiwania ms <small>200–10000</small></label>
+          <input type="number" v-model.number="cal.wait_ms" min="200" max="10000" @change="clampCal('wait_ms',200,10000);calDirty=true">
+        </div>
+        <div class="cal-actions">
+          <button class="btn" :disabled="!connected || myRole !== 'controller'" @click="calSend" style="background:var(--accent);color:#fff">📡 Wyślij</button>
+          <button class="btn btn-success" :disabled="!connected || myRole !== 'controller'" @click="calThrow">🏓 Rzut</button>
+          <button class="btn btn-danger" :disabled="!connected || myRole !== 'controller'" @click="calStop">⏹ Stop</button>
+        </div>
       </div>
 
       <div style="margin-top:12px">
@@ -892,6 +908,23 @@ createApp({
       const limits = { top_speed:[-249,249], bot_speed:[-249,249], oscillation:[0,255], height:[0,255], rotation:[0,255], wait_ms:[200,10000] }
       Object.keys(limits).forEach(k => clampCal(k, ...limits[k]))
     }
+    // strzałki pozycji — throttled: zbiera kliknięcia, wysyła 1 request po 300ms ciszy
+    let _stepTimer = null
+    const HEAD_KEYS = new Set(['rotation', 'height', 'oscillation'])
+    function calStep(key, delta) {
+      cal[key] += delta
+      clampCal(key, ...(HEAD_KEYS.has(key) ? [0, 255] : [-249, 249]))
+      calDirty.value = true
+      clearTimeout(_stepTimer)
+      _stepTimer = setTimeout(() => {
+        // pozycja głowicy: wyślij set_ball z silnikami OFF
+        if (HEAD_KEYS.has(key)) {
+          send({ action: 'set_ball', ball: { top_speed: 0, bot_speed: 0, oscillation: cal.oscillation, height: cal.height, rotation: cal.rotation, wait_ms: 1000 } })
+          addLog(`→ pozycja: osc=${cal.oscillation} h=${cal.height} rot=${cal.rotation}`)
+        }
+      }, 300)
+    }
+
     function calSend() {
       _clampAllCal()
       send({ action: 'set_ball', ball: { ...cal } })
@@ -901,13 +934,15 @@ createApp({
     }
     function calThrow() {
       _clampAllCal()
+      // rozgrzewka: wyślij pełne parametry, poczekaj na rozpędzenie, rzuć, stop
       send({ action: 'set_ball', ball: { ...cal } })
-      addLog(`→ top=${cal.top_speed} bot=${cal.bot_speed} osc=${cal.oscillation} h=${cal.height} r=${cal.rotation} ms=${cal.wait_ms}`)
+      addLog(`→ top=${cal.top_speed} bot=${cal.bot_speed} osc=${cal.oscillation} h=${cal.height} r=${cal.rotation}`)
       calDirty.value = false
+      showToast('🔥 Rozgrzewka…')
       setTimeout(() => {
         send({ action:'throw' }); addLog('→ T (rzut)'); showToast('🏓 Rzut!')
         setTimeout(() => { send({ action:'stop' }); addLog('→ H (stop po rzucie)') }, 1500)
-      }, 300)
+      }, 1500)  // 1.5s rozgrzewka silników
     }
     function calStop()  { send({ action:'stop' }); addLog('→ H (stop)'); showToast('⏹ Stop') }
 
@@ -944,7 +979,7 @@ createApp({
       scan, connect, disconnect, saveName, usbScan, usbConnect, reconnectLast,
       runScenario, stopDrill, deleteScenario, openEditor, addBall, removeBall, saveScenario,
       clamp, clampCal,
-      calSend, calThrow, calStop, calReset, loadCal,
+      calStep, calSend, calThrow, calStop, calReset, loadCal,
       presets, savePreset, loadPreset, setDefaultPreset, deletePreset,
       roleLabel, rolePillClass,
       requestTakeover, cancelTakeover, respondTakeover, releaseControl,
