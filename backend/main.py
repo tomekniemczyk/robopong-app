@@ -85,7 +85,7 @@ def _broadcast_sessions():
 LAST_ADDR_FILE = Path(__file__).parent / ".last_device"
 CAL_FILE       = Path(__file__).parent / ".calibration.json"
 
-DEFAULT_CAL = {"top_speed": 75, "bot_speed": 75, "oscillation": 150, "height": 170, "rotation": 150, "wait_ms": 1500}
+DEFAULT_CAL = {"top_speed": 50, "bot_speed": 50, "oscillation": 128, "height": 128, "rotation": 128, "wait_ms": 1500}
 
 
 def _load_cal() -> dict:

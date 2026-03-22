@@ -369,8 +369,7 @@
       </div>
 
       <div class="cal-actions">
-        <button class="btn btn-primary"  :disabled="!connected || myRole !== 'controller'" @click="calSend" :style="calDirty ? 'opacity:1' : 'opacity:.45'">📡 Wyślij</button>
-        <button class="btn btn-success"  :disabled="!connected || myRole !== 'controller'" @click="calThrow">🏓 {{ calDirty ? 'Wyślij + Rzut' : 'Rzut' }}</button>
+        <button class="btn btn-success"  :disabled="!connected || myRole !== 'controller'" @click="calThrow">🏓 Rzut</button>
         <button class="btn btn-danger"   :disabled="!connected || myRole !== 'controller'" @click="calStop">⏹ Stop</button>
       </div>
 
@@ -566,7 +565,7 @@ createApp({
     const editRepeat = ref(1)
     const editBalls  = ref([])
 
-    const cal            = reactive({ top_speed: 75, bot_speed: 75, oscillation: 150, height: 170, rotation: 150, wait_ms: 1500 })
+    const cal            = reactive({ top_speed: 50, bot_speed: 50, oscillation: 128, height: 128, rotation: 128, wait_ms: 1500 })
     const calDirty       = ref(true)
     const calMotorLocked = ref(true)
     const helpOpen       = ref(false)
@@ -823,7 +822,7 @@ createApp({
       await loadPresets()
     }
     function calReset() {
-      Object.assign(cal, { top_speed: 75, bot_speed: 75, oscillation: 150, height: 170, rotation: 150, wait_ms: 1500 })
+      Object.assign(cal, { top_speed: 50, bot_speed: 50, oscillation: 128, height: 128, rotation: 128, wait_ms: 1500 })
       calDirty.value = true
     }
     function _clampAllCal() {
@@ -838,15 +837,11 @@ createApp({
       showToast('📡 Wysłano')
     }
     function calThrow() {
-      if (calDirty.value) {
-        _clampAllCal()
-        send({ action: 'set_ball', ball: { ...cal } })
-        addLog(`→ top=${cal.top_speed} bot=${cal.bot_speed} osc=${cal.oscillation} h=${cal.height} r=${cal.rotation} ms=${cal.wait_ms}`)
-        calDirty.value = false
-        setTimeout(() => { send({ action:'throw' }); addLog('→ T (rzut)'); showToast('🏓 Rzut!') }, 300)
-      } else {
-        send({ action:'throw' }); addLog('→ T (rzut)'); showToast('🏓 Rzut!')
-      }
+      _clampAllCal()
+      send({ action: 'set_ball', ball: { ...cal } })
+      addLog(`→ top=${cal.top_speed} bot=${cal.bot_speed} osc=${cal.oscillation} h=${cal.height} r=${cal.rotation} ms=${cal.wait_ms}`)
+      calDirty.value = false
+      setTimeout(() => { send({ action:'throw' }); addLog('→ T (rzut)'); showToast('🏓 Rzut!') }, 300)
     }
     function calStop()  { send({ action:'stop' }); addLog('→ H (stop)'); showToast('⏹ Stop') }
 
