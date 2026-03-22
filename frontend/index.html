@@ -582,7 +582,7 @@
 
 <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
 <script>
-const { createApp, ref, reactive, watch, onMounted, nextTick } = Vue
+const { createApp, ref, reactive, computed, watch, onMounted, nextTick } = Vue
 
 createApp({
   setup() {
@@ -600,7 +600,7 @@ createApp({
     const serverLogBox = ref(null)
     const logLevel     = ref('DEBUG')
     const LOG_LEVELS   = { DEBUG: 0, INFO: 1, WARNING: 2, ERROR: 3, CRITICAL: 4 }
-    const filteredServerLogs = Vue.computed(() => {
+    const filteredServerLogs = computed(() => {
       const min = LOG_LEVELS[logLevel.value] || 0
       return serverLogs.value.filter(l => (LOG_LEVELS[l.level] || 0) >= min)
     })
@@ -903,19 +903,12 @@ createApp({
       send({ action: 'set_ball', ball: { ...cal } })
       addLog(`→ top=${cal.top_speed} bot=${cal.bot_speed} osc=${cal.oscillation} h=${cal.height} r=${cal.rotation} ms=${cal.wait_ms}`)
       calDirty.value = false
-      setTimeout(() => { send({ action:'throw' }); addLog('→ T (rzut)'); showToast('🏓 Rzut!') }, 300)
+      setTimeout(() => {
+        send({ action:'throw' }); addLog('→ T (rzut)'); showToast('🏓 Rzut!')
+        setTimeout(() => { send({ action:'stop' }); addLog('→ H (stop po rzucie)') }, 1500)
+      }, 300)
     }
     function calStop()  { send({ action:'stop' }); addLog('→ H (stop)'); showToast('⏹ Stop') }
-
-    // auto-rozgrzewka silników po wejściu w kalibrację
-    watch(page, (newPage, oldPage) => {
-      if (newPage === 'calibration' && oldPage !== 'calibration' && connected.value && myRole.value === 'controller') {
-        _clampAllCal()
-        send({ action: 'set_ball', ball: { ...cal } })
-        calDirty.value = false
-        showToast('🔥 Silniki rozgrzewanie…')
-      }
-    })
 
     // ── helpers ────────────────────────────────────────────────
     function addLog(line) {
