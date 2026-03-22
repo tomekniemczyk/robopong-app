@@ -382,19 +382,19 @@
           <div class="field" style="margin:0">
             <label>Góra <small>-249…249</small></label>
             <div style="display:flex;align-items:center;gap:4px">
-              <button class="btn btn-ghost" style="padding:4px 8px" :disabled="!connected || myRole!=='controller'" @click="calStep('top_speed',-10)">−</button>
+              <button class="btn btn-ghost" style="padding:4px 8px" :disabled="!connected || myRole!=='controller'" @click="calStep('top_speed',-2)">−</button>
               <input type="number" v-model.number="cal.top_speed" min="-249" max="249" style="flex:1;text-align:center"
                 @change="clampCal('top_speed',-249,249);calDirty=true">
-              <button class="btn btn-ghost" style="padding:4px 8px" :disabled="!connected || myRole!=='controller'" @click="calStep('top_speed',10)">+</button>
+              <button class="btn btn-ghost" style="padding:4px 8px" :disabled="!connected || myRole!=='controller'" @click="calStep('top_speed',2)">+</button>
             </div>
           </div>
           <div class="field" style="margin:0">
             <label>Dół <small>-249…249</small></label>
             <div style="display:flex;align-items:center;gap:4px">
-              <button class="btn btn-ghost" style="padding:4px 8px" :disabled="!connected || myRole!=='controller'" @click="calStep('bot_speed',-10)">−</button>
+              <button class="btn btn-ghost" style="padding:4px 8px" :disabled="!connected || myRole!=='controller'" @click="calStep('bot_speed',-2)">−</button>
               <input type="number" v-model.number="cal.bot_speed" min="-249" max="249" style="flex:1;text-align:center"
                 @change="clampCal('bot_speed',-249,249);calDirty=true">
-              <button class="btn btn-ghost" style="padding:4px 8px" :disabled="!connected || myRole!=='controller'" @click="calStep('bot_speed',10)">+</button>
+              <button class="btn btn-ghost" style="padding:4px 8px" :disabled="!connected || myRole!=='controller'" @click="calStep('bot_speed',2)">+</button>
             </div>
           </div>
         </div>
@@ -638,7 +638,7 @@ createApp({
     const editRepeat = ref(1)
     const editBalls  = ref([])
 
-    const cal            = reactive({ top_speed: 160, bot_speed: 0, oscillation: 150, height: 183, rotation: 150, wait_ms: 1000 })
+    const cal            = reactive({ top_speed: 161, bot_speed: 0, oscillation: 150, height: 183, rotation: 150, wait_ms: 1000 })
     const calDirty       = ref(true)
     const calMotorLocked = ref(true)
     const helpOpen       = ref(false)
@@ -905,7 +905,7 @@ createApp({
       await loadPresets()
     }
     function calReset() {
-      Object.assign(cal, { top_speed: 160, bot_speed: 0, oscillation: 150, height: 183, rotation: 150, wait_ms: 1000 })
+      Object.assign(cal, { top_speed: 161, bot_speed: 0, oscillation: 150, height: 183, rotation: 150, wait_ms: 1000 })
       calDirty.value = true
     }
     function _clampAllCal() {

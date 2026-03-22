@@ -121,7 +121,7 @@ CAL_FILE       = Path(__file__).parent / ".calibration.json"
 # Domyślne wartości kalibracji z MSI (FillRobot: Top=80, Bot=0, h/osc/rot=128)
 # Używamy bot=80 (nie 0) bo kalibracja wymaga obu silników do oceny lotu piłki.
 # Zakres prędkości zmieniony na -249..249 — SpeedCAL target w MSI = Top=170 (raw 682).
-DEFAULT_CAL = {"top_speed": 160, "bot_speed": 0, "oscillation": 150, "height": 183, "rotation": 150, "wait_ms": 1000}
+DEFAULT_CAL = {"top_speed": 161, "bot_speed": 0, "oscillation": 150, "height": 183, "rotation": 150, "wait_ms": 1000}
 
 
 def _load_cal(addr: str = "") -> dict:
