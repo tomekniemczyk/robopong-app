@@ -3,8 +3,8 @@ from typing import List
 
 
 class Ball(BaseModel):
-    top_speed:   int = Field(default=50,   ge=-99,  le=99)
-    bot_speed:   int = Field(default=50,   ge=-99,  le=99)
+    top_speed:   int = Field(default=80,   ge=-249, le=249)
+    bot_speed:   int = Field(default=80,   ge=-249, le=249)
     oscillation: int = Field(default=128,  ge=0,    le=255)
     height:      int = Field(default=128,  ge=0,    le=255)
     rotation:    int = Field(default=128,  ge=0,    le=255)
