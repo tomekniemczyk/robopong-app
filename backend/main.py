@@ -177,7 +177,7 @@ async def _reconnect_loop():
         if sessions and not robot.is_connected:
             last = _load_last_addr()
             if last:
-                logger.info("auto-reconnect → %s", last)
+                logger.info("Reconnecting to %s...", last)
                 await _do_connect(last)
 
 
@@ -188,7 +188,7 @@ async def _standby_loop():
         if (robot.is_connected
                 and _last_activity > 0
                 and time.monotonic() - _last_activity > STANDBY_SECS):
-            logger.info("standby — brak aktywności przez %ds", STANDBY_SECS)
+            logger.info("Standby — idle for %d min", STANDBY_SECS // 60)
             await robot.stop()
             _last_activity = 0.0
             broadcast("info", {"message": "🌙 Robot w trybie standby (5 min bezczynności)"})
@@ -206,7 +206,7 @@ async def lifespan(app: FastAPI):
     robot = Robot(on_event=broadcast)
     last = _load_last_addr()
     if last:
-        logger.info("auto-connect przy starcie → %s", last)
+        logger.info("Connecting to last device %s...", last)
         asyncio.create_task(_do_connect(last))
     asyncio.create_task(_reconnect_loop())
     asyncio.create_task(_standby_loop())
@@ -233,7 +233,7 @@ async def ws_endpoint(ws: WebSocket):
     if not any(s.role == Role.CONTROLLER for s in sessions.values()):
         sess.role = Role.CONTROLLER
     sessions[ws] = sess
-    _log("WS connect id=%s role=%s (total=%d)", sess.id, sess.role, len(sessions))
+    _log("Browser connected — session %s (%s), total: %d", sess.id, sess.role, len(sessions))
     _broadcast_sessions()
 
     transport = "usb" if (hasattr(robot, "_usb") and getattr(robot._usb, "is_connected", False)) else "ble"
@@ -252,7 +252,7 @@ async def ws_endpoint(ws: WebSocket):
             await _handle(json.loads(raw), ws)
     except (WebSocketDisconnect, Exception):
         gone = sessions.pop(ws, None)
-        _log("WS disconnect id=%s (remaining=%d)", gone.id if gone else "?", len(sessions))
+        _log("Browser disconnected — session %s, remaining: %d", gone.id if gone else "?", len(sessions))
         _promote_first_observer()
         _broadcast_sessions()
 
@@ -266,35 +266,35 @@ async def _handle(msg: dict, ws: WebSocket):
     action = msg.get("action", "")
     sess = sessions.get(ws)
     sid = sess.id if sess else "?"
-    _dbg("← WS [%s] action=%s", sid, action)
+    _dbg("Received from %s: %s", sid, action)
 
     if action in ROBOT_ACTIONS:
         if not sess or sess.role != Role.CONTROLLER:
-            _log("BLOCKED action=%s from non-controller id=%s", action, sid)
+            _log("Blocked '%s' — session %s is not the controller", action, sid)
             await _send(ws, "error", {"message": "Nie jesteś kontrolerem robota"})
             return
         global _last_activity
         _last_activity = time.monotonic()
 
     if action == "scan":
-        _log("BLE scan start (timeout=%s)", msg.get("timeout", 8))
+        _log("Scanning BLE (%ds)...", msg.get("timeout", 8))
         devices = await robot.scan(msg.get("timeout", 8))
-        _log("BLE scan done: %d devices", len(devices))
+        _log("Scan complete — found %d devices", len(devices))
         await ws.send_text(json.dumps({"type": "scan_result", "devices": devices}))
 
     elif action == "connect":
         addr = msg["address"]
-        _log("BLE connect → %s", addr)
+        _log("Connecting BLE to %s...", addr)
         ok = await robot.connect(addr)
         if ok:
-            _log("BLE connect OK → %s fw=%d", addr, robot.firmware)
+            _log("Connected to %s (firmware: %d)", addr, robot.firmware)
             _save_last_addr(addr)
             _last_activity = time.monotonic()
             cal = _load_cal(addr)
-            _log("CAL loaded for %s: %s", addr, cal)
+            _log("Calibration loaded for %s", addr)
             broadcast("calibration_loaded", {"cal": cal})
         else:
-            _log("BLE connect FAILED → %s", addr)
+            _log("Connection failed for %s", addr)
             await _send(ws, "error", {"message": "Nie można połączyć z robotem"})
 
     elif action == "disconnect":
@@ -306,15 +306,15 @@ async def _handle(msg: dict, ws: WebSocket):
         await ws.send_text(json.dumps({"type": "usb_ports", "ports": ports}))
 
     elif action == "usb_connect":
-        _log("USB connect → %s", msg["port"])
+        _log("Connecting USB to %s...", msg["port"])
         ok = await robot.connect_usb(msg["port"])
         if ok:
             addr = f"USB:{msg['port']}"
-            _log("USB connect OK → %s", addr)
+            _log("Connected USB: %s", addr)
             _save_last_addr(addr)
             _last_activity = time.monotonic()
             cal = _load_cal(addr)
-            _log("CAL loaded for %s: %s", addr, cal)
+            _log("Calibration loaded for %s", addr)
             broadcast("calibration_loaded", {"cal": cal})
 
     elif action == "usb_disconnect":
@@ -323,7 +323,7 @@ async def _handle(msg: dict, ws: WebSocket):
 
     elif action == "set_ball":
         b = msg["ball"]
-        _log("SET_BALL top=%s bot=%s osc=%s h=%s rot=%s ms=%s",
+        _log("Set ball: top=%s bot=%s osc=%s height=%s rot=%s wait=%sms",
              b["top_speed"], b["bot_speed"], b["oscillation"], b["height"], b["rotation"], b.get("wait_ms", 1500))
         await robot.set_ball(
             b["top_speed"], b["bot_speed"],
@@ -332,11 +332,11 @@ async def _handle(msg: dict, ws: WebSocket):
         )
 
     elif action == "throw":
-        _log("THROW")
+        _log("Throw")
         await robot.throw()
 
     elif action == "stop":
-        _log("STOP")
+        _log("Motors stop")
         await robot.stop()
 
     elif action == "run_scenario":
@@ -344,11 +344,12 @@ async def _handle(msg: dict, ws: WebSocket):
         if not s:
             await _send(ws, "error", {"message": "Nie znaleziono scenariusza"})
             return
-        _log("RUN_DRILL id=%s name=%s balls=%d repeat=%s", msg["id"], s.get("name", "?"), len(s["balls"]), s.get("repeat", 1))
+        repeat = s.get("repeat", 1)
+        _log("Drill start: \"%s\" — %d balls, repeat: %s", s.get("name", "?"), len(s["balls"]), "infinite" if repeat == 0 else repeat)
         asyncio.create_task(robot.run_drill(s["balls"], s.get("repeat", 1)))
 
     elif action == "stop_drill":
-        _log("STOP_DRILL")
+        _log("Drill stop")
         robot.stop_drill()
 
     elif action == "reset_ble":
@@ -357,7 +358,7 @@ async def _handle(msg: dict, ws: WebSocket):
     # ── Zarządzanie sesjami ──────────────────────────────────────────────────
 
     elif action == "request_takeover":
-        _log("TAKEOVER request from id=%s", sid)
+        _log("Takeover requested by session %s", sid)
         ctrl = _get_controller()
         if not ctrl:
             # nikt nie kontroluje — od razu przejmij
@@ -381,7 +382,7 @@ async def _handle(msg: dict, ws: WebSocket):
 
     elif action == "respond_takeover":
         accepted = msg.get("accepted", False)
-        _log("TAKEOVER response accepted=%s from id=%s", accepted, sid)
+        _log("Takeover %s by session %s", "accepted" if accepted else "rejected", sid)
         pending = next((s for s in sessions.values() if s.role == Role.PENDING), None)
         if not pending or not sess or sess.role != Role.CONTROLLER:
             return
@@ -415,7 +416,7 @@ def save_calibration(body: dict):
     allowed = {"top_speed", "bot_speed", "oscillation", "height", "rotation", "wait_ms"}
     cal = {k: v for k, v in body.items() if k in allowed}
     addr = _load_last_addr() if robot.is_connected else ""
-    _log("SAVE CAL addr=%s cal=%s", addr or "(default)", cal)
+    _log("Calibration saved for %s", addr or "default")
     _save_cal(cal, addr)
     return cal
 
