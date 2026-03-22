@@ -233,12 +233,12 @@
           </div>
           <div class="ball-fields">
             <div class="ball-field">
-              <label>Góra <small>±99</small></label>
-              <input type="number" v-model.number="b.top_speed" min="-99" max="99" @change="clamp(b,'top_speed',-99,99)">
+              <label>Góra <small>±249</small></label>
+              <input type="number" v-model.number="b.top_speed" min="-249" max="249" @change="clamp(b,'top_speed',-249,249)">
             </div>
             <div class="ball-field">
-              <label>Dół <small>±99</small></label>
-              <input type="number" v-model.number="b.bot_speed" min="-99" max="99" @change="clamp(b,'bot_speed',-99,99)">
+              <label>Dół <small>±249</small></label>
+              <input type="number" v-model.number="b.bot_speed" min="-249" max="249" @change="clamp(b,'bot_speed',-249,249)">
             </div>
             <div class="ball-field">
               <label>Oscylacja <small>0–255</small></label>
@@ -277,11 +277,11 @@
         <span style="color:var(--muted);font-size:12px;margin-left:auto">{{ helpOpen ? '▲ zwiń' : '▼ rozwiń' }}</span>
       </div>
       <div v-if="helpOpen" style="font-size:13px;line-height:1.8;color:var(--text2)">
-        <p style="margin-bottom:8px"><strong style="color:var(--text)">Silniki (Góra / Dół):</strong> zakres <code>-99…99</code></p>
+        <p style="margin-bottom:8px"><strong style="color:var(--text)">Silniki (Góra / Dół):</strong> zakres <code>-249…249</code></p>
         <ul style="padding-left:16px;margin-bottom:10px">
-          <li><code>50 / 50</code> — brak spinu, prosta piłka</li>
-          <li><code>70 / 30</code> — topspin (górny silnik szybciej)</li>
-          <li><code>30 / 70</code> — backspin (dolny silnik szybciej)</li>
+          <li><code>80 / 80</code> — brak spinu, prosta piłka</li>
+          <li><code>120 / 40</code> — topspin (górny silnik szybciej)</li>
+          <li><code>40 / 120</code> — backspin (dolny silnik szybciej)</li>
           <li>Wartości ujemne odwracają kierunek silnika (mocniejszy spin)</li>
           <li>Im wyższe cyfry, tym szybsza piłka</li>
         </ul>
@@ -333,16 +333,16 @@
             Zmień prędkość w presetach lub odblokuj 🔓
           </div>
           <div class="field">
-            <label>Góra &nbsp;<small style="text-transform:none;letter-spacing:0">-99…99</small></label>
-            <input type="number" v-model.number="cal.top_speed" min="-99" max="99"
+            <label>Góra &nbsp;<small style="text-transform:none;letter-spacing:0">-249…249</small></label>
+            <input type="number" v-model.number="cal.top_speed" min="-249" max="249"
               :disabled="calMotorLocked"
-              @change="clampCal('top_speed',-99,99);calDirty=true">
+              @change="clampCal('top_speed',-249,249);calDirty=true">
           </div>
           <div class="field" style="margin-bottom:0">
-            <label>Dół &nbsp;<small style="text-transform:none;letter-spacing:0">-99…99</small></label>
-            <input type="number" v-model.number="cal.bot_speed" min="-99" max="99"
+            <label>Dół &nbsp;<small style="text-transform:none;letter-spacing:0">-249…249</small></label>
+            <input type="number" v-model.number="cal.bot_speed" min="-249" max="249"
               :disabled="calMotorLocked"
-              @change="clampCal('bot_speed',-99,99);calDirty=true">
+              @change="clampCal('bot_speed',-249,249);calDirty=true">
           </div>
         </div>
 
@@ -565,7 +565,7 @@ createApp({
     const editRepeat = ref(1)
     const editBalls  = ref([])
 
-    const cal            = reactive({ top_speed: 50, bot_speed: 50, oscillation: 128, height: 128, rotation: 128, wait_ms: 1500 })
+    const cal            = reactive({ top_speed: 80, bot_speed: 80, oscillation: 128, height: 128, rotation: 128, wait_ms: 1000 })
     const calDirty       = ref(true)
     const calMotorLocked = ref(true)
     const helpOpen       = ref(false)
@@ -697,6 +697,9 @@ createApp({
         addLog(`← ${m.data}`)
       } else if (m.type === 'error') {
         showToast(`⚠ ${m.message}`)
+      } else if (m.type === 'calibration_loaded') {
+        Object.assign(cal, m.cal)
+        calDirty.value = false
       } else if (m.type === 'info') {
         showToast(m.message)
       }
@@ -774,7 +777,7 @@ createApp({
 
     async function saveScenario() {
       editBalls.value.forEach(b => {
-        clamp(b,'top_speed',-99,99); clamp(b,'bot_speed',-99,99)
+        clamp(b,'top_speed',-249,249); clamp(b,'bot_speed',-249,249)
         clamp(b,'oscillation',0,255); clamp(b,'height',0,255)
         clamp(b,'rotation',0,255); clamp(b,'wait_ms',200,10000)
       })
@@ -824,11 +827,11 @@ createApp({
       await loadPresets()
     }
     function calReset() {
-      Object.assign(cal, { top_speed: 50, bot_speed: 50, oscillation: 128, height: 128, rotation: 128, wait_ms: 1500 })
+      Object.assign(cal, { top_speed: 80, bot_speed: 80, oscillation: 128, height: 128, rotation: 128, wait_ms: 1000 })
       calDirty.value = true
     }
     function _clampAllCal() {
-      const limits = { top_speed:[-99,99], bot_speed:[-99,99], oscillation:[0,255], height:[0,255], rotation:[0,255], wait_ms:[200,10000] }
+      const limits = { top_speed:[-249,249], bot_speed:[-249,249], oscillation:[0,255], height:[0,255], rotation:[0,255], wait_ms:[200,10000] }
       Object.keys(limits).forEach(k => clampCal(k, ...limits[k]))
     }
     function calSend() {
