@@ -341,7 +341,8 @@
         <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px">
           <!-- Rotacja -->
           <div style="text-align:center">
-            <div style="font-size:11px;color:var(--muted);margin-bottom:4px">Rotacja</div>
+            <div style="font-size:11px;color:var(--muted);margin-bottom:2px;font-weight:600">Rotacja</div>
+            <div style="font-size:9px;color:var(--muted);margin-bottom:4px">obrót głowicy L/R</div>
             <div style="display:flex;align-items:center;justify-content:center;gap:4px">
               <button class="btn btn-ghost" style="padding:6px 10px;font-size:16px" :disabled="!connected || myRole!=='controller'" @click="calStep('rotation',-2)">◀</button>
               <span style="font-size:18px;font-weight:700;min-width:40px;display:inline-block;text-align:center">{{ cal.rotation }}</span>
@@ -351,23 +352,25 @@
           </div>
           <!-- Wysokość -->
           <div style="text-align:center">
-            <div style="font-size:11px;color:var(--muted);margin-bottom:4px">Wysokość</div>
+            <div style="font-size:11px;color:var(--muted);margin-bottom:2px;font-weight:600">Wysokość</div>
+            <div style="font-size:9px;color:var(--muted);margin-bottom:4px">kąt wylotu piłki</div>
             <div style="display:flex;align-items:center;justify-content:center;gap:4px">
               <button class="btn btn-ghost" style="padding:6px 10px;font-size:16px" :disabled="!connected || myRole!=='controller'" @click="calStep('height',-2)">▼</button>
               <span style="font-size:18px;font-weight:700;min-width:40px;display:inline-block;text-align:center">{{ cal.height }}</span>
               <button class="btn btn-ghost" style="padding:6px 10px;font-size:16px" :disabled="!connected || myRole!=='controller'" @click="calStep('height',2)">▲</button>
             </div>
-            <div style="font-size:10px;color:var(--muted)">75 ▼ 150 ▲ 210</div>
+            <div style="font-size:10px;color:var(--muted)">75 nisko ▲ 210 wysoko</div>
           </div>
           <!-- Oscylacja -->
           <div style="text-align:center">
-            <div style="font-size:11px;color:var(--muted);margin-bottom:4px">Oscylacja</div>
+            <div style="font-size:11px;color:var(--muted);margin-bottom:2px;font-weight:600">Oscylacja</div>
+            <div style="font-size:9px;color:var(--muted);margin-bottom:4px">wahadło głowicy L/R</div>
             <div style="display:flex;align-items:center;justify-content:center;gap:4px">
               <button class="btn btn-ghost" style="padding:6px 10px;font-size:16px" :disabled="!connected || myRole!=='controller'" @click="calStep('oscillation',-2)">◀</button>
               <span style="font-size:18px;font-weight:700;min-width:40px;display:inline-block;text-align:center">{{ cal.oscillation }}</span>
               <button class="btn btn-ghost" style="padding:6px 10px;font-size:16px" :disabled="!connected || myRole!=='controller'" @click="calStep('oscillation',2)">▶</button>
             </div>
-            <div style="font-size:10px;color:var(--muted)">173 ◀ 150 ▶ 127</div>
+            <div style="font-size:10px;color:var(--muted)">173 ◀ 150 środek ▶ 127</div>
           </div>
         </div>
       </div>
