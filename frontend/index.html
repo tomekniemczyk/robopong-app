@@ -697,6 +697,8 @@ createApp({
         addLog(`← ${m.data}`)
       } else if (m.type === 'error') {
         showToast(`⚠ ${m.message}`)
+      } else if (m.type === 'info') {
+        showToast(m.message)
       }
     }
 

@@ -1,6 +1,7 @@
 import asyncio
 import json
 import logging
+import time
 import uuid
 from contextlib import asynccontextmanager
 from dataclasses import dataclass, field
@@ -132,6 +133,19 @@ async def _reconnect_loop():
                 await _do_connect(last)
 
 
+async def _standby_loop():
+    global _last_activity
+    while True:
+        await asyncio.sleep(30)
+        if (robot.is_connected
+                and _last_activity > 0
+                and time.monotonic() - _last_activity > STANDBY_SECS):
+            logger.info("standby — brak aktywności przez %ds", STANDBY_SECS)
+            await robot.stop()
+            _last_activity = 0.0
+            broadcast("info", {"message": "🌙 Robot w trybie standby (5 min bezczynności)"})
+
+
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     global robot, DEFAULT_CAL
@@ -146,6 +160,7 @@ async def lifespan(app: FastAPI):
         logger.info("auto-connect przy starcie → %s", last)
         asyncio.create_task(_do_connect(last))
     asyncio.create_task(_reconnect_loop())
+    asyncio.create_task(_standby_loop())
     yield
     if robot.is_connected:
         await robot.disconnect()
@@ -185,7 +200,9 @@ async def ws_endpoint(ws: WebSocket):
         _broadcast_sessions()
 
 
-ROBOT_ACTIONS = {"set_ball", "throw", "stop", "run_scenario", "stop_drill"}
+ROBOT_ACTIONS  = {"set_ball", "throw", "stop", "run_scenario", "stop_drill"}
+STANDBY_SECS   = 5 * 60
+_last_activity: float = 0.0
 
 
 async def _handle(msg: dict, ws: WebSocket):
@@ -196,6 +213,8 @@ async def _handle(msg: dict, ws: WebSocket):
         if not sess or sess.role != Role.CONTROLLER:
             await _send(ws, "error", {"message": "Nie jesteś kontrolerem robota"})
             return
+        global _last_activity
+        _last_activity = time.monotonic()
 
     if action == "scan":
         devices = await robot.scan(msg.get("timeout", 8))
@@ -205,6 +224,7 @@ async def _handle(msg: dict, ws: WebSocket):
         ok = await robot.connect(msg["address"])
         if ok:
             _save_last_addr(msg["address"])
+            _last_activity = time.monotonic()
         else:
             await _send(ws, "error", {"message": "Nie można połączyć z robotem"})
 
@@ -220,6 +240,7 @@ async def _handle(msg: dict, ws: WebSocket):
         ok = await robot.connect_usb(msg["port"])
         if ok:
             _save_last_addr(f"USB:{msg['port']}")
+            _last_activity = time.monotonic()
 
     elif action == "usb_disconnect":
         _save_last_addr("")
