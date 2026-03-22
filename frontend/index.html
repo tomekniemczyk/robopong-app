@@ -124,10 +124,7 @@
 <div id="app">
 
   <div class="topbar">
-    <div>
-      <h1 style="margin:0">🏓 RoboPong</h1>
-      <div v-if="deployTime" style="font-size:9px;color:var(--muted);font-family:monospace;margin-top:-2px">deploy: {{ deployTime }}</div>
-    </div>
+    <h1>🏓 RoboPong <span v-if="deployTime" style="font-size:9px;color:var(--muted);font-weight:400;font-family:monospace;letter-spacing:0">{{ deployTime }}</span></h1>
     <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;justify-content:flex-end">
       <!-- robot name -->
       <div v-if="connected && lastAddr" style="display:flex;flex-direction:column;align-items:flex-end;gap:1px">
