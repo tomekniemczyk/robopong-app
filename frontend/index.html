@@ -9,19 +9,153 @@
   <title>RoboPong</title>
   <link rel="stylesheet" href="/static/style.css">
   <link rel="manifest" href="/static/manifest.json">
+  <style>
+    /* ── Role pills ─────────────────────────────────────────── */
+    .role-pill {
+      display:inline-flex; align-items:center; gap:4px;
+      font-size:10px; font-weight:700; letter-spacing:.06em; text-transform:uppercase;
+      padding:3px 8px; border-radius:20px; white-space:nowrap;
+    }
+    .role-pill.ctrl  { background:rgba(52,199,89,.18); color:#34c759; border:1px solid rgba(52,199,89,.3); }
+    .role-pill.obs   { background:rgba(142,142,147,.14); color:#8e8e93; border:1px solid rgba(142,142,147,.25); }
+    .role-pill.pend  { background:rgba(255,159,10,.15); color:#ff9f0a; border:1px solid rgba(255,159,10,.3);
+                       animation:pulse-pend 1.2s ease-in-out infinite; }
+    @keyframes pulse-pend { 0%,100%{opacity:1} 50%{opacity:.55} }
+
+    /* ── Sessions button ────────────────────────────────────── */
+    .sessions-btn {
+      background:none; border:1px solid var(--border); border-radius:20px;
+      color:var(--muted); font-size:11px; padding:3px 8px; cursor:pointer;
+      display:inline-flex; align-items:center; gap:3px;
+    }
+    .sessions-btn:hover { border-color:var(--accent); color:var(--text); }
+
+    /* ── Sessions panel ─────────────────────────────────────── */
+    .sessions-backdrop {
+      position:fixed; inset:0; z-index:80;
+    }
+    .sessions-panel {
+      position:fixed; top:52px; right:12px; z-index:90;
+      background:var(--surface); border:1px solid var(--border); border-radius:14px;
+      padding:12px; min-width:200px; box-shadow:0 8px 32px rgba(0,0,0,.4);
+    }
+    .sessions-panel h4 { margin:0 0 10px; font-size:11px; color:var(--muted); text-transform:uppercase; letter-spacing:.07em; }
+    .session-row {
+      display:flex; align-items:center; gap:6px; padding:5px 0;
+      border-bottom:1px solid var(--border); font-size:12px;
+    }
+    .session-row:last-of-type { border-bottom:none; }
+    .s-id { font-family:monospace; font-size:11px; color:var(--muted); flex:1; }
+    .s-you { font-size:10px; color:var(--accent); font-weight:700; }
+
+    /* ── Observer / Pending banner ──────────────────────────── */
+    .role-banner {
+      display:flex; align-items:center; gap:10px; flex-wrap:wrap;
+      padding:10px 16px; margin:0 0 0;
+      font-size:13px;
+    }
+    .role-banner.obs-banner { background:rgba(142,142,147,.1); border-bottom:1px solid rgba(142,142,147,.2); }
+    .role-banner.pend-banner { background:rgba(255,159,10,.08); border-bottom:1px solid rgba(255,159,10,.2); }
+    .role-banner span { flex:1; min-width:0; }
+    .btn-takeover {
+      background:var(--accent); color:#fff; border:none; border-radius:10px;
+      padding:6px 14px; font-size:12px; font-weight:600; cursor:pointer; white-space:nowrap;
+    }
+    .btn-takeover:disabled { opacity:.4; cursor:not-allowed; }
+    .btn-cancel-takeover {
+      background:transparent; color:var(--muted); border:1px solid var(--border);
+      border-radius:10px; padding:6px 14px; font-size:12px; cursor:pointer;
+    }
+
+    /* ── Takeover modal ─────────────────────────────────────── */
+    .takeover-backdrop {
+      position:fixed; inset:0; z-index:200;
+      background:rgba(0,0,0,.72); backdrop-filter:blur(6px);
+      display:flex; align-items:center; justify-content:center; padding:20px;
+    }
+    .takeover-card {
+      background:var(--surface); border:1px solid var(--border); border-radius:20px;
+      padding:28px 24px; max-width:340px; width:100%; text-align:center;
+      box-shadow:0 24px 64px rgba(0,0,0,.6);
+    }
+    .takeover-icon { font-size:40px; margin-bottom:10px; }
+    .takeover-card h3 { margin:0 0 8px; font-size:17px; }
+    .takeover-card p  { margin:0 0 18px; font-size:13px; color:var(--muted); line-height:1.6; }
+    .countdown-ring {
+      width:56px; height:56px; margin:0 auto 18px;
+      border-radius:50%; display:flex; align-items:center; justify-content:center;
+      font-size:22px; font-weight:800;
+      background:conic-gradient(var(--accent) calc(var(--p,100)*1%), var(--border) 0);
+      position:relative;
+    }
+    .countdown-ring::before {
+      content:''; position:absolute; inset:5px; border-radius:50%; background:var(--surface);
+    }
+    .countdown-ring span { position:relative; z-index:1; }
+    .takeover-btns { display:flex; gap:10px; }
+    .takeover-btns .btn { flex:1; padding:12px; font-size:14px; }
+
+    /* ── Observer overlay on controls ─────────────────────────*/
+    .observer-lock {
+      pointer-events:none; opacity:.35; user-select:none;
+    }
+
+    /* ── Cooldown hint ──────────────────────────────────────── */
+    .cooldown-hint { font-size:11px; color:var(--muted); }
+  </style>
 </head>
 <body>
 <div id="app">
 
   <div class="topbar">
     <h1>🏓 RoboPong</h1>
-    <div style="display:flex;flex-direction:column;align-items:flex-end;gap:1px" v-if="connected && lastAddr">
-      <span class="ble-pill on" style="font-size:10px">{{ robotName || 'Robopong' }}</span>
-      <span style="font-size:9px;color:var(--muted);font-family:monospace">{{ lastAddr }}</span>
+    <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;justify-content:flex-end">
+      <!-- robot name -->
+      <div v-if="connected && lastAddr" style="display:flex;flex-direction:column;align-items:flex-end;gap:1px">
+        <span class="ble-pill on" style="font-size:10px">{{ robotName || 'Robopong' }}</span>
+        <span style="font-size:9px;color:var(--muted);font-family:monospace">{{ lastAddr }}</span>
+      </div>
+      <span class="ble-pill" :class="{ on: connected }" v-else>
+        {{ connected ? (transport === 'usb' ? '🔌 USB' : firmware ? `FW ${firmware}` : 'BLE') : 'Offline' }}
+      </span>
+      <!-- role pill -->
+      <span class="role-pill ctrl"  v-if="myRole === 'controller'">🎮 Kontroler</span>
+      <span class="role-pill obs"   v-else-if="myRole === 'observer'">👁 Obserwator</span>
+      <span class="role-pill pend"  v-else-if="myRole === 'pending'">⏳ Czeka</span>
+      <!-- sessions button -->
+      <button class="sessions-btn" @click="showSessions=!showSessions" title="Aktywne sesje">
+        👥 {{ sessionsList.length }}
+      </button>
     </div>
-    <span class="ble-pill" :class="{ on: connected }" v-else>
-      {{ connected ? (transport === 'usb' ? '🔌 USB' : firmware ? `FW ${firmware}` : 'BLE') : 'Offline' }}
-    </span>
+  </div>
+
+  <!-- ── Sessions panel ──────────────────────────────────────────────────── -->
+  <div class="sessions-backdrop" v-if="showSessions" @click="showSessions=false"></div>
+  <div class="sessions-panel" v-if="showSessions">
+    <h4>Aktywne sesje</h4>
+    <div class="session-row" v-for="s in sessionsList" :key="s.id">
+      <span class="s-id">{{ s.id }}</span>
+      <span :class="['role-pill', rolePillClass(s.role)]" style="font-size:9px;padding:2px 6px">{{ roleLabel(s.role) }}</span>
+      <span class="s-you" v-if="s.id === mySessionId">← Ty</span>
+    </div>
+    <div v-if="!sessionsList.length" style="font-size:12px;color:var(--muted);padding:4px 0">Brak sesji</div>
+    <button v-if="myRole === 'controller'" class="btn btn-ghost"
+      style="font-size:12px;margin-top:10px;width:100%;padding:8px"
+      @click="releaseControl();showSessions=false">
+      🔄 Oddaj kontrolę
+    </button>
+  </div>
+
+  <!-- ── Observer / Pending banner ───────────────────────────────────────── -->
+  <div v-if="myRole === 'observer'" class="role-banner obs-banner">
+    <span>👁 Obserwujesz — robot jest kontrolowany przez inną sesję.</span>
+    <button class="btn-takeover" :disabled="takeoverCooldown > 0" @click="requestTakeover">
+      {{ takeoverCooldown > 0 ? `Odczekaj ${takeoverCooldown}s` : 'Przejmij kontrolę' }}
+    </button>
+  </div>
+  <div v-if="myRole === 'pending'" class="role-banner pend-banner">
+    <span>⏳ Czekasz na akceptację przejęcia kontroli…</span>
+    <button class="btn-cancel-takeover" @click="cancelTakeover">Anuluj</button>
   </div>
 
   <!-- ── Scenariusze ──────────────────────────────────────────────────── -->
@@ -51,7 +185,7 @@
         <div class="scenario-card-footer">
           <button class="btn btn-ghost btn-icon" @click="openEditor(s)" title="Edytuj">✏️</button>
           <button class="btn btn-ghost btn-icon" @click="deleteScenario(s.id)" title="Usuń">🗑</button>
-          <button class="btn-start" :disabled="!connected || drillRunning" @click="runScenario(s)">▶ Start</button>
+          <button class="btn-start" :disabled="!connected || drillRunning || myRole !== 'controller'" @click="runScenario(s)">▶ Start</button>
         </div>
       </div>
     </div>
@@ -179,11 +313,10 @@
       </div>
     </div>
 
-
-    <div class="card">
+    <div class="card" :class="{ 'observer-lock': myRole !== 'controller' }">
       <div style="display:flex;align-items:center;gap:8px;margin-bottom:14px">
         <h2 style="flex:1">Parametry piłki</h2>
-        <button class="btn btn-ghost" style="padding:7px 14px;font-size:12px" @click="calReset">↺ Reset</button>
+        <button class="btn btn-ghost" style="padding:7px 14px;font-size:12px" @click="calReset" :disabled="myRole !== 'controller'">↺ Reset</button>
       </div>
 
       <div class="cal-grid">
@@ -236,9 +369,9 @@
       </div>
 
       <div class="cal-actions">
-        <button class="btn btn-primary"  :disabled="!connected" @click="calSend" :style="calDirty ? 'opacity:1' : 'opacity:.45'">📡 Wyślij</button>
-        <button class="btn btn-success"  :disabled="!connected" @click="calThrow">🏓 {{ calDirty ? 'Wyślij + Rzut' : 'Rzut' }}</button>
-        <button class="btn btn-danger"   :disabled="!connected" @click="calStop">⏹ Stop</button>
+        <button class="btn btn-primary"  :disabled="!connected || myRole !== 'controller'" @click="calSend" :style="calDirty ? 'opacity:1' : 'opacity:.45'">📡 Wyślij</button>
+        <button class="btn btn-success"  :disabled="!connected || myRole !== 'controller'" @click="calThrow">🏓 {{ calDirty ? 'Wyślij + Rzut' : 'Rzut' }}</button>
+        <button class="btn btn-danger"   :disabled="!connected || myRole !== 'controller'" @click="calStop">⏹ Stop</button>
       </div>
 
       <div style="margin-top:12px">
@@ -362,6 +495,23 @@
     <button class="btn btn-danger" @click="stopDrill">⏹ Zatrzymaj</button>
   </div>
 
+  <!-- ── Takeover request modal (dla kontrolera) ─────────────────────────── -->
+  <div class="takeover-backdrop" v-if="takeoverReq">
+    <div class="takeover-card">
+      <div class="takeover-icon">⚡</div>
+      <h3>Żądanie przejęcia kontroli</h3>
+      <p>Sesja <code style="background:rgba(255,255,255,.08);padding:1px 5px;border-radius:4px">{{ takeoverReq.id }}</code> chce przejąć kontrolę nad robotem.</p>
+      <div class="countdown-ring" :style="`--p:${takeoverCountdown / 30 * 100}`">
+        <span>{{ takeoverCountdown }}</span>
+      </div>
+      <div class="takeover-btns">
+        <button class="btn btn-danger"  @click="respondTakeover(false)">✕ Odmów</button>
+        <button class="btn btn-success" @click="respondTakeover(true)">✓ Akceptuj</button>
+      </div>
+      <p style="font-size:11px;color:var(--muted);margin-top:10px;margin-bottom:0">Brak odpowiedzi = automatyczna odmowa</p>
+    </div>
+  </div>
+
   <!-- ── Bottom nav ───────────────────────────────────────────────────────── -->
   <nav class="nav">
     <button :class="{ active: page === 'scenarios' }" @click="page='scenarios'">
@@ -416,11 +566,11 @@ createApp({
     const editRepeat = ref(1)
     const editBalls  = ref([])
 
-    const cal           = reactive({ top_speed: 75, bot_speed: 75, oscillation: 150, height: 170, rotation: 150, wait_ms: 1500 })
-    const calDirty      = ref(true)
-    const calMotorLocked = ref(true)   // domyślnie zablokowane — kalibracja = pozycja głowicy
-    const helpOpen      = ref(false)
-    const presets  = ref([])
+    const cal            = reactive({ top_speed: 75, bot_speed: 75, oscillation: 150, height: 170, rotation: 150, wait_ms: 1500 })
+    const calDirty       = ref(true)
+    const calMotorLocked = ref(true)
+    const helpOpen       = ref(false)
+    const presets        = ref([])
 
     const lastAddr      = ref(localStorage.getItem('lastAddr') || '')
     const robotName     = ref(localStorage.getItem('robotName') || '')
@@ -432,8 +582,44 @@ createApp({
     const usbPorts      = ref([])
     const usbScanning   = ref(false)
 
+    // ── Session management ─────────────────────────────────────
+    const myRole          = ref('observer')
+    const mySessionId     = ref('')
+    const sessionsList    = ref([])
+    const showSessions    = ref(false)
+    const takeoverReq     = ref(null)      // { id } — ktoś chce przejąć od nas
+    const takeoverCountdown = ref(30)
+    const takeoverCooldown  = ref(0)
+    let _takeoverTimer    = null
+    let _cooldownTimer    = null
 
-    // ── WebSocket ──────────────────────────────────────────────────
+    function roleLabel(role) {
+      return { controller: '🎮 Ctrl', observer: '👁 Obs', pending: '⏳ Czeka' }[role] || role
+    }
+    function rolePillClass(role) {
+      return { controller: 'ctrl', observer: 'obs', pending: 'pend' }[role] || 'obs'
+    }
+
+    function requestTakeover() {
+      if (takeoverCooldown.value > 0) return
+      myRole.value = 'pending'
+      send({ action: 'request_takeover' })
+    }
+    function cancelTakeover() {
+      send({ action: 'cancel_takeover' })
+      myRole.value = 'observer'
+    }
+    function respondTakeover(accepted) {
+      clearInterval(_takeoverTimer)
+      _takeoverTimer = null
+      takeoverReq.value = null
+      send({ action: 'respond_takeover', accepted })
+    }
+    function releaseControl() {
+      send({ action: 'release_control' })
+    }
+
+    // ── WebSocket ──────────────────────────────────────────────
     let ws = null
     function wsConnect() {
       const proto = location.protocol === 'https:' ? 'wss' : 'ws'
@@ -450,6 +636,45 @@ createApp({
         firmware.value  = m.firmware
         device.value    = m.device
         transport.value = m.transport || 'ble'
+        if (m.session_id) mySessionId.value = m.session_id
+        if (m.role)       myRole.value = m.role
+
+      } else if (m.type === 'session_role') {
+        myRole.value = m.role
+        if (m.role === 'controller') showToast('🎮 Jesteś kontrolerem')
+        else if (m.role === 'observer') showToast('👁 Oddałeś kontrolę')
+
+      } else if (m.type === 'sessions') {
+        sessionsList.value = m.sessions
+
+      } else if (m.type === 'takeover_request') {
+        // ktoś chce przejąć — my jesteśmy kontrolerem
+        takeoverReq.value = { id: m.requester_id }
+        takeoverCountdown.value = 30
+        clearInterval(_takeoverTimer)
+        _takeoverTimer = setInterval(() => {
+          takeoverCountdown.value--
+          if (takeoverCountdown.value <= 0) {
+            clearInterval(_takeoverTimer)
+            respondTakeover(false)
+          }
+        }, 1000)
+
+      } else if (m.type === 'takeover_response') {
+        if (m.accepted) {
+          myRole.value = 'controller'
+          showToast('🎮 Przejąłeś kontrolę!')
+        } else {
+          myRole.value = 'observer'
+          showToast('❌ Odmówiono przejęcia kontroli')
+          takeoverCooldown.value = 60
+          clearInterval(_cooldownTimer)
+          _cooldownTimer = setInterval(() => {
+            takeoverCooldown.value--
+            if (takeoverCooldown.value <= 0) clearInterval(_cooldownTimer)
+          }, 1000)
+        }
+
       } else if (m.type === 'usb_ports') {
         usbScanning.value = false
         usbPorts.value = m.ports
@@ -476,8 +701,7 @@ createApp({
       }
     }
 
-    // ── BLE ────────────────────────────────────────────────────────
-    // Filtrujemy tylko roboty Donic/Newgy po nazwie BLE
+    // ── BLE ────────────────────────────────────────────────────
     const ROBOT_FILTER = /robopong|newgy|nwgy|donic|rp3|rp\d/i
 
     function scan() { scanning.value = true; devices.value = []; send({ action: 'scan' }) }
@@ -506,12 +730,13 @@ createApp({
       editingName.value = false
     }
 
-    // ── Scenarios ──────────────────────────────────────────────────
+    // ── Scenarios ──────────────────────────────────────────────
     async function loadScenarios() {
       const r = await fetch('/api/scenarios')
       scenarios.value = await r.json()
     }
     function runScenario(s) {
+      if (myRole.value !== 'controller') return
       drillScenario.value  = s.name
       drillBall.value      = 0
       drillTotal.value     = s.balls.length
@@ -563,7 +788,7 @@ createApp({
       showToast('✅ Zapisano!')
     }
 
-    // ── Calibration ────────────────────────────────────────────────
+    // ── Calibration ────────────────────────────────────────────
     async function loadCal() {
       const r = await fetch('/api/calibration')
       const j = await r.json()
@@ -618,7 +843,6 @@ createApp({
         send({ action: 'set_ball', ball: { ...cal } })
         addLog(`→ top=${cal.top_speed} bot=${cal.bot_speed} osc=${cal.oscillation} h=${cal.height} r=${cal.rotation} ms=${cal.wait_ms}`)
         calDirty.value = false
-        // daj chwilę robotowi na ustawienie silników przed rzutem
         setTimeout(() => { send({ action:'throw' }); addLog('→ T (rzut)'); showToast('🏓 Rzut!') }, 300)
       } else {
         send({ action:'throw' }); addLog('→ T (rzut)'); showToast('🏓 Rzut!')
@@ -628,7 +852,7 @@ createApp({
 
     // auto-rozgrzewka silników po wejściu w kalibrację
     watch(page, (newPage, oldPage) => {
-      if (newPage === 'calibration' && oldPage !== 'calibration' && connected.value) {
+      if (newPage === 'calibration' && oldPage !== 'calibration' && connected.value && myRole.value === 'controller') {
         _clampAllCal()
         send({ action: 'set_ball', ball: { ...cal } })
         calDirty.value = false
@@ -636,7 +860,7 @@ createApp({
       }
     })
 
-    // ── helpers ────────────────────────────────────────────────────
+    // ── helpers ────────────────────────────────────────────────
     function addLog(line) {
       robotLog.value.push(line)
       if (robotLog.value.length > 60) robotLog.value.shift()
@@ -664,11 +888,15 @@ createApp({
       cal, calDirty, calMotorLocked, helpOpen,
       lastAddr, robotName, editingName, robotNameEdit, camErr, camSrc,
       transport, usbPorts, usbScanning,
+      myRole, mySessionId, sessionsList, showSessions,
+      takeoverReq, takeoverCountdown, takeoverCooldown,
       scan, connect, disconnect, saveName, usbScan, usbConnect, reconnectLast,
       runScenario, stopDrill, deleteScenario, openEditor, addBall, removeBall, saveScenario,
       clamp, clampCal,
       calSend, calThrow, calStop, calReset, loadCal,
       presets, savePreset, loadPreset, setDefaultPreset, deletePreset,
+      roleLabel, rolePillClass,
+      requestTakeover, cancelTakeover, respondTakeover, releaseControl,
       ballWord,
     }
   }

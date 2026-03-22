@@ -1,9 +1,11 @@
 import asyncio
 import json
 import logging
+import uuid
 from contextlib import asynccontextmanager
+from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Set
+from typing import Dict
 
 from fastapi import FastAPI, HTTPException, WebSocket, WebSocketDisconnect
 from fastapi.responses import FileResponse
@@ -21,22 +23,67 @@ logger = logging.getLogger(__name__)
 FRONTEND = Path(__file__).parent.parent / "frontend"
 
 robot: Robot
-clients: Set[WebSocket] = set()
+
+
+class Role:
+    CONTROLLER = "controller"
+    OBSERVER   = "observer"
+    PENDING    = "pending"
+
+
+@dataclass
+class Session:
+    ws:   WebSocket
+    id:   str = field(default_factory=lambda: uuid.uuid4().hex[:6])
+    role: str = Role.OBSERVER
+
+
+sessions: Dict[WebSocket, Session] = {}
 
 
 def broadcast(event_type: str, data: dict):
     msg = json.dumps({"type": event_type, **data})
-    dead = set()
-    for ws in clients:
+    dead = []
+    for ws in list(sessions):
         try:
             asyncio.create_task(ws.send_text(msg))
         except Exception:
-            dead.add(ws)
-    clients.difference_update(dead)
+            dead.append(ws)
+    for ws in dead:
+        sessions.pop(ws, None)
 
 
-LAST_ADDR_FILE  = Path(__file__).parent / ".last_device"
-CAL_FILE        = Path(__file__).parent / ".calibration.json"
+async def _send(ws: WebSocket, event_type: str, data: dict):
+    try:
+        await ws.send_text(json.dumps({"type": event_type, **data}))
+    except Exception:
+        pass
+
+
+def _get_controller() -> "Session | None":
+    return next((s for s in sessions.values() if s.role == Role.CONTROLLER), None)
+
+
+def _promote_first_observer():
+    if not any(s.role == Role.CONTROLLER for s in sessions.values()):
+        first = next(
+            (s for s in sessions.values() if s.role in (Role.OBSERVER, Role.PENDING)),
+            None,
+        )
+        if first:
+            first.role = Role.CONTROLLER
+            asyncio.create_task(
+                _send(first.ws, "session_role", {"role": first.role, "session_id": first.id})
+            )
+
+
+def _broadcast_sessions():
+    lst = [{"id": s.id, "role": s.role} for s in sessions.values()]
+    broadcast("sessions", {"sessions": lst})
+
+
+LAST_ADDR_FILE = Path(__file__).parent / ".last_device"
+CAL_FILE       = Path(__file__).parent / ".calibration.json"
 
 DEFAULT_CAL = {"top_speed": 75, "bot_speed": 75, "oscillation": 150, "height": 170, "rotation": 150, "wait_ms": 1500}
 
@@ -78,7 +125,7 @@ async def _do_connect(addr: str) -> bool:
 async def _reconnect_loop():
     while True:
         await asyncio.sleep(15)
-        if clients and not robot.is_connected:
+        if sessions and not robot.is_connected:
             last = _load_last_addr()
             if last:
                 logger.info("auto-reconnect → %s", last)
@@ -112,23 +159,43 @@ app = FastAPI(title="robopong-app", lifespan=lifespan)
 @app.websocket("/ws")
 async def ws_endpoint(ws: WebSocket):
     await ws.accept()
-    clients.add(ws)
+    sess = Session(ws=ws)
+    if not any(s.role == Role.CONTROLLER for s in sessions.values()):
+        sess.role = Role.CONTROLLER
+    sessions[ws] = sess
+    _broadcast_sessions()
+
+    transport = "usb" if (hasattr(robot, "_usb") and getattr(robot._usb, "is_connected", False)) else "ble"
     await ws.send_text(json.dumps({
-        "type":      "status",
-        "connected": robot.is_connected,
-        "firmware":  robot.firmware,
-        "device":    robot.device,
+        "type":       "status",
+        "connected":  robot.is_connected,
+        "firmware":   robot.firmware,
+        "device":     robot.device,
+        "transport":  transport,
+        "session_id": sess.id,
+        "role":       sess.role,
     }))
     try:
         while True:
             raw = await ws.receive_text()
             await _handle(json.loads(raw), ws)
     except (WebSocketDisconnect, Exception):
-        clients.discard(ws)
+        sessions.pop(ws, None)
+        _promote_first_observer()
+        _broadcast_sessions()
+
+
+ROBOT_ACTIONS = {"set_ball", "throw", "stop", "run_scenario", "stop_drill"}
 
 
 async def _handle(msg: dict, ws: WebSocket):
     action = msg.get("action", "")
+    sess = sessions.get(ws)
+
+    if action in ROBOT_ACTIONS:
+        if not sess or sess.role != Role.CONTROLLER:
+            await _send(ws, "error", {"message": "Nie jesteś kontrolerem robota"})
+            return
 
     if action == "scan":
         devices = await robot.scan(msg.get("timeout", 8))
@@ -139,7 +206,7 @@ async def _handle(msg: dict, ws: WebSocket):
         if ok:
             _save_last_addr(msg["address"])
         else:
-            await ws.send_text(json.dumps({"type": "error", "message": "Nie można połączyć z robotem"}))
+            await _send(ws, "error", {"message": "Nie można połączyć z robotem"})
 
     elif action == "disconnect":
         _save_last_addr("")
@@ -175,7 +242,7 @@ async def _handle(msg: dict, ws: WebSocket):
     elif action == "run_scenario":
         s = db.get_scenario(msg["id"])
         if not s:
-            await ws.send_text(json.dumps({"type": "error", "message": "Nie znaleziono scenariusza"}))
+            await _send(ws, "error", {"message": "Nie znaleziono scenariusza"})
             return
         asyncio.create_task(robot.run_drill(s["balls"], s.get("repeat", 1)))
 
@@ -184,6 +251,51 @@ async def _handle(msg: dict, ws: WebSocket):
 
     elif action == "reset_ble":
         asyncio.create_task(robot.reset_ble())
+
+    # ── Zarządzanie sesjami ──────────────────────────────────────────────────
+
+    elif action == "request_takeover":
+        ctrl = _get_controller()
+        if not ctrl:
+            # nikt nie kontroluje — od razu przejmij
+            if sess:
+                sess.role = Role.CONTROLLER
+                _broadcast_sessions()
+                await _send(ws, "session_role", {"role": Role.CONTROLLER, "session_id": sess.id})
+            return
+        if any(s.role == Role.PENDING for s in sessions.values()):
+            await _send(ws, "error", {"message": "Inny użytkownik już czeka na przejęcie"})
+            return
+        if sess:
+            sess.role = Role.PENDING
+            _broadcast_sessions()
+            await _send(ctrl.ws, "takeover_request", {"requester_id": sess.id})
+
+    elif action == "cancel_takeover":
+        if sess and sess.role == Role.PENDING:
+            sess.role = Role.OBSERVER
+            _broadcast_sessions()
+
+    elif action == "respond_takeover":
+        accepted = msg.get("accepted", False)
+        pending = next((s for s in sessions.values() if s.role == Role.PENDING), None)
+        if not pending or not sess or sess.role != Role.CONTROLLER:
+            return
+        if accepted:
+            sess.role = Role.OBSERVER
+            pending.role = Role.CONTROLLER
+            await _send(sess.ws, "session_role", {"role": Role.OBSERVER, "session_id": sess.id})
+            await _send(pending.ws, "takeover_response", {"accepted": True, "role": Role.CONTROLLER})
+        else:
+            pending.role = Role.OBSERVER
+            await _send(pending.ws, "takeover_response", {"accepted": False})
+        _broadcast_sessions()
+
+    elif action == "release_control":
+        if sess and sess.role == Role.CONTROLLER:
+            sess.role = Role.OBSERVER
+            _promote_first_observer()
+            _broadcast_sessions()
 
 
 # ── REST — kalibracja ─────────────────────────────────────────────────────────
@@ -260,7 +372,6 @@ def delete_scenario(id: int):
     if not db.get_scenario(id):
         raise HTTPException(404)
     db.delete_scenario(id)
-
 
 
 # ── Frontend ───────────────────────────────────────────────────────────────────
