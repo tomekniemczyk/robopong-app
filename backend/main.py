@@ -257,7 +257,7 @@ async def ws_endpoint(ws: WebSocket):
         _broadcast_sessions()
 
 
-ROBOT_ACTIONS  = {"set_ball", "throw", "stop", "run_scenario", "run_drill", "stop_drill"}
+ROBOT_ACTIONS  = {"set_ball", "throw", "run_scenario", "run_drill"}  # stop/stop_drill dozwolone dla każdego
 STANDBY_SECS   = 5 * 60
 _last_activity: float = 0.0
 
