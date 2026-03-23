@@ -14,6 +14,7 @@ from fastapi.staticfiles import StaticFiles
 
 import db
 import drills
+import training
 import presets
 from models import Ball, ScenarioIn, FolderIn, FolderUpdate, DrillIn, ReorderItem, DrillReorderItem
 from robot import Robot
@@ -258,9 +259,10 @@ async def ws_endpoint(ws: WebSocket):
         _broadcast_sessions()
 
 
-ROBOT_ACTIONS  = {"set_ball", "throw", "run_scenario", "run_drill"}  # stop/stop_drill dozwolone dla każdego
+ROBOT_ACTIONS  = {"set_ball", "throw", "run_scenario", "run_drill", "run_training"}  # stop/stop_drill/stop_training dozwolone dla każdego
 STANDBY_SECS   = 5 * 60
 _last_activity: float = 0.0
+_training_runner = training.TrainingRunner()
 
 
 async def _handle(msg: dict, ws: WebSocket):
@@ -365,6 +367,18 @@ async def _handle(msg: dict, ws: WebSocket):
     elif action == "stop_drill":
         _log("Drill stop")
         robot.stop_drill()
+
+    elif action == "run_training":
+        t = training.get_training(msg["id"])
+        if not t:
+            await _send(ws, "error", {"message": "Nie znaleziono treningu"})
+            return
+        _log("Training start: \"%s\" — %d steps", t.get("name", "?"), len(t.get("steps", [])))
+        _training_runner.start(t, broadcast, robot)
+
+    elif action == "stop_training":
+        _log("Training stop")
+        _training_runner.stop(robot)
 
     elif action == "reset_ble":
         asyncio.create_task(robot.reset_ble())
@@ -545,6 +559,39 @@ def reset_all_drills():
     drills.reset_all()
     _log("RESET ALL DRILLS")
     return {"ok": True}
+
+
+# ── REST — treningi ───────────────────────────────────────────────────────────
+
+@app.get("/api/trainings")
+def list_trainings():
+    return training.get_trainings()
+
+
+@app.get("/api/trainings/{tid}")
+def get_training_endpoint(tid: int):
+    t = training.get_training(tid)
+    if not t:
+        raise HTTPException(404)
+    return t
+
+
+@app.post("/api/trainings", status_code=201)
+def create_training(body: dict):
+    tid = training.save_training(body)
+    return training.get_training(tid)
+
+
+@app.put("/api/trainings/{tid}")
+def update_training(tid: int, body: dict):
+    body["id"] = tid
+    training.save_training(body)
+    return training.get_training(tid)
+
+
+@app.delete("/api/trainings/{tid}", status_code=204)
+def delete_training_endpoint(tid: int):
+    training.delete_training(tid)
 
 
 # ── Frontend ───────────────────────────────────────────────────────────────────

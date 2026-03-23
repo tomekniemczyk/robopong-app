@@ -49,3 +49,18 @@ class DrillReorderItem(BaseModel):
     id:          int
     sort_order:  int
     folder_id:   Optional[int] = None
+
+
+class TrainingStep(BaseModel):
+    drill_id:        int
+    drill_name:      str = ""
+    count:           int = Field(default=60, ge=1, le=999)
+    percent:         int = Field(default=100, ge=25, le=200)
+    pause_after_sec: int = Field(default=30, ge=0, le=600)
+
+
+class TrainingScenarioIn(BaseModel):
+    name:           str
+    description:    str = ""
+    countdown_sec:  int = Field(default=20, ge=3, le=120)
+    steps:          List[TrainingStep]
