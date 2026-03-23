@@ -248,11 +248,17 @@
   <!-- ── Sessions panel ──────────────────────────────────────────────────── -->
   <div class="sessions-backdrop" v-if="showSessions" @click="showSessions=false"></div>
   <div class="sessions-panel" v-if="showSessions">
-    <h4>Aktywne sesje</h4>
-    <div class="session-row" v-for="s in sessionsList" :key="s.id">
-      <span class="s-id">{{ s.id }}</span>
-      <span :class="['role-pill', rolePillClass(s.role)]" style="font-size:9px;padding:2px 6px">{{ roleLabel(s.role) }}</span>
-      <span class="s-you" v-if="s.id === mySessionId">← Ty</span>
+    <h4>Aktywne sesje ({{ sessionsList.length }})</h4>
+    <div class="session-row" v-for="s in sessionsList" :key="s.id" style="flex-direction:column;align-items:flex-start;gap:4px;padding:8px 0">
+      <div style="display:flex;align-items:center;gap:6px;width:100%">
+        <span :class="['role-pill', rolePillClass(s.role)]" style="font-size:9px;padding:2px 6px">{{ roleLabel(s.role) }}</span>
+        <span class="s-id">{{ s.id }}</span>
+        <span class="s-you" v-if="s.id === mySessionId">← Ty</span>
+        <span style="flex:1"></span>
+        <span style="font-size:10px;color:var(--muted)" v-if="s.since">{{ sessionAge(s.since) }}</span>
+      </div>
+      <div v-if="s.ip" style="font-size:10px;color:var(--muted);font-family:monospace;padding-left:2px">{{ s.ip }}</div>
+      <div v-if="s.ua" style="font-size:10px;color:var(--muted);padding-left:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:200px" :title="s.ua">{{ parseUA(s.ua) }}</div>
     </div>
     <div v-if="!sessionsList.length" style="font-size:12px;color:var(--muted);padding:4px 0">Brak sesji</div>
     <button v-if="myRole === 'controller'" class="btn btn-ghost"
@@ -1951,6 +1957,22 @@ createApp({
       if (robotLog.value.length > 60) robotLog.value.shift()
       nextTick(() => { if (logBox.value) logBox.value.scrollTop = logBox.value.scrollHeight })
     }
+    function sessionAge(since) {
+      const s = Math.floor(Date.now() / 1000 - since)
+      if (s < 60) return `${s}s`
+      if (s < 3600) return `${Math.floor(s/60)}min`
+      return `${Math.floor(s/3600)}h`
+    }
+    function parseUA(ua) {
+      if (!ua) return ''
+      if (/iPhone|iPad/.test(ua)) return '📱 iOS'
+      if (/Android/.test(ua)) return '📱 Android'
+      if (/Windows/.test(ua)) return '🖥 Windows'
+      if (/Macintosh|Mac OS/.test(ua)) return '🍎 macOS'
+      if (/Linux/.test(ua)) return '🐧 Linux'
+      return ua.substring(0, 30)
+    }
+
     function copyDiagReport() {
       const lines = [
         '=== Raport diagnostyczny RoboPong ===',
@@ -2011,7 +2033,7 @@ createApp({
       cal, calDirty, calMotorLocked, helpOpen,
       lastAddr, robotName, editingName, robotNameEdit, camErr, camSrc,
       transport, deployTime, usbPorts, usbScanning, simulationMode, toggleSimulation,
-      myRole, mySessionId, sessionsList, showSessions, showDeviceInfo, copyDiagReport,
+      myRole, mySessionId, sessionsList, showSessions, showDeviceInfo, copyDiagReport, sessionAge, parseUA,
       takeoverReq, takeoverCountdown, takeoverCooldown,
       scan, connect, disconnect, saveName, usbScan, usbConnect, reconnectLast,
       runScenario, pauseDrill, resumeDrill, stopDrill, endDrill, drillPaused,

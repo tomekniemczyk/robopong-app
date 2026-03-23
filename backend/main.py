@@ -69,9 +69,12 @@ class Role:
 
 @dataclass
 class Session:
-    ws:   WebSocket
-    id:   str = field(default_factory=lambda: uuid.uuid4().hex[:6])
-    role: str = Role.OBSERVER
+    ws:          WebSocket
+    id:          str = field(default_factory=lambda: uuid.uuid4().hex[:6])
+    role:        str = Role.OBSERVER
+    ip:          str = ""
+    user_agent:  str = ""
+    connected_at: float = field(default_factory=time.time)
 
 
 sessions: Dict[WebSocket, Session] = {}
@@ -114,7 +117,8 @@ def _promote_first_observer():
 
 
 def _broadcast_sessions():
-    lst = [{"id": s.id, "role": s.role} for s in sessions.values()]
+    lst = [{"id": s.id, "role": s.role, "ip": s.ip, "ua": s.user_agent, "since": s.connected_at}
+           for s in sessions.values()]
     broadcast("sessions", {"sessions": lst})
 
 
@@ -234,7 +238,9 @@ def deploy_time():
 @app.websocket("/ws")
 async def ws_endpoint(ws: WebSocket):
     await ws.accept()
-    sess = Session(ws=ws)
+    ip = (ws.headers.get("x-forwarded-for") or ws.client.host or "") if ws.client else ""
+    ua = ws.headers.get("user-agent", "")
+    sess = Session(ws=ws, ip=ip, user_agent=ua)
     if not any(s.role == Role.CONTROLLER for s in sessions.values()):
         sess.role = Role.CONTROLLER
     sessions[ws] = sess
