@@ -606,6 +606,28 @@
     <button class="btn btn-danger" @click="stopDrill">⏹ Zatrzymaj</button>
   </div>
 
+  <!-- ── Training runner overlay ─────────────────────────────────────────── -->
+  <div class="runner-overlay" v-if="trainingRunning">
+    <h2>{{ trainingScenarioName }}</h2>
+    <div style="font-size:14px;color:var(--muted);margin-bottom:8px">
+      Krok {{ trainingStep }}/{{ trainingTotalSteps }} · {{ trainingDrillName }}
+    </div>
+    <div v-if="trainingPhase === 'countdown'" style="text-align:center">
+      <div class="ball-counter">{{ trainingTimer }}</div>
+      <div class="ball-sub">Odliczanie...</div>
+    </div>
+    <div v-if="trainingPhase === 'drill'" style="text-align:center">
+      <div class="ball-counter">{{ trainingBall }}</div>
+      <div class="ball-sub">z {{ trainingBallTotal }} piłek</div>
+      <div class="progress-bar"><div class="fill" :style="{width: trainingBallTotal ? (trainingBall/trainingBallTotal*100)+'%' : '0'}"></div></div>
+    </div>
+    <div v-if="trainingPhase === 'pause'" style="text-align:center">
+      <div class="ball-counter">{{ trainingTimer }}</div>
+      <div class="ball-sub">Pauza · następny: {{ trainingNextDrill }}</div>
+    </div>
+    <button class="btn btn-danger" style="margin-top:20px" @click="stopTraining">⏹ Zatrzymaj trening</button>
+  </div>
+
   <!-- ── Takeover request modal (dla kontrolera) ─────────────────────────── -->
   <div class="takeover-backdrop" v-if="takeoverReq">
     <div class="takeover-card">
@@ -684,6 +706,74 @@
     </div>
   </div>
 
+  <!-- ── Trening ────────────────────────────────────────────────────────── -->
+  <div class="page" v-show="page === 'training'">
+    <div class="card">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:14px">
+        <h2 style="flex:1">Treningi</h2>
+        <button class="btn btn-primary" @click="openTrainingEditor()">+ Nowy</button>
+      </div>
+      <div v-if="!trainings.length" style="color:var(--muted);font-size:13px">Brak treningów</div>
+      <ul class="device-list" v-else>
+        <li v-for="t in trainings" :key="t.id">
+          <div style="flex:1">
+            <div style="font-weight:600">{{ t.name }}</div>
+            <div style="font-size:11px;color:var(--muted)">{{ t.steps?.length || 0 }} drilli · {{ totalTrainingTime(t) }}</div>
+          </div>
+          <button class="btn btn-ghost btn-icon" @click="openTrainingEditor(t)" title="Edytuj">✏</button>
+          <button class="btn btn-success btn-icon" @click="runTraining(t.id)" :disabled="!connected || myRole!=='controller'" title="Start">▶</button>
+          <button class="btn btn-ghost btn-icon" style="color:var(--danger)" @click="deleteTraining(t.id)" title="Usuń">✕</button>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- ── Edytor treningu ───────────────────────────────────────────────── -->
+  <div class="page" v-show="page === 'training-editor'">
+    <div class="card">
+      <h2>{{ tEditId ? 'Edytuj trening' : 'Nowy trening' }}</h2>
+      <div class="field"><label>Nazwa</label><input v-model="tEditName"></div>
+      <div class="field"><label>Opis</label><input v-model="tEditDesc"></div>
+      <div class="field"><label>Odliczanie (sek) <small>3–120</small></label><input type="number" v-model.number="tEditCountdown" min="3" max="120"></div>
+
+      <h3 style="margin-top:14px">Kroki</h3>
+      <div v-for="(step, i) in tEditSteps" :key="i" class="card" style="margin:8px 0;padding:10px 12px">
+        <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+          <select v-model="step.drill_id" @change="onDrillSelect(step)" style="flex:1;min-width:120px;background:var(--surface);color:var(--text);border:1px solid var(--border);border-radius:8px;padding:6px 8px;font-size:12px">
+            <option :value="null" disabled>-- wybierz drill --</option>
+            <optgroup v-for="f in drillTree.folders" :label="f.name" :key="f.id">
+              <option v-for="d in f.drills" :value="d.id" :key="d.id">{{ d.name }}</option>
+            </optgroup>
+          </select>
+          <div style="display:flex;align-items:center;gap:4px;font-size:11px">
+            <label style="color:var(--muted)">Ilość</label>
+            <input type="number" v-model.number="step.count" min="1" max="999" style="width:50px;text-align:center">
+          </div>
+          <div style="display:flex;align-items:center;gap:4px;font-size:11px">
+            <label style="color:var(--muted)">%</label>
+            <input type="number" v-model.number="step.percent" min="25" max="200" style="width:50px;text-align:center">
+          </div>
+          <div style="display:flex;align-items:center;gap:4px;font-size:11px">
+            <label style="color:var(--muted)">Pauza</label>
+            <input type="number" v-model.number="step.pause_after_sec" min="0" max="600" style="width:50px;text-align:center">
+            <span style="color:var(--muted)">s</span>
+          </div>
+          <div style="display:flex;gap:3px">
+            <button class="btn-xs" @click="moveStep(i,-1)" :disabled="i===0">↑</button>
+            <button class="btn-xs" @click="moveStep(i,1)" :disabled="i===tEditSteps.length-1">↓</button>
+            <button class="btn-xs" @click="tEditSteps.splice(i,1)" style="color:var(--danger)">✕</button>
+          </div>
+        </div>
+      </div>
+      <button class="btn btn-ghost" @click="addTrainingStep" style="margin-top:6px">+ Dodaj krok</button>
+
+      <div class="cal-actions" style="margin-top:14px">
+        <button class="btn btn-primary" @click="saveTraining" :disabled="!tEditName || !tEditSteps.length">Zapisz</button>
+        <button class="btn btn-ghost" @click="page='training'">Anuluj</button>
+      </div>
+    </div>
+  </div>
+
   <!-- ── Move drill modal ─────────────────────────────────────────────────── -->
   <div class="move-overlay" v-if="moveModalDrill" @click.self="moveModalDrill=null">
     <div class="move-sheet">
@@ -705,6 +795,9 @@
     </button>
     <button :class="{ active: page === 'scenarios' }" @click="page='scenarios'">
       <span class="nav-icon">📋</span>Moje
+    </button>
+    <button :class="{ active: page === 'training' || page === 'training-editor' }" @click="page='training'">
+      <span class="nav-icon">🏋</span>Trening
     </button>
     <button :class="{ active: page === 'editor' }" @click="openEditor(null)">
       <span class="nav-icon">✏️</span>Edytor
@@ -893,6 +986,26 @@ createApp({
         drillMaxRepeat.value = m.max_repeat
       } else if (m.type === 'drill_ended') {
         drillRunning.value = false
+      } else if (m.type === 'training_countdown') {
+        trainingPhase.value = 'countdown'
+        trainingTimer.value = m.sec
+      } else if (m.type === 'training_step') {
+        trainingPhase.value = 'drill'
+        trainingStep.value = m.step
+        trainingTotalSteps.value = m.total
+        trainingDrillName.value = m.drill_name
+        trainingBall.value = 0
+        trainingBallTotal.value = m.count || 0
+      } else if (m.type === 'training_drill_progress') {
+        trainingBall.value = m.thrown || m.ball
+        trainingBallTotal.value = m.count || m.total
+      } else if (m.type === 'training_pause') {
+        trainingPhase.value = 'pause'
+        trainingTimer.value = m.sec
+        trainingNextDrill.value = m.next_drill || ''
+      } else if (m.type === 'training_ended') {
+        trainingRunning.value = false
+        showToast('Trening zakończony!')
       } else if (m.type === 'reconnecting') {
         showToast(`🔄 Ponowne łączenie…`)
       } else if (m.type === 'robot_response') {
@@ -1129,6 +1242,90 @@ createApp({
       showToast('✅ Zapisano!')
     }
 
+    // ── Trainings ─────────────────────────────────────────────
+    const trainings = ref([])
+    const trainingRunning = ref(false)
+    const trainingScenarioName = ref('')
+    const trainingPhase = ref('')
+    const trainingStep = ref(0)
+    const trainingTotalSteps = ref(0)
+    const trainingDrillName = ref('')
+    const trainingNextDrill = ref('')
+    const trainingTimer = ref(0)
+    const trainingBall = ref(0)
+    const trainingBallTotal = ref(0)
+    const tEditId = ref(null)
+    const tEditName = ref('')
+    const tEditDesc = ref('')
+    const tEditCountdown = ref(20)
+    const tEditSteps = ref([])
+
+    async function loadTrainings() {
+      const r = await fetch('/api/trainings')
+      trainings.value = await r.json()
+    }
+    function openTrainingEditor(t) {
+      if (t) {
+        tEditId.value = t.id; tEditName.value = t.name; tEditDesc.value = t.description || ''
+        tEditCountdown.value = t.countdown_sec || 20
+        tEditSteps.value = (t.steps || []).map(s => ({...s}))
+      } else {
+        tEditId.value = null; tEditName.value = ''; tEditDesc.value = ''
+        tEditCountdown.value = 20; tEditSteps.value = []
+      }
+      page.value = 'training-editor'
+    }
+    function addTrainingStep() {
+      tEditSteps.value.push({ drill_id: null, drill_name: '', count: 60, percent: 100, pause_after_sec: 30 })
+    }
+    function moveStep(i, dir) {
+      const arr = tEditSteps.value
+      const j = i + dir
+      if (j < 0 || j >= arr.length) return
+      ;[arr[i], arr[j]] = [arr[j], arr[i]]
+    }
+    function onDrillSelect(step) {
+      for (const f of (drillTree.folders || [])) {
+        for (const d of f.drills) {
+          if (d.id === step.drill_id) { step.drill_name = d.name; return }
+        }
+      }
+    }
+    async function saveTraining() {
+      const body = { name: tEditName.value, description: tEditDesc.value, countdown_sec: tEditCountdown.value, steps: tEditSteps.value }
+      if (tEditId.value) {
+        await fetch(`/api/trainings/${tEditId.value}`, { method: 'PUT', headers: {'Content-Type':'application/json'}, body: JSON.stringify(body) })
+      } else {
+        await fetch('/api/trainings', { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify(body) })
+      }
+      await loadTrainings()
+      page.value = 'training'
+      showToast('Trening zapisany')
+    }
+    async function deleteTraining(id) {
+      if (!confirm('Usunąć trening?')) return
+      await fetch(`/api/trainings/${id}`, { method: 'DELETE' })
+      await loadTrainings()
+    }
+    function runTraining(id) {
+      trainingRunning.value = true
+      trainingScenarioName.value = trainings.value.find(t => t.id === id)?.name || ''
+      send({ action: 'run_training', id })
+    }
+    function stopTraining() {
+      send({ action: 'stop_training' })
+      trainingRunning.value = false
+    }
+    function totalTrainingTime(t) {
+      if (!t.steps?.length) return '0s'
+      const totalSec = (t.countdown_sec || 20) + t.steps.reduce((sum, s) => {
+        const drillTime = (s.count || 60) * (s.wait_ms || 1500) / 1000
+        return sum + drillTime + (s.pause_after_sec || 0)
+      }, 0)
+      const min = Math.floor(totalSec / 60)
+      return min > 0 ? `~${min} min` : `~${Math.round(totalSec)}s`
+    }
+
     // ── Calibration ────────────────────────────────────────────
     const CAL_DEFAULTS = { top_speed: 161, bot_speed: 0, oscillation: 150, height: 183, rotation: 150, wait_ms: 1000 }
     async function loadCal() {
@@ -1240,7 +1437,7 @@ createApp({
     }
 
     onMounted(() => {
-      wsConnect(); loadScenarios(); loadCal(); loadDrillTree()
+      wsConnect(); loadScenarios(); loadCal(); loadDrillTree(); loadTrainings()
       fetch('/api/deploy-time').then(r=>r.json()).then(d => { deployTime.value = d.deploy_time }).catch(()=>{})
     })
 
@@ -1266,6 +1463,12 @@ createApp({
       roleLabel, rolePillClass,
       requestTakeover, cancelTakeover, respondTakeover, releaseControl,
       ballWord,
+      trainings, trainingRunning, trainingScenarioName, trainingPhase,
+      trainingStep, trainingTotalSteps, trainingDrillName, trainingNextDrill,
+      trainingTimer, trainingBall, trainingBallTotal,
+      tEditId, tEditName, tEditDesc, tEditCountdown, tEditSteps,
+      loadTrainings, openTrainingEditor, addTrainingStep, moveStep,
+      onDrillSelect, saveTraining, deleteTraining, runTraining, stopTraining, totalTrainingTime,
     }
   }
 }).mount('#app')
