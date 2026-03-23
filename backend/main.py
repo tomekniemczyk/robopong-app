@@ -566,11 +566,23 @@ def get_drill_endpoint(drill_id: int):
     return d
 
 
+@app.post("/api/drills", status_code=201)
+def create_drill_endpoint(body: dict):
+    new_id = drills.create_custom_drill(body)
+    return drills.get_drill(new_id)
+
+
 @app.put("/api/drills/{drill_id}")
 def update_drill_endpoint(drill_id: int, body: dict):
     _log("UPDATE DRILL id=%d", drill_id)
-    drills.save_override(drill_id, body)
+    if not drills.save_override(drill_id, body):
+        drills.update_custom_drill(drill_id, body)
     return drills.get_drill(drill_id)
+
+
+@app.delete("/api/drills/{drill_id}", status_code=204)
+def delete_drill_endpoint(drill_id: int):
+    drills.delete_custom_drill(drill_id)
 
 
 @app.put("/api/drills/{drill_id}/count")

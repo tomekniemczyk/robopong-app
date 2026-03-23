@@ -31,11 +31,12 @@ def _drill_key(folder_name: str, drill_name: str) -> str:
 
 
 def _assign_ids(tree: dict) -> dict:
-    """Assign stable IDs: folder_idx*1000 + drill_idx."""
+    """Assign stable IDs: folder_idx*1000 + drill_idx. Custom drills keep their stored IDs."""
     for fi, folder in enumerate(tree.get("folders", [])):
         folder["id"] = (fi + 1) * 1000
         for di, drill in enumerate(folder.get("drills", [])):
-            drill["id"] = folder["id"] + di + 1
+            if not drill.get("id"):  # factory drills have no pre-assigned ID
+                drill["id"] = folder["id"] + di + 1
             drill["folder_id"] = folder["id"]
     return tree
 
@@ -142,6 +143,19 @@ def reset_all():
     user = _load_user()
     user["overrides"] = {}
     _save_user(user)
+
+
+def update_custom_drill(drill_id: int, data: dict) -> bool:
+    user = _load_user()
+    custom = user.get("custom_drills", [])
+    for drill in custom:
+        if drill.get("id") == drill_id:
+            for k, v in data.items():
+                if k != "id":
+                    drill[k] = v
+            _save_user(user)
+            return True
+    return False
 
 
 def create_custom_drill(data: dict):
