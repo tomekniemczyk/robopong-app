@@ -213,11 +213,13 @@ class Robot:
         self._drill:       Optional[asyncio.Task] = None
         self._reconnect:   Optional[asyncio.Task] = None
         self.firmware:     int = 0
+        self.robot_version: int = -1  # -1=unknown, 0=OriginalNewFW, 1=Original, 2=SecondRun(Gen2)
         self.device:       str = ""
         self._last_addr:   str = ""
         self._auto_reconnect: bool = False
         self._health_task: Optional[asyncio.Task] = None
         self._last_notify: float = 0
+        self._awaiting_version: bool = False
 
         # USB
         self._usb = _USBTransport()
@@ -304,6 +306,7 @@ class Robot:
             except Exception: pass
             self._client = None
         self.firmware = 0
+        self.robot_version = -1
         self.device = ""
         self._push_status()
         await asyncio.to_thread(_bt_disconnect, addr)
@@ -332,6 +335,7 @@ class Robot:
             loop = asyncio.get_event_loop()
             await loop.run_in_executor(None, self._usb.disconnect)
         self.firmware = 0
+        self.robot_version = -1
         self.device = ""
         self._push_status()
 
@@ -503,18 +507,34 @@ class Robot:
             await asyncio.sleep(0.12)
         await self._write("H")
         await asyncio.sleep(0.4)
-        # 2. InitializeRobot — F, I, ClearBall (H + W000)
-        await self._write("F")         # GetFirmwareVersion
+
+        # 2. GetFirmwareVersion
+        await self._write("F")
         await asyncio.sleep(0.5)
-        await self._write("I")         # getRobotVersion (query)
-        await asyncio.sleep(0.3)
-        await self._write("J02")       # SetVersion Gen2
-        await asyncio.sleep(0.2)
-        await self._write("H")         # ClearBall
+
+        # 3. getRobotVersion (query I, czekaj na odpowiedź)
+        self._awaiting_version = True
+        await self._write("I")
+        for _ in range(10):  # max 1s czekania
+            await asyncio.sleep(0.1)
+            if not self._awaiting_version:
+                break
+        self._awaiting_version = False
+
+        # 4. Jeśli firmware >= 220 i wersja nie wykryta → ustaw Gen2
+        if self.robot_version < 0 and self.firmware >= 220:
+            logger.info("Version unknown, forcing Gen2 (J02)")
+            await self._write("J02")
+            self.robot_version = 2
+            await asyncio.sleep(0.2)
+
+        # 5. ClearBall (H + W000)
+        await self._write("H")
         await asyncio.sleep(0.1)
-        await self._write("W000")      # SetAdjustment(0)
+        await self._write("W000")
         await asyncio.sleep(0.2)
-        logger.info("handshake complete")
+
+        logger.info("handshake complete: fw=%d version=%d", self.firmware, self.robot_version)
 
     async def _write(self, cmd: str):
         # USB takes priority if connected
@@ -546,6 +566,16 @@ class Robot:
             return
         self._last_notify = asyncio.get_event_loop().time()
         self._emit("robot_response", {"data": text})
+
+        # Parsowanie odpowiedzi na I (robot version): 1 bajt 0/1/2
+        if self._awaiting_version and len(text) == 1 and text in ("0", "1", "2"):
+            self.robot_version = int(text)
+            self._awaiting_version = False
+            logger.info("Robot version: %d (%s)", self.robot_version,
+                        {0: "OriginalNewFW", 1: "Original", 2: "SecondRun/Gen2"}.get(self.robot_version, "?"))
+            self._push_status()
+            return
+
         try:
             v = int(text)
             if 100 <= v <= 9999:
@@ -557,6 +587,7 @@ class Robot:
     def _on_disconnect(self, _client):
         self._client = None
         self.firmware = 0
+        self.robot_version = -1
         self.device = ""
         self._stop_health_monitor()
         self._push_status()
@@ -566,10 +597,11 @@ class Robot:
 
     def _push_status(self):
         self._emit("status", {
-            "connected": self.is_connected,
-            "firmware":  self.firmware,
-            "device":    self.device,
-            "transport": "usb" if self._usb.is_connected else "ble",
+            "connected":     self.is_connected,
+            "firmware":      self.firmware,
+            "robot_version": self.robot_version,
+            "device":        self.device,
+            "transport":     "usb" if self._usb.is_connected else "ble",
         })
 
     async def _reconnect_loop(self):
