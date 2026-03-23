@@ -118,6 +118,55 @@
     .slog-info .slog-lvl  { color:#34c759; }
     .slog-warning .slog-lvl { color:#ff9f0a; }
     .slog-error .slog-lvl, .slog-critical .slog-lvl { color:#ff453a; }
+
+    /* ── Drills tree ─────────────────────────────────────────── */
+    .drill-folder { margin-bottom:6px; }
+    .drill-folder-header {
+      display:flex; align-items:center; gap:8px; cursor:pointer;
+      padding:10px 12px; border-radius:12px; background:var(--surface);
+      border:1px solid var(--border); user-select:none;
+    }
+    .drill-folder-header:hover { border-color:rgba(91,124,247,.4); }
+    .drill-folder-arrow { font-size:10px; color:var(--muted); width:10px; flex-shrink:0; }
+    .drill-folder-name { font-size:14px; font-weight:600; }
+    .drill-folder-actions { display:flex; gap:4px; align-items:center; }
+    .drill-list { padding:4px 0 4px 16px; display:flex; flex-direction:column; gap:2px; }
+    .drill-row {
+      display:flex; align-items:center; gap:6px;
+      padding:8px 10px; border-radius:9px;
+      background:var(--bg); border:1px solid transparent;
+    }
+    .drill-row:hover { border-color:var(--border); background:var(--surface); }
+    .drill-name { font-size:13px; flex:1; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+    .drill-actions { display:flex; gap:3px; align-items:center; flex-shrink:0; }
+    .btn-xs {
+      background:var(--border); color:var(--muted); border:none; border-radius:7px;
+      padding:4px 7px; font-size:11px; cursor:pointer; line-height:1;
+    }
+    .btn-xs:hover:not(:disabled) { color:var(--text); background:rgba(255,255,255,.1); }
+    .btn-xs:disabled { opacity:.3; cursor:default; }
+    .btn-start-xs {
+      background:var(--accent); color:#fff; border:none; border-radius:8px;
+      padding:5px 10px; font-size:11px; font-weight:600; cursor:pointer; white-space:nowrap;
+    }
+    .btn-start-xs:hover:not(:disabled) { box-shadow:0 0 12px rgba(91,124,247,.45); }
+    .btn-start-xs:disabled { opacity:.3; cursor:default; }
+    /* move modal */
+    .move-overlay {
+      position:fixed; inset:0; z-index:150; background:rgba(0,0,0,.6); backdrop-filter:blur(4px);
+      display:flex; align-items:flex-end; justify-content:center; padding:0 0 env(safe-area-inset-bottom);
+    }
+    .move-sheet {
+      background:var(--surface); border:1px solid var(--border); border-radius:20px 20px 0 0;
+      padding:20px 16px 24px; width:100%; max-width:480px; max-height:70vh; overflow-y:auto;
+    }
+    .move-sheet h3 { font-size:14px; margin:0 0 14px; color:var(--muted); font-weight:500; }
+    .move-btn {
+      display:block; width:100%; text-align:left; padding:11px 14px; margin-bottom:4px;
+      background:var(--bg); border:1px solid var(--border); border-radius:10px;
+      color:var(--text); font-size:14px; cursor:pointer;
+    }
+    .move-btn:hover { border-color:rgba(91,124,247,.5); }
   </style>
 </head>
 <body>
@@ -403,7 +452,7 @@
           <input type="number" v-model.number="cal.wait_ms" min="200" max="10000" @change="clampCal('wait_ms',200,10000);calDirty=true">
         </div>
         <div class="cal-actions">
-          <button class="btn" :disabled="!connected || myRole !== 'controller'" @click="calSend" style="background:var(--accent);color:#fff">📡 Wyślij</button>
+          <button class="btn" :disabled="!connected || myRole !== 'controller'" @click="calSend" style="background:var(--accent);color:#fff">⚡ Kalibruj</button>
           <button class="btn btn-success" :disabled="!connected || myRole !== 'controller'" @click="calThrow">🏓 Rzut</button>
           <button class="btn btn-danger" :disabled="!connected || myRole !== 'controller'" @click="calStop">⏹ Stop</button>
         </div>
@@ -574,10 +623,88 @@
     </div>
   </div>
 
+  <!-- ── Drille ──────────────────────────────────────────────────────────── -->
+  <div class="page" v-show="page === 'drills'">
+    <div class="row" style="margin-bottom:14px">
+      <span class="section-title" style="margin-bottom:0">Drille</span>
+      <div class="spacer"></div>
+      <button class="btn btn-ghost" style="padding:8px 12px;font-size:12px" @click="exportDrills">⬇ Export</button>
+      <button class="btn btn-primary" style="padding:8px 12px;font-size:12px" @click="addFolder">+ Folder</button>
+    </div>
+
+    <div v-if="drillTree.folders.length === 0 && (!drillTree.unfiled || drillTree.unfiled.length === 0)" class="empty">
+      <div class="empty-icon">📚</div>
+      <p>Brak drilli. Dodaj folder.</p>
+    </div>
+
+    <div v-for="folder in drillTree.folders" :key="folder.id" class="drill-folder">
+      <div class="drill-folder-header" @click="toggleFolder(folder.id)">
+        <span class="drill-folder-arrow">{{ openFolders.has(folder.id) ? '▼' : '▶' }}</span>
+        <span class="drill-folder-name">{{ folder.name }}</span>
+        <span class="chip" style="margin-left:4px;font-size:10px">{{ folder.drills.length }}</span>
+        <div class="spacer"></div>
+        <div class="drill-folder-actions" @click.stop>
+          <button class="btn-xs" @click="moveFolderUp(folder)" :disabled="drillTree.folders.indexOf(folder)===0" title="W górę">↑</button>
+          <button class="btn-xs" @click="moveFolderDown(folder)" :disabled="drillTree.folders.indexOf(folder)===drillTree.folders.length-1" title="W dół">↓</button>
+          <button class="btn-xs" @click="renameFolder(folder)" title="Zmień nazwę">✏</button>
+          <button class="btn-xs" @click="deleteFolderConfirm(folder.id)" title="Usuń folder">🗑</button>
+        </div>
+      </div>
+      <div v-if="openFolders.has(folder.id)" class="drill-list">
+        <div v-if="folder.drills.length === 0" style="padding:8px 6px;font-size:12px;color:var(--muted)">Brak drilli</div>
+        <div v-for="(drill, idx) in folder.drills" :key="drill.id" class="drill-row">
+          <span class="drill-name" :title="drill.description || drill.name">{{ drill.name }}</span>
+          <div class="drill-actions">
+            <button class="btn-xs" @click="moveDrillUp(folder, idx)" :disabled="idx===0">↑</button>
+            <button class="btn-xs" @click="moveDrillDown(folder, idx)" :disabled="idx===folder.drills.length-1">↓</button>
+            <button class="btn-xs" @click="showMoveModal(drill)" title="Przenieś do folderu">→</button>
+            <button class="btn-xs" @click="deleteDrillConfirm(drill.id)" title="Usuń">🗑</button>
+            <button class="btn-start-xs" :disabled="!connected || drillRunning || myRole !== 'controller'" @click="runDrill(drill)">▶</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div v-if="drillTree.unfiled && drillTree.unfiled.length > 0" class="drill-folder" style="margin-top:8px">
+      <div class="drill-folder-header" @click="toggleFolder('unfiled')">
+        <span class="drill-folder-arrow">{{ openFolders.has('unfiled') ? '▼' : '▶' }}</span>
+        <span class="drill-folder-name" style="color:var(--muted)">Bez folderu</span>
+        <span class="chip" style="margin-left:4px;font-size:10px">{{ drillTree.unfiled.length }}</span>
+      </div>
+      <div v-if="openFolders.has('unfiled')" class="drill-list">
+        <div v-for="drill in drillTree.unfiled" :key="drill.id" class="drill-row">
+          <span class="drill-name">{{ drill.name }}</span>
+          <div class="drill-actions">
+            <button class="btn-xs" @click="showMoveModal(drill)" title="Przenieś do folderu">→</button>
+            <button class="btn-xs" @click="deleteDrillConfirm(drill.id)">🗑</button>
+            <button class="btn-start-xs" :disabled="!connected || drillRunning || myRole !== 'controller'" @click="runDrill(drill)">▶</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Move drill modal ─────────────────────────────────────────────────── -->
+  <div class="move-overlay" v-if="moveModalDrill" @click.self="moveModalDrill=null">
+    <div class="move-sheet">
+      <h3>Przenieś: {{ moveModalDrill.name }}</h3>
+      <button v-for="f in drillTree.folders" :key="f.id" class="move-btn" @click="moveDrillToFolder(moveModalDrill.id, f.id)">
+        📁 {{ f.name }}
+      </button>
+      <button class="move-btn" style="color:var(--muted)" @click="moveDrillToFolder(moveModalDrill.id, null)">
+        — Bez folderu
+      </button>
+      <button class="btn btn-ghost" style="width:100%;margin-top:10px" @click="moveModalDrill=null">Anuluj</button>
+    </div>
+  </div>
+
   <!-- ── Bottom nav ───────────────────────────────────────────────────────── -->
   <nav class="nav">
+    <button :class="{ active: page === 'drills' }" @click="page='drills'">
+      <span class="nav-icon">📚</span>Drille
+    </button>
     <button :class="{ active: page === 'scenarios' }" @click="page='scenarios'">
-      <span class="nav-icon">📋</span>Scenariusze
+      <span class="nav-icon">📋</span>Moje
     </button>
     <button :class="{ active: page === 'editor' }" @click="openEditor(null)">
       <span class="nav-icon">✏️</span>Edytor
@@ -813,6 +940,137 @@ createApp({
       editingName.value = false
     }
 
+    // ── Drills tree ────────────────────────────────────────────
+    const drillTree    = reactive({ folders: [], unfiled: [] })
+    const openFolders  = reactive(new Set())
+    const moveModalDrill = ref(null)
+
+    async function loadDrillTree() {
+      const r = await fetch('/api/drills/tree')
+      const data = await r.json()
+      drillTree.folders = data.folders
+      drillTree.unfiled = data.unfiled || []
+    }
+
+    function toggleFolder(id) {
+      openFolders.has(id) ? openFolders.delete(id) : openFolders.add(id)
+    }
+
+    async function addFolder() {
+      const name = prompt('Nazwa folderu:')
+      if (!name?.trim()) return
+      await fetch('/api/drills/folders', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name: name.trim() })
+      })
+      await loadDrillTree()
+    }
+
+    async function renameFolder(folder) {
+      const name = prompt('Nowa nazwa:', folder.name)
+      if (!name?.trim() || name.trim() === folder.name) return
+      await fetch(`/api/drills/folders/${folder.id}`, {
+        method: 'PUT', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name: name.trim() })
+      })
+      await loadDrillTree()
+    }
+
+    async function deleteFolderConfirm(id) {
+      if (!confirm('Usunąć folder? Drille przejdą do "Bez folderu".')) return
+      await fetch(`/api/drills/folders/${id}`, { method: 'DELETE' })
+      await loadDrillTree()
+    }
+
+    async function moveFolderUp(folder) {
+      const idx = drillTree.folders.indexOf(folder)
+      if (idx <= 0) return
+      const order = drillTree.folders.map((f, i) => ({ id: f.id, sort_order: i }))
+      ;[order[idx - 1].sort_order, order[idx].sort_order] = [order[idx].sort_order, order[idx - 1].sort_order]
+      await fetch('/api/drills/folders/reorder', {
+        method: 'PUT', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(order)
+      })
+      await loadDrillTree()
+    }
+
+    async function moveFolderDown(folder) {
+      const idx = drillTree.folders.indexOf(folder)
+      if (idx >= drillTree.folders.length - 1) return
+      const order = drillTree.folders.map((f, i) => ({ id: f.id, sort_order: i }))
+      ;[order[idx + 1].sort_order, order[idx].sort_order] = [order[idx].sort_order, order[idx + 1].sort_order]
+      await fetch('/api/drills/folders/reorder', {
+        method: 'PUT', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(order)
+      })
+      await loadDrillTree()
+    }
+
+    async function moveDrillUp(folder, idx) {
+      if (idx <= 0) return
+      const drills = folder.drills
+      const order = drills.map((d, i) => ({ id: d.id, sort_order: i, folder_id: d.folder_id }))
+      ;[order[idx - 1].sort_order, order[idx].sort_order] = [order[idx].sort_order, order[idx - 1].sort_order]
+      await fetch('/api/drills/reorder', {
+        method: 'PUT', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(order)
+      })
+      await loadDrillTree()
+    }
+
+    async function moveDrillDown(folder, idx) {
+      if (idx >= folder.drills.length - 1) return
+      const drills = folder.drills
+      const order = drills.map((d, i) => ({ id: d.id, sort_order: i, folder_id: d.folder_id }))
+      ;[order[idx + 1].sort_order, order[idx].sort_order] = [order[idx].sort_order, order[idx + 1].sort_order]
+      await fetch('/api/drills/reorder', {
+        method: 'PUT', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(order)
+      })
+      await loadDrillTree()
+    }
+
+    function showMoveModal(drill) { moveModalDrill.value = drill }
+
+    async function moveDrillToFolder(drillId, folderId) {
+      await fetch('/api/drills/reorder', {
+        method: 'PUT', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify([{ id: drillId, sort_order: 9999, folder_id: folderId }])
+      })
+      moveModalDrill.value = null
+      await loadDrillTree()
+    }
+
+    async function deleteDrillConfirm(id) {
+      if (!confirm('Usunąć drill?')) return
+      await fetch(`/api/drills/${id}`, { method: 'DELETE' })
+      await loadDrillTree()
+    }
+
+    function runDrill(drill) {
+      if (myRole.value !== 'controller') return
+      drillScenario.value  = drill.name
+      drillBall.value      = 0
+      drillTotal.value     = drill.balls.length
+      drillRun.value       = 0
+      drillMaxRepeat.value = drill.repeat
+      drillRunning.value   = true
+      send({ action: 'run_drill', id: drill.id })
+    }
+
+    function exportDrills() {
+      fetch('/api/drills/export')
+        .then(r => r.json())
+        .then(data => {
+          const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' })
+          const a = document.createElement('a')
+          a.href = URL.createObjectURL(blob)
+          a.download = 'drills_export.json'
+          a.click()
+          URL.revokeObjectURL(a.href)
+        })
+    }
+
     // ── Scenarios ──────────────────────────────────────────────
     async function loadScenarios() {
       const r = await fetch('/api/scenarios')
@@ -985,12 +1243,16 @@ createApp({
     }
 
     onMounted(() => {
-      wsConnect(); loadScenarios(); loadCal()
+      wsConnect(); loadScenarios(); loadCal(); loadDrillTree()
       fetch('/api/deploy-time').then(r=>r.json()).then(d => { deployTime.value = d.deploy_time }).catch(()=>{})
     })
 
     return {
       page, connected, firmware, device, scanning, devices, scenarios,
+      drillTree, openFolders, moveModalDrill,
+      loadDrillTree, toggleFolder, addFolder, renameFolder, deleteFolderConfirm,
+      moveFolderUp, moveFolderDown, moveDrillUp, moveDrillDown,
+      showMoveModal, moveDrillToFolder, deleteDrillConfirm, runDrill, exportDrills,
       toast, robotLog, logBox, serverLogs, serverLogBox, logLevel, filteredServerLogs,
       drillRunning, drillScenario, drillBall, drillTotal, drillRun, drillMaxRepeat,
       editId, editName, editDesc, editRepeat, editBalls,

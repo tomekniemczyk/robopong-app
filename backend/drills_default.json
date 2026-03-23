@@ -1,0 +1,3494 @@
+{
+  "folders": [
+    {
+      "name": "Introductory",
+      "description": "Drills for the table tennis player just starting out",
+      "sort_order": 0,
+      "readonly": true,
+      "drills": [
+        {
+          "name": "Forehand Warmup",
+          "description": "Warmup drill with topspin serve to the forehand",
+          "youtube_id": "",
+          "delay_s": 0.0,
+          "balls": [
+            {
+              "top_speed": 120,
+              "bot_speed": 0,
+              "oscillation": 164,
+              "height": 116,
+              "rotation": 150,
+              "wait_ms": 2100
+            }
+          ],
+          "repeat": 0,
+          "sort_order": 0,
+          "readonly": true
+        },
+        {
+          "name": "Backhand Warmup",
+          "description": "Warmup drill with topspin serve to the backhand",
+          "youtube_id": "",
+          "delay_s": 0.0,
+          "balls": [
+            {
+              "top_speed": 120,
+              "bot_speed": 0,
+              "oscillation": 136,
+              "height": 116,
+              "rotation": 150,
+              "wait_ms": 2100
+            }
+          ],
+          "repeat": 0,
+          "sort_order": 1,
+          "readonly": true
+        },
+        {
+          "name": "Forehand 2-Step Footwork",
+          "description": "Footwork drill with two serves to the forehand",
+          "youtube_id": "",
+          "delay_s": 0.0,
+          "balls": [
+            {
+              "top_speed": 120,
+              "bot_speed": 0,
+              "oscillation": 150,
+              "height": 116,
+              "rotation": 150,
+              "wait_ms": 2050
+            },
+            {
+              "top_speed": 120,
+              "bot_speed": 0,
+              "oscillation": 164,
+              "height": 116,
+              "rotation": 150,
+              "wait_ms": 2050
+            }
+          ],
+          "repeat": 0,
+          "sort_order": 2,
+          "readonly": true
+        },
+        {
+          "name": "Backhand 2-Step Footwork",
+          "description": "Footwork drill with two serves to the backhand",
+          "youtube_id": "",
+          "delay_s": 0.0,
+          "balls": [
+            {
+              "top_speed": 120,
+              "bot_speed": 0,
+              "oscillation": 141,
+              "height": 116,
+              "rotation": 150,
+              "wait_ms": 2050
+            },
+            {
+              "top_speed": 120,
+              "bot_speed": 0,
+              "oscillation": 129,
+              "height": 116,
+              "rotation": 150,
+              "wait_ms": 2050
+            }
+          ],
+          "repeat": 0,
+          "sort_order": 3,
+          "readonly": true
+        },
+        {
+          "name": "Forehand Push",
+          "description": "Warmup drill with backspin serve to the forehand",
+          "youtube_id": "",
+          "delay_s": 0.0,
+          "balls": [
+            {
+              "top_speed": -20,
+              "bot_speed": 100,
+              "oscillation": 164,
+              "height": 116,
+              "rotation": 150,
+              "wait_ms": 2050
+            }
+          ],
+          "repeat": 0,
+          "sort_order": 4,
+          "readonly": true
+        },
+        {
+          "name": "Backhand Push",
+          "description": "Warmup drill with backspin serve to the backhand",
+          "youtube_id": "",
+          "delay_s": 0.0,
+          "balls": [
+            {
+              "top_speed": -20,
+              "bot_speed": 100,
+              "oscillation": 134,
+              "height": 116,
+              "rotation": 150,
+              "wait_ms": 2050
+            }
+          ],
+          "repeat": 0,
+          "sort_order": 5,
+          "readonly": true
+        },
+        {
+          "name": "Forehand Push With Footwork",
+          "description": "Footwork drill with backspin serve to the forehand",
+          "youtube_id": "",
+          "delay_s": 0.0,
+          "balls": [
+            {
+              "top_speed": -12,
+              "bot_speed": 100,
+              "oscillation": 150,
+              "height": 116,
+              "rotation": 150,
+              "wait_ms": 2100
+            },
+            {
+              "top_speed": -12,
+              "bot_speed": 100,
+              "oscillation": 164,
+              "height": 116,
+              "rotation": 150,
+              "wait_ms": 2100
+            }
+          ],
+          "repeat": 0,
+          "sort_order": 6,
+          "readonly": true
+        },
+        {
+          "name": "Backhand Push With Footwork",
+          "description": "Footword drill with backspin serve to the backhand",
+          "youtube_id": "",
+          "delay_s": 0.0,
+          "balls": [
+            {
+              "top_speed": -12,
+              "bot_speed": 100,
+              "oscillation": 143,
+              "height": 116,
+              "rotation": 150,
+              "wait_ms": 2100
+            },
+            {
+              "top_speed": -12,
+              "bot_speed": 100,
+              "oscillation": 129,
+              "height": 116,
+              "rotation": 150,
+              "wait_ms": 2100
+            }
+          ],
+          "repeat": 0,
+          "sort_order": 7,
+          "readonly": true
+        },
+        {
+          "name": "Forehand Topspin",
+          "description": "Simple topspin ball to the forehand",
+          "youtube_id": "",
+          "delay_s": 0.0,
+          "balls": [
+            {
+              "top_speed": 149,
+              "bot_speed": -12,
+              "oscillation": 164,
+              "height": 188,
+              "rotation": 150,
+              "wait_ms": 2100
+            }
+          ],
+          "repeat": 0,
+          "sort_order": 8,
+          "readonly": true
+        },
+        {
+          "name": "Backhand Topspin",
+          "description": "Simple topspin ball to the backhand",
+          "youtube_id": "",
+          "delay_s": 0.0,
+          "balls": [
+            {
+              "top_speed": 149,
+              "bot_speed": -12,
+              "oscillation": 134,
+              "height": 188,
+              "rotation": 150,
+              "wait_ms": 2050
+            }
+          ],
+          "repeat": 0,
+          "sort_order": 9,
+          "readonly": true
+        },
+        {
+          "name": "Forehand Topspin With Footwork",
+          "description": "Footwork with topspin balls to the forehand",
+          "youtube_id": "",
+          "delay_s": 0.0,
+          "balls": [
+            {
+              "top_speed": 149,
+              "bot_speed": -12,
+              "oscillation": 150,
+              "height": 188,
+              "rotation": 150,
+              "wait_ms": 2000
+            },
+            {
+              "top_speed": 149,
+              "bot_speed": -12,
+              "oscillation": 166,
+              "height": 188,
+              "rotation": 150,
+              "wait_ms": 2000
+            }
+          ],
+          "repeat": 0,
+          "sort_order": 10,
+          "readonly": true
+        },
+        {
+          "name": "Backhand Topspin With Footwork",
+          "description": "Footwork with topspin balls to the backhand",
+          "youtube_id": "",
+          "delay_s": 0.0,
+          "balls": [
+            {
+              "top_speed": 144,
+              "bot_speed": -25,
+              "oscillation": 141,
+              "height": 188,
+              "rotation": 150,
+              "wait_ms": 2050
+            },
+            {
+              "top_speed": 144,
+              "bot_speed": -25,
+              "oscillation": 129,
+              "height": 188,
+              "rotation": 150,
+              "wait_ms": 2050
+            }
+          ],
+          "repeat": 0,
+          "sort_order": 11,
+          "readonly": true
+        },
+        {
+          "name": "Forehand Backspin",
+          "description": "Simple backspin ball to the forehand",
+          "youtube_id": "",
+          "delay_s": 0.0,
+          "balls": [
+            {
+              "top_speed": 37,
+              "bot_speed": 75,
+              "oscillation": 164,
+              "height": 176,
+              "rotation": 150,
+              "wait_ms": 2100
+            }
+          ],
+          "repeat": 0,
+          "sort_order": 12,
+          "readonly": true
+        },
+        {
+          "name": "Backhand Backspin",
+          "description": "Simple backspin ball to the backhand",
+          "youtube_id": "",
+          "delay_s": 0.0,
+          "balls": [
+            {
+              "top_speed": 37,
+              "bot_speed": 75,
+              "oscillation": 134,
+              "height": 176,
+              "rotation": 150,
+              "wait_ms": 2100
+            }
+          ],
+          "repeat": 0,
+          "sort_order": 13,
+          "readonly": true
+        },
+        {
+          "name": "Forehand Backspin With Footwork",
+          "description": "Footwork with backspin balls to the forehand",
+          "youtube_id": "",
+          "delay_s": 0.0,
+          "balls": [
+            {
+              "top_speed": 37,
+              "bot_speed": 75,
+              "oscillation": 150,
+              "height": 176,
+              "rotation": 150,
+              "wait_ms": 2100
+            },
+            {
+              "top_speed": 37,
+              "bot_speed": 75,
+              "oscillation": 166,
+              "height": 176,
+              "rotation": 150,
+              "wait_ms": 2100
+            }
+          ],
+          "repeat": 0,
+          "sort_order": 14,
+          "readonly": true
+        },
+        {
+          "name": "Backhand Backspin With Footwork",
+          "description": "Footwork with backspin balls to the backhand",
+          "youtube_id": "",
+          "delay_s": 0.0,
+          "balls": [
+            {
+              "top_speed": 37,
+              "bot_speed": 75,
+              "oscillation": 143,
+              "height": 176,
+              "rotation": 150,
+              "wait_ms": 2100
+            },
+            {
+              "top_speed": 37,
+              "bot_speed": 75,
+              "oscillation": 132,
+              "height": 176,
+              "rotation": 150,
+              "wait_ms": 2100
+            }
+          ],
+          "repeat": 0,
+          "sort_order": 15,
+          "readonly": true
+        },
+        {
+          "name": "Three Serve Balls",
+          "description": "Three serves - topspin, no spin, and backspin",
+          "youtube_id": "",
+          "delay_s": 0.0,
+          "balls": [
+            {
+              "top_speed": 100,
+              "bot_speed": 0,
+              "oscillation": 162,
+              "height": 122,
+              "rotation": 150,
+              "wait_ms": 2150
+            },
+            {
+              "top_speed": 50,
+              "bot_speed": 50,
+              "oscillation": 162,
+              "height": 116,
+              "rotation": 150,
+              "wait_ms": 2150
+            },
+            {
+              "top_speed": 12,
+              "bot_speed": 87,
+              "oscillation": 162,
+              "height": 116,
+              "rotation": 150,
+              "wait_ms": 2150
+            }
+          ],
+          "repeat": 0,
+          "sort_order": 16,
+          "readonly": true
+        },
+        {
+          "name": "Three Balls",
+          "description": "Three balls - topspin, no spin, and backspin",
+          "youtube_id": "",
+          "delay_s": 0.0,
+          "balls": [
+            {
+              "top_speed": 125,
+              "bot_speed": 12,
+              "oscillation": 164,
+              "height": 183,
+              "rotation": 150,
+              "wait_ms": 2100
+            },
+            {
+              "top_speed": 62,
+              "bot_speed": 62,
+              "oscillation": 164,
+              "height": 180,
+              "rotation": 150,
+              "wait_ms": 2100
+            },
+            {
+              "top_speed": 5,
+              "bot_speed": 100,
+              "oscillation": 164,
+              "height": 187,
+              "rotation": 150,
+              "wait_ms": 2100
+            }
+          ],
+          "repeat": 0,
+          "sort_order": 17,
+          "readonly": true
+        },
+        {
+          "name": "No Spin Forehand",
+          "description": "No spin to the forehand",
+          "youtube_id": "",
+          "delay_s": 0.0,
+          "balls": [
+            {
+              "top_speed": 50,
+              "bot_speed": 50,
+              "oscillation": 164,
+              "height": 183,
+              "rotation": 150,
+              "wait_ms": 2100
+            }
+          ],
+          "repeat": 0,
+          "sort_order": 18,
+          "readonly": true
+        },
+        {
+          "name": "No Spin Backhand",
+          "description": "No spin to the backhand",
+          "youtube_id": "",
+          "delay_s": 0.0,
+          "balls": [
+            {
+              "top_speed": 62,
+              "bot_speed": 62,
+              "oscillation": 132,
+              "height": 186,
+              "rotation": 150,
+              "wait_ms": 2100
+            }
+          ],
+          "repeat": 0,
+          "sort_order": 19,
+          "readonly": true
+        }
+      ]
+    },
+    {
+      "name": "Beginner",
+      "description": "Drills for the table tennis player just starting out",
+      "sort_order": 1,
+      "readonly": true,
+      "drills": [
+        {
+          "name": "Beginner Forehand Warmup",
+          "description": "Warm-up your basic forehand stroke by keeping your angle set at 90 degrees and stroking forward on the ball.",
+          "youtube_id": "cEHFkuy4iv8",
+          "delay_s": 0.0,
+          "balls": [
+            {
+              "top_speed": 75,
+              "bot_speed": 50,
+              "oscillation": 159,
+              "height": 118,
+              "rotation": 150,
+              "wait_ms": 1300
+            }
+          ],
+          "repeat": 0,
+          "sort_order": 0,
+          "readonly": true
+        },
+        {
+          "name": "Beginner Backhand Warmup",
+          "description": "Warm-up your backhand stroke by controlling the ball to different locations   sometimes hitting to the forehand, sometimes middle, and sometimes backhand.",
+          "youtube_id": "rFGYvUce-zY",
+          "delay_s": 0.0,
+          "balls": [
+            {
+              "top_speed": 75,
+              "bot_speed": 50,
+              "oscillation": 138,
+              "height": 122,
+              "rotation": 150,
+              "wait_ms": 1500
+            }
+          ],
+          "repeat": 0,
+          "sort_order": 1,
+          "readonly": true
+        },
+        {
+          "name": "Forehand Backhand Footwork",
+          "description": "Link the strokes together by hitting one forehand and one backhand! Use a mini-step to move from one ball to the next.",
+          "youtube_id": "GdgcNdeohuM",
+          "delay_s": 0.0,
+          "balls": [
+            {
+              "top_speed": 62,
+              "bot_speed": 50,
+              "oscillation": 162,
+              "height": 113,
+              "rotation": 150,
+              "wait_ms": 1400
+            },
+            {
+              "top_speed": 62,
+              "bot_speed": 50,
+              "oscillation": 136,
+              "height": 113,
+              "rotation": 150,
+              "wait_ms": 1400
+            }
+          ],
+          "repeat": 0,
+          "sort_order": 2,
+          "readonly": true
+        },
+        {
+          "name": "Beginner Forehand Random",
+          "description": "This drill is a bit more challenging. The robot will move the ball around in the forehand zone; watch the robot s head and look for the subtle variations!",
+          "youtube_id": "serNYRE_FJ4",
+          "delay_s": 0.0,
+          "balls": [
+            {
+              "top_speed": 62,
+              "bot_speed": 50,
+              "oscillation": 158,
+              "height": 116,
+              "rotation": 150,
+              "wait_ms": 1400
+            }
+          ],
+          "repeat": 0,
+          "sort_order": 3,
+          "readonly": true
+        },
+        {
+          "name": "Beginner Backhand Random",
+          "description": "This drill will give you balls in the backhand zone. Keep your racket in front, move into position, and control the ball sometimes hitting a bit harder, sometimes giving a slow variation!",
+          "youtube_id": "t6ibeQg-S9c",
+          "delay_s": 0.0,
+          "balls": [
+            {
+              "top_speed": 62,
+              "bot_speed": 50,
+              "oscillation": 141,
+              "height": 116,
+              "rotation": 150,
+              "wait_ms": 1400
+            }
+          ],
+          "repeat": 0,
+          "sort_order": 4,
+          "readonly": true
+        },
+        {
+          "name": "Beginner Full Table Random",
+          "description": "Now this feels more like a game! Just like playing a real opponent, the balls will go anywhere on the table. Work on adjusting to the ball, while still maintaining good ball placement on all of your shots.",
+          "youtube_id": "EPxef156rsE",
+          "delay_s": 0.0,
+          "balls": [
+            {
+              "top_speed": 62,
+              "bot_speed": 50,
+              "oscillation": 149,
+              "height": 116,
+              "rotation": 150,
+              "wait_ms": 1200
+            }
+          ],
+          "repeat": 0,
+          "sort_order": 5,
+          "readonly": true
+        },
+        {
+          "name": "Serve Then Two Random",
+          "description": "This drill gives you a serve then two balls anywhere, then a break, just like a game.",
+          "youtube_id": "kWtoSjraULQ",
+          "delay_s": 2.5,
+          "balls": [
+            {
+              "top_speed": 62,
+              "bot_speed": 50,
+              "oscillation": 150,
+              "height": 114,
+              "rotation": 150,
+              "wait_ms": 1500
+            },
+            {
+              "top_speed": 112,
+              "bot_speed": 62,
+              "oscillation": 150,
+              "height": 171,
+              "rotation": 150,
+              "wait_ms": 1200
+            },
+            {
+              "top_speed": 125,
+              "bot_speed": 62,
+              "oscillation": 150,
+              "height": 172,
+              "rotation": 150,
+              "wait_ms": 1200
+            }
+          ],
+          "repeat": 0,
+          "sort_order": 6,
+          "readonly": true
+        },
+        {
+          "name": "In-And-Out Footwork",
+          "description": "Move in for the short forehand, then move back for the deep forehand. Next, move in for the short backhand, then move back a bit for the deep backhand. Stay on your toes, leaning forward, and contact the ball in-front of your body.",
+          "youtube_id": "BTLnGEVMpJI",
+          "delay_s": 0.0,
+          "balls": [
+            {
+              "top_speed": 50,
+              "bot_speed": 45,
+              "oscillation": 162,
+              "height": 120,
+              "rotation": 150,
+              "wait_ms": 1200
+            },
+            {
+              "top_speed": 75,
+              "bot_speed": 62,
+              "oscillation": 162,
+              "height": 120,
+              "rotation": 150,
+              "wait_ms": 1200
+            },
+            {
+              "top_speed": 50,
+              "bot_speed": 45,
+              "oscillation": 138,
+              "height": 120,
+              "rotation": 150,
+              "wait_ms": 1200
+            },
+            {
+              "top_speed": 75,
+              "bot_speed": 62,
+              "oscillation": 138,
+              "height": 120,
+              "rotation": 150,
+              "wait_ms": 1200
+            }
+          ],
+          "repeat": 0,
+          "sort_order": 7,
+          "readonly": true
+        },
+        {
+          "name": "Three Middle, One to Either Corner",
+          "description": "Pay Attention! The first three balls go to your middle, then suddenly the fourth balls goes surprisingly to either corner. Watch the robot s head and be ready to make the adjustment!",
+          "youtube_id": "m1YbX9nOecs",
+          "delay_s": 0.0,
+          "balls": [
+            {
+              "top_speed": 75,
+              "bot_speed": 62,
+              "oscillation": 150,
+              "height": 120,
+              "rotation": 150,
+              "wait_ms": 1200
+            },
+            {
+              "top_speed": 75,
+              "bot_speed": 62,
+              "oscillation": 150,
+              "height": 120,
+              "rotation": 150,
+              "wait_ms": 1050
+            }
+          ],
+          "repeat": 0,
+          "sort_order": 8,
+          "readonly": true
+        },
+        {
+          "name": "Forehand Random",
+          "description": "Within the forehand side of the table, you will get medium speed balls. Move quickly, get in position, and turn your shoulders as you make contact with the ball!",
+          "youtube_id": "r44h39AkH78",
+          "delay_s": 0.0,
+          "balls": [
+            {
+              "top_speed": 77,
+              "bot_speed": 50,
+              "oscillation": 158,
+              "height": 116,
+              "rotation": 150,
+              "wait_ms": 1250
+            }
+          ],
+          "repeat": 0,
+          "sort_order": 9,
+          "readonly": true
+        },
+        {
+          "name": "Backhand Random",
+          "description": "Within the backhand side of the table, you will get medium speed balls. Lean forward, creating space for your backspin, and brush the ball forward using your wrist and forearm to generate spin on your backhand stroke.",
+          "youtube_id": "9flvJ9OmfRg",
+          "delay_s": 0.0,
+          "balls": [
+            {
+              "top_speed": 77,
+              "bot_speed": 50,
+              "oscillation": 142,
+              "height": 116,
+              "rotation": 150,
+              "wait_ms": 1150
+            }
+          ],
+          "repeat": 0,
+          "sort_order": 10,
+          "readonly": true
+        },
+        {
+          "name": "Fast Random",
+          "description": "Be ready to quickly adjust, these balls will be coming anywhere on the table. Keep your racket in front and be ready to make fast transitions from middle to forehand to backhand!",
+          "youtube_id": "BswYKFJnT-Y",
+          "delay_s": 0.0,
+          "balls": [
+            {
+              "top_speed": 77,
+              "bot_speed": 50,
+              "oscillation": 150,
+              "height": 116,
+              "rotation": 150,
+              "wait_ms": 1000
+            }
+          ],
+          "repeat": 0,
+          "sort_order": 11,
+          "readonly": true
+        },
+        {
+          "name": "Short Forehand, Deep Backhand",
+          "description": "The first ball will be short to your forehand, then the follow-up ball will be deep to your backhand. If you are right handed, step forward with your right foot to get you closer to the ball.",
+          "youtube_id": "jDhjPW__I2s",
+          "delay_s": 2.3,
+          "balls": [
+            {
+              "top_speed": 62,
+              "bot_speed": 25,
+              "oscillation": 164,
+              "height": 116,
+              "rotation": 150,
+              "wait_ms": 1300
+            },
+            {
+              "top_speed": 105,
+              "bot_speed": 45,
+              "oscillation": 136,
+              "height": 183,
+              "rotation": 150,
+              "wait_ms": 1550
+            }
+          ],
+          "repeat": 0,
+          "sort_order": 12,
+          "readonly": true
+        },
+        {
+          "name": "Short Backhand, Deep Forehand",
+          "description": "Attack the first ball with your backhand, then quickly get back for the deep forehand.",
+          "youtube_id": "KtVZsgVfVIk",
+          "delay_s": 2.3,
+          "balls": [
+            {
+              "top_speed": 62,
+              "bot_speed": 25,
+              "oscillation": 136,
+              "height": 116,
+              "rotation": 150,
+              "wait_ms": 1300
+            },
+            {
+              "top_speed": 105,
+              "bot_speed": 45,
+              "oscillation": 164,
+              "height": 180,
+              "rotation": 150,
+              "wait_ms": 1550
+            }
+          ],
+          "repeat": 0,
+          "sort_order": 13,
+          "readonly": true
+        },
+        {
+          "name": "Backhand Rally, Surprise Forehand",
+          "description": "This is just like a game. It starts with a serve, then gives a backhand rally of one to five balls, then suddenly it surprises you to the forehand. After the sequence, it gives a short break for you to physically and mentally recover for the next ball.",
+          "youtube_id": "tpDD-hCq1CE",
+          "delay_s": 2.2,
+          "balls": [
+            {
+              "top_speed": 60,
+              "bot_speed": 25,
+              "oscillation": 157,
+              "height": 116,
+              "rotation": 150,
+              "wait_ms": 1450
+            },
+            {
+              "top_speed": 129,
+              "bot_speed": 37,
+              "oscillation": 136,
+              "height": 176,
+              "rotation": 150,
+              "wait_ms": 1300
+            },
+            {
+              "top_speed": 139,
+              "bot_speed": 37,
+              "oscillation": 162,
+              "height": 176,
+              "rotation": 150,
+              "wait_ms": 1100
+            }
+          ],
+          "repeat": 0,
+          "sort_order": 14,
+          "readonly": true
+        },
+        {
+          "name": "No-Spin Serves",
+          "description": "This drill gives you no-spin serves. You can choose whether to chop or attack each of these balls. Whichever you choose, make sure that you keep a relaxed grip and brush the ball to impart maximum spin.",
+          "youtube_id": "fVZG6X1Beno",
+          "delay_s": 1.1,
+          "balls": [
+            {
+              "top_speed": 50,
+              "bot_speed": 50,
+              "oscillation": 149,
+              "height": 120,
+              "rotation": 150,
+              "wait_ms": 1200
+            }
+          ],
+          "repeat": 0,
+          "sort_order": 15,
+          "readonly": true
+        },
+        {
+          "name": "Serve, Two Speed Balls",
+          "description": "After returning the serve, get ready for two fast balls. Just meet the ball and focus on keeping it low!",
+          "youtube_id": "JTKD6zXjmew",
+          "delay_s": 2.5,
+          "balls": [
+            {
+              "top_speed": 75,
+              "bot_speed": 25,
+              "oscillation": 150,
+              "height": 121,
+              "rotation": 150,
+              "wait_ms": 1550
+            },
+            {
+              "top_speed": 162,
+              "bot_speed": 12,
+              "oscillation": 150,
+              "height": 172,
+              "rotation": 150,
+              "wait_ms": 1300
+            },
+            {
+              "top_speed": 162,
+              "bot_speed": 27,
+              "oscillation": 150,
+              "height": 170,
+              "rotation": 150,
+              "wait_ms": 1000
+            }
+          ],
+          "repeat": 0,
+          "sort_order": 16,
+          "readonly": true
+        },
+        {
+          "name": "Serve, High Forehand, High Backhand",
+          "description": "After returning the serve, you will get a high ball to your forehand then a high ball to the backhand. Get in position and smash both high balls with your powerful forehand!",
+          "youtube_id": "tL-BphUMj1A",
+          "delay_s": 2.1,
+          "balls": [
+            {
+              "top_speed": 62,
+              "bot_speed": 55,
+              "oscillation": 150,
+              "height": 122,
+              "rotation": 150,
+              "wait_ms": 1150
+            },
+            {
+              "top_speed": 125,
+              "bot_speed": -7,
+              "oscillation": 160,
+              "height": 210,
+              "rotation": 150,
+              "wait_ms": 1150
+            },
+            {
+              "top_speed": 125,
+              "bot_speed": -7,
+              "oscillation": 138,
+              "height": 210,
+              "rotation": 150,
+              "wait_ms": 1150
+            }
+          ],
+          "repeat": 0,
+          "sort_order": 17,
+          "readonly": true
+        },
+        {
+          "name": "Serve, Then Speed",
+          "description": "After returning the serve, be ready for three fast balls   one to the forehand, one to the middle, then one to the backhand.",
+          "youtube_id": "IPYxu7adiwg",
+          "delay_s": 2.1,
+          "balls": [
+            {
+              "top_speed": 12,
+              "bot_speed": 62,
+              "oscillation": 150,
+              "height": 114,
+              "rotation": 150,
+              "wait_ms": 1150
+            },
+            {
+              "top_speed": 207,
+              "bot_speed": 0,
+              "oscillation": 162,
+              "height": 176,
+              "rotation": 150,
+              "wait_ms": 1100
+            },
+            {
+              "top_speed": 207,
+              "bot_speed": 0,
+              "oscillation": 150,
+              "height": 176,
+              "rotation": 150,
+              "wait_ms": 1000
+            },
+            {
+              "top_speed": 207,
+              "bot_speed": 0,
+              "oscillation": 140,
+              "height": 176,
+              "rotation": 150,
+              "wait_ms": 1000
+            }
+          ],
+          "repeat": 0,
+          "sort_order": 18,
+          "readonly": true
+        },
+        {
+          "name": "Forehand Game Situation",
+          "description": "First, you will get a backspin serve to the forehand, push it. Next you will get a deep backspin ball to the forehand, get down low and loop it up and over the net. Finally, you will get a deep topspin ball to the forehand, start your hand high and drive through the ball forward.",
+          "youtube_id": "l7VZ279DJBg",
+          "delay_s": 2.8,
+          "balls": [
+            {
+              "top_speed": 12,
+              "bot_speed": 62,
+              "oscillation": 160,
+              "height": 114,
+              "rotation": 150,
+              "wait_ms": 1350
+            },
+            {
+              "top_speed": 12,
+              "bot_speed": 87,
+              "oscillation": 160,
+              "height": 179,
+              "rotation": 150,
+              "wait_ms": 1350
+            },
+            {
+              "top_speed": 125,
+              "bot_speed": 25,
+              "oscillation": 160,
+              "height": 179,
+              "rotation": 150,
+              "wait_ms": 1250
+            }
+          ],
+          "repeat": 0,
+          "sort_order": 19,
+          "readonly": true
+        },
+        {
+          "name": "Backhand Game Situation",
+          "description": "First, you will get a backspin serve to the backhand, push it. Next you will get a deep backspin ball to the backhand, get down low and loop it up and over the net. Finally, you will get a deep topspin ball to the backhand, start your hand high and drive through the ball forward.",
+          "youtube_id": "Qf2e2440hk0",
+          "delay_s": 2.8,
+          "balls": [
+            {
+              "top_speed": 12,
+              "bot_speed": 62,
+              "oscillation": 136,
+              "height": 114,
+              "rotation": 150,
+              "wait_ms": 1350
+            },
+            {
+              "top_speed": 12,
+              "bot_speed": 87,
+              "oscillation": 140,
+              "height": 179,
+              "rotation": 150,
+              "wait_ms": 1350
+            },
+            {
+              "top_speed": 125,
+              "bot_speed": 25,
+              "oscillation": 140,
+              "height": 179,
+              "rotation": 150,
+              "wait_ms": 1250
+            }
+          ],
+          "repeat": 0,
+          "sort_order": 20,
+          "readonly": true
+        },
+        {
+          "name": "Short Serve Then 10 Balls",
+          "description": "You will get a short serve, step forward and push or flip this ball. Next, you will have a marathon rally of 10 topspin balls anywhere on the table. You will then have a short rest before the next rally.",
+          "youtube_id": "_nbeA1FoaJE",
+          "delay_s": 2.8,
+          "balls": [
+            {
+              "top_speed": 60,
+              "bot_speed": 35,
+              "oscillation": 150,
+              "height": 122,
+              "rotation": 150,
+              "wait_ms": 1350
+            },
+            {
+              "top_speed": 100,
+              "bot_speed": 70,
+              "oscillation": 150,
+              "height": 170,
+              "rotation": 150,
+              "wait_ms": 1250
+            }
+          ],
+          "repeat": 0,
+          "sort_order": 21,
+          "readonly": true
+        },
+        {
+          "name": "No Spin, Topspin",
+          "description": "Watch out for the tricky spin variations. The robot will alternate between no-spin serves and topspin serves! Pay attention and adjust your swing slightly for each ball!",
+          "youtube_id": "JiQzg_pF3H4",
+          "delay_s": 0.0,
+          "balls": [
+            {
+              "top_speed": 57,
+              "bot_speed": 57,
+              "oscillation": 150,
+              "height": 122,
+              "rotation": 150,
+              "wait_ms": 1600
+            },
+            {
+              "top_speed": 110,
+              "bot_speed": -112,
+              "oscillation": 150,
+              "height": 129,
+              "rotation": 150,
+              "wait_ms": 1600
+            }
+          ],
+          "repeat": 0,
+          "sort_order": 22,
+          "readonly": true
+        },
+        {
+          "name": "Left Sidespin Serve Return",
+          "description": "Regardless if you choose to hit with your forehand or backhand, touch the right side of the ball to control it onto the table.",
+          "youtube_id": "SLvgXQhfHJQ",
+          "delay_s": 0.0,
+          "balls": [
+            {
+              "top_speed": 122,
+              "bot_speed": -134,
+              "oscillation": 153,
+              "height": 141,
+              "rotation": 97,
+              "wait_ms": 1650
+            }
+          ],
+          "repeat": 0,
+          "sort_order": 23,
+          "readonly": true
+        },
+        {
+          "name": "Right Sidespin Serve Return",
+          "description": "If you contact the back of the ball, it will fly off your racket far to the left. In order to counter the spin, touch the left side of the ball.",
+          "youtube_id": "mV3QKBa2SXM",
+          "delay_s": 0.0,
+          "balls": [
+            {
+              "top_speed": 122,
+              "bot_speed": -134,
+              "oscillation": 147,
+              "height": 145,
+              "rotation": 203,
+              "wait_ms": 1650
+            }
+          ],
+          "repeat": 0,
+          "sort_order": 24,
+          "readonly": true
+        },
+        {
+          "name": "No-Spin Serve Return",
+          "description": "Against these serves, float the ball controlled over the net with a steady chop.",
+          "youtube_id": "noWuqsD0Ijs",
+          "delay_s": 0.0,
+          "balls": [
+            {
+              "top_speed": 50,
+              "bot_speed": 50,
+              "oscillation": 150,
+              "height": 122,
+              "rotation": 150,
+              "wait_ms": 1650
+            }
+          ],
+          "repeat": 0,
+          "sort_order": 25,
+          "readonly": true
+        },
+        {
+          "name": "Topspin Serve Return",
+          "description": "Using a controlled stroke, contact the ball with a relaxed grip and a 60 degree racket angle.",
+          "youtube_id": "b0KtuUCRBZY",
+          "delay_s": 0.0,
+          "balls": [
+            {
+              "top_speed": 117,
+              "bot_speed": -125,
+              "oscillation": 150,
+              "height": 110,
+              "rotation": 150,
+              "wait_ms": 1600
+            }
+          ],
+          "repeat": 0,
+          "sort_order": 26,
+          "readonly": true
+        },
+        {
+          "name": "Left Sidespin Serve Anywhere",
+          "description": "Be ready to adjust in-and-out as well as side-to-side for these very spinny left sidespin serves.",
+          "youtube_id": "K81A7FqPvoQ",
+          "delay_s": 0.0,
+          "balls": [
+            {
+              "top_speed": 126,
+              "bot_speed": -149,
+              "oscillation": 150,
+              "height": 145,
+              "rotation": 97,
+              "wait_ms": 1650
+            }
+          ],
+          "repeat": 0,
+          "sort_order": 27,
+          "readonly": true
+        },
+        {
+          "name": "Right Sidespin Serve Anywhere",
+          "description": "Prepare for the long sidespin serve, but always be ready to move in slightly with the right foot for the surprise short one! To control the spin, touch the left side of the ball.",
+          "youtube_id": "UAy4ANNx2aY",
+          "delay_s": 0.0,
+          "balls": [
+            {
+              "top_speed": 126,
+              "bot_speed": -149,
+              "oscillation": 150,
+              "height": 145,
+              "rotation": 203,
+              "wait_ms": 1650
+            }
+          ],
+          "repeat": 0,
+          "sort_order": 28,
+          "readonly": true
+        },
+        {
+          "name": "Left Sidespin Topspin Serve",
+          "description": "To return this combo serve, contact the top right of the ball. If you imagine that the ball is a globe with the United States facing you, you will touch the state of Maine.",
+          "youtube_id": "ZnBgwzS8HUs",
+          "delay_s": 0.0,
+          "balls": [
+            {
+              "top_speed": 126,
+              "bot_speed": -149,
+              "oscillation": 150,
+              "height": 116,
+              "rotation": 117,
+              "wait_ms": 1550
+            }
+          ],
+          "repeat": 0,
+          "sort_order": 29,
+          "readonly": true
+        },
+        {
+          "name": "Right Sidespin Topspin Serve",
+          "description": "To return this combo serve, contact the top left of the ball. This serve is a simulation of a right handed player doing a backhand serve.",
+          "youtube_id": "j3vLbY_x7RE",
+          "delay_s": 0.0,
+          "balls": [
+            {
+              "top_speed": 126,
+              "bot_speed": -149,
+              "oscillation": 150,
+              "height": 116,
+              "rotation": 183,
+              "wait_ms": 1550
+            }
+          ],
+          "repeat": 0,
+          "sort_order": 30,
+          "readonly": true
+        },
+        {
+          "name": "Backspin, Topspin",
+          "description": "After getting a backspin serve, you will then get five topspin balls anywhere. Try to keep score against the robot. Every time you get all 6 balls back, it is 1 point for you. Every time you miss during the six ball sequence, it is a point for Robo-Pong. Games to 11. Loser buys lunch.",
+          "youtube_id": "BQiBuevdYEI",
+          "delay_s": 2.3,
+          "balls": [
+            {
+              "top_speed": 2,
+              "bot_speed": 93,
+              "oscillation": 150,
+              "height": 118,
+              "rotation": 150,
+              "wait_ms": 1650
+            },
+            {
+              "top_speed": 125,
+              "bot_speed": 50,
+              "oscillation": 150,
+              "height": 172,
+              "rotation": 150,
+              "wait_ms": 1200
+            }
+          ],
+          "repeat": 0,
+          "sort_order": 31,
+          "readonly": true
+        }
+      ]
+    },
+    {
+      "name": "Intermediate",
+      "description": "Drills for the intermediate table tennis player",
+      "sort_order": 2,
+      "readonly": true,
+      "drills": [
+        {
+          "name": "Intermediate Forehand Warmup",
+          "description": "Contact the top of the ball and swing forward toward the top of the net.",
+          "youtube_id": "_MQAiXG2CTI",
+          "delay_s": 0.0,
+          "balls": [
+            {
+              "top_speed": 174,
+              "bot_speed": 0,
+              "oscillation": 159,
+              "height": 180,
+              "rotation": 150,
+              "wait_ms": 950
+            }
+          ],
+          "repeat": 0,
+          "sort_order": 0,
+          "readonly": true
+        },
+        {
+          "name": "Intermediate Backhand Warmup",
+          "description": "Use a quick, short stroke and get ready for a series of quick balls to your backhand.",
+          "youtube_id": "zerfXPAX_w4",
+          "delay_s": 0.0,
+          "balls": [
+            {
+              "top_speed": 174,
+              "bot_speed": 0,
+              "oscillation": 137,
+              "height": 180,
+              "rotation": 150,
+              "wait_ms": 930
+            }
+          ],
+          "repeat": 0,
+          "sort_order": 1,
+          "readonly": true
+        },
+        {
+          "name": "Two Backhands, Two Forehands",
+          "description": "Practice varying your spin a bit. Hit the first ball at medium speed, then the next a bit faster. Alternate speeds between each hit   medium backhand, hard backhand, medium forehand, hard forehand.",
+          "youtube_id": "3ynMpn3TG78",
+          "delay_s": 0.0,
+          "balls": [
+            {
+              "top_speed": 162,
+              "bot_speed": 0,
+              "oscillation": 138,
+              "height": 180,
+              "rotation": 150,
+              "wait_ms": 980
+            },
+            {
+              "top_speed": 162,
+              "bot_speed": 0,
+              "oscillation": 162,
+              "height": 180,
+              "rotation": 150,
+              "wait_ms": 980
+            }
+          ],
+          "repeat": 0,
+          "sort_order": 2,
+          "readonly": true
+        },
+        {
+          "name": "Forehand, Middle",
+          "description": "What a workout! Continuously move for every ball, playing one forehand from the forehand side then one forehand from the middle!",
+          "youtube_id": "obSDAvtq-hE",
+          "delay_s": 0.0,
+          "balls": [
+            {
+              "top_speed": 162,
+              "bot_speed": 0,
+              "oscillation": 162,
+              "height": 183,
+              "rotation": 150,
+              "wait_ms": 980
+            },
+            {
+              "top_speed": 162,
+              "bot_speed": 0,
+              "oscillation": 150,
+              "height": 183,
+              "rotation": 150,
+              "wait_ms": 980
+            }
+          ],
+          "repeat": 0,
+          "sort_order": 3,
+          "readonly": true
+        },
+        {
+          "name": "Backhand, Middle",
+          "description": "Backhand footwork is one of the most neglected aspects of the game! Use your backhand from the backhand side then quickly move and use your backhand from the middle of the table.",
+          "youtube_id": "0VJgvhM3rtc",
+          "delay_s": 0.0,
+          "balls": [
+            {
+              "top_speed": 162,
+              "bot_speed": 0,
+              "oscillation": 136,
+              "height": 183,
+              "rotation": 150,
+              "wait_ms": 980
+            },
+            {
+              "top_speed": 162,
+              "bot_speed": 0,
+              "oscillation": 150,
+              "height": 183,
+              "rotation": 150,
+              "wait_ms": 980
+            }
+          ],
+          "repeat": 0,
+          "sort_order": 4,
+          "readonly": true
+        },
+        {
+          "name": "Backhand, Middle, Backhand, Forehand",
+          "description": "This systematic drill alternates between backhand and forehand with a unique pattern   backhand, middle, backhand, forehand!",
+          "youtube_id": "4JZp8BQBL1U",
+          "delay_s": 0.0,
+          "balls": [
+            {
+              "top_speed": 162,
+              "bot_speed": 0,
+              "oscillation": 136,
+              "height": 183,
+              "rotation": 150,
+              "wait_ms": 980
+            },
+            {
+              "top_speed": 162,
+              "bot_speed": 0,
+              "oscillation": 150,
+              "height": 183,
+              "rotation": 150,
+              "wait_ms": 980
+            },
+            {
+              "top_speed": 162,
+              "bot_speed": 0,
+              "oscillation": 136,
+              "height": 183,
+              "rotation": 150,
+              "wait_ms": 980
+            },
+            {
+              "top_speed": 162,
+              "bot_speed": 0,
+              "oscillation": 162,
+              "height": 183,
+              "rotation": 150,
+              "wait_ms": 980
+            }
+          ],
+          "repeat": 0,
+          "sort_order": 5,
+          "readonly": true
+        },
+        {
+          "name": "One or Two Backhands, One or Two Forehands",
+          "description": "I love this semi-systematic drill. Watch the robot s head to see where the ball is going, then focus on the ball as it approaches.",
+          "youtube_id": "pX6xD_7Fe6U",
+          "delay_s": 0.0,
+          "balls": [
+            {
+              "top_speed": 162,
+              "bot_speed": 0,
+              "oscillation": 136,
+              "height": 183,
+              "rotation": 150,
+              "wait_ms": 980
+            },
+            {
+              "top_speed": 162,
+              "bot_speed": 0,
+              "oscillation": 150,
+              "height": 183,
+              "rotation": 150,
+              "wait_ms": 980
+            }
+          ],
+          "repeat": 0,
+          "sort_order": 6,
+          "readonly": true
+        },
+        {
+          "name": "Middle, Either Corner",
+          "description": "This is one of the world s most popular drills! Play a forehand from the middle, then be ready to adjust for the surprise to either corner. The pattern continues, one middle then one to either corner. See if you can last for three full minutes!",
+          "youtube_id": "mOS2DB_M2bc",
+          "delay_s": 0.0,
+          "balls": [
+            {
+              "top_speed": 162,
+              "bot_speed": 0,
+              "oscillation": 150,
+              "height": 183,
+              "rotation": 150,
+              "wait_ms": 980
+            },
+            {
+              "top_speed": 162,
+              "bot_speed": 0,
+              "oscillation": 150,
+              "height": 183,
+              "rotation": 150,
+              "wait_ms": 980
+            }
+          ],
+          "repeat": 0,
+          "sort_order": 7,
+          "readonly": true
+        },
+        {
+          "name": "Wide Faulkenberg",
+          "description": "This drill gives you two balls to the backhand then one ball to the wide forehand. Play the first ball with your backhand, play the second ball with your forehand from the backhand side, play the final ball with your forehand from the forehand side.",
+          "youtube_id": "WIpxLr7uL2Q",
+          "delay_s": 0.0,
+          "balls": [
+            {
+              "top_speed": 137,
+              "bot_speed": 5,
+              "oscillation": 137,
+              "height": 180,
+              "rotation": 150,
+              "wait_ms": 1400
+            },
+            {
+              "top_speed": 137,
+              "bot_speed": 5,
+              "oscillation": 138,
+              "height": 180,
+              "rotation": 150,
+              "wait_ms": 1000
+            },
+            {
+              "top_speed": 137,
+              "bot_speed": 5,
+              "oscillation": 162,
+              "height": 180,
+              "rotation": 150,
+              "wait_ms": 1050
+            }
+          ],
+          "repeat": 0,
+          "sort_order": 8,
+          "readonly": true
+        },
+        {
+          "name": "Forehand Random",
+          "description": "You will be getting speed balls anywhere in the forehand side of the table. Take mini-steps and continue to move for every ball!",
+          "youtube_id": "poSH016NoUc",
+          "delay_s": 0.0,
+          "balls": [
+            {
+              "top_speed": 174,
+              "bot_speed": 0,
+              "oscillation": 158,
+              "height": 180,
+              "rotation": 150,
+              "wait_ms": 950
+            }
+          ],
+          "repeat": 0,
+          "sort_order": 9,
+          "readonly": true
+        },
+        {
+          "name": "Backhand Random",
+          "description": "Your choice, you can use all backhand or you can choose to use both backhand and forehand for this drill. As you improve, you can also vary the speed, spin, and placement of your shots!",
+          "youtube_id": "7wa3FvOacmU",
+          "delay_s": 0.0,
+          "balls": [
+            {
+              "top_speed": 174,
+              "bot_speed": 0,
+              "oscillation": 141,
+              "height": 180,
+              "rotation": 150,
+              "wait_ms": 950
+            }
+          ],
+          "repeat": 0,
+          "sort_order": 10,
+          "readonly": true
+        },
+        {
+          "name": "Random",
+          "description": "The fast topspin balls will now go anywhere on the table. Be ready to move, especially for the tricky middle ball. Keep your feet active, stay on your toes, and be ready to adjust!",
+          "youtube_id": "VszRMTO930g",
+          "delay_s": 0.0,
+          "balls": [
+            {
+              "top_speed": 174,
+              "bot_speed": 0,
+              "oscillation": 149,
+              "height": 183,
+              "rotation": 150,
+              "wait_ms": 930
+            }
+          ],
+          "repeat": 0,
+          "sort_order": 11,
+          "readonly": true
+        },
+        {
+          "name": "Short Forehand, Deep Backhand",
+          "description": "After getting a short backspin ball to the forehand, you will then get two quick topspin balls to the backhand. Push or flip the short one, then loop the two deep ones.",
+          "youtube_id": "VnncuuIcCR0",
+          "delay_s": 2.4,
+          "balls": [
+            {
+              "top_speed": 0,
+              "bot_speed": 100,
+              "oscillation": 163,
+              "height": 113,
+              "rotation": 150,
+              "wait_ms": 1400
+            },
+            {
+              "top_speed": 169,
+              "bot_speed": 0,
+              "oscillation": 136,
+              "height": 183,
+              "rotation": 150,
+              "wait_ms": 1200
+            }
+          ],
+          "repeat": 0,
+          "sort_order": 12,
+          "readonly": true
+        },
+        {
+          "name": "Serve Then Footwork",
+          "description": "After getting a short backspin ball to the backhand, you will then get three deep topspin balls   one to the forehand, one to the middle, and one to the backhand. After these four balls, you will get a short rest before the next sequence.",
+          "youtube_id": "H8E5BqKwPWc",
+          "delay_s": 2.4,
+          "balls": [
+            {
+              "top_speed": 0,
+              "bot_speed": 105,
+              "oscillation": 136,
+              "height": 113,
+              "rotation": 150,
+              "wait_ms": 1450
+            },
+            {
+              "top_speed": 157,
+              "bot_speed": 0,
+              "oscillation": 162,
+              "height": 183,
+              "rotation": 150,
+              "wait_ms": 1310
+            },
+            {
+              "top_speed": 157,
+              "bot_speed": 0,
+              "oscillation": 150,
+              "height": 183,
+              "rotation": 150,
+              "wait_ms": 1150
+            },
+            {
+              "top_speed": 157,
+              "bot_speed": 0,
+              "oscillation": 136,
+              "height": 183,
+              "rotation": 150,
+              "wait_ms": 1150
+            }
+          ],
+          "repeat": 0,
+          "sort_order": 13,
+          "readonly": true
+        },
+        {
+          "name": "Three Ball Drill",
+          "description": "You will get a short backspin serve to the middle, followed by a heavy backspin ball to either corner, followed by a spinny topspin ball back to the middle!",
+          "youtube_id": "PkVzlYtZ2bc",
+          "delay_s": 2.4,
+          "balls": [
+            {
+              "top_speed": 0,
+              "bot_speed": 105,
+              "oscillation": 150,
+              "height": 113,
+              "rotation": 150,
+              "wait_ms": 1500
+            },
+            {
+              "top_speed": -5,
+              "bot_speed": 110,
+              "oscillation": 150,
+              "height": 183,
+              "rotation": 150,
+              "wait_ms": 1800
+            },
+            {
+              "top_speed": 174,
+              "bot_speed": 0,
+              "oscillation": 150,
+              "height": 180,
+              "rotation": 150,
+              "wait_ms": 1150
+            }
+          ],
+          "repeat": 0,
+          "sort_order": 14,
+          "readonly": true
+        },
+        {
+          "name": "Three Ball Random",
+          "description": "This is the same as the previous drill, but now all three balls are random! Short backspin then long backspin then long topspin!",
+          "youtube_id": "vMLSvnNkRJs",
+          "delay_s": 2.4,
+          "balls": [
+            {
+              "top_speed": 0,
+              "bot_speed": 105,
+              "oscillation": 150,
+              "height": 116,
+              "rotation": 150,
+              "wait_ms": 1500
+            },
+            {
+              "top_speed": -5,
+              "bot_speed": 110,
+              "oscillation": 150,
+              "height": 183,
+              "rotation": 150,
+              "wait_ms": 1800
+            },
+            {
+              "top_speed": 174,
+              "bot_speed": 0,
+              "oscillation": 150,
+              "height": 180,
+              "rotation": 150,
+              "wait_ms": 1150
+            }
+          ],
+          "repeat": 0,
+          "sort_order": 15,
+          "readonly": true
+        },
+        {
+          "name": "Twelve Ball Rally",
+          "description": "It all starts with a short backspin serve followed by a long backspin push, then the marathon begins   ten fast topspins anywhere. It s like playing a blocker who never misses!",
+          "youtube_id": "eZRSfXGaU5g",
+          "delay_s": 2.4,
+          "balls": [
+            {
+              "top_speed": 0,
+              "bot_speed": 100,
+              "oscillation": 150,
+              "height": 113,
+              "rotation": 150,
+              "wait_ms": 1600
+            },
+            {
+              "top_speed": 12,
+              "bot_speed": 112,
+              "oscillation": 150,
+              "height": 167,
+              "rotation": 150,
+              "wait_ms": 1400
+            },
+            {
+              "top_speed": 169,
+              "bot_speed": 0,
+              "oscillation": 150,
+              "height": 180,
+              "rotation": 150,
+              "wait_ms": 1000
+            }
+          ],
+          "repeat": 0,
+          "sort_order": 16,
+          "readonly": true
+        },
+        {
+          "name": "No Spin, Topspin, High Ball",
+          "description": "This is what the 3050 XL is all about   Game-like variations! You will get a sequence of a no-spin balls, then a topspin ball, then a high ball.",
+          "youtube_id": "9tpwPcMjq2w",
+          "delay_s": 3.0,
+          "balls": [
+            {
+              "top_speed": 50,
+              "bot_speed": 50,
+              "oscillation": 150,
+              "height": 122,
+              "rotation": 150,
+              "wait_ms": 1350
+            },
+            {
+              "top_speed": 197,
+              "bot_speed": 0,
+              "oscillation": 150,
+              "height": 180,
+              "rotation": 150,
+              "wait_ms": 1150
+            },
+            {
+              "top_speed": 149,
+              "bot_speed": 0,
+              "oscillation": 162,
+              "height": 210,
+              "rotation": 150,
+              "wait_ms": 950
+            }
+          ],
+          "repeat": 0,
+          "sort_order": 17,
+          "readonly": true
+        },
+        {
+          "name": "Left Sidespin Then Rally",
+          "description": "After returning the left sidespin serve, be prepared for three or four or five fast topspin balls. Keep track of the score, every time you have a perfect rally, you get one point. Every time you miss a ball during the rally, the robot gets one point! Games to 11! I never said he was an easy opponent!",
+          "youtube_id": "SK_NlK6d9lw",
+          "delay_s": 3.0,
+          "balls": [
+            {
+              "top_speed": -22,
+              "bot_speed": 102,
+              "oscillation": 150,
+              "height": 121,
+              "rotation": 195,
+              "wait_ms": 1500
+            },
+            {
+              "top_speed": 192,
+              "bot_speed": 0,
+              "oscillation": 150,
+              "height": 180,
+              "rotation": 150,
+              "wait_ms": 1300
+            }
+          ],
+          "repeat": 0,
+          "sort_order": 18,
+          "readonly": true
+        },
+        {
+          "name": "Serve Then Backhand Random",
+          "description": "After returning the right sidespin serve, you will then get a tough rally of ten balls randomly to your backhand!",
+          "youtube_id": "nM2r1vmJUzk",
+          "delay_s": 3.0,
+          "balls": [
+            {
+              "top_speed": -22,
+              "bot_speed": 102,
+              "oscillation": 150,
+              "height": 126,
+              "rotation": 102,
+              "wait_ms": 1450
+            },
+            {
+              "top_speed": 199,
+              "bot_speed": 0,
+              "oscillation": 143,
+              "height": 180,
+              "rotation": 150,
+              "wait_ms": 1040
+            }
+          ],
+          "repeat": 0,
+          "sort_order": 19,
+          "readonly": true
+        },
+        {
+          "name": "Serve Then Speed",
+          "description": "Attack the topspin serve then block the next two speed balls. To control your block, relax your grip and keep your hand in-front of your body and cushion the ball with a pillow grip.",
+          "youtube_id": "R136_2wvBSE",
+          "delay_s": 2.9,
+          "balls": [
+            {
+              "top_speed": 105,
+              "bot_speed": -189,
+              "oscillation": 150,
+              "height": 118,
+              "rotation": 150,
+              "wait_ms": 1400
+            },
+            {
+              "top_speed": 249,
+              "bot_speed": 0,
+              "oscillation": 150,
+              "height": 167,
+              "rotation": 150,
+              "wait_ms": 1200
+            }
+          ],
+          "repeat": 0,
+          "sort_order": 20,
+          "readonly": true
+        },
+        {
+          "name": "High Spins",
+          "description": "This difficult five ball drill gives you a serve, then a high backspin, high topspin, high backspin, high topspin. Smash the backspin by going up and forward. Smash the topspin by going down and forward.",
+          "youtube_id": "f_oZp0t0eHI",
+          "delay_s": 2.9,
+          "balls": [
+            {
+              "top_speed": 0,
+              "bot_speed": 105,
+              "oscillation": 150,
+              "height": 116,
+              "rotation": 150,
+              "wait_ms": 1500
+            },
+            {
+              "top_speed": 0,
+              "bot_speed": 105,
+              "oscillation": 150,
+              "height": 210,
+              "rotation": 150,
+              "wait_ms": 1310
+            },
+            {
+              "top_speed": 125,
+              "bot_speed": -25,
+              "oscillation": 150,
+              "height": 210,
+              "rotation": 150,
+              "wait_ms": 1310
+            },
+            {
+              "top_speed": -5,
+              "bot_speed": 90,
+              "oscillation": 150,
+              "height": 210,
+              "rotation": 150,
+              "wait_ms": 1310
+            },
+            {
+              "top_speed": 125,
+              "bot_speed": -12,
+              "oscillation": 150,
+              "height": 210,
+              "rotation": 150,
+              "wait_ms": 1300
+            }
+          ],
+          "repeat": 0,
+          "sort_order": 21,
+          "readonly": true
+        },
+        {
+          "name": "High Backhand, High Forehand",
+          "description": "Use your forehand to smash both balls   one high ball from the backhand side and one high ball from the forehand side.",
+          "youtube_id": "TvzzczKbB1M",
+          "delay_s": 0.0,
+          "balls": [
+            {
+              "top_speed": 125,
+              "bot_speed": 2,
+              "oscillation": 141,
+              "height": 210,
+              "rotation": 150,
+              "wait_ms": 1310
+            },
+            {
+              "top_speed": 125,
+              "bot_speed": 2,
+              "oscillation": 159,
+              "height": 210,
+              "rotation": 150,
+              "wait_ms": 1310
+            }
+          ],
+          "repeat": 0,
+          "sort_order": 22,
+          "readonly": true
+        },
+        {
+          "name": "High Spins Smashing",
+          "description": "Smash the high topspin ball by hitting slightly down and forward. Smash the high backspin ball by hitting slightly up and forward. This drill has a lot more spin than you might guess   it is like playing a high level chopper!",
+          "youtube_id": "I9Ao4pmgVEw",
+          "delay_s": 0.0,
+          "balls": [
+            {
+              "top_speed": 125,
+              "bot_speed": -12,
+              "oscillation": 159,
+              "height": 210,
+              "rotation": 150,
+              "wait_ms": 1410
+            },
+            {
+              "top_speed": -12,
+              "bot_speed": 95,
+              "oscillation": 159,
+              "height": 210,
+              "rotation": 150,
+              "wait_ms": 1410
+            }
+          ],
+          "repeat": 0,
+          "sort_order": 23,
+          "readonly": true
+        },
+        {
+          "name": "Forehand Speed",
+          "description": "The lightening speed balls to the forehand come fast and with a bit of topspin. Get close to the table and contact the ball early, on the rise.",
+          "youtube_id": "c3Umf1dv0w4",
+          "delay_s": 0.0,
+          "balls": [
+            {
+              "top_speed": 249,
+              "bot_speed": 0,
+              "oscillation": 157,
+              "height": 167,
+              "rotation": 150,
+              "wait_ms": 750
+            }
+          ],
+          "repeat": 0,
+          "sort_order": 24,
+          "readonly": true
+        },
+        {
+          "name": "Backhand Speed",
+          "description": "To block these speed balls, crouch low in your ready position, keep your racket in front of your body, and block with control keeping the ball low.",
+          "youtube_id": "05AoSGikc8g",
+          "delay_s": 0.0,
+          "balls": [
+            {
+              "top_speed": 249,
+              "bot_speed": 0,
+              "oscillation": 139,
+              "height": 167,
+              "rotation": 150,
+              "wait_ms": 750
+            }
+          ],
+          "repeat": 0,
+          "sort_order": 25,
+          "readonly": true
+        },
+        {
+          "name": "Left Sidespin Topspin Serve",
+          "description": "The left sidespin topspin serve is like a right handed player serving a forehand pendulum serve. To return this difficult spin, touch the top right side of the ball.",
+          "youtube_id": "Z-2GclsZDqc",
+          "delay_s": 0.0,
+          "balls": [
+            {
+              "top_speed": 105,
+              "bot_speed": -37,
+              "oscillation": 150,
+              "height": 140,
+              "rotation": 118,
+              "wait_ms": 1400
+            }
+          ],
+          "repeat": 0,
+          "sort_order": 26,
+          "readonly": true
+        },
+        {
+          "name": "Right Sidespin Topspin Serve",
+          "description": "The right sidespin topspin serve is like a left handed player serving a forehand pendulum serve. To return this difficult spin, touch the top left side of the ball.",
+          "youtube_id": "v7POq0QYKWo",
+          "delay_s": 0.0,
+          "balls": [
+            {
+              "top_speed": 105,
+              "bot_speed": -37,
+              "oscillation": 150,
+              "height": 140,
+              "rotation": 182,
+              "wait_ms": 1400
+            }
+          ],
+          "repeat": 0,
+          "sort_order": 27,
+          "readonly": true
+        },
+        {
+          "name": "Left Sidespin Backspin Serve",
+          "description": "To return this serve, you can either push it with control or loop it with spin. Touch the bottom right side of the ball.",
+          "youtube_id": "Fr1MspMrPto",
+          "delay_s": 0.0,
+          "balls": [
+            {
+              "top_speed": -20,
+              "bot_speed": 105,
+              "oscillation": 150,
+              "height": 116,
+              "rotation": 182,
+              "wait_ms": 1450
+            }
+          ],
+          "repeat": 0,
+          "sort_order": 28,
+          "readonly": true
+        },
+        {
+          "name": "Right Sidespin Backspin Serve",
+          "description": "rTo return this serve, push or loop with spin. It is vitally important to impart your own spin so that your opponent s spin will have less effect on your rubber. Work on stroking through the ball slightly.",
+          "youtube_id": "ief4COw5yMw",
+          "delay_s": 0.0,
+          "balls": [
+            {
+              "top_speed": -25,
+              "bot_speed": 110,
+              "oscillation": 150,
+              "height": 116,
+              "rotation": 118,
+              "wait_ms": 1450
+            }
+          ],
+          "repeat": 0,
+          "sort_order": 29,
+          "readonly": true
+        },
+        {
+          "name": "Smash, Topspin, Lob",
+          "description": "You will first get a speed ball, block it with control. Next, you will get a normal topspin ball, loop it with good topspin. Finally, you will get a high ball, smash it with every ounce of energy you have left!",
+          "youtube_id": "gxi9G037EfA",
+          "delay_s": 0.0,
+          "balls": [
+            {
+              "top_speed": 237,
+              "bot_speed": 37,
+              "oscillation": 160,
+              "height": 159,
+              "rotation": 150,
+              "wait_ms": 1320
+            },
+            {
+              "top_speed": 212,
+              "bot_speed": -125,
+              "oscillation": 160,
+              "height": 176,
+              "rotation": 150,
+              "wait_ms": 1320
+            },
+            {
+              "top_speed": 100,
+              "bot_speed": 25,
+              "oscillation": 160,
+              "height": 210,
+              "rotation": 150,
+              "wait_ms": 1320
+            }
+          ],
+          "repeat": 0,
+          "sort_order": 30,
+          "readonly": true
+        },
+        {
+          "name": "Spinny Serves",
+          "description": "This drill will give you very spinny serves anywhere long! Look at the lights to tell the direction and amount of spin. The more lights that are on, the stronger the spin.",
+          "youtube_id": "twZYYQP2FbA",
+          "delay_s": 0.0,
+          "balls": [
+            {
+              "top_speed": -87,
+              "bot_speed": 137,
+              "oscillation": 150,
+              "height": 118,
+              "rotation": 150,
+              "wait_ms": 1770
+            }
+          ],
+          "repeat": 0,
+          "sort_order": 31,
+          "readonly": true
+        }
+      ]
+    },
+    {
+      "name": "Advanced",
+      "description": "Drills for the advanced table tennis player",
+      "sort_order": 3,
+      "readonly": true,
+      "drills": [
+        {
+          "name": "Advanced Forehand Warmup",
+          "description": "These balls to the forehand are not only fast, but also have placement, speed, spin, height, and depth variations. Be ready to make quick adjustments!",
+          "youtube_id": "O3LXmTXFSi0",
+          "delay_s": 0.0,
+          "balls": [
+            {
+              "top_speed": 183,
+              "bot_speed": 0,
+              "oscillation": 161,
+              "height": 180,
+              "rotation": 150,
+              "wait_ms": 780
+            }
+          ],
+          "repeat": 0,
+          "sort_order": 0,
+          "readonly": true
+        },
+        {
+          "name": "Advanced Backhand Warmup",
+          "description": "With fast and slightly random balls to the backhand, the advanced backhand warmup is both a fun and challenging beginning to any practice session. Warmup for one minute, take a break, recover, then warmup for another minute.",
+          "youtube_id": "4A9u6MOArDo",
+          "delay_s": 0.0,
+          "balls": [
+            {
+              "top_speed": 183,
+              "bot_speed": 0,
+              "oscillation": 136,
+              "height": 177,
+              "rotation": 150,
+              "wait_ms": 780
+            }
+          ],
+          "repeat": 0,
+          "sort_order": 1,
+          "readonly": true
+        },
+        {
+          "name": "Forehand, Middle, Backhand",
+          "description": "Within the forehand, middle, and backhand zones, the robot will add subtle variations. Sometimes challenge yourself to see if you can play all forehands the entire time!",
+          "youtube_id": "47qwWrVxRJc",
+          "delay_s": 0.0,
+          "balls": [
+            {
+              "top_speed": 183,
+              "bot_speed": 0,
+              "oscillation": 163,
+              "height": 179,
+              "rotation": 150,
+              "wait_ms": 800
+            },
+            {
+              "top_speed": 183,
+              "bot_speed": 0,
+              "oscillation": 150,
+              "height": 179,
+              "rotation": 150,
+              "wait_ms": 800
+            },
+            {
+              "top_speed": 183,
+              "bot_speed": 0,
+              "oscillation": 135,
+              "height": 179,
+              "rotation": 150,
+              "wait_ms": 800
+            }
+          ],
+          "repeat": 0,
+          "sort_order": 2,
+          "readonly": true
+        },
+        {
+          "name": "One or Two Forehands, One or Two Backhands",
+          "description": "Using all forehand, make quick adjustments to hit forehand from the wide angle and forehands from the center of the table.",
+          "youtube_id": "lfz_6vDO588",
+          "delay_s": 0.0,
+          "balls": [
+            {
+              "top_speed": 187,
+              "bot_speed": 0,
+              "oscillation": 162,
+              "height": 175,
+              "rotation": 150,
+              "wait_ms": 870
+            },
+            {
+              "top_speed": 187,
+              "bot_speed": 0,
+              "oscillation": 141,
+              "height": 175,
+              "rotation": 150,
+              "wait_ms": 870
+            }
+          ],
+          "repeat": 0,
+          "sort_order": 3,
+          "readonly": true
+        },
+        {
+          "name": "One or Two Backhands, One or Two Middle",
+          "description": "You can use backhand or forehand for this drill, just make sure that you are moving for every ball. Also, watch the robot s head to see where the next ball with be thrown.",
+          "youtube_id": "A9-3t3LQizI",
+          "delay_s": 0.0,
+          "balls": [
+            {
+              "top_speed": 187,
+              "bot_speed": 0,
+              "oscillation": 134,
+              "height": 175,
+              "rotation": 150,
+              "wait_ms": 870
+            },
+            {
+              "top_speed": 187,
+              "bot_speed": 0,
+              "oscillation": 150,
+              "height": 175,
+              "rotation": 150,
+              "wait_ms": 870
+            }
+          ],
+          "repeat": 0,
+          "sort_order": 4,
+          "readonly": true
+        },
+        {
+          "name": "One Middle, One Random",
+          "description": "First you will get a speed ball to the middle, next you will get a speed ball anywhere, the pattern continues, one middle, one random.",
+          "youtube_id": "k4yKRtjNJAU",
+          "delay_s": 0.0,
+          "balls": [
+            {
+              "top_speed": 187,
+              "bot_speed": 0,
+              "oscillation": 150,
+              "height": 175,
+              "rotation": 150,
+              "wait_ms": 870
+            },
+            {
+              "top_speed": 187,
+              "bot_speed": 0,
+              "oscillation": 150,
+              "height": 175,
+              "rotation": 150,
+              "wait_ms": 870
+            }
+          ],
+          "repeat": 0,
+          "sort_order": 5,
+          "readonly": true
+        },
+        {
+          "name": "Forehand, Backhand, Random",
+          "description": "This is called a semi-systematic drill. First a simple forehand then backhand followed by a surprise anywhere!",
+          "youtube_id": "VxmytOBUaq0",
+          "delay_s": 0.0,
+          "balls": [
+            {
+              "top_speed": 174,
+              "bot_speed": 0,
+              "oscillation": 163,
+              "height": 175,
+              "rotation": 150,
+              "wait_ms": 870
+            },
+            {
+              "top_speed": 174,
+              "bot_speed": 0,
+              "oscillation": 136,
+              "height": 175,
+              "rotation": 150,
+              "wait_ms": 890
+            },
+            {
+              "top_speed": 199,
+              "bot_speed": 0,
+              "oscillation": 150,
+              "height": 175,
+              "rotation": 150,
+              "wait_ms": 870
+            }
+          ],
+          "repeat": 0,
+          "sort_order": 6,
+          "readonly": true
+        },
+        {
+          "name": "Six Balls",
+          "description": "It starts with a backhand, middle, forehand, then goes random for three balls anywhere. The pattern continues without a break. Try to survive for two full minutes before taking a needed water break!",
+          "youtube_id": "T2Odg4evvuo",
+          "delay_s": 0.0,
+          "balls": [
+            {
+              "top_speed": 174,
+              "bot_speed": 0,
+              "oscillation": 136,
+              "height": 176,
+              "rotation": 150,
+              "wait_ms": 1000
+            },
+            {
+              "top_speed": 174,
+              "bot_speed": 0,
+              "oscillation": 150,
+              "height": 176,
+              "rotation": 150,
+              "wait_ms": 870
+            },
+            {
+              "top_speed": 174,
+              "bot_speed": 0,
+              "oscillation": 162,
+              "height": 176,
+              "rotation": 150,
+              "wait_ms": 870
+            },
+            {
+              "top_speed": 174,
+              "bot_speed": 0,
+              "oscillation": 150,
+              "height": 176,
+              "rotation": 150,
+              "wait_ms": 870
+            }
+          ],
+          "repeat": 0,
+          "sort_order": 7,
+          "readonly": true
+        },
+        {
+          "name": "Backhand, Random",
+          "description": "This drill alternates between a backhand then a random ball anywhere. Remember, the random ball might just be to the backhand; in that case, you would get three backhands in a row.",
+          "youtube_id": "5oP3vdswZMQ",
+          "delay_s": 0.0,
+          "balls": [
+            {
+              "top_speed": 179,
+              "bot_speed": 0,
+              "oscillation": 136,
+              "height": 175,
+              "rotation": 150,
+              "wait_ms": 940
+            },
+            {
+              "top_speed": 179,
+              "bot_speed": 0,
+              "oscillation": 150,
+              "height": 175,
+              "rotation": 150,
+              "wait_ms": 800
+            }
+          ],
+          "repeat": 0,
+          "sort_order": 8,
+          "readonly": true
+        },
+        {
+          "name": "Nine Balls",
+          "description": "Three backhands, three forehands, then three random. Try your best to change locations when hitting, sometimes hit to the wide forehand, sometimes wide backhand, and sometimes try to jam your opponent in the middle.",
+          "youtube_id": "oFRoZTo_Xsc",
+          "delay_s": 2.0,
+          "balls": [
+            {
+              "top_speed": 164,
+              "bot_speed": 0,
+              "oscillation": 137,
+              "height": 176,
+              "rotation": 150,
+              "wait_ms": 870
+            },
+            {
+              "top_speed": 164,
+              "bot_speed": 0,
+              "oscillation": 163,
+              "height": 176,
+              "rotation": 150,
+              "wait_ms": 870
+            },
+            {
+              "top_speed": 164,
+              "bot_speed": 0,
+              "oscillation": 150,
+              "height": 176,
+              "rotation": 150,
+              "wait_ms": 870
+            }
+          ],
+          "repeat": 0,
+          "sort_order": 9,
+          "readonly": true
+        },
+        {
+          "name": "Medium Random",
+          "description": "This drill always keeps you guessing, it gives excellent variations in placement and actually feels like you are playing a real game!",
+          "youtube_id": "m-F1hV2RYgo",
+          "delay_s": 2.0,
+          "balls": [
+            {
+              "top_speed": 154,
+              "bot_speed": 0,
+              "oscillation": 150,
+              "height": 180,
+              "rotation": 150,
+              "wait_ms": 910
+            }
+          ],
+          "repeat": 0,
+          "sort_order": 10,
+          "readonly": true
+        },
+        {
+          "name": "Wild Random",
+          "description": "This tough drill gives you placement, speed, spin, height, and depth variations. Be alert and ready to make the adjustments. Start off with just doing twenty balls, before taking a break. As you develop the ability to adjust, then challenge yourself with longer drills.",
+          "youtube_id": "FvH0pj_wpr0",
+          "delay_s": 0.0,
+          "balls": [
+            {
+              "top_speed": 186,
+              "bot_speed": 0,
+              "oscillation": 150,
+              "height": 175,
+              "rotation": 150,
+              "wait_ms": 800
+            }
+          ],
+          "repeat": 0,
+          "sort_order": 11,
+          "readonly": true
+        },
+        {
+          "name": "Serve, Backspin, Topspin",
+          "description": "First, the serve will come with slight backspin sidespin, next a very spinny backspin, followed by a very spinny topspin ball. Be ready to adjust to the extreme spin!",
+          "youtube_id": "yvITm23XlYE",
+          "delay_s": 2.9,
+          "balls": [
+            {
+              "top_speed": -45,
+              "bot_speed": 120,
+              "oscillation": 150,
+              "height": 109,
+              "rotation": 150,
+              "wait_ms": 1320
+            },
+            {
+              "top_speed": -35,
+              "bot_speed": 120,
+              "oscillation": 150,
+              "height": 191,
+              "rotation": 150,
+              "wait_ms": 1300
+            },
+            {
+              "top_speed": 147,
+              "bot_speed": 0,
+              "oscillation": 150,
+              "height": 180,
+              "rotation": 150,
+              "wait_ms": 1310
+            }
+          ],
+          "repeat": 0,
+          "sort_order": 12,
+          "readonly": true
+        },
+        {
+          "name": "Serve, Forehand, Backhand",
+          "description": "This is a great drill for defense. It gives you a backspin serve, followed by a topspin ball to your forehand then a topspin ball to your backhand.",
+          "youtube_id": "wKiJt6w8hv0",
+          "delay_s": 2.5,
+          "balls": [
+            {
+              "top_speed": 0,
+              "bot_speed": 103,
+              "oscillation": 150,
+              "height": 111,
+              "rotation": 150,
+              "wait_ms": 1450
+            },
+            {
+              "top_speed": 202,
+              "bot_speed": 0,
+              "oscillation": 158,
+              "height": 171,
+              "rotation": 150,
+              "wait_ms": 1110
+            },
+            {
+              "top_speed": 202,
+              "bot_speed": 0,
+              "oscillation": 141,
+              "height": 171,
+              "rotation": 150,
+              "wait_ms": 860
+            }
+          ],
+          "repeat": 0,
+          "sort_order": 13,
+          "readonly": true
+        },
+        {
+          "name": "No-Spin Serve then Backhand, Forehand",
+          "description": "After pushing the no-spin serve, use a controlled stroke and block with your backhand then block with your forehand. Try to keep your blocks as low to the net as possible!",
+          "youtube_id": "t5H0dTE_IaI",
+          "delay_s": 2.5,
+          "balls": [
+            {
+              "top_speed": 62,
+              "bot_speed": 62,
+              "oscillation": 150,
+              "height": 116,
+              "rotation": 150,
+              "wait_ms": 1150
+            },
+            {
+              "top_speed": 202,
+              "bot_speed": 0,
+              "oscillation": 140,
+              "height": 172,
+              "rotation": 150,
+              "wait_ms": 1140
+            },
+            {
+              "top_speed": 199,
+              "bot_speed": 0,
+              "oscillation": 164,
+              "height": 172,
+              "rotation": 150,
+              "wait_ms": 860
+            }
+          ],
+          "repeat": 0,
+          "sort_order": 14,
+          "readonly": true
+        },
+        {
+          "name": "Serve Then Middle Random",
+          "description": "After a heavy backspin serve, the footwork drill begins   middle then random, middle then random, middle then random. Try to play most of the middle balls with your forehand.",
+          "youtube_id": "PHFvkLusqqE",
+          "delay_s": 2.5,
+          "balls": [
+            {
+              "top_speed": 0,
+              "bot_speed": 97,
+              "oscillation": 150,
+              "height": 113,
+              "rotation": 150,
+              "wait_ms": 1200
+            },
+            {
+              "top_speed": 179,
+              "bot_speed": 0,
+              "oscillation": 150,
+              "height": 175,
+              "rotation": 150,
+              "wait_ms": 1260
+            },
+            {
+              "top_speed": 179,
+              "bot_speed": 0,
+              "oscillation": 150,
+              "height": 175,
+              "rotation": 150,
+              "wait_ms": 1010
+            },
+            {
+              "top_speed": 179,
+              "bot_speed": 0,
+              "oscillation": 150,
+              "height": 175,
+              "rotation": 150,
+              "wait_ms": 1010
+            },
+            {
+              "top_speed": 179,
+              "bot_speed": 0,
+              "oscillation": 150,
+              "height": 175,
+              "rotation": 150,
+              "wait_ms": 1010
+            },
+            {
+              "top_speed": 179,
+              "bot_speed": 0,
+              "oscillation": 150,
+              "height": 175,
+              "rotation": 149,
+              "wait_ms": 1010
+            },
+            {
+              "top_speed": 179,
+              "bot_speed": 0,
+              "oscillation": 150,
+              "height": 175,
+              "rotation": 150,
+              "wait_ms": 1010
+            }
+          ],
+          "repeat": 0,
+          "sort_order": 15,
+          "readonly": true
+        },
+        {
+          "name": "Block Training",
+          "description": "After returning the no-spin serve, you will then get five to ten topspin balls anywhere, simply block the ball with control. See if you can last the entire drill without missing a single block!",
+          "youtube_id": "mUIZvuyam9A",
+          "delay_s": 2.5,
+          "balls": [
+            {
+              "top_speed": 52,
+              "bot_speed": 50,
+              "oscillation": 150,
+              "height": 120,
+              "rotation": 150,
+              "wait_ms": 1150
+            },
+            {
+              "top_speed": 214,
+              "bot_speed": 0,
+              "oscillation": 150,
+              "height": 170,
+              "rotation": 150,
+              "wait_ms": 850
+            }
+          ],
+          "repeat": 0,
+          "sort_order": 16,
+          "readonly": true
+        },
+        {
+          "name": "Mega Backspin, Ten Topspins",
+          "description": "After pushing the very spinny serve, endure the ten ball rally with your steady defense. Instead of reaching for the balls, move your feet into position for each shot   it is tiring, but worth the effort!",
+          "youtube_id": "PdY72A1sdYg",
+          "delay_s": 3.1,
+          "balls": [
+            {
+              "top_speed": -199,
+              "bot_speed": 120,
+              "oscillation": 149,
+              "height": 113,
+              "rotation": 150,
+              "wait_ms": 1300
+            },
+            {
+              "top_speed": 177,
+              "bot_speed": 0,
+              "oscillation": 150,
+              "height": 175,
+              "rotation": 150,
+              "wait_ms": 1300
+            },
+            {
+              "top_speed": 187,
+              "bot_speed": 0,
+              "oscillation": 150,
+              "height": 175,
+              "rotation": 150,
+              "wait_ms": 850
+            }
+          ],
+          "repeat": 0,
+          "sort_order": 17,
+          "readonly": true
+        },
+        {
+          "name": "Two Ball Speed",
+          "description": "This is the quickest drill on the robot. After a left sidespin serve, it will immediately give you a quick topspin ball.",
+          "youtube_id": "GF43FWTZm3I",
+          "delay_s": 3.1,
+          "balls": [
+            {
+              "top_speed": -25,
+              "bot_speed": 115,
+              "oscillation": 150,
+              "height": 121,
+              "rotation": 123,
+              "wait_ms": 1150
+            },
+            {
+              "top_speed": 177,
+              "bot_speed": 0,
+              "oscillation": 150,
+              "height": 176,
+              "rotation": 150,
+              "wait_ms": 950
+            }
+          ],
+          "repeat": 0,
+          "sort_order": 18,
+          "readonly": true
+        },
+        {
+          "name": "Serve Then Rally of One-Ten Balls",
+          "description": "After returning the left sidespin serve, be ready for a variable rally of one to ten balls. Sometimes it will just give one, sometimes six, sometimes maybe ten. Prepare for the ten every time.",
+          "youtube_id": "6omcEJP-z24",
+          "delay_s": 3.1,
+          "balls": [
+            {
+              "top_speed": -25,
+              "bot_speed": 115,
+              "oscillation": 150,
+              "height": 121,
+              "rotation": 123,
+              "wait_ms": 1450
+            },
+            {
+              "top_speed": 177,
+              "bot_speed": 0,
+              "oscillation": 150,
+              "height": 176,
+              "rotation": 150,
+              "wait_ms": 1250
+            },
+            {
+              "top_speed": 187,
+              "bot_speed": 0,
+              "oscillation": 150,
+              "height": 174,
+              "rotation": 150,
+              "wait_ms": 1000
+            }
+          ],
+          "repeat": 0,
+          "sort_order": 19,
+          "readonly": true
+        },
+        {
+          "name": "No-Spin Serve Then Speed",
+          "description": "This is one of the most entertaining drills! After returning the no-spin serve, the robot will pound you hard with the next shot. Just try to make contact with the ball. As you become more advanced, then you can begin taking a small swing.",
+          "youtube_id": "FOh-tbET-lY",
+          "delay_s": 2.7,
+          "balls": [
+            {
+              "top_speed": 60,
+              "bot_speed": 60,
+              "oscillation": 150,
+              "height": 113,
+              "rotation": 150,
+              "wait_ms": 1150
+            },
+            {
+              "top_speed": 237,
+              "bot_speed": 80,
+              "oscillation": 150,
+              "height": 160,
+              "rotation": 150,
+              "wait_ms": 960
+            }
+          ],
+          "repeat": 0,
+          "sort_order": 20,
+          "readonly": true
+        },
+        {
+          "name": "Serve Then Ten Lobs",
+          "description": "You will be winded, guaranteed! After returning the topspin serve, you will get ten lobs. Get in position, and smash down and forward with full power!",
+          "youtube_id": "xo8m1yxfMiE",
+          "delay_s": 4.1,
+          "balls": [
+            {
+              "top_speed": 105,
+              "bot_speed": -187,
+              "oscillation": 150,
+              "height": 120,
+              "rotation": 150,
+              "wait_ms": 1150
+            },
+            {
+              "top_speed": 105,
+              "bot_speed": 17,
+              "oscillation": 150,
+              "height": 210,
+              "rotation": 150,
+              "wait_ms": 1150
+            }
+          ],
+          "repeat": 0,
+          "sort_order": 21,
+          "readonly": true
+        },
+        {
+          "name": "Speed Forehand, Speed Backhand",
+          "description": "The robot will give you one speed ball randomly in the forehand zone then one speed ball randomly in the backhand zone. Move into position and block the ball with good placement.",
+          "youtube_id": "aIPCYZuAPG0",
+          "delay_s": 0.0,
+          "balls": [
+            {
+              "top_speed": 237,
+              "bot_speed": 55,
+              "oscillation": 156,
+              "height": 160,
+              "rotation": 150,
+              "wait_ms": 900
+            },
+            {
+              "top_speed": 237,
+              "bot_speed": 55,
+              "oscillation": 141,
+              "height": 160,
+              "rotation": 150,
+              "wait_ms": 900
+            }
+          ],
+          "repeat": 0,
+          "sort_order": 22,
+          "readonly": true
+        },
+        {
+          "name": "Random Smashing",
+          "description": "Speed balls will be coming anywhere on the table. Instead of merely guessing, you should keep your racket neutral in-front, move into position, and try to touch every ball. Even if you can t block it on, try to make contact.",
+          "youtube_id": "nbvmwFZQe0U",
+          "delay_s": 0.0,
+          "balls": [
+            {
+              "top_speed": 237,
+              "bot_speed": 55,
+              "oscillation": 149,
+              "height": 160,
+              "rotation": 150,
+              "wait_ms": 700
+            }
+          ],
+          "repeat": 0,
+          "sort_order": 23,
+          "readonly": true
+        },
+        {
+          "name": "Random Lobbing",
+          "description": "The most difficult part about these lobs is the depth variation. Be ready to move out and smash or be ready to charge the table and smash. As the ball leaves the robot s head, try to judge the depth and move accordingly!",
+          "youtube_id": "nDoLQIPJDHY",
+          "delay_s": 0.0,
+          "balls": [
+            {
+              "top_speed": 93,
+              "bot_speed": 25,
+              "oscillation": 150,
+              "height": 210,
+              "rotation": 150,
+              "wait_ms": 1210
+            }
+          ],
+          "repeat": 0,
+          "sort_order": 24,
+          "readonly": true
+        },
+        {
+          "name": "Spin Lobs",
+          "description": "This drill will give you a topspin lob, backspin lob, then a no-spin lob. Instead of lobbing, it will sometimes be a bit low and short, in this case, give it a controlled stroke. If it is high, try to use your most powerful smash!",
+          "youtube_id": "74j5Dp3mgjo",
+          "delay_s": 0.0,
+          "balls": [
+            {
+              "top_speed": 86,
+              "bot_speed": 25,
+              "oscillation": 150,
+              "height": 210,
+              "rotation": 150,
+              "wait_ms": 1250
+            },
+            {
+              "top_speed": -5,
+              "bot_speed": 100,
+              "oscillation": 150,
+              "height": 210,
+              "rotation": 150,
+              "wait_ms": 1250
+            },
+            {
+              "top_speed": 42,
+              "bot_speed": 42,
+              "oscillation": 150,
+              "height": 210,
+              "rotation": 150,
+              "wait_ms": 1250
+            }
+          ],
+          "repeat": 0,
+          "sort_order": 25,
+          "readonly": true
+        },
+        {
+          "name": "Sidespin Lobs",
+          "description": "Move the furniture aside! This drill requires a bit of space! The sidespin lobs will be curving at very wide angles! Read the spin, adjust with your feet, and smash all the balls using your forehand!",
+          "youtube_id": "8fQLNevQ77c",
+          "delay_s": 0.0,
+          "balls": [
+            {
+              "top_speed": 127,
+              "bot_speed": -25,
+              "oscillation": 150,
+              "height": 210,
+              "rotation": 150,
+              "wait_ms": 1560
+            }
+          ],
+          "repeat": 0,
+          "sort_order": 26,
+          "readonly": true
+        },
+        {
+          "name": "Short and Long",
+          "description": "The robot will give you one to four short backspin balls followed by one deep backspin ball followed by three deep topspin balls to the backhand then one deep topspin ball to the forehand.",
+          "youtube_id": "ar81BNVuX_o",
+          "delay_s": 2.5,
+          "balls": [
+            {
+              "top_speed": -12,
+              "bot_speed": 100,
+              "oscillation": 150,
+              "height": 122,
+              "rotation": 150,
+              "wait_ms": 1350
+            },
+            {
+              "top_speed": -25,
+              "bot_speed": 125,
+              "oscillation": 150,
+              "height": 175,
+              "rotation": 150,
+              "wait_ms": 1210
+            },
+            {
+              "top_speed": 162,
+              "bot_speed": 0,
+              "oscillation": 138,
+              "height": 178,
+              "rotation": 150,
+              "wait_ms": 1000
+            },
+            {
+              "top_speed": 199,
+              "bot_speed": 0,
+              "oscillation": 163,
+              "height": 175,
+              "rotation": 150,
+              "wait_ms": 800
+            }
+          ],
+          "repeat": 0,
+          "sort_order": 27,
+          "readonly": true
+        },
+        {
+          "name": "Short Ball Training",
+          "description": "After one to ten short backspin balls, the robot will surprise long with a backspin ball anywhere, followed by a long topspin ball anywhere.",
+          "youtube_id": "_FfHnEkf73M",
+          "delay_s": 2.5,
+          "balls": [
+            {
+              "top_speed": -12,
+              "bot_speed": 110,
+              "oscillation": 150,
+              "height": 113,
+              "rotation": 150,
+              "wait_ms": 1150
+            },
+            {
+              "top_speed": -12,
+              "bot_speed": 112,
+              "oscillation": 150,
+              "height": 176,
+              "rotation": 150,
+              "wait_ms": 1120
+            },
+            {
+              "top_speed": 174,
+              "bot_speed": -15,
+              "oscillation": 150,
+              "height": 175,
+              "rotation": 150,
+              "wait_ms": 1150
+            }
+          ],
+          "repeat": 0,
+          "sort_order": 28,
+          "readonly": true
+        },
+        {
+          "name": "Backspin, No-Spin Serve",
+          "description": "This drill alternates between a short backspin serve and a short no-spin serve. Push the backspin and flip the no-spin. Also, work on placement by sometimes returning short, sometimes long, sometimes to the middle, sometimes use the angles.",
+          "youtube_id": "IvJtxKcGU70",
+          "delay_s": 0.0,
+          "balls": [
+            {
+              "top_speed": -125,
+              "bot_speed": 117,
+              "oscillation": 150,
+              "height": 113,
+              "rotation": 150,
+              "wait_ms": 1800
+            },
+            {
+              "top_speed": 55,
+              "bot_speed": 55,
+              "oscillation": 150,
+              "height": 129,
+              "rotation": 150,
+              "wait_ms": 1800
+            }
+          ],
+          "repeat": 0,
+          "sort_order": 29,
+          "readonly": true
+        },
+        {
+          "name": "Heavy Topspins",
+          "description": "This drill gives you heavy topspin balls to your forehand on half of the table. Practice your blocking placement to various locations. As you perfect your control, then begin an active block or even a counterloop!",
+          "youtube_id": "mE6TNXZt1w8",
+          "delay_s": 0.0,
+          "balls": [
+            {
+              "top_speed": 237,
+              "bot_speed": -219,
+              "oscillation": 162,
+              "height": 171,
+              "rotation": 150,
+              "wait_ms": 800
+            }
+          ],
+          "repeat": 0,
+          "sort_order": 30,
+          "readonly": true
+        },
+        {
+          "name": "Low Lobs",
+          "description": "This drill gives you lower lobs   one topspin, one backspin, then one no-spin. Move into position and smash all of them using your forehand.",
+          "youtube_id": "Cpk4Ly3uqyI",
+          "delay_s": 0.0,
+          "balls": [
+            {
+              "top_speed": 62,
+              "bot_speed": 50,
+              "oscillation": 150,
+              "height": 196,
+              "rotation": 150,
+              "wait_ms": 1300
+            },
+            {
+              "top_speed": 35,
+              "bot_speed": 55,
+              "oscillation": 150,
+              "height": 194,
+              "rotation": 150,
+              "wait_ms": 1300
+            },
+            {
+              "top_speed": 50,
+              "bot_speed": 50,
+              "oscillation": 150,
+              "height": 196,
+              "rotation": 150,
+              "wait_ms": 1300
+            }
+          ],
+          "repeat": 0,
+          "sort_order": 31,
+          "readonly": true
+        }
+      ]
+    },
+    {
+      "name": "Bonus",
+      "description": "Bonus Drills",
+      "sort_order": 4,
+      "readonly": true,
+      "drills": [
+        {
+          "name": "Topspin to either corner",
+          "description": "Topspin to either corner",
+          "youtube_id": "",
+          "delay_s": 0.0,
+          "balls": [
+            {
+              "top_speed": 187,
+              "bot_speed": -12,
+              "oscillation": 149,
+              "height": 176,
+              "rotation": 150,
+              "wait_ms": 950
+            }
+          ],
+          "repeat": 0,
+          "sort_order": 0,
+          "readonly": true
+        },
+        {
+          "name": "Backhand topspin rally, the surprise forehand",
+          "description": "Backhand topspin rally, the surprise forehand",
+          "youtube_id": "",
+          "delay_s": 0.0,
+          "balls": [
+            {
+              "top_speed": 164,
+              "bot_speed": 0,
+              "oscillation": 138,
+              "height": 179,
+              "rotation": 150,
+              "wait_ms": 780
+            },
+            {
+              "top_speed": 164,
+              "bot_speed": 0,
+              "oscillation": 157,
+              "height": 179,
+              "rotation": 150,
+              "wait_ms": 780
+            }
+          ],
+          "repeat": 0,
+          "sort_order": 1,
+          "readonly": true
+        },
+        {
+          "name": "Topspin small movements",
+          "description": "Topspin small movements",
+          "youtube_id": "",
+          "delay_s": 0.0,
+          "balls": [
+            {
+              "top_speed": 164,
+              "bot_speed": 0,
+              "oscillation": 138,
+              "height": 176,
+              "rotation": 150,
+              "wait_ms": 840
+            },
+            {
+              "top_speed": 164,
+              "bot_speed": 0,
+              "oscillation": 142,
+              "height": 176,
+              "rotation": 150,
+              "wait_ms": 840
+            },
+            {
+              "top_speed": 164,
+              "bot_speed": 0,
+              "oscillation": 146,
+              "height": 176,
+              "rotation": 150,
+              "wait_ms": 840
+            },
+            {
+              "top_speed": 164,
+              "bot_speed": 0,
+              "oscillation": 150,
+              "height": 176,
+              "rotation": 150,
+              "wait_ms": 840
+            },
+            {
+              "top_speed": 164,
+              "bot_speed": 0,
+              "oscillation": 154,
+              "height": 176,
+              "rotation": 150,
+              "wait_ms": 840
+            },
+            {
+              "top_speed": 164,
+              "bot_speed": 0,
+              "oscillation": 158,
+              "height": 176,
+              "rotation": 150,
+              "wait_ms": 840
+            },
+            {
+              "top_speed": 164,
+              "bot_speed": 0,
+              "oscillation": 162,
+              "height": 176,
+              "rotation": 150,
+              "wait_ms": 840
+            },
+            {
+              "top_speed": 164,
+              "bot_speed": 0,
+              "oscillation": 158,
+              "height": 176,
+              "rotation": 150,
+              "wait_ms": 840
+            },
+            {
+              "top_speed": 164,
+              "bot_speed": 0,
+              "oscillation": 154,
+              "height": 176,
+              "rotation": 150,
+              "wait_ms": 840
+            },
+            {
+              "top_speed": 164,
+              "bot_speed": 0,
+              "oscillation": 150,
+              "height": 176,
+              "rotation": 150,
+              "wait_ms": 840
+            },
+            {
+              "top_speed": 164,
+              "bot_speed": 0,
+              "oscillation": 146,
+              "height": 176,
+              "rotation": 150,
+              "wait_ms": 840
+            },
+            {
+              "top_speed": 164,
+              "bot_speed": 0,
+              "oscillation": 142,
+              "height": 176,
+              "rotation": 150,
+              "wait_ms": 840
+            }
+          ],
+          "repeat": 0,
+          "sort_order": 2,
+          "readonly": true
+        },
+        {
+          "name": "Forehand topspin moving toward backhand",
+          "description": "Forehand topspin moving toward backhand",
+          "youtube_id": "",
+          "delay_s": 0.0,
+          "balls": [
+            {
+              "top_speed": 164,
+              "bot_speed": 0,
+              "oscillation": 159,
+              "height": 180,
+              "rotation": 150,
+              "wait_ms": 940
+            },
+            {
+              "top_speed": 164,
+              "bot_speed": 0,
+              "oscillation": 153,
+              "height": 176,
+              "rotation": 150,
+              "wait_ms": 940
+            },
+            {
+              "top_speed": 164,
+              "bot_speed": 0,
+              "oscillation": 147,
+              "height": 176,
+              "rotation": 150,
+              "wait_ms": 940
+            },
+            {
+              "top_speed": 164,
+              "bot_speed": 0,
+              "oscillation": 142,
+              "height": 176,
+              "rotation": 150,
+              "wait_ms": 940
+            },
+            {
+              "top_speed": 164,
+              "bot_speed": 0,
+              "oscillation": 150,
+              "height": 180,
+              "rotation": 150,
+              "wait_ms": 940
+            }
+          ],
+          "repeat": 0,
+          "sort_order": 3,
+          "readonly": true
+        },
+        {
+          "name": "Spinny variation short serves",
+          "description": "Spinny variation short serves",
+          "youtube_id": "",
+          "delay_s": 0.0,
+          "balls": [
+            {
+              "top_speed": -212,
+              "bot_speed": 129,
+              "oscillation": 150,
+              "height": 113,
+              "rotation": 150,
+              "wait_ms": 1780
+            }
+          ],
+          "repeat": 0,
+          "sort_order": 4,
+          "readonly": true
+        },
+        {
+          "name": "Very spinny backspin serve",
+          "description": "Very spinny backspin serve",
+          "youtube_id": "",
+          "delay_s": 0.0,
+          "balls": [
+            {
+              "top_speed": -224,
+              "bot_speed": 125,
+              "oscillation": 150,
+              "height": 113,
+              "rotation": 150,
+              "wait_ms": 1780
+            }
+          ],
+          "repeat": 0,
+          "sort_order": 5,
+          "readonly": true
+        },
+        {
+          "name": "One Topspin, One Sidespin",
+          "description": "One Topspin, One Sidespin",
+          "youtube_id": "",
+          "delay_s": 0.0,
+          "balls": [
+            {
+              "top_speed": 152,
+              "bot_speed": 0,
+              "oscillation": 150,
+              "height": 182,
+              "rotation": 150,
+              "wait_ms": 1250
+            },
+            {
+              "top_speed": 152,
+              "bot_speed": 0,
+              "oscillation": 150,
+              "height": 182,
+              "rotation": 150,
+              "wait_ms": 1250
+            }
+          ],
+          "repeat": 0,
+          "sort_order": 6,
+          "readonly": true
+        },
+        {
+          "name": "Random placement one topspin, one sidespin",
+          "description": "Random placement one topspin, one sidespin",
+          "youtube_id": "",
+          "delay_s": 0.0,
+          "balls": [
+            {
+              "top_speed": 152,
+              "bot_speed": 0,
+              "oscillation": 150,
+              "height": 182,
+              "rotation": 150,
+              "wait_ms": 1250
+            },
+            {
+              "top_speed": 152,
+              "bot_speed": 0,
+              "oscillation": 150,
+              "height": 182,
+              "rotation": 150,
+              "wait_ms": 1250
+            }
+          ],
+          "repeat": 0,
+          "sort_order": 7,
+          "readonly": true
+        },
+        {
+          "name": "Weird sidespin rally",
+          "description": "Weird sidespin rally",
+          "youtube_id": "",
+          "delay_s": 0.0,
+          "balls": [
+            {
+              "top_speed": -212,
+              "bot_speed": 115,
+              "oscillation": 150,
+              "height": 196,
+              "rotation": 150,
+              "wait_ms": 1770
+            }
+          ],
+          "repeat": 0,
+          "sort_order": 8,
+          "readonly": true
+        },
+        {
+          "name": "Spinny Long Serves",
+          "description": "This drill will give you very spinny serves to either corner! Look at the lights to tell the direction and amount of spin. The more lights that are on, the stronger the spin.",
+          "youtube_id": "",
+          "delay_s": 0.0,
+          "balls": [
+            {
+              "top_speed": -87,
+              "bot_speed": 137,
+              "oscillation": 150,
+              "height": 118,
+              "rotation": 150,
+              "wait_ms": 1770
+            }
+          ],
+          "repeat": 0,
+          "sort_order": 9,
+          "readonly": true
+        }
+      ]
+    }
+  ]
+}

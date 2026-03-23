@@ -1,5 +1,5 @@
 from pydantic import BaseModel, Field
-from typing import List
+from typing import List, Optional
 
 
 class Ball(BaseModel):
@@ -15,4 +15,37 @@ class ScenarioIn(BaseModel):
     name:        str
     description: str = ""
     balls:       List[Ball]
-    repeat:      int = Field(default=1, ge=0)  # 0 = nieskończenie
+    repeat:      int = Field(default=1, ge=0)
+
+
+class FolderIn(BaseModel):
+    name:        str
+    description: str = ""
+
+
+class FolderUpdate(BaseModel):
+    name:        Optional[str] = None
+    description: Optional[str] = None
+    sort_order:  Optional[int] = None
+
+
+class DrillIn(BaseModel):
+    folder_id:   Optional[int] = None
+    name:        str
+    description: str = ""
+    youtube_id:  str = ""
+    delay_s:     float = 0
+    balls:       List[Ball]
+    repeat:      int = Field(default=0, ge=0)
+    sort_order:  int = Field(default=0, ge=0)
+
+
+class ReorderItem(BaseModel):
+    id:          int
+    sort_order:  int
+
+
+class DrillReorderItem(BaseModel):
+    id:          int
+    sort_order:  int
+    folder_id:   Optional[int] = None

@@ -1,0 +1,4798 @@
+<Training Name="Advanced" Description="Drills for the advanced table tennis player" IsAdjustable="false">
+	<Drill Name="Advanced Forehand Warmup"
+	       Description="These balls to the forehand are not only fast, but also have placement, speed, spin, height, and depth variations. Be ready to make quick adjustments!"
+	       Delay="0"
+	       YouTubeVideoID="O3LXmTXFSi0">
+		<Ball Type="RandomInterfaceBall" TableYPercent="0.5">
+			<BallNumber>1</BallNumber>
+			<NumberOfBallsLow>1</NumberOfBallsLow>
+			<NumberOfBallsHigh>1</NumberOfBallsHigh>
+			<NumberOfBallsType>3</NumberOfBallsType>
+			<WaitTime>780</WaitTime>
+			<TopMotorLow>72</TopMotorLow>
+			<TopMotorHigh>75</TopMotorHigh>
+			<TopMotorType>1</TopMotorType>
+			<BottomMotorLow>0</BottomMotorLow>
+			<BottomMotorHigh>0</BottomMotorHigh>
+			<BottomMotorType>3</BottomMotorType>
+			<HeightLow>75</HeightLow>
+			<HeightHigh>80</HeightHigh>
+			<HeightType>1</HeightType>
+			<OscillationLow>70</OscillationLow>
+			<OscillationHigh>77</OscillationHigh>
+			<OscillationType>1</OscillationType>
+			<RotationLow>0</RotationLow>
+			<RotationHigh>0</RotationHigh>
+			<RotationType>3</RotationType>
+		</Ball>
+	</Drill>
+	<Drill Name="Advanced Backhand Warmup"
+	       Description="With fast and slightly random balls to the backhand, the advanced backhand warmup is both a fun and challenging beginning to any practice session. Warmup for one minute, take a break, recover, then warmup for another minute."
+	       Delay="0"
+	       YouTubeVideoID="4A9u6MOArDo">
+		<Ball Type="RandomInterfaceBall" TableYPercent="0.45">
+			<BallNumber>1</BallNumber>
+			<NumberOfBallsLow>1</NumberOfBallsLow>
+			<NumberOfBallsHigh>1</NumberOfBallsHigh>
+			<NumberOfBallsType>3</NumberOfBallsType>
+			<WaitTime>780</WaitTime>
+			<TopMotorLow>72</TopMotorLow>
+			<TopMotorHigh>75</TopMotorHigh>
+			<TopMotorType>1</TopMotorType>
+			<BottomMotorLow>0</BottomMotorLow>
+			<BottomMotorHigh>0</BottomMotorHigh>
+			<BottomMotorType>3</BottomMotorType>
+			<HeightLow>73</HeightLow>
+			<HeightHigh>78</HeightHigh>
+			<HeightType>1</HeightType>
+			<OscillationLow>8</OscillationLow>
+			<OscillationHigh>30</OscillationHigh>
+			<OscillationType>1</OscillationType>
+			<RotationLow>0</RotationLow>
+			<RotationHigh>0</RotationHigh>
+			<RotationType>3</RotationType>
+		</Ball>
+	</Drill>
+	<Drill Name="Forehand, Middle, Backhand"
+	       Description="Within the forehand, middle, and backhand zones, the robot will add subtle variations. Sometimes challenge yourself to see if you can play all forehands the entire time!"
+	       Delay="0"
+	       YouTubeVideoID="47qwWrVxRJc">
+		<Ball Type="RandomInterfaceBall" TableYPercent="0.5">
+			<BallNumber>1</BallNumber>
+			<NumberOfBallsLow>1</NumberOfBallsLow>
+			<NumberOfBallsHigh>1</NumberOfBallsHigh>
+			<NumberOfBallsType>3</NumberOfBallsType>
+			<WaitTime>800</WaitTime>
+			<TopMotorLow>72</TopMotorLow>
+			<TopMotorHigh>75</TopMotorHigh>
+			<TopMotorType>1</TopMotorType>
+			<BottomMotorLow>0</BottomMotorLow>
+			<BottomMotorHigh>0</BottomMotorHigh>
+			<BottomMotorType>3</BottomMotorType>
+			<HeightLow>77</HeightLow>
+			<HeightHigh>77</HeightHigh>
+			<HeightType>3</HeightType>
+			<OscillationLow>75</OscillationLow>
+			<OscillationHigh>81</OscillationHigh>
+			<OscillationType>1</OscillationType>
+			<RotationLow>0</RotationLow>
+			<RotationHigh>0</RotationHigh>
+			<RotationType>3</RotationType>
+		</Ball>
+		<Ball Type="RandomInterfaceBall" TableYPercent="0.4">
+			<BallNumber>2</BallNumber>
+			<NumberOfBallsLow>1</NumberOfBallsLow>
+			<NumberOfBallsHigh>1</NumberOfBallsHigh>
+			<NumberOfBallsType>3</NumberOfBallsType>
+			<WaitTime>800</WaitTime>
+			<TopMotorLow>72</TopMotorLow>
+			<TopMotorHigh>75</TopMotorHigh>
+			<TopMotorType>1</TopMotorType>
+			<BottomMotorLow>0</BottomMotorLow>
+			<BottomMotorHigh>0</BottomMotorHigh>
+			<BottomMotorType>3</BottomMotorType>
+			<HeightLow>77</HeightLow>
+			<HeightHigh>77</HeightHigh>
+			<HeightType>3</HeightType>
+			<OscillationLow>45</OscillationLow>
+			<OscillationHigh>55</OscillationHigh>
+			<OscillationType>1</OscillationType>
+			<RotationLow>0</RotationLow>
+			<RotationHigh>0</RotationHigh>
+			<RotationType>3</RotationType>
+		</Ball>
+		<Ball Type="RandomInterfaceBall" TableYPercent="0.4">
+			<BallNumber>3</BallNumber>
+			<NumberOfBallsLow>1</NumberOfBallsLow>
+			<NumberOfBallsHigh>1</NumberOfBallsHigh>
+			<NumberOfBallsType>3</NumberOfBallsType>
+			<WaitTime>800</WaitTime>
+			<TopMotorLow>72</TopMotorLow>
+			<TopMotorHigh>75</TopMotorHigh>
+			<TopMotorType>1</TopMotorType>
+			<BottomMotorLow>0</BottomMotorLow>
+			<BottomMotorHigh>0</BottomMotorHigh>
+			<BottomMotorType>3</BottomMotorType>
+			<HeightLow>77</HeightLow>
+			<HeightHigh>77</HeightHigh>
+			<HeightType>3</HeightType>
+			<OscillationLow>15</OscillationLow>
+			<OscillationHigh>20</OscillationHigh>
+			<OscillationType>1</OscillationType>
+			<RotationLow>0</RotationLow>
+			<RotationHigh>0</RotationHigh>
+			<RotationType>3</RotationType>
+		</Ball>
+	</Drill>
+	<Drill Name="One or Two Forehands, One or Two Backhands"
+	       Description="Using all forehand, make quick adjustments to hit forehand from the wide angle and forehands from the center of the table."
+	       Delay="0"
+	       YouTubeVideoID="lfz_6vDO588">
+		<Ball Type="RandomInterfaceBall" TableYPercent="0.4">
+			<BallNumber>1</BallNumber>
+			<NumberOfBallsLow>1</NumberOfBallsLow>
+			<NumberOfBallsHigh>2</NumberOfBallsHigh>
+			<NumberOfBallsType>1</NumberOfBallsType>
+			<WaitTime>870</WaitTime>
+			<TopMotorLow>75</TopMotorLow>
+			<TopMotorHigh>75</TopMotorHigh>
+			<TopMotorType>3</TopMotorType>
+			<BottomMotorLow>0</BottomMotorLow>
+			<BottomMotorHigh>0</BottomMotorHigh>
+			<BottomMotorType>3</BottomMotorType>
+			<HeightLow>74</HeightLow>
+			<HeightHigh>74</HeightHigh>
+			<HeightType>3</HeightType>
+			<OscillationLow>75</OscillationLow>
+			<OscillationHigh>75</OscillationHigh>
+			<OscillationType>3</OscillationType>
+			<RotationLow>0</RotationLow>
+			<RotationHigh>0</RotationHigh>
+			<RotationType>3</RotationType>
+		</Ball>
+		<Ball Type="RandomInterfaceBall" TableYPercent="0.4">
+			<BallNumber>2</BallNumber>
+			<NumberOfBallsLow>1</NumberOfBallsLow>
+			<NumberOfBallsHigh>2</NumberOfBallsHigh>
+			<NumberOfBallsType>1</NumberOfBallsType>
+			<WaitTime>870</WaitTime>
+			<TopMotorLow>75</TopMotorLow>
+			<TopMotorHigh>75</TopMotorHigh>
+			<TopMotorType>3</TopMotorType>
+			<BottomMotorLow>0</BottomMotorLow>
+			<BottomMotorHigh>0</BottomMotorHigh>
+			<BottomMotorType>3</BottomMotorType>
+			<HeightLow>74</HeightLow>
+			<HeightHigh>74</HeightHigh>
+			<HeightType>3</HeightType>
+			<OscillationLow>30</OscillationLow>
+			<OscillationHigh>30</OscillationHigh>
+			<OscillationType>3</OscillationType>
+			<RotationLow>0</RotationLow>
+			<RotationHigh>0</RotationHigh>
+			<RotationType>3</RotationType>
+		</Ball>
+	</Drill>
+	<Drill Name="One or Two Backhands, One or Two Middle"
+	       Description="You can use backhand or forehand for this drill, just make sure that you are moving for every ball. Also, watch the robot
+s head to see where the next ball with be thrown."
+	       Delay="0"
+	       YouTubeVideoID="A9-3t3LQizI">
+		<Ball Type="RandomInterfaceBall" TableYPercent="0.4">
+			<BallNumber>1</BallNumber>
+			<NumberOfBallsLow>1</NumberOfBallsLow>
+			<NumberOfBallsHigh>2</NumberOfBallsHigh>
+			<NumberOfBallsType>1</NumberOfBallsType>
+			<WaitTime>870</WaitTime>
+			<TopMotorLow>75</TopMotorLow>
+			<TopMotorHigh>75</TopMotorHigh>
+			<TopMotorType>3</TopMotorType>
+			<BottomMotorLow>0</BottomMotorLow>
+			<BottomMotorHigh>0</BottomMotorHigh>
+			<BottomMotorType>3</BottomMotorType>
+			<HeightLow>74</HeightLow>
+			<HeightHigh>74</HeightHigh>
+			<HeightType>3</HeightType>
+			<OscillationLow>16</OscillationLow>
+			<OscillationHigh>16</OscillationHigh>
+			<OscillationType>3</OscillationType>
+			<RotationLow>0</RotationLow>
+			<RotationHigh>0</RotationHigh>
+			<RotationType>3</RotationType>
+		</Ball>
+		<Ball Type="RandomInterfaceBall" TableYPercent="0.4">
+			<BallNumber>2</BallNumber>
+			<NumberOfBallsLow>1</NumberOfBallsLow>
+			<NumberOfBallsHigh>2</NumberOfBallsHigh>
+			<NumberOfBallsType>1</NumberOfBallsType>
+			<WaitTime>870</WaitTime>
+			<TopMotorLow>75</TopMotorLow>
+			<TopMotorHigh>75</TopMotorHigh>
+			<TopMotorType>3</TopMotorType>
+			<BottomMotorLow>0</BottomMotorLow>
+			<BottomMotorHigh>0</BottomMotorHigh>
+			<BottomMotorType>3</BottomMotorType>
+			<HeightLow>74</HeightLow>
+			<HeightHigh>74</HeightHigh>
+			<HeightType>3</HeightType>
+			<OscillationLow>50</OscillationLow>
+			<OscillationHigh>50</OscillationHigh>
+			<OscillationType>3</OscillationType>
+			<RotationLow>0</RotationLow>
+			<RotationHigh>0</RotationHigh>
+			<RotationType>3</RotationType>
+		</Ball>
+	</Drill>
+	<Drill Name="One Middle, One Random"
+	       Description="First you will get a speed ball to the middle, next you will get a speed ball anywhere, the pattern continues, one middle, one random."
+	       Delay="0"
+	       YouTubeVideoID="k4yKRtjNJAU">
+		<Ball Type="AdvancedInterfaceBall" TableYPercent="0.55">
+			<BallNumber>1</BallNumber>
+			<NumberOfBalls>1</NumberOfBalls>
+			<WaitTime>870</WaitTime>
+			<TopMotorSpeed>75</TopMotorSpeed>
+			<BottomMotorSpeed>0</BottomMotorSpeed>
+			<Height>74</Height>
+			<Oscillation>50</Oscillation>
+			<Rotation>0</Rotation>
+		</Ball>
+		<Ball Type="RandomInterfaceBall" TableYPercent="0.55">
+			<BallNumber>2</BallNumber>
+			<NumberOfBallsLow>1</NumberOfBallsLow>
+			<NumberOfBallsHigh>1</NumberOfBallsHigh>
+			<NumberOfBallsType>3</NumberOfBallsType>
+			<WaitTime>870</WaitTime>
+			<TopMotorLow>75</TopMotorLow>
+			<TopMotorHigh>75</TopMotorHigh>
+			<TopMotorType>3</TopMotorType>
+			<BottomMotorLow>0</BottomMotorLow>
+			<BottomMotorHigh>0</BottomMotorHigh>
+			<BottomMotorType>3</BottomMotorType>
+			<HeightLow>74</HeightLow>
+			<HeightHigh>74</HeightHigh>
+			<HeightType>3</HeightType>
+			<OscillationLow>19</OscillationLow>
+			<OscillationHigh>81</OscillationHigh>
+			<OscillationType>1</OscillationType>
+			<RotationLow>0</RotationLow>
+			<RotationHigh>0</RotationHigh>
+			<RotationType>3</RotationType>
+		</Ball>
+	</Drill>
+	<Drill Name="Forehand, Backhand, Random"
+	       Description="This is called a semi-systematic drill. First a simple forehand then backhand followed by a surprise anywhere!"
+	       Delay="0"
+	       YouTubeVideoID="VxmytOBUaq0">
+		<Ball Type="AdvancedInterfaceBall" TableYPercent="0.35">
+			<BallNumber>1</BallNumber>
+			<NumberOfBalls>1</NumberOfBalls>
+			<WaitTime>870</WaitTime>
+			<TopMotorSpeed>70</TopMotorSpeed>
+			<BottomMotorSpeed>0</BottomMotorSpeed>
+			<Height>74</Height>
+			<Oscillation>78</Oscillation>
+			<Rotation>0</Rotation>
+		</Ball>
+		<Ball Type="AdvancedInterfaceBall" TableYPercent="0.35">
+			<BallNumber>2</BallNumber>
+			<NumberOfBalls>1</NumberOfBalls>
+			<WaitTime>890</WaitTime>
+			<TopMotorSpeed>70</TopMotorSpeed>
+			<BottomMotorSpeed>0</BottomMotorSpeed>
+			<Height>74</Height>
+			<Oscillation>20</Oscillation>
+			<Rotation>0</Rotation>
+		</Ball>
+		<Ball Type="RandomInterfaceBall" TableYPercent="0.45">
+			<BallNumber>3</BallNumber>
+			<NumberOfBallsLow>1</NumberOfBallsLow>
+			<NumberOfBallsHigh>1</NumberOfBallsHigh>
+			<NumberOfBallsType>3</NumberOfBallsType>
+			<WaitTime>870</WaitTime>
+			<TopMotorLow>80</TopMotorLow>
+			<TopMotorHigh>80</TopMotorHigh>
+			<TopMotorType>3</TopMotorType>
+			<BottomMotorLow>0</BottomMotorLow>
+			<BottomMotorHigh>0</BottomMotorHigh>
+			<BottomMotorType>3</BottomMotorType>
+			<HeightLow>74</HeightLow>
+			<HeightHigh>74</HeightHigh>
+			<HeightType>3</HeightType>
+			<OscillationLow>25</OscillationLow>
+			<OscillationHigh>75</OscillationHigh>
+			<OscillationType>1</OscillationType>
+			<RotationLow>0</RotationLow>
+			<RotationHigh>0</RotationHigh>
+			<RotationType>3</RotationType>
+		</Ball>
+	</Drill>
+	<Drill Name="Six Balls"
+	       Description="It starts with a backhand, middle, forehand, then goes random for three balls anywhere. The pattern continues without a break. Try to survive for two full minutes before taking a needed water break!"
+	       Delay="0"
+	       YouTubeVideoID="T2Odg4evvuo">
+		<Ball Type="AdvancedInterfaceBall" TableYPercent="0.55">
+			<BallNumber>1</BallNumber>
+			<NumberOfBalls>1</NumberOfBalls>
+			<WaitTime>1000</WaitTime>
+			<TopMotorSpeed>70</TopMotorSpeed>
+			<BottomMotorSpeed>0</BottomMotorSpeed>
+			<Height>75</Height>
+			<Oscillation>20</Oscillation>
+			<Rotation>0</Rotation>
+		</Ball>
+		<Ball Type="AdvancedInterfaceBall" TableYPercent="0.55">
+			<BallNumber>2</BallNumber>
+			<NumberOfBalls>1</NumberOfBalls>
+			<WaitTime>870</WaitTime>
+			<TopMotorSpeed>70</TopMotorSpeed>
+			<BottomMotorSpeed>0</BottomMotorSpeed>
+			<Height>75</Height>
+			<Oscillation>50</Oscillation>
+			<Rotation>0</Rotation>
+		</Ball>
+		<Ball Type="AdvancedInterfaceBall" TableYPercent="0.55">
+			<BallNumber>3</BallNumber>
+			<NumberOfBalls>1</NumberOfBalls>
+			<WaitTime>870</WaitTime>
+			<TopMotorSpeed>70</TopMotorSpeed>
+			<BottomMotorSpeed>0</BottomMotorSpeed>
+			<Height>75</Height>
+			<Oscillation>77</Oscillation>
+			<Rotation>0</Rotation>
+		</Ball>
+		<Ball Type="RandomInterfaceBall" TableYPercent="0.55">
+			<BallNumber>4</BallNumber>
+			<NumberOfBallsLow>3</NumberOfBallsLow>
+			<NumberOfBallsHigh>3</NumberOfBallsHigh>
+			<NumberOfBallsType>3</NumberOfBallsType>
+			<WaitTime>870</WaitTime>
+			<TopMotorLow>70</TopMotorLow>
+			<TopMotorHigh>70</TopMotorHigh>
+			<TopMotorType>3</TopMotorType>
+			<BottomMotorLow>0</BottomMotorLow>
+			<BottomMotorHigh>0</BottomMotorHigh>
+			<BottomMotorType>3</BottomMotorType>
+			<HeightLow>75</HeightLow>
+			<HeightHigh>75</HeightHigh>
+			<HeightType>3</HeightType>
+			<OscillationLow>25</OscillationLow>
+			<OscillationHigh>75</OscillationHigh>
+			<OscillationType>1</OscillationType>
+			<RotationLow>0</RotationLow>
+			<RotationHigh>0</RotationHigh>
+			<RotationType>3</RotationType>
+		</Ball>
+	</Drill>
+	<Drill Name="Backhand, Random"
+	       Description="This drill alternates between a backhand then a random ball anywhere. Remember, the random ball might just be to the backhand; in that case, you would get three backhands in a row."
+	       Delay="0"
+	       YouTubeVideoID="5oP3vdswZMQ">
+		<Ball Type="AdvancedInterfaceBall" TableYPercent="0.35">
+			<BallNumber>1</BallNumber>
+			<NumberOfBalls>1</NumberOfBalls>
+			<WaitTime>940</WaitTime>
+			<TopMotorSpeed>72</TopMotorSpeed>
+			<BottomMotorSpeed>0</BottomMotorSpeed>
+			<Height>74</Height>
+			<Oscillation>20</Oscillation>
+			<Rotation>0</Rotation>
+		</Ball>
+		<Ball Type="RandomInterfaceBall" TableYPercent="0.35">
+			<BallNumber>2</BallNumber>
+			<NumberOfBallsLow>1</NumberOfBallsLow>
+			<NumberOfBallsHigh>1</NumberOfBallsHigh>
+			<NumberOfBallsType>3</NumberOfBallsType>
+			<WaitTime>800</WaitTime>
+			<TopMotorLow>72</TopMotorLow>
+			<TopMotorHigh>72</TopMotorHigh>
+			<TopMotorType>3</TopMotorType>
+			<BottomMotorLow>0</BottomMotorLow>
+			<BottomMotorHigh>0</BottomMotorHigh>
+			<BottomMotorType>3</BottomMotorType>
+			<HeightLow>74</HeightLow>
+			<HeightHigh>74</HeightHigh>
+			<HeightType>3</HeightType>
+			<OscillationLow>25</OscillationLow>
+			<OscillationHigh>75</OscillationHigh>
+			<OscillationType>1</OscillationType>
+			<RotationLow>0</RotationLow>
+			<RotationHigh>0</RotationHigh>
+			<RotationType>3</RotationType>
+		</Ball>
+	</Drill>
+	<Drill Name="Nine Balls"
+	       Description="Three backhands, three forehands, then three random. Try your best to change locations when hitting, sometimes hit to the wide forehand, sometimes wide backhand, and sometimes try to jam your opponent in the middle."
+	       Delay="2"
+	       YouTubeVideoID="oFRoZTo_Xsc">
+		<Ball Type="AdvancedInterfaceBall" TableYPercent="0.3">
+			<BallNumber>1</BallNumber>
+			<NumberOfBalls>3</NumberOfBalls>
+			<WaitTime>870</WaitTime>
+			<TopMotorSpeed>66</TopMotorSpeed>
+			<BottomMotorSpeed>0</BottomMotorSpeed>
+			<Height>75</Height>
+			<Oscillation>22</Oscillation>
+			<Rotation>0</Rotation>
+		</Ball>
+		<Ball Type="AdvancedInterfaceBall" TableYPercent="0.3">
+			<BallNumber>2</BallNumber>
+			<NumberOfBalls>3</NumberOfBalls>
+			<WaitTime>870</WaitTime>
+			<TopMotorSpeed>66</TopMotorSpeed>
+			<BottomMotorSpeed>0</BottomMotorSpeed>
+			<Height>75</Height>
+			<Oscillation>78</Oscillation>
+			<Rotation>0</Rotation>
+		</Ball>
+		<Ball Type="RandomInterfaceBall" TableYPercent="0.3">
+			<BallNumber>3</BallNumber>
+			<NumberOfBallsLow>3</NumberOfBallsLow>
+			<NumberOfBallsHigh>3</NumberOfBallsHigh>
+			<NumberOfBallsType>3</NumberOfBallsType>
+			<WaitTime>870</WaitTime>
+			<TopMotorLow>66</TopMotorLow>
+			<TopMotorHigh>66</TopMotorHigh>
+			<TopMotorType>3</TopMotorType>
+			<BottomMotorLow>0</BottomMotorLow>
+			<BottomMotorHigh>0</BottomMotorHigh>
+			<BottomMotorType>3</BottomMotorType>
+			<HeightLow>75</HeightLow>
+			<HeightHigh>75</HeightHigh>
+			<HeightType>3</HeightType>
+			<OscillationLow>22</OscillationLow>
+			<OscillationHigh>78</OscillationHigh>
+			<OscillationType>1</OscillationType>
+			<RotationLow>0</RotationLow>
+			<RotationHigh>0</RotationHigh>
+			<RotationType>3</RotationType>
+		</Ball>
+	</Drill>
+	<Drill Name="Medium Random"
+	       Description="This drill always keeps you guessing, it gives excellent variations in placement and actually feels like you are playing a real game!"
+	       Delay="2"
+	       YouTubeVideoID="m-F1hV2RYgo">
+		<Ball Type="RandomInterfaceBall" TableYPercent="0.40">
+			<BallNumber>1</BallNumber>
+			<NumberOfBallsLow>3</NumberOfBallsLow>
+			<NumberOfBallsHigh>3</NumberOfBallsHigh>
+			<NumberOfBallsType>3</NumberOfBallsType>
+			<WaitTime>910</WaitTime>
+			<TopMotorLow>62</TopMotorLow>
+			<TopMotorHigh>62</TopMotorHigh>
+			<TopMotorType>3</TopMotorType>
+			<BottomMotorLow>0</BottomMotorLow>
+			<BottomMotorHigh>0</BottomMotorHigh>
+			<BottomMotorType>3</BottomMotorType>
+			<HeightLow>78</HeightLow>
+			<HeightHigh>78</HeightHigh>
+			<HeightType>3</HeightType>
+			<OscillationLow>19</OscillationLow>
+			<OscillationHigh>81</OscillationHigh>
+			<OscillationType>1</OscillationType>
+			<RotationLow>0</RotationLow>
+			<RotationHigh>0</RotationHigh>
+			<RotationType>3</RotationType>
+		</Ball>
+	</Drill>
+	<Drill Name="Wild Random"
+	       Description="This tough drill gives you placement, speed, spin, height, and depth variations. Be alert and ready to make the adjustments. Start off with just doing twenty balls, before taking a break. As you develop the ability to adjust, then challenge yourself with longer drills."
+	       Delay="0"
+	       YouTubeVideoID="FvH0pj_wpr0">
+		<Ball Type="RandomInterfaceBall" TableYPercent="0.4">
+			<BallNumber>1</BallNumber>
+			<NumberOfBallsLow>1</NumberOfBallsLow>
+			<NumberOfBallsHigh>1</NumberOfBallsHigh>
+			<NumberOfBallsType>3</NumberOfBallsType>
+			<WaitTime>800</WaitTime>
+			<TopMotorLow>73</TopMotorLow>
+			<TopMotorHigh>76</TopMotorHigh>
+			<TopMotorType>1</TopMotorType>
+			<BottomMotorLow>0</BottomMotorLow>
+			<BottomMotorHigh>0</BottomMotorHigh>
+			<BottomMotorType>3</BottomMotorType>
+			<HeightLow>74</HeightLow>
+			<HeightHigh>74</HeightHigh>
+			<HeightType>1</HeightType>
+			<OscillationLow>20</OscillationLow>
+			<OscillationHigh>78</OscillationHigh>
+			<OscillationType>1</OscillationType>
+			<RotationLow>0</RotationLow>
+			<RotationHigh>0</RotationHigh>
+			<RotationType>3</RotationType>
+		</Ball>
+	</Drill>
+	<Drill Name="Serve, Backspin, Topspin"
+	       Description="First, the serve will come with slight backspin sidespin, next a very spinny backspin, followed by a very spinny topspin ball. Be ready to adjust to the extreme spin!"
+	       Delay="2.9"
+	       YouTubeVideoID="yvITm23XlYE">
+		<Ball Type="RandomInterfaceBall" TableYPercent="0.35">
+			<BallNumber>1</BallNumber>
+			<NumberOfBallsLow>1</NumberOfBallsLow>
+			<NumberOfBallsHigh>1</NumberOfBallsHigh>
+			<NumberOfBallsType>3</NumberOfBallsType>
+			<WaitTime>1320</WaitTime>
+			<TopMotorLow>-18</TopMotorLow>
+			<TopMotorHigh>-18</TopMotorHigh>
+			<TopMotorType>3</TopMotorType>
+			<BottomMotorLow>48</BottomMotorLow>
+			<BottomMotorHigh>48</BottomMotorHigh>
+			<BottomMotorType>3</BottomMotorType>
+			<HeightLow>25</HeightLow>
+			<HeightHigh>25</HeightHigh>
+			<HeightType>3</HeightType>
+			<OscillationLow>28</OscillationLow>
+			<OscillationHigh>72</OscillationHigh>
+			<OscillationType>1</OscillationType>
+			<RotationLow>-15</RotationLow>
+			<RotationHigh>15</RotationHigh>
+			<RotationType>2</RotationType>
+		</Ball>
+		<Ball Type="RandomInterfaceBall" TableYPercent="0.25">
+			<BallNumber>2</BallNumber>
+			<NumberOfBallsLow>1</NumberOfBallsLow>
+			<NumberOfBallsHigh>1</NumberOfBallsHigh>
+			<NumberOfBallsType>3</NumberOfBallsType>
+			<WaitTime>1300</WaitTime>
+			<TopMotorLow>-14</TopMotorLow>
+			<TopMotorHigh>-14</TopMotorHigh>
+			<TopMotorType>3</TopMotorType>
+			<BottomMotorLow>48</BottomMotorLow>
+			<BottomMotorHigh>48</BottomMotorHigh>
+			<BottomMotorType>3</BottomMotorType>
+			<HeightLow>86</HeightLow>
+			<HeightHigh>86</HeightHigh>
+			<HeightType>3</HeightType>
+			<OscillationLow>28</OscillationLow>
+			<OscillationHigh>72</OscillationHigh>
+			<OscillationType>1</OscillationType>
+			<RotationLow>0</RotationLow>
+			<RotationHigh>0</RotationHigh>
+			<RotationType>3</RotationType>
+		</Ball>
+		<Ball Type="RandomInterfaceBall" TableYPercent="0.5">
+			<BallNumber>3</BallNumber>
+			<NumberOfBallsLow>1</NumberOfBallsLow>
+			<NumberOfBallsHigh>1</NumberOfBallsHigh>
+			<NumberOfBallsType>3</NumberOfBallsType>
+			<WaitTime>1310</WaitTime>
+			<TopMotorLow>59</TopMotorLow>
+			<TopMotorHigh>59</TopMotorHigh>
+			<TopMotorType>3</TopMotorType>
+			<BottomMotorLow>0</BottomMotorLow>
+			<BottomMotorHigh>0</BottomMotorHigh>
+			<BottomMotorType>3</BottomMotorType>
+			<HeightLow>78</HeightLow>
+			<HeightHigh>78</HeightHigh>
+			<HeightType>3</HeightType>
+			<OscillationLow>28</OscillationLow>
+			<OscillationHigh>72</OscillationHigh>
+			<OscillationType>1</OscillationType>
+			<RotationLow>0</RotationLow>
+			<RotationHigh>0</RotationHigh>
+			<RotationType>3</RotationType>
+		</Ball>
+	</Drill>
+	<Drill Name="Serve, Forehand, Backhand"
+	       Description="This is a great drill for defense. It gives you a backspin serve, followed by a topspin ball to your forehand then a topspin ball to your backhand."
+	       Delay="2.5"
+	       YouTubeVideoID="wKiJt6w8hv0">
+		<Ball Type="RandomInterfaceBall" TableYPercent="0.5">
+			<BallNumber>1</BallNumber>
+			<NumberOfBallsLow>1</NumberOfBallsLow>
+			<NumberOfBallsHigh>1</NumberOfBallsHigh>
+			<NumberOfBallsType>3</NumberOfBallsType>
+			<WaitTime>1450</WaitTime>
+			<TopMotorLow>0</TopMotorLow>
+			<TopMotorHigh>0</TopMotorHigh>
+			<TopMotorType>3</TopMotorType>
+			<BottomMotorLow>40</BottomMotorLow>
+			<BottomMotorHigh>43</BottomMotorHigh>
+			<BottomMotorType>1</BottomMotorType>
+			<HeightLow>27</HeightLow>
+			<HeightHigh>27</HeightHigh>
+			<HeightType>3</HeightType>
+			<OscillationLow>19</OscillationLow>
+			<OscillationHigh>81</OscillationHigh>
+			<OscillationType>1</OscillationType>
+			<RotationLow>0</RotationLow>
+			<RotationHigh>0</RotationHigh>
+			<RotationType>3</RotationType>
+		</Ball>
+		<Ball Type="RandomInterfaceBall" TableYPercent="0.5">
+			<BallNumber>2</BallNumber>
+			<NumberOfBallsLow>1</NumberOfBallsLow>
+			<NumberOfBallsHigh>1</NumberOfBallsHigh>
+			<NumberOfBallsType>3</NumberOfBallsType>
+			<WaitTime>1110</WaitTime>
+			<TopMotorLow>81</TopMotorLow>
+			<TopMotorHigh>81</TopMotorHigh>
+			<TopMotorType>3</TopMotorType>
+			<BottomMotorLow>0</BottomMotorLow>
+			<BottomMotorHigh>0</BottomMotorHigh>
+			<BottomMotorType>3</BottomMotorType>
+			<HeightLow>71</HeightLow>
+			<HeightHigh>71</HeightHigh>
+			<HeightType>3</HeightType>
+			<OscillationLow>58</OscillationLow>
+			<OscillationHigh>78</OscillationHigh>
+			<OscillationType>1</OscillationType>
+			<RotationLow>0</RotationLow>
+			<RotationHigh>0</RotationHigh>
+			<RotationType>3</RotationType>
+		</Ball>
+		<Ball Type="RandomInterfaceBall" TableYPercent="0.5">
+			<BallNumber>3</BallNumber>
+			<NumberOfBallsLow>1</NumberOfBallsLow>
+			<NumberOfBallsHigh>1</NumberOfBallsHigh>
+			<NumberOfBallsType>3</NumberOfBallsType>
+			<WaitTime>860</WaitTime>
+			<TopMotorLow>81</TopMotorLow>
+			<TopMotorHigh>81</TopMotorHigh>
+			<TopMotorType>3</TopMotorType>
+			<BottomMotorLow>0</BottomMotorLow>
+			<BottomMotorHigh>0</BottomMotorHigh>
+			<BottomMotorType>3</BottomMotorType>
+			<HeightLow>71</HeightLow>
+			<HeightHigh>71</HeightHigh>
+			<HeightType>3</HeightType>
+			<OscillationLow>22</OscillationLow>
+			<OscillationHigh>40</OscillationHigh>
+			<OscillationType>1</OscillationType>
+			<RotationLow>0</RotationLow>
+			<RotationHigh>0</RotationHigh>
+			<RotationType>3</RotationType>
+		</Ball>
+	</Drill>
+	<Drill Name="No-Spin Serve then Backhand, Forehand"
+	       Description="After pushing the no-spin serve, use a controlled stroke and block with your backhand then block with your forehand. Try to keep your blocks as low to the net as possible!"
+	       Delay="2.5"
+	       YouTubeVideoID="t5H0dTE_IaI">
+		<Ball Type="RandomInterfaceBall" TableYPercent="0.75">
+			<BallNumber>1</BallNumber>
+			<NumberOfBallsLow>1</NumberOfBallsLow>
+			<NumberOfBallsHigh>1</NumberOfBallsHigh>
+			<NumberOfBallsType>3</NumberOfBallsType>
+			<WaitTime>1150</WaitTime>
+			<TopMotorLow>25</TopMotorLow>
+			<TopMotorHigh>25</TopMotorHigh>
+			<TopMotorType>1</TopMotorType>
+			<BottomMotorLow>25</BottomMotorLow>
+			<BottomMotorHigh>25</BottomMotorHigh>
+			<BottomMotorType>3</BottomMotorType>
+			<HeightLow>30</HeightLow>
+			<HeightHigh>30</HeightHigh>
+			<HeightType>3</HeightType>
+			<OscillationLow>19</OscillationLow>
+			<OscillationHigh>81</OscillationHigh>
+			<OscillationType>1</OscillationType>
+			<RotationLow>0</RotationLow>
+			<RotationHigh>0</RotationHigh>
+			<RotationType>3</RotationType>
+		</Ball>
+		<Ball Type="AdvancedInterfaceBall" TableYPercent="0.6">
+			<BallNumber>2</BallNumber>
+			<NumberOfBalls>1</NumberOfBalls>
+			<WaitTime>1140</WaitTime>
+			<TopMotorSpeed>81</TopMotorSpeed>
+			<BottomMotorSpeed>0</BottomMotorSpeed>
+			<Height>72</Height>
+			<Oscillation>28</Oscillation>
+			<Rotation>0</Rotation>
+		</Ball>
+		<Ball Type="AdvancedInterfaceBall" TableYPercent="0.5">
+			<BallNumber>3</BallNumber>
+			<NumberOfBalls>1</NumberOfBalls>
+			<WaitTime>860</WaitTime>
+			<TopMotorSpeed>80</TopMotorSpeed>
+			<BottomMotorSpeed>0</BottomMotorSpeed>
+			<Height>72</Height>
+			<Oscillation>81</Oscillation>
+			<Rotation>0</Rotation>
+		</Ball>
+	</Drill>
+	<Drill Name="Serve Then Middle Random"
+	       Description="After a heavy backspin serve, the footwork drill begins 
+ middle then random, middle then random, middle then random. Try to play most of the middle balls with your forehand."
+	       Delay="2.5"
+	       YouTubeVideoID="PHFvkLusqqE">
+		<Ball Type="RandomInterfaceBall" TableYPercent="0.25">
+			<BallNumber>1</BallNumber>
+			<NumberOfBallsLow>1</NumberOfBallsLow>
+			<NumberOfBallsHigh>1</NumberOfBallsHigh>
+			<NumberOfBallsType>3</NumberOfBallsType>
+			<WaitTime>1200</WaitTime>
+			<TopMotorLow>0</TopMotorLow>
+			<TopMotorHigh>0</TopMotorHigh>
+			<TopMotorType>3</TopMotorType>
+			<BottomMotorLow>39</BottomMotorLow>
+			<BottomMotorHigh>39</BottomMotorHigh>
+			<BottomMotorType>3</BottomMotorType>
+			<HeightLow>28</HeightLow>
+			<HeightHigh>28</HeightHigh>
+			<HeightType>3</HeightType>
+			<OscillationLow>19</OscillationLow>
+			<OscillationHigh>81</OscillationHigh>
+			<OscillationType>1</OscillationType>
+			<RotationLow>0</RotationLow>
+			<RotationHigh>0</RotationHigh>
+			<RotationType>3</RotationType>
+		</Ball>
+		<Ball Type="AdvancedInterfaceBall" TableYPercent="0.3">
+			<BallNumber>2</BallNumber>
+			<NumberOfBalls>1</NumberOfBalls>
+			<WaitTime>1260</WaitTime>
+			<TopMotorSpeed>72</TopMotorSpeed>
+			<BottomMotorSpeed>0</BottomMotorSpeed>
+			<Height>74</Height>
+			<Oscillation>50</Oscillation>
+			<Rotation>0</Rotation>
+		</Ball>
+		<Ball Type="RandomInterfaceBall" TableYPercent="0.3">
+			<BallNumber>3</BallNumber>
+			<NumberOfBallsLow>1</NumberOfBallsLow>
+			<NumberOfBallsHigh>1</NumberOfBallsHigh>
+			<NumberOfBallsType>3</NumberOfBallsType>
+			<WaitTime>1010</WaitTime>
+			<TopMotorLow>72</TopMotorLow>
+			<TopMotorHigh>72</TopMotorHigh>
+			<TopMotorType>3</TopMotorType>
+			<BottomMotorLow>0</BottomMotorLow>
+			<BottomMotorHigh>0</BottomMotorHigh>
+			<BottomMotorType>3</BottomMotorType>
+			<HeightLow>74</HeightLow>
+			<HeightHigh>74</HeightHigh>
+			<HeightType>3</HeightType>
+			<OscillationLow>14</OscillationLow>
+			<OscillationHigh>86</OscillationHigh>
+			<OscillationType>1</OscillationType>
+			<RotationLow>0</RotationLow>
+			<RotationHigh>0</RotationHigh>
+			<RotationType>3</RotationType>
+		</Ball>
+		<Ball Type="AdvancedInterfaceBall" TableYPercent="0.3">
+			<BallNumber>4</BallNumber>
+			<NumberOfBalls>1</NumberOfBalls>
+			<WaitTime>1010</WaitTime>
+			<TopMotorSpeed>72</TopMotorSpeed>
+			<BottomMotorSpeed>0</BottomMotorSpeed>
+			<Height>74</Height>
+			<Oscillation>50</Oscillation>
+			<Rotation>0</Rotation>
+		</Ball>
+		<Ball Type="RandomInterfaceBall" TableYPercent="0.3">
+			<BallNumber>5</BallNumber>
+			<NumberOfBallsLow>1</NumberOfBallsLow>
+			<NumberOfBallsHigh>1</NumberOfBallsHigh>
+			<NumberOfBallsType>3</NumberOfBallsType>
+			<WaitTime>1010</WaitTime>
+			<TopMotorLow>72</TopMotorLow>
+			<TopMotorHigh>72</TopMotorHigh>
+			<TopMotorType>3</TopMotorType>
+			<BottomMotorLow>0</BottomMotorLow>
+			<BottomMotorHigh>0</BottomMotorHigh>
+			<BottomMotorType>3</BottomMotorType>
+			<HeightLow>74</HeightLow>
+			<HeightHigh>74</HeightHigh>
+			<HeightType>3</HeightType>
+			<OscillationLow>14</OscillationLow>
+			<OscillationHigh>86</OscillationHigh>
+			<OscillationType>1</OscillationType>
+			<RotationLow>0</RotationLow>
+			<RotationHigh>0</RotationHigh>
+			<RotationType>3</RotationType>
+		</Ball>
+		<Ball Type="AdvancedInterfaceBall" TableYPercent="0.3">
+			<BallNumber>6</BallNumber>
+			<NumberOfBalls>1</NumberOfBalls>
+			<WaitTime>1010</WaitTime>
+			<TopMotorSpeed>72</TopMotorSpeed>
+			<BottomMotorSpeed>0</BottomMotorSpeed>
+			<Height>74</Height>
+			<Oscillation>50</Oscillation>
+			<Rotation>-1</Rotation>
+		</Ball>
+		<Ball Type="RandomInterfaceBall" TableYPercent="0.3">
+			<BallNumber>7</BallNumber>
+			<NumberOfBallsLow>1</NumberOfBallsLow>
+			<NumberOfBallsHigh>1</NumberOfBallsHigh>
+			<NumberOfBallsType>3</NumberOfBallsType>
+			<WaitTime>1010</WaitTime>
+			<TopMotorLow>72</TopMotorLow>
+			<TopMotorHigh>72</TopMotorHigh>
+			<TopMotorType>3</TopMotorType>
+			<BottomMotorLow>0</BottomMotorLow>
+			<BottomMotorHigh>0</BottomMotorHigh>
+			<BottomMotorType>3</BottomMotorType>
+			<HeightLow>74</HeightLow>
+			<HeightHigh>74</HeightHigh>
+			<HeightType>3</HeightType>
+			<OscillationLow>14</OscillationLow>
+			<OscillationHigh>86</OscillationHigh>
+			<OscillationType>1</OscillationType>
+			<RotationLow>0</RotationLow>
+			<RotationHigh>0</RotationHigh>
+			<RotationType>3</RotationType>
+		</Ball>
+	</Drill>
+	<Drill Name="Block Training"
+	       Description="After returning the no-spin serve, you will then get five to ten topspin balls anywhere, simply block the ball with control. See if you can last the entire drill without missing a single block!"
+	       Delay="2.5"
+	       YouTubeVideoID="mUIZvuyam9A">
+		<Ball Type="RandomInterfaceBall" TableYPercent="0.5">
+			<BallNumber>1</BallNumber>
+			<NumberOfBallsLow>1</NumberOfBallsLow>
+			<NumberOfBallsHigh>1</NumberOfBallsHigh>
+			<NumberOfBallsType>3</NumberOfBallsType>
+			<WaitTime>1150</WaitTime>
+			<TopMotorLow>20</TopMotorLow>
+			<TopMotorHigh>22</TopMotorHigh>
+			<TopMotorType>1</TopMotorType>
+			<BottomMotorLow>20</BottomMotorLow>
+			<BottomMotorHigh>20</BottomMotorHigh>
+			<BottomMotorType>3</BottomMotorType>
+			<HeightLow>33</HeightLow>
+			<HeightHigh>33</HeightHigh>
+			<HeightType>3</HeightType>
+			<OscillationLow>19</OscillationLow>
+			<OscillationHigh>81</OscillationHigh>
+			<OscillationType>1</OscillationType>
+			<RotationLow>0</RotationLow>
+			<RotationHigh>0</RotationHigh>
+			<RotationType>3</RotationType>
+		</Ball>
+		<Ball Type="RandomInterfaceBall" TableYPercent="0.5">
+			<BallNumber>2</BallNumber>
+			<NumberOfBallsLow>5</NumberOfBallsLow>
+			<NumberOfBallsHigh>10</NumberOfBallsHigh>
+			<NumberOfBallsType>1</NumberOfBallsType>
+			<WaitTime>850</WaitTime>
+			<TopMotorLow>86</TopMotorLow>
+			<TopMotorHigh>86</TopMotorHigh>
+			<TopMotorType>3</TopMotorType>
+			<BottomMotorLow>0</BottomMotorLow>
+			<BottomMotorHigh>0</BottomMotorHigh>
+			<BottomMotorType>3</BottomMotorType>
+			<HeightLow>70</HeightLow>
+			<HeightHigh>70</HeightHigh>
+			<HeightType>3</HeightType>
+			<OscillationLow>19</OscillationLow>
+			<OscillationHigh>81</OscillationHigh>
+			<OscillationType>1</OscillationType>
+			<RotationLow>0</RotationLow>
+			<RotationHigh>0</RotationHigh>
+			<RotationType>3</RotationType>
+		</Ball>
+	</Drill>
+	<Drill Name="Mega Backspin, Ten Topspins"
+	       Description="After pushing the very spinny serve, endure the ten ball rally with your steady defense. Instead of reaching for the balls, move your feet into position for each shot 
+ it is tiring, but worth the effort!"
+	       Delay="3.1"
+	       YouTubeVideoID="PdY72A1sdYg">
+		<Ball Type="RandomInterfaceBall" TableYPercent="0.2">
+			<BallNumber>1</BallNumber>
+			<NumberOfBallsLow>1</NumberOfBallsLow>
+			<NumberOfBallsHigh>1</NumberOfBallsHigh>
+			<NumberOfBallsType>3</NumberOfBallsType>
+			<WaitTime>1300</WaitTime>
+			<TopMotorLow>-80</TopMotorLow>
+			<TopMotorHigh>-80</TopMotorHigh>
+			<TopMotorType>3</TopMotorType>
+			<BottomMotorLow>48</BottomMotorLow>
+			<BottomMotorHigh>48</BottomMotorHigh>
+			<BottomMotorType>3</BottomMotorType>
+			<HeightLow>28</HeightLow>
+			<HeightHigh>28</HeightHigh>
+			<HeightType>3</HeightType>
+			<OscillationLow>25</OscillationLow>
+			<OscillationHigh>72</OscillationHigh>
+			<OscillationType>1</OscillationType>
+			<RotationLow>0</RotationLow>
+			<RotationHigh>0</RotationHigh>
+			<RotationType>3</RotationType>
+		</Ball>
+		<Ball Type="RandomInterfaceBall" TableYPercent="0.5">
+			<BallNumber>2</BallNumber>
+			<NumberOfBallsLow>1</NumberOfBallsLow>
+			<NumberOfBallsHigh>1</NumberOfBallsHigh>
+			<NumberOfBallsType>3</NumberOfBallsType>
+			<WaitTime>1300</WaitTime>
+			<TopMotorLow>71</TopMotorLow>
+			<TopMotorHigh>71</TopMotorHigh>
+			<TopMotorType>3</TopMotorType>
+			<BottomMotorLow>0</BottomMotorLow>
+			<BottomMotorHigh>0</BottomMotorHigh>
+			<BottomMotorType>3</BottomMotorType>
+			<HeightLow>74</HeightLow>
+			<HeightHigh>74</HeightHigh>
+			<HeightType>3</HeightType>
+			<OscillationLow>22</OscillationLow>
+			<OscillationHigh>78</OscillationHigh>
+			<OscillationType>1</OscillationType>
+			<RotationLow>0</RotationLow>
+			<RotationHigh>0</RotationHigh>
+			<RotationType>3</RotationType>
+		</Ball>
+		<Ball Type="RandomInterfaceBall" TableYPercent="0.5">
+			<BallNumber>2</BallNumber>
+			<NumberOfBallsLow>9</NumberOfBallsLow>
+			<NumberOfBallsHigh>9</NumberOfBallsHigh>
+			<NumberOfBallsType>3</NumberOfBallsType>
+			<WaitTime>850</WaitTime>
+			<TopMotorLow>75</TopMotorLow>
+			<TopMotorHigh>75</TopMotorHigh>
+			<TopMotorType>3</TopMotorType>
+			<BottomMotorLow>0</BottomMotorLow>
+			<BottomMotorHigh>0</BottomMotorHigh>
+			<BottomMotorType>3</BottomMotorType>
+			<HeightLow>74</HeightLow>
+			<HeightHigh>74</HeightHigh>
+			<HeightType>3</HeightType>
+			<OscillationLow>22</OscillationLow>
+			<OscillationHigh>78</OscillationHigh>
+			<OscillationType>1</OscillationType>
+			<RotationLow>0</RotationLow>
+			<RotationHigh>0</RotationHigh>
+			<RotationType>3</RotationType>
+		</Ball>
+	</Drill>
+	<Drill Name="Two Ball Speed"
+	       Description="This is the quickest drill on the robot. After a left sidespin serve, it will immediately give you a quick topspin ball."
+	       Delay="3.1"
+	       YouTubeVideoID="GF43FWTZm3I">
+		<Ball Type="RandomInterfaceBall" TableYPercent="0.35">
+			<BallNumber>1</BallNumber>
+			<NumberOfBallsLow>1</NumberOfBallsLow>
+			<NumberOfBallsHigh>1</NumberOfBallsHigh>
+			<NumberOfBallsType>3</NumberOfBallsType>
+			<WaitTime>1150</WaitTime>
+			<TopMotorLow>-10</TopMotorLow>
+			<TopMotorHigh>-10</TopMotorHigh>
+			<TopMotorType>3</TopMotorType>
+			<BottomMotorLow>44</BottomMotorLow>
+			<BottomMotorHigh>48</BottomMotorHigh>
+			<BottomMotorType>1</BottomMotorType>
+			<HeightLow>34</HeightLow>
+			<HeightHigh>34</HeightHigh>
+			<HeightType>3</HeightType>
+			<OscillationLow>28</OscillationLow>
+			<OscillationHigh>72</OscillationHigh>
+			<OscillationType>1</OscillationType>
+			<RotationLow>-40</RotationLow>
+			<RotationHigh>-40</RotationHigh>
+			<RotationType>3</RotationType>
+		</Ball>
+		<Ball Type="RandomInterfaceBall" TableYPercent="0.5">
+			<BallNumber>2</BallNumber>
+			<NumberOfBallsLow>1</NumberOfBallsLow>
+			<NumberOfBallsHigh>1</NumberOfBallsHigh>
+			<NumberOfBallsType>3</NumberOfBallsType>
+			<WaitTime>950</WaitTime>
+			<TopMotorLow>71</TopMotorLow>
+			<TopMotorHigh>71</TopMotorHigh>
+			<TopMotorType>3</TopMotorType>
+			<BottomMotorLow>0</BottomMotorLow>
+			<BottomMotorHigh>0</BottomMotorHigh>
+			<BottomMotorType>3</BottomMotorType>
+			<HeightLow>75</HeightLow>
+			<HeightHigh>75</HeightHigh>
+			<HeightType>3</HeightType>
+			<OscillationLow>22</OscillationLow>
+			<OscillationHigh>78</OscillationHigh>
+			<OscillationType>1</OscillationType>
+			<RotationLow>0</RotationLow>
+			<RotationHigh>0</RotationHigh>
+			<RotationType>3</RotationType>
+		</Ball>
+	</Drill>
+	<Drill Name="Serve Then Rally of One-Ten Balls"
+	       Description="After returning the left sidespin serve, be ready for a variable rally of one to ten balls. Sometimes it will just give one, sometimes six, sometimes maybe ten. Prepare for the ten every time."
+	       Delay="3.1"
+	       YouTubeVideoID="6omcEJP-z24">
+		<Ball Type="RandomInterfaceBall" TableYPercent="0.15">
+			<BallNumber>1</BallNumber>
+			<NumberOfBallsLow>1</NumberOfBallsLow>
+			<NumberOfBallsHigh>1</NumberOfBallsHigh>
+			<NumberOfBallsType>3</NumberOfBallsType>
+			<WaitTime>1450</WaitTime>
+			<TopMotorLow>-10</TopMotorLow>
+			<TopMotorHigh>-10</TopMotorHigh>
+			<TopMotorType>3</TopMotorType>
+			<BottomMotorLow>44</BottomMotorLow>
+			<BottomMotorHigh>48</BottomMotorHigh>
+			<BottomMotorType>1</BottomMotorType>
+			<HeightLow>34</HeightLow>
+			<HeightHigh>34</HeightHigh>
+			<HeightType>3</HeightType>
+			<OscillationLow>28</OscillationLow>
+			<OscillationHigh>72</OscillationHigh>
+			<OscillationType>1</OscillationType>
+			<RotationLow>-40</RotationLow>
+			<RotationHigh>-40</RotationHigh>
+			<RotationType>3</RotationType>
+		</Ball>
+		<Ball Type="RandomInterfaceBall" TableYPercent="0.3">
+			<BallNumber>2</BallNumber>
+			<NumberOfBallsLow>1</NumberOfBallsLow>
+			<NumberOfBallsHigh>1</NumberOfBallsHigh>
+			<NumberOfBallsType>3</NumberOfBallsType>
+			<WaitTime>1250</WaitTime>
+			<TopMotorLow>71</TopMotorLow>
+			<TopMotorHigh>71</TopMotorHigh>
+			<TopMotorType>3</TopMotorType>
+			<BottomMotorLow>0</BottomMotorLow>
+			<BottomMotorHigh>0</BottomMotorHigh>
+			<BottomMotorType>3</BottomMotorType>
+			<HeightLow>75</HeightLow>
+			<HeightHigh>75</HeightHigh>
+			<HeightType>3</HeightType>
+			<OscillationLow>22</OscillationLow>
+			<OscillationHigh>78</OscillationHigh>
+			<OscillationType>1</OscillationType>
+			<RotationLow>0</RotationLow>
+			<RotationHigh>0</RotationHigh>
+			<RotationType>3</RotationType>
+		</Ball>
+		<Ball Type="RandomInterfaceBall" TableYPercent="0.3">
+			<BallNumber>3</BallNumber>
+			<NumberOfBallsLow>1</NumberOfBallsLow>
+			<NumberOfBallsHigh>9</NumberOfBallsHigh>
+			<NumberOfBallsType>1</NumberOfBallsType>
+			<WaitTime>1000</WaitTime>
+			<TopMotorLow>75</TopMotorLow>
+			<TopMotorHigh>75</TopMotorHigh>
+			<TopMotorType>3</TopMotorType>
+			<BottomMotorLow>0</BottomMotorLow>
+			<BottomMotorHigh>0</BottomMotorHigh>
+			<BottomMotorType>3</BottomMotorType>
+			<HeightLow>73</HeightLow>
+			<HeightHigh>73</HeightHigh>
+			<HeightType>3</HeightType>
+			<OscillationLow>22</OscillationLow>
+			<OscillationHigh>78</OscillationHigh>
+			<OscillationType>1</OscillationType>
+			<RotationLow>0</RotationLow>
+			<RotationHigh>0</RotationHigh>
+			<RotationType>3</RotationType>
+		</Ball>
+	</Drill>
+	<Drill Name="No-Spin Serve Then Speed"
+	       Description="This is one of the most entertaining drills! After returning the no-spin serve, the robot will pound you hard with the next shot. Just try to make contact with the ball. As you become more advanced, then you can begin taking a small swing."
+	       Delay="2.7"
+	       YouTubeVideoID="FOh-tbET-lY">
+		<Ball Type="RandomInterfaceBall" TableYPercent="0.5">
+			<BallNumber>1</BallNumber>
+			<NumberOfBallsLow>1</NumberOfBallsLow>
+			<NumberOfBallsHigh>1</NumberOfBallsHigh>
+			<NumberOfBallsType>3</NumberOfBallsType>
+			<WaitTime>1150</WaitTime>
+			<TopMotorLow>24</TopMotorLow>
+			<TopMotorHigh>24</TopMotorHigh>
+			<TopMotorType>2</TopMotorType>
+			<BottomMotorLow>24</BottomMotorLow>
+			<BottomMotorHigh>24</BottomMotorHigh>
+			<BottomMotorType>3</BottomMotorType>
+			<HeightLow>28</HeightLow>
+			<HeightHigh>28</HeightHigh>
+			<HeightType>3</HeightType>
+			<OscillationLow>25</OscillationLow>
+			<OscillationHigh>75</OscillationHigh>
+			<OscillationType>1</OscillationType>
+			<RotationLow>0</RotationLow>
+			<RotationHigh>0</RotationHigh>
+			<RotationType>3</RotationType>
+		</Ball>
+		<Ball Type="RandomInterfaceBall" TableYPercent="0.75">
+			<BallNumber>2</BallNumber>
+			<NumberOfBallsLow>1</NumberOfBallsLow>
+			<NumberOfBallsHigh>1</NumberOfBallsHigh>
+			<NumberOfBallsType>3</NumberOfBallsType>
+			<WaitTime>960</WaitTime>
+			<TopMotorLow>95</TopMotorLow>
+			<TopMotorHigh>95</TopMotorHigh>
+			<TopMotorType>3</TopMotorType>
+			<BottomMotorLow>32</BottomMotorLow>
+			<BottomMotorHigh>32</BottomMotorHigh>
+			<BottomMotorType>3</BottomMotorType>
+			<HeightLow>63</HeightLow>
+			<HeightHigh>63</HeightHigh>
+			<HeightType>3</HeightType>
+			<OscillationLow>22</OscillationLow>
+			<OscillationHigh>78</OscillationHigh>
+			<OscillationType>1</OscillationType>
+			<RotationLow>0</RotationLow>
+			<RotationHigh>0</RotationHigh>
+			<RotationType>3</RotationType>
+		</Ball>
+	</Drill>
+	<Drill Name="Serve Then Ten Lobs"
+	       Description="You will be winded, guaranteed! After returning the topspin serve, you will get ten lobs. Get in position, and smash down and forward with full power!"
+	       Delay="4.1"
+	       YouTubeVideoID="xo8m1yxfMiE">
+		<Ball Type="RandomInterfaceBall" TableYPercent="0.4">
+			<BallNumber>1</BallNumber>
+			<NumberOfBallsLow>1</NumberOfBallsLow>
+			<NumberOfBallsHigh>1</NumberOfBallsHigh>
+			<NumberOfBallsType>3</NumberOfBallsType>
+			<WaitTime>1150</WaitTime>
+			<TopMotorLow>42</TopMotorLow>
+			<TopMotorHigh>42</TopMotorHigh>
+			<TopMotorType>3</TopMotorType>
+			<BottomMotorLow>-75</BottomMotorLow>
+			<BottomMotorHigh>-75</BottomMotorHigh>
+			<BottomMotorType>3</BottomMotorType>
+			<HeightLow>33</HeightLow>
+			<HeightHigh>33</HeightHigh>
+			<HeightType>3</HeightType>
+			<OscillationLow>28</OscillationLow>
+			<OscillationHigh>72</OscillationHigh>
+			<OscillationType>1</OscillationType>
+			<RotationLow>0</RotationLow>
+			<RotationHigh>0</RotationHigh>
+			<RotationType>3</RotationType>
+		</Ball>
+		<Ball Type="RandomInterfaceBall" TableYPercent="0.75">
+			<BallNumber>2</BallNumber>
+			<NumberOfBallsLow>10</NumberOfBallsLow>
+			<NumberOfBallsHigh>10</NumberOfBallsHigh>
+			<NumberOfBallsType>3</NumberOfBallsType>
+			<WaitTime>1150</WaitTime>
+			<TopMotorLow>42</TopMotorLow>
+			<TopMotorHigh>42</TopMotorHigh>
+			<TopMotorType>3</TopMotorType>
+			<BottomMotorLow>7</BottomMotorLow>
+			<BottomMotorHigh>7</BottomMotorHigh>
+			<BottomMotorType>3</BottomMotorType>
+			<HeightLow>100</HeightLow>
+			<HeightHigh>100</HeightHigh>
+			<HeightType>3</HeightType>
+			<OscillationLow>25</OscillationLow>
+			<OscillationHigh>75</OscillationHigh>
+			<OscillationType>1</OscillationType>
+			<RotationLow>0</RotationLow>
+			<RotationHigh>0</RotationHigh>
+			<RotationType>3</RotationType>
+		</Ball>
+	</Drill>
+	<Drill Name="Speed Forehand, Speed Backhand"
+	       Description="The robot will give you one speed ball randomly in the forehand zone then one speed ball randomly in the backhand zone. Move into position and block the ball with good placement."
+	       Delay="0"
+	       YouTubeVideoID="aIPCYZuAPG0">
+		<Ball Type="RandomInterfaceBall" TableYPercent="0.55">
+			<BallNumber>1</BallNumber>
+			<NumberOfBallsLow>1</NumberOfBallsLow>
+			<NumberOfBallsHigh>1</NumberOfBallsHigh>
+			<NumberOfBallsType>3</NumberOfBallsType>
+			<WaitTime>900</WaitTime>
+			<TopMotorLow>95</TopMotorLow>
+			<TopMotorHigh>95</TopMotorHigh>
+			<TopMotorType>3</TopMotorType>
+			<BottomMotorLow>22</BottomMotorLow>
+			<BottomMotorHigh>22</BottomMotorHigh>
+			<BottomMotorType>3</BottomMotorType>
+			<HeightLow>63</HeightLow>
+			<HeightHigh>63</HeightHigh>
+			<HeightType>3</HeightType>
+			<OscillationLow>53</OscillationLow>
+			<OscillationHigh>75</OscillationHigh>
+			<OscillationType>1</OscillationType>
+			<RotationLow>0</RotationLow>
+			<RotationHigh>0</RotationHigh>
+			<RotationType>3</RotationType>
+		</Ball>
+		<Ball Type="RandomInterfaceBall" TableYPercent="0.55">
+			<BallNumber>2</BallNumber>
+			<NumberOfBallsLow>1</NumberOfBallsLow>
+			<NumberOfBallsHigh>1</NumberOfBallsHigh>
+			<NumberOfBallsType>3</NumberOfBallsType>
+			<WaitTime>900</WaitTime>
+			<TopMotorLow>95</TopMotorLow>
+			<TopMotorHigh>95</TopMotorHigh>
+			<TopMotorType>3</TopMotorType>
+			<BottomMotorLow>22</BottomMotorLow>
+			<BottomMotorHigh>22</BottomMotorHigh>
+			<BottomMotorType>3</BottomMotorType>
+			<HeightLow>63</HeightLow>
+			<HeightHigh>63</HeightHigh>
+			<HeightType>3</HeightType>
+			<OscillationLow>18</OscillationLow>
+			<OscillationHigh>45</OscillationHigh>
+			<OscillationType>1</OscillationType>
+			<RotationLow>0</RotationLow>
+			<RotationHigh>0</RotationHigh>
+			<RotationType>3</RotationType>
+		</Ball>
+	</Drill>
+	<Drill Name="Random Smashing"
+	       Description="Speed balls will be coming anywhere on the table. Instead of merely guessing, you should keep your racket neutral in-front, move into position, and try to touch every ball. Even if you can
+t block it on, try to make contact."
+	       Delay="0"
+	       YouTubeVideoID="nbvmwFZQe0U">
+		<Ball Type="RandomInterfaceBall" TableYPercent="0.55">
+			<BallNumber>1</BallNumber>
+			<NumberOfBallsLow>1</NumberOfBallsLow>
+			<NumberOfBallsHigh>1</NumberOfBallsHigh>
+			<NumberOfBallsType>3</NumberOfBallsType>
+			<WaitTime>700</WaitTime>
+			<TopMotorLow>95</TopMotorLow>
+			<TopMotorHigh>95</TopMotorHigh>
+			<TopMotorType>3</TopMotorType>
+			<BottomMotorLow>22</BottomMotorLow>
+			<BottomMotorHigh>22</BottomMotorHigh>
+			<BottomMotorType>3</BottomMotorType>
+			<HeightLow>63</HeightLow>
+			<HeightHigh>63</HeightHigh>
+			<HeightType>3</HeightType>
+			<OscillationLow>20</OscillationLow>
+			<OscillationHigh>75</OscillationHigh>
+			<OscillationType>1</OscillationType>
+			<RotationLow>0</RotationLow>
+			<RotationHigh>0</RotationHigh>
+			<RotationType>3</RotationType>
+		</Ball>
+	</Drill>
+	<Drill Name="Random Lobbing"
+	       Description="The most difficult part about these lobs is the depth variation. Be ready to move out and smash or be ready to charge the table and smash. As the ball leaves the robot
+s head, try to judge the depth and move accordingly!"
+	       Delay="0"
+	       YouTubeVideoID="nDoLQIPJDHY">
+		<Ball Type="RandomInterfaceBall" TableYPercent="0.75">
+			<BallNumber>1</BallNumber>
+			<NumberOfBallsLow>1</NumberOfBallsLow>
+			<NumberOfBallsHigh>1</NumberOfBallsHigh>
+			<NumberOfBallsType>3</NumberOfBallsType>
+			<WaitTime>1210</WaitTime>
+			<TopMotorLow>35</TopMotorLow>
+			<TopMotorHigh>40</TopMotorHigh>
+			<TopMotorType>1</TopMotorType>
+			<BottomMotorLow>10</BottomMotorLow>
+			<BottomMotorHigh>10</BottomMotorHigh>
+			<BottomMotorType>3</BottomMotorType>
+			<HeightLow>100</HeightLow>
+			<HeightHigh>100</HeightHigh>
+			<HeightType>3</HeightType>
+			<OscillationLow>25</OscillationLow>
+			<OscillationHigh>75</OscillationHigh>
+			<OscillationType>1</OscillationType>
+			<RotationLow>0</RotationLow>
+			<RotationHigh>0</RotationHigh>
+			<RotationType>3</RotationType>
+		</Ball>
+	</Drill>
+	<Drill Name="Spin Lobs"
+	       Description="This drill will give you a topspin lob, backspin lob, then a no-spin lob. Instead of lobbing, it will sometimes be a bit low and short, in this case, give it a controlled stroke. If it is high, try to use your most powerful smash!"
+	       Delay="0"
+	       YouTubeVideoID="74j5Dp3mgjo">
+		<Ball Type="RandomInterfaceBall" TableYPercent="0.5">
+			<BallNumber>1</BallNumber>
+			<NumberOfBallsLow>1</NumberOfBallsLow>
+			<NumberOfBallsHigh>1</NumberOfBallsHigh>
+			<NumberOfBallsType>3</NumberOfBallsType>
+			<WaitTime>1250</WaitTime>
+			<TopMotorLow>33</TopMotorLow>
+			<TopMotorHigh>36</TopMotorHigh>
+			<TopMotorType>1</TopMotorType>
+			<BottomMotorLow>8</BottomMotorLow>
+			<BottomMotorHigh>12</BottomMotorHigh>
+			<BottomMotorType>1</BottomMotorType>
+			<HeightLow>100</HeightLow>
+			<HeightHigh>100</HeightHigh>
+			<HeightType>3</HeightType>
+			<OscillationLow>25</OscillationLow>
+			<OscillationHigh>75</OscillationHigh>
+			<OscillationType>1</OscillationType>
+			<RotationLow>0</RotationLow>
+			<RotationHigh>0</RotationHigh>
+			<RotationType>3</RotationType>
+		</Ball>
+		<Ball Type="RandomInterfaceBall" TableYPercent="0.5">
+			<BallNumber>2</BallNumber>
+			<NumberOfBallsLow>1</NumberOfBallsLow>
+			<NumberOfBallsHigh>1</NumberOfBallsHigh>
+			<NumberOfBallsType>3</NumberOfBallsType>
+			<WaitTime>1250</WaitTime>
+			<TopMotorLow>-2</TopMotorLow>
+			<TopMotorHigh>-2</TopMotorHigh>
+			<TopMotorType>3</TopMotorType>
+			<BottomMotorLow>40</BottomMotorLow>
+			<BottomMotorHigh>40</BottomMotorHigh>
+			<BottomMotorType>3</BottomMotorType>
+			<HeightLow>100</HeightLow>
+			<HeightHigh>100</HeightHigh>
+			<HeightType>3</HeightType>
+			<OscillationLow>25</OscillationLow>
+			<OscillationHigh>75</OscillationHigh>
+			<OscillationType>1</OscillationType>
+			<RotationLow>0</RotationLow>
+			<RotationHigh>0</RotationHigh>
+			<RotationType>3</RotationType>
+		</Ball>
+		<Ball Type="RandomInterfaceBall" TableYPercent="0.5">
+			<BallNumber>3</BallNumber>
+			<NumberOfBallsLow>1</NumberOfBallsLow>
+			<NumberOfBallsHigh>1</NumberOfBallsHigh>
+			<NumberOfBallsType>3</NumberOfBallsType>
+			<WaitTime>1250</WaitTime>
+			<TopMotorLow>17</TopMotorLow>
+			<TopMotorHigh>17</TopMotorHigh>
+			<TopMotorType>3</TopMotorType>
+			<BottomMotorLow>17</BottomMotorLow>
+			<BottomMotorHigh>17</BottomMotorHigh>
+			<BottomMotorType>3</BottomMotorType>
+			<HeightLow>100</HeightLow>
+			<HeightHigh>100</HeightHigh>
+			<HeightType>3</HeightType>
+			<OscillationLow>25</OscillationLow>
+			<OscillationHigh>75</OscillationHigh>
+			<OscillationType>1</OscillationType>
+			<RotationLow>0</RotationLow>
+			<RotationHigh>0</RotationHigh>
+			<RotationType>3</RotationType>
+		</Ball>
+	</Drill>
+	<Drill Name="Sidespin Lobs"
+	       Description="Move the furniture aside! This drill requires a bit of space! The sidespin lobs will be curving at very wide angles! Read the spin, adjust with your feet, and smash all the balls using your forehand!"
+	       Delay="0"
+	       YouTubeVideoID="8fQLNevQ77c">
+		<Ball Type="RandomInterfaceBall" TableYPercent="0.75">
+			<BallNumber>1</BallNumber>
+			<NumberOfBallsLow>1</NumberOfBallsLow>
+			<NumberOfBallsHigh>1</NumberOfBallsHigh>
+			<NumberOfBallsType>3</NumberOfBallsType>
+			<WaitTime>1560</WaitTime>
+			<TopMotorLow>51</TopMotorLow>
+			<TopMotorHigh>51</TopMotorHigh>
+			<TopMotorType>3</TopMotorType>
+			<BottomMotorLow>-10</BottomMotorLow>
+			<BottomMotorHigh>-10</BottomMotorHigh>
+			<BottomMotorType>3</BottomMotorType>
+			<HeightLow>100</HeightLow>
+			<HeightHigh>100</HeightHigh>
+			<HeightType>3</HeightType>
+			<OscillationLow>31</OscillationLow>
+			<OscillationHigh>69</OscillationHigh>
+			<OscillationType>1</OscillationType>
+			<RotationLow>-75</RotationLow>
+			<RotationHigh>75</RotationHigh>
+			<RotationType>2</RotationType>
+		</Ball>
+	</Drill>
+	<Drill Name="Short and Long"
+	       Description="The robot will give you one to four short backspin balls followed by one deep backspin ball followed by three deep topspin balls to the backhand then one deep topspin ball to the forehand."
+	       Delay="2.5"
+	       YouTubeVideoID="ar81BNVuX_o">
+		<Ball Type="RandomInterfaceBall" TableYPercent="0.25">
+			<BallNumber>1</BallNumber>
+			<NumberOfBallsLow>1</NumberOfBallsLow>
+			<NumberOfBallsHigh>4</NumberOfBallsHigh>
+			<NumberOfBallsType>1</NumberOfBallsType>
+			<WaitTime>1350</WaitTime>
+			<TopMotorLow>-5</TopMotorLow>
+			<TopMotorHigh>-5</TopMotorHigh>
+			<TopMotorType>3</TopMotorType>
+			<BottomMotorLow>40</BottomMotorLow>
+			<BottomMotorHigh>40</BottomMotorHigh>
+			<BottomMotorType>3</BottomMotorType>
+			<HeightLow>35</HeightLow>
+			<HeightHigh>35</HeightHigh>
+			<HeightType>3</HeightType>
+			<OscillationLow>28</OscillationLow>
+			<OscillationHigh>72</OscillationHigh>
+			<OscillationType>1</OscillationType>
+			<RotationLow>-15</RotationLow>
+			<RotationHigh>15</RotationHigh>
+			<RotationType>2</RotationType>
+		</Ball>
+		<Ball Type="RandomInterfaceBall" TableYPercent="0.3">
+			<BallNumber>2</BallNumber>
+			<NumberOfBallsLow>1</NumberOfBallsLow>
+			<NumberOfBallsHigh>1</NumberOfBallsHigh>
+			<NumberOfBallsType>3</NumberOfBallsType>
+			<WaitTime>1210</WaitTime>
+			<TopMotorLow>-10</TopMotorLow>
+			<TopMotorHigh>-10</TopMotorHigh>
+			<TopMotorType>3</TopMotorType>
+			<BottomMotorLow>50</BottomMotorLow>
+			<BottomMotorHigh>50</BottomMotorHigh>
+			<BottomMotorType>3</BottomMotorType>
+			<HeightLow>74</HeightLow>
+			<HeightHigh>74</HeightHigh>
+			<HeightType>3</HeightType>
+			<OscillationLow>28</OscillationLow>
+			<OscillationHigh>72</OscillationHigh>
+			<OscillationType>1</OscillationType>
+			<RotationLow>0</RotationLow>
+			<RotationHigh>0</RotationHigh>
+			<RotationType>3</RotationType>
+		</Ball>
+		<Ball Type="RandomInterfaceBall" TableYPercent="0.4">
+			<BallNumber>3</BallNumber>
+			<NumberOfBallsLow>3</NumberOfBallsLow>
+			<NumberOfBallsHigh>3</NumberOfBallsHigh>
+			<NumberOfBallsType>3</NumberOfBallsType>
+			<WaitTime>1000</WaitTime>
+			<TopMotorLow>65</TopMotorLow>
+			<TopMotorHigh>65</TopMotorHigh>
+			<TopMotorType>3</TopMotorType>
+			<BottomMotorLow>0</BottomMotorLow>
+			<BottomMotorHigh>0</BottomMotorHigh>
+			<BottomMotorType>3</BottomMotorType>
+			<HeightLow>74</HeightLow>
+			<HeightHigh>78</HeightHigh>
+			<HeightType>1</HeightType>
+			<OscillationLow>15</OscillationLow>
+			<OscillationHigh>35</OscillationHigh>
+			<OscillationType>1</OscillationType>
+			<RotationLow>0</RotationLow>
+			<RotationHigh>0</RotationHigh>
+			<RotationType>3</RotationType>
+		</Ball>
+		<Ball Type="AdvancedInterfaceBall" TableYPercent="0.4">
+			<BallNumber>4</BallNumber>
+			<NumberOfBalls>1</NumberOfBalls>
+			<WaitTime>800</WaitTime>
+			<TopMotorSpeed>80</TopMotorSpeed>
+			<BottomMotorSpeed>0</BottomMotorSpeed>
+			<Height>74</Height>
+			<Oscillation>78</Oscillation>
+			<Rotation>0</Rotation>
+		</Ball>
+	</Drill>
+	<Drill Name="Short Ball Training"
+	       Description="After one to ten short backspin balls, the robot will surprise long with a backspin ball anywhere, followed by a long topspin ball anywhere."
+	       Delay="2.5"
+	       YouTubeVideoID="_FfHnEkf73M">
+		<Ball Type="RandomInterfaceBall" TableYPercent="0.2">
+			<BallNumber>1</BallNumber>
+			<NumberOfBallsLow>1</NumberOfBallsLow>
+			<NumberOfBallsHigh>10</NumberOfBallsHigh>
+			<NumberOfBallsType>1</NumberOfBallsType>
+			<WaitTime>1150</WaitTime>
+			<TopMotorLow>-5</TopMotorLow>
+			<TopMotorHigh>-5</TopMotorHigh>
+			<TopMotorType>3</TopMotorType>
+			<BottomMotorLow>44</BottomMotorLow>
+			<BottomMotorHigh>44</BottomMotorHigh>
+			<BottomMotorType>3</BottomMotorType>
+			<HeightLow>28</HeightLow>
+			<HeightHigh>28</HeightHigh>
+			<HeightType>3</HeightType>
+			<OscillationLow>28</OscillationLow>
+			<OscillationHigh>72</OscillationHigh>
+			<OscillationType>1</OscillationType>
+			<RotationLow>-15</RotationLow>
+			<RotationHigh>15</RotationHigh>
+			<RotationType>2</RotationType>
+		</Ball>
+		<Ball Type="RandomInterfaceBall" TableYPercent="0.5">
+			<BallNumber>2</BallNumber>
+			<NumberOfBallsLow>1</NumberOfBallsLow>
+			<NumberOfBallsHigh>1</NumberOfBallsHigh>
+			<NumberOfBallsType>3</NumberOfBallsType>
+			<WaitTime>1120</WaitTime>
+			<TopMotorLow>-5</TopMotorLow>
+			<TopMotorHigh>-5</TopMotorHigh>
+			<TopMotorType>3</TopMotorType>
+			<BottomMotorLow>45</BottomMotorLow>
+			<BottomMotorHigh>45</BottomMotorHigh>
+			<BottomMotorType>3</BottomMotorType>
+			<HeightLow>75</HeightLow>
+			<HeightHigh>75</HeightHigh>
+			<HeightType>3</HeightType>
+			<OscillationLow>28</OscillationLow>
+			<OscillationHigh>72</OscillationHigh>
+			<OscillationType>1</OscillationType>
+			<RotationLow>0</RotationLow>
+			<RotationHigh>0</RotationHigh>
+			<RotationType>3</RotationType>
+		</Ball>
+		<Ball Type="RandomInterfaceBall" TableYPercent="0.6">
+			<BallNumber>3</BallNumber>
+			<NumberOfBallsLow>1</NumberOfBallsLow>
+			<NumberOfBallsHigh>1</NumberOfBallsHigh>
+			<NumberOfBallsType>3</NumberOfBallsType>
+			<WaitTime>1150</WaitTime>
+			<TopMotorLow>70</TopMotorLow>
+			<TopMotorHigh>70</TopMotorHigh>
+			<TopMotorType>3</TopMotorType>
+			<BottomMotorLow>-6</BottomMotorLow>
+			<BottomMotorHigh>-6</BottomMotorHigh>
+			<BottomMotorType>3</BottomMotorType>
+			<HeightLow>74</HeightLow>
+			<HeightHigh>74</HeightHigh>
+			<HeightType>3</HeightType>
+			<OscillationLow>25</OscillationLow>
+			<OscillationHigh>75</OscillationHigh>
+			<OscillationType>1</OscillationType>
+			<RotationLow>0</RotationLow>
+			<RotationHigh>0</RotationHigh>
+			<RotationType>3</RotationType>
+		</Ball>
+	</Drill>
+	<Drill Name="Backspin, No-Spin Serve"
+	       Description="This drill alternates between a short backspin serve and a short no-spin serve. Push the backspin and flip the no-spin. Also, work on placement by sometimes returning short, sometimes long, sometimes to the middle, sometimes use the angles."
+	       Delay="0"
+	       YouTubeVideoID="IvJtxKcGU70">
+		<Ball Type="RandomInterfaceBall" TableYPercent="0.15">
+			<BallNumber>1</BallNumber>
+			<NumberOfBallsLow>1</NumberOfBallsLow>
+			<NumberOfBallsHigh>1</NumberOfBallsHigh>
+			<NumberOfBallsType>3</NumberOfBallsType>
+			<WaitTime>1800</WaitTime>
+			<TopMotorLow>-50</TopMotorLow>
+			<TopMotorHigh>-50</TopMotorHigh>
+			<TopMotorType>3</TopMotorType>
+			<BottomMotorLow>47</BottomMotorLow>
+			<BottomMotorHigh>47</BottomMotorHigh>
+			<BottomMotorType>3</BottomMotorType>
+			<HeightLow>28</HeightLow>
+			<HeightHigh>28</HeightHigh>
+			<HeightType>3</HeightType>
+			<OscillationLow>28</OscillationLow>
+			<OscillationHigh>72</OscillationHigh>
+			<OscillationType>1</OscillationType>
+			<RotationLow>0</RotationLow>
+			<RotationHigh>0</RotationHigh>
+			<RotationType>3</RotationType>
+		</Ball>
+		<Ball Type="RandomInterfaceBall" TableYPercent="0.15">
+			<BallNumber>2</BallNumber>
+			<NumberOfBallsLow>1</NumberOfBallsLow>
+			<NumberOfBallsHigh>1</NumberOfBallsHigh>
+			<NumberOfBallsType>3</NumberOfBallsType>
+			<WaitTime>1800</WaitTime>
+			<TopMotorLow>22</TopMotorLow>
+			<TopMotorHigh>22</TopMotorHigh>
+			<TopMotorType>3</TopMotorType>
+			<BottomMotorLow>22</BottomMotorLow>
+			<BottomMotorHigh>22</BottomMotorHigh>
+			<BottomMotorType>3</BottomMotorType>
+			<HeightLow>40</HeightLow>
+			<HeightHigh>40</HeightHigh>
+			<HeightType>3</HeightType>
+			<OscillationLow>28</OscillationLow>
+			<OscillationHigh>72</OscillationHigh>
+			<OscillationType>1</OscillationType>
+			<RotationLow>0</RotationLow>
+			<RotationHigh>0</RotationHigh>
+			<RotationType>3</RotationType>
+		</Ball>
+	</Drill>
+	<Drill Name="Heavy Topspins"
+	       Description="This drill gives you heavy topspin balls to your forehand on half of the table. Practice your blocking placement to various locations. As you perfect your control, then begin an active block or even a counterloop!"
+	       Delay="0"
+	       YouTubeVideoID="mE6TNXZt1w8">
+		<Ball Type="RandomInterfaceBall" TableYPercent="0.55">
+			<BallNumber>1</BallNumber>
+			<NumberOfBallsLow>1</NumberOfBallsLow>
+			<NumberOfBallsHigh>1</NumberOfBallsHigh>
+			<NumberOfBallsType>3</NumberOfBallsType>
+			<WaitTime>800</WaitTime>
+			<TopMotorLow>95</TopMotorLow>
+			<TopMotorHigh>95</TopMotorHigh>
+			<TopMotorType>3</TopMotorType>
+			<BottomMotorLow>-88</BottomMotorLow>
+			<BottomMotorHigh>-88</BottomMotorHigh>
+			<BottomMotorType>3</BottomMotorType>
+			<HeightLow>71</HeightLow>
+			<HeightHigh>71</HeightHigh>
+			<HeightType>3</HeightType>
+			<OscillationLow>65</OscillationLow>
+			<OscillationHigh>85</OscillationHigh>
+			<OscillationType>2</OscillationType>
+			<RotationLow>0</RotationLow>
+			<RotationHigh>0</RotationHigh>
+			<RotationType>3</RotationType>
+		</Ball>
+	</Drill>
+	<Drill Name="Low Lobs"
+	       Description="This drill gives you lower lobs 
+ one topspin, one backspin, then one no-spin. Move into position and smash all of them using your forehand."
+	       Delay="0"
+	       YouTubeVideoID="Cpk4Ly3uqyI">
+		<Ball Type="RandomInterfaceBall" TableYPercent="0.55">
+			<BallNumber>1</BallNumber>
+			<NumberOfBallsLow>1</NumberOfBallsLow>
+			<NumberOfBallsHigh>1</NumberOfBallsHigh>
+			<NumberOfBallsType>3</NumberOfBallsType>
+			<WaitTime>1300</WaitTime>
+			<TopMotorLow>25</TopMotorLow>
+			<TopMotorHigh>25</TopMotorHigh>
+			<TopMotorType>3</TopMotorType>
+			<BottomMotorLow>20</BottomMotorLow>
+			<BottomMotorHigh>20</BottomMotorHigh>
+			<BottomMotorType>3</BottomMotorType>
+			<HeightLow>90</HeightLow>
+			<HeightHigh>90</HeightHigh>
+			<HeightType>3</HeightType>
+			<OscillationLow>25</OscillationLow>
+			<OscillationHigh>75</OscillationHigh>
+			<OscillationType>1</OscillationType>
+			<RotationLow>0</RotationLow>
+			<RotationHigh>0</RotationHigh>
+			<RotationType>3</RotationType>
+		</Ball>
+		<Ball Type="RandomInterfaceBall" TableYPercent="0.6">
+			<BallNumber>2</BallNumber>
+			<NumberOfBallsLow>1</NumberOfBallsLow>
+			<NumberOfBallsHigh>1</NumberOfBallsHigh>
+			<NumberOfBallsType>3</NumberOfBallsType>
+			<WaitTime>1300</WaitTime>
+			<TopMotorLow>14</TopMotorLow>
+			<TopMotorHigh>14</TopMotorHigh>
+			<TopMotorType>3</TopMotorType>
+			<BottomMotorLow>22</BottomMotorLow>
+			<BottomMotorHigh>22</BottomMotorHigh>
+			<BottomMotorType>3</BottomMotorType>
+			<HeightLow>88</HeightLow>
+			<HeightHigh>88</HeightHigh>
+			<HeightType>3</HeightType>
+			<OscillationLow>25</OscillationLow>
+			<OscillationHigh>75</OscillationHigh>
+			<OscillationType>1</OscillationType>
+			<RotationLow>0</RotationLow>
+			<RotationHigh>0</RotationHigh>
+			<RotationType>3</RotationType>
+		</Ball>
+		<Ball Type="RandomInterfaceBall" TableYPercent="0.5">
+			<BallNumber>3</BallNumber>
+			<NumberOfBallsLow>1</NumberOfBallsLow>
+			<NumberOfBallsHigh>1</NumberOfBallsHigh>
+			<NumberOfBallsType>3</NumberOfBallsType>
+			<WaitTime>1300</WaitTime>
+			<TopMotorLow>20</TopMotorLow>
+			<TopMotorHigh>20</TopMotorHigh>
+			<TopMotorType>3</TopMotorType>
+			<BottomMotorLow>20</BottomMotorLow>
+			<BottomMotorHigh>20</BottomMotorHigh>
+			<BottomMotorType>3</BottomMotorType>
+			<HeightLow>90</HeightLow>
+			<HeightHigh>90</HeightHigh>
+			<HeightType>3</HeightType>
+			<OscillationLow>25</OscillationLow>
+			<OscillationHigh>75</OscillationHigh>
+			<OscillationType>1</OscillationType>
+			<RotationLow>0</RotationLow>
+			<RotationHigh>0</RotationHigh>
+			<RotationType>3</RotationType>
+		</Ball>
+	</Drill>
+</Training>
+<?xml version="1.0" encoding="utf-8"?>
+<Training Name="Beginner" Description="Drills for the table tennis player just starting out" IsAdjustable="false">
+	<Drill Name="Beginner Forehand Warmup"
+	       Description="Warm-up your basic forehand stroke by keeping your angle set at 90 degrees and stroking forward on the ball."
+	       Delay="0"
+	       YouTubeVideoID="cEHFkuy4iv8">
+		<Ball Type="AdvancedInterfaceBall" TableYPercent="0.55">
+			<BallNumber>1</BallNumber>
+			<NumberOfBalls>1</NumberOfBalls>
+			<WaitTime>1300</WaitTime>
+			<TopMotorSpeed>30</TopMotorSpeed>
+			<BottomMotorSpeed>20</BottomMotorSpeed>
+			<Height>32</Height>
+			<Oscillation>70</Oscillation>
+			<Rotation>0</Rotation>
+		</Ball>
+	</Drill>
+	<Drill Name="Beginner Backhand Warmup"
+	       Description="Warm-up your backhand stroke by controlling the ball to different locations 
+ sometimes hitting to the forehand, sometimes middle, and sometimes backhand."
+	       Delay="0"
+	       YouTubeVideoID="rFGYvUce-zY">
+		<Ball Type="AdvancedInterfaceBall" TableYPercent="0.55">
+			<BallNumber>1</BallNumber>
+			<NumberOfBalls>1</NumberOfBalls>
+			<WaitTime>1500</WaitTime>
+			<TopMotorSpeed>30</TopMotorSpeed>
+			<BottomMotorSpeed>20</BottomMotorSpeed>
+			<Height>35</Height>
+			<Oscillation>25</Oscillation>
+			<Rotation>0</Rotation>
+		</Ball>
+	</Drill>
+	<Drill Name="Forehand Backhand Footwork"
+	       Description="Link the strokes together by hitting one forehand and one backhand! Use a mini-step to move from one ball to the next."
+	       Delay="0"
+	       YouTubeVideoID="GdgcNdeohuM">
+		<Ball Type="AdvancedInterfaceBall" TableYPercent="0.5">
+			<BallNumber>1</BallNumber>
+			<NumberOfBalls>1</NumberOfBalls>
+			<WaitTime>1400</WaitTime>
+			<TopMotorSpeed>25</TopMotorSpeed>
+			<BottomMotorSpeed>20</BottomMotorSpeed>
+			<Height>28</Height>
+			<Oscillation>75</Oscillation>
+			<Rotation>0</Rotation>
+		</Ball>
+		<Ball Type="AdvancedInterfaceBall" TableYPercent="0.5">
+			<BallNumber>2</BallNumber>
+			<NumberOfBalls>1</NumberOfBalls>
+			<WaitTime>1400</WaitTime>
+			<TopMotorSpeed>25</TopMotorSpeed>
+			<BottomMotorSpeed>20</BottomMotorSpeed>
+			<Height>28</Height>
+			<Oscillation>20</Oscillation>
+			<Rotation>0</Rotation>
+		</Ball>
+	</Drill>
+	<Drill Name="Beginner Forehand Random"
+	       Description="This drill is a bit more challenging. The robot will move the ball around in the forehand zone; watch the robot
+s head and look for the subtle variations!"
+	       Delay="0"
+	       YouTubeVideoID="serNYRE_FJ4">
+		<Ball Type="RandomInterfaceBall" TableYPercent="0.5">
+			<BallNumber>1</BallNumber>
+			<NumberOfBallsLow>1</NumberOfBallsLow>
+			<NumberOfBallsHigh>1</NumberOfBallsHigh>
+			<NumberOfBallsType>3</NumberOfBallsType>
+			<WaitTime>1400</WaitTime>
+			<TopMotorLow>25</TopMotorLow>
+			<TopMotorHigh>25</TopMotorHigh>
+			<TopMotorType>3</TopMotorType>
+			<BottomMotorLow>20</BottomMotorLow>
+			<BottomMotorHigh>20</BottomMotorHigh>
+			<BottomMotorType>3</BottomMotorType>
+			<HeightLow>30</HeightLow>
+			<HeightHigh>30</HeightHigh>
+			<HeightType>3</HeightType>
+			<OscillationLow>55</OscillationLow>
+			<OscillationHigh>80</OscillationHigh>
+			<OscillationType>1</OscillationType>
+			<RotationLow>0</RotationLow>
+			<RotationHigh>0</RotationHigh>
+			<RotationType>3</RotationType>
+		</Ball>
+	</Drill>
+	<Drill Name="Beginner Backhand Random"
+	       Description="This drill will give you balls in the backhand zone. Keep your racket in front, move into position, and control the ball sometimes hitting a bit harder, sometimes giving a slow variation!"
+	       Delay="0"
+	       YouTubeVideoID="t6ibeQg-S9c">
+		<Ball Type="RandomInterfaceBall" TableYPercent="0.5">
+			<BallNumber>1</BallNumber>
+			<NumberOfBallsLow>1</NumberOfBallsLow>
+			<NumberOfBallsHigh>1</NumberOfBallsHigh>
+			<NumberOfBallsType>3</NumberOfBallsType>
+			<WaitTime>1400</WaitTime>
+			<TopMotorLow>25</TopMotorLow>
+			<TopMotorHigh>25</TopMotorHigh>
+			<TopMotorType>3</TopMotorType>
+			<BottomMotorLow>20</BottomMotorLow>
+			<BottomMotorHigh>20</BottomMotorHigh>
+			<BottomMotorType>3</BottomMotorType>
+			<HeightLow>30</HeightLow>
+			<HeightHigh>30</HeightHigh>
+			<HeightType>3</HeightType>
+			<OscillationLow>15</OscillationLow>
+			<OscillationHigh>45</OscillationHigh>
+			<OscillationType>1</OscillationType>
+			<RotationLow>0</RotationLow>
+			<RotationHigh>0</RotationHigh>
+			<RotationType>3</RotationType>
+		</Ball>
+	</Drill>
+	<Drill Name="Beginner Full Table Random"
+	       Description="Now this feels more like a game! Just like playing a real opponent, the balls will go anywhere on the table. Work on adjusting to the ball, while still maintaining good ball placement on all of your shots."
+	       Delay="0"
+	       YouTubeVideoID="EPxef156rsE">
+		<Ball Type="RandomInterfaceBall" TableYPercent="0.5">
+			<BallNumber>1</BallNumber>
+			<NumberOfBallsLow>1</NumberOfBallsLow>
+			<NumberOfBallsHigh>1</NumberOfBallsHigh>
+			<NumberOfBallsType>3</NumberOfBallsType>
+			<WaitTime>1200</WaitTime>
+			<TopMotorLow>25</TopMotorLow>
+			<TopMotorHigh>25</TopMotorHigh>
+			<TopMotorType>3</TopMotorType>
+			<BottomMotorLow>20</BottomMotorLow>
+			<BottomMotorHigh>20</BottomMotorHigh>
+			<BottomMotorType>3</BottomMotorType>
+			<HeightLow>30</HeightLow>
+			<HeightHigh>30</HeightHigh>
+			<HeightType>3</HeightType>
+			<OscillationLow>15</OscillationLow>
+			<OscillationHigh>80</OscillationHigh>
+			<OscillationType>1</OscillationType>
+			<RotationLow>0</RotationLow>
+			<RotationHigh>0</RotationHigh>
+			<RotationType>3</RotationType>
+		</Ball>
+	</Drill>
+	<Drill Name="Serve Then Two Random"
+	       Description="This drill gives you a serve then two balls anywhere, then a break, just like a game." Delay="2.5"
+	       YouTubeVideoID="kWtoSjraULQ">
+		<Ball Type="RandomInterfaceBall" TableYPercent="0.4">
+			<BallNumber>1</BallNumber>
+			<NumberOfBallsLow>1</NumberOfBallsLow>
+			<NumberOfBallsHigh>1</NumberOfBallsHigh>
+			<NumberOfBallsType>3</NumberOfBallsType>
+			<WaitTime>1500</WaitTime>
+			<TopMotorLow>25</TopMotorLow>
+			<TopMotorHigh>25</TopMotorHigh>
+			<TopMotorType>3</TopMotorType>
+			<BottomMotorLow>20</BottomMotorLow>
+			<BottomMotorHigh>20</BottomMotorHigh>
+			<BottomMotorType>3</BottomMotorType>
+			<HeightLow>29</HeightLow>
+			<HeightHigh>29</HeightHigh>
+			<HeightType>3</HeightType>
+			<OscillationLow>28</OscillationLow>
+			<OscillationHigh>72</OscillationHigh>
+			<OscillationType>1</OscillationType>
+			<RotationLow>0</RotationLow>
+			<RotationHigh>0</RotationHigh>
+			<RotationType>3</RotationType>
+		</Ball>
+		<Ball Type="RandomInterfaceBall" TableYPercent="0.6">
+			<BallNumber>2</BallNumber>
+			<NumberOfBallsLow>1</NumberOfBallsLow>
+			<NumberOfBallsHigh>1</NumberOfBallsHigh>
+			<NumberOfBallsType>3</NumberOfBallsType>
+			<WaitTime>1200</WaitTime>
+			<TopMotorLow>45</TopMotorLow>
+			<TopMotorHigh>45</TopMotorHigh>
+			<TopMotorType>3</TopMotorType>
+			<BottomMotorLow>25</BottomMotorLow>
+			<BottomMotorHigh>25</BottomMotorHigh>
+			<BottomMotorType>3</BottomMotorType>
+			<HeightLow>71</HeightLow>
+			<HeightHigh>71</HeightHigh>
+			<HeightType>3</HeightType>
+			<OscillationLow>28</OscillationLow>
+			<OscillationHigh>72</OscillationHigh>
+			<OscillationType>1</OscillationType>
+			<RotationLow>0</RotationLow>
+			<RotationHigh>0</RotationHigh>
+			<RotationType>3</RotationType>
+		</Ball>
+		<Ball Type="RandomInterfaceBall" TableYPercent="0.6">
+			<BallNumber>3</BallNumber>
+			<NumberOfBallsLow>1</NumberOfBallsLow>
+			<NumberOfBallsHigh>1</NumberOfBallsHigh>
+			<NumberOfBallsType>3</NumberOfBallsType>
+			<WaitTime>1200</WaitTime>
+			<TopMotorLow>50</TopMotorLow>
+			<TopMotorHigh>50</TopMotorHigh>
+			<TopMotorType>3</TopMotorType>
+			<BottomMotorLow>25</BottomMotorLow>
+			<BottomMotorHigh>25</BottomMotorHigh>
+			<BottomMotorType>3</BottomMotorType>
+			<HeightLow>72</HeightLow>
+			<HeightHigh>72</HeightHigh>
+			<HeightType>3</HeightType>
+			<OscillationLow>28</OscillationLow>
+			<OscillationHigh>72</OscillationHigh>
+			<OscillationType>1</OscillationType>
+			<RotationLow>0</RotationLow>
+			<RotationHigh>0</RotationHigh>
+			<RotationType>3</RotationType>
+		</Ball>
+	</Drill>
+	<Drill Name="In-And-Out Footwork"
+	       Description="Move in for the short forehand, then move back for the deep forehand. Next, move in for the short backhand, then move back a bit for the deep backhand. Stay on your toes, leaning forward, and contact the ball in-front of your body."
+	       Delay="0"
+	       YouTubeVideoID="BTLnGEVMpJI">
+		<Ball Type="AdvancedInterfaceBall" TableYPercent="0.4">
+			<BallNumber>1</BallNumber>
+			<NumberOfBalls>1</NumberOfBalls>
+			<WaitTime>1200</WaitTime>
+			<TopMotorSpeed>20</TopMotorSpeed>
+			<BottomMotorSpeed>18</BottomMotorSpeed>
+			<Height>33</Height>
+			<Oscillation>75</Oscillation>
+			<Rotation>0</Rotation>
+		</Ball>
+		<Ball Type="AdvancedInterfaceBall" TableYPercent="0.6">
+			<BallNumber>2</BallNumber>
+			<NumberOfBalls>1</NumberOfBalls>
+			<WaitTime>1200</WaitTime>
+			<TopMotorSpeed>30</TopMotorSpeed>
+			<BottomMotorSpeed>25</BottomMotorSpeed>
+			<Height>33</Height>
+			<Oscillation>75</Oscillation>
+			<Rotation>0</Rotation>
+		</Ball>
+		<Ball Type="AdvancedInterfaceBall" TableYPercent="0.4">
+			<BallNumber>3</BallNumber>
+			<NumberOfBalls>1</NumberOfBalls>
+			<WaitTime>1200</WaitTime>
+			<TopMotorSpeed>20</TopMotorSpeed>
+			<BottomMotorSpeed>18</BottomMotorSpeed>
+			<Height>33</Height>
+			<Oscillation>25</Oscillation>
+			<Rotation>0</Rotation>
+		</Ball>
+		<Ball Type="AdvancedInterfaceBall" TableYPercent="0.6">
+			<BallNumber>4</BallNumber>
+			<NumberOfBalls>1</NumberOfBalls>
+			<WaitTime>1200</WaitTime>
+			<TopMotorSpeed>30</TopMotorSpeed>
+			<BottomMotorSpeed>25</BottomMotorSpeed>
+			<Height>33</Height>
+			<Oscillation>25</Oscillation>
+			<Rotation>0</Rotation>
+		</Ball>
+	</Drill>
+	<Drill Name="Three Middle, One to Either Corner"
+	       Description="Pay Attention! The first three balls go to your middle, then suddenly the fourth balls goes surprisingly to either corner. Watch the robot
+s head and be ready to make the adjustment!"
+	       Delay="0"
+	       YouTubeVideoID="m1YbX9nOecs">
+		<Ball Type="AdvancedInterfaceBall" TableYPercent="0.8">
+			<BallNumber>1</BallNumber>
+			<NumberOfBalls>3</NumberOfBalls>
+			<WaitTime>1200</WaitTime>
+			<TopMotorSpeed>30</TopMotorSpeed>
+			<BottomMotorSpeed>25</BottomMotorSpeed>
+			<Height>33</Height>
+			<Oscillation>50</Oscillation>
+			<Rotation>0</Rotation>
+		</Ball>
+		<Ball Type="RandomInterfaceBall" TableYPercent="0.8">
+			<BallNumber>2</BallNumber>
+			<NumberOfBallsLow>1</NumberOfBallsLow>
+			<NumberOfBallsHigh>1</NumberOfBallsHigh>
+			<NumberOfBallsType>3</NumberOfBallsType>
+			<WaitTime>1050</WaitTime>
+			<TopMotorLow>30</TopMotorLow>
+			<TopMotorHigh>30</TopMotorHigh>
+			<TopMotorType>3</TopMotorType>
+			<BottomMotorLow>25</BottomMotorLow>
+			<BottomMotorHigh>25</BottomMotorHigh>
+			<BottomMotorType>3</BottomMotorType>
+			<HeightLow>33</HeightLow>
+			<HeightHigh>33</HeightHigh>
+			<HeightType>3</HeightType>
+			<OscillationLow>10</OscillationLow>
+			<OscillationHigh>90</OscillationHigh>
+			<OscillationType>2</OscillationType>
+			<RotationLow>0</RotationLow>
+			<RotationHigh>0</RotationHigh>
+			<RotationType>3</RotationType>
+		</Ball>
+	</Drill>
+	<Drill Name="Forehand Random"
+	       Description="Within the forehand side of the table, you will get medium speed balls. Move quickly, get in position, and turn your shoulders as you make contact with the ball!"
+	       Delay="0"
+	       YouTubeVideoID="r44h39AkH78">
+		<Ball Type="RandomInterfaceBall" TableYPercent="0.7">
+			<BallNumber>1</BallNumber>
+			<NumberOfBallsLow>1</NumberOfBallsLow>
+			<NumberOfBallsHigh>1</NumberOfBallsHigh>
+			<NumberOfBallsType>3</NumberOfBallsType>
+			<WaitTime>1250</WaitTime>
+			<TopMotorLow>31</TopMotorLow>
+			<TopMotorHigh>31</TopMotorHigh>
+			<TopMotorType>3</TopMotorType>
+			<BottomMotorLow>20</BottomMotorLow>
+			<BottomMotorHigh>20</BottomMotorHigh>
+			<BottomMotorType>3</BottomMotorType>
+			<HeightLow>30</HeightLow>
+			<HeightHigh>30</HeightHigh>
+			<HeightType>3</HeightType>
+			<OscillationLow>55</OscillationLow>
+			<OscillationHigh>78</OscillationHigh>
+			<OscillationType>1</OscillationType>
+			<RotationLow>0</RotationLow>
+			<RotationHigh>0</RotationHigh>
+			<RotationType>3</RotationType>
+		</Ball>
+	</Drill>
+	<Drill Name="Backhand Random"
+	       Description="Within the backhand side of the table, you will get medium speed balls. Lean forward, creating space for your backspin, and brush the ball forward using your wrist and forearm to generate spin on your backhand stroke."
+	       Delay="0"
+	       YouTubeVideoID="9flvJ9OmfRg">
+		<Ball Type="RandomInterfaceBall" TableYPercent="0.6">
+			<BallNumber>1</BallNumber>
+			<NumberOfBallsLow>1</NumberOfBallsLow>
+			<NumberOfBallsHigh>1</NumberOfBallsHigh>
+			<NumberOfBallsType>3</NumberOfBallsType>
+			<WaitTime>1150</WaitTime>
+			<TopMotorLow>31</TopMotorLow>
+			<TopMotorHigh>31</TopMotorHigh>
+			<TopMotorType>3</TopMotorType>
+			<BottomMotorLow>20</BottomMotorLow>
+			<BottomMotorHigh>20</BottomMotorHigh>
+			<BottomMotorType>3</BottomMotorType>
+			<HeightLow>30</HeightLow>
+			<HeightHigh>30</HeightHigh>
+			<HeightType>3</HeightType>
+			<OscillationLow>20</OscillationLow>
+			<OscillationHigh>45</OscillationHigh>
+			<OscillationType>1</OscillationType>
+			<RotationLow>0</RotationLow>
+			<RotationHigh>0</RotationHigh>
+			<RotationType>3</RotationType>
+		</Ball>
+	</Drill>
+	<Drill Name="Fast Random"
+	       Description="Be ready to quickly adjust, these balls will be coming anywhere on the table. Keep your racket in front and be ready to make fast transitions from middle to forehand to backhand!"
+	       Delay="0"
+	       YouTubeVideoID="BswYKFJnT-Y">
+		<Ball Type="RandomInterfaceBall" TableYPercent="0.7">
+			<BallNumber>1</BallNumber>
+			<NumberOfBallsLow>1</NumberOfBallsLow>
+			<NumberOfBallsHigh>1</NumberOfBallsHigh>
+			<NumberOfBallsType>3</NumberOfBallsType>
+			<WaitTime>1000</WaitTime>
+			<TopMotorLow>31</TopMotorLow>
+			<TopMotorHigh>31</TopMotorHigh>
+			<TopMotorType>3</TopMotorType>
+			<BottomMotorLow>20</BottomMotorLow>
+			<BottomMotorHigh>20</BottomMotorHigh>
+			<BottomMotorType>3</BottomMotorType>
+			<HeightLow>30</HeightLow>
+			<HeightHigh>30</HeightHigh>
+			<HeightType>3</HeightType>
+			<OscillationLow>25</OscillationLow>
+			<OscillationHigh>75</OscillationHigh>
+			<OscillationType>1</OscillationType>
+			<RotationLow>0</RotationLow>
+			<RotationHigh>0</RotationHigh>
+			<RotationType>3</RotationType>
+		</Ball>
+	</Drill>
+	<Drill Name="Short Forehand, Deep Backhand"
+	       Description="The first ball will be short to your forehand, then the follow-up ball will be deep to your backhand. If you are right handed, step forward with your right foot to get you closer to the ball."
+	       Delay="2.3"
+	       YouTubeVideoID="jDhjPW__I2s">
+		<Ball Type="AdvancedInterfaceBall" TableYPercent="0.3">
+			<BallNumber>1</BallNumber>
+			<NumberOfBalls>1</NumberOfBalls>
+			<WaitTime>1300</WaitTime>
+			<TopMotorSpeed>25</TopMotorSpeed>
+			<BottomMotorSpeed>10</BottomMotorSpeed>
+			<Height>30</Height>
+			<Oscillation>80</Oscillation>
+			<Rotation>0</Rotation>
+		</Ball>
+		<Ball Type="AdvancedInterfaceBall" TableYPercent="0.7">
+			<BallNumber>2</BallNumber>
+			<NumberOfBalls>1</NumberOfBalls>
+			<WaitTime>1550</WaitTime>
+			<TopMotorSpeed>42</TopMotorSpeed>
+			<BottomMotorSpeed>18</BottomMotorSpeed>
+			<Height>80</Height>
+			<Oscillation>20</Oscillation>
+			<Rotation>0</Rotation>
+		</Ball>
+	</Drill>
+	<Drill Name="Short Backhand, Deep Forehand"
+	       Description="Attack the first ball with your backhand, then quickly get back for the deep forehand."
+	       Delay="2.3"
+	       YouTubeVideoID="KtVZsgVfVIk">
+		<Ball Type="AdvancedInterfaceBall" TableYPercent="0.3">
+			<BallNumber>1</BallNumber>
+			<NumberOfBalls>1</NumberOfBalls>
+			<WaitTime>1300</WaitTime>
+			<TopMotorSpeed>25</TopMotorSpeed>
+			<BottomMotorSpeed>10</BottomMotorSpeed>
+			<Height>30</Height>
+			<Oscillation>20</Oscillation>
+			<Rotation>0</Rotation>
+		</Ball>
+		<Ball Type="AdvancedInterfaceBall" TableYPercent="0.5">
+			<BallNumber>2</BallNumber>
+			<NumberOfBalls>1</NumberOfBalls>
+			<WaitTime>1550</WaitTime>
+			<TopMotorSpeed>42</TopMotorSpeed>
+			<BottomMotorSpeed>18</BottomMotorSpeed>
+			<Height>78</Height>
+			<Oscillation>80</Oscillation>
+			<Rotation>0</Rotation>
+		</Ball>
+	</Drill>
+	<Drill Name="Backhand Rally, Surprise Forehand"
+	       Description="This is just like a game. It starts with a serve, then gives a backhand rally of one to five balls, then suddenly it surprises you to the forehand. After the sequence, it gives a short break for you to physically and mentally recover for the next ball."
+	       Delay="2.2"
+	       YouTubeVideoID="tpDD-hCq1CE">
+		<Ball Type="AdvancedInterfaceBall" TableYPercent="0.3">
+			<BallNumber>1</BallNumber>
+			<NumberOfBalls>1</NumberOfBalls>
+			<WaitTime>1450</WaitTime>
+			<TopMotorSpeed>24</TopMotorSpeed>
+			<BottomMotorSpeed>10</BottomMotorSpeed>
+			<Height>30</Height>
+			<Oscillation>65</Oscillation>
+			<Rotation>0</Rotation>
+		</Ball>
+		<Ball Type="RandomInterfaceBall" TableYPercent="0.5">
+			<BallNumber>2</BallNumber>
+			<NumberOfBallsLow>1</NumberOfBallsLow>
+			<NumberOfBallsHigh>5</NumberOfBallsHigh>
+			<NumberOfBallsType>1</NumberOfBallsType>
+			<WaitTime>1300</WaitTime>
+			<TopMotorLow>52</TopMotorLow>
+			<TopMotorHigh>52</TopMotorHigh>
+			<TopMotorType>3</TopMotorType>
+			<BottomMotorLow>15</BottomMotorLow>
+			<BottomMotorHigh>15</BottomMotorHigh>
+			<BottomMotorType>3</BottomMotorType>
+			<HeightLow>75</HeightLow>
+			<HeightHigh>75</HeightHigh>
+			<HeightType>3</HeightType>
+			<OscillationLow>20</OscillationLow>
+			<OscillationHigh>20</OscillationHigh>
+			<OscillationType>1</OscillationType>
+			<RotationLow>0</RotationLow>
+			<RotationHigh>0</RotationHigh>
+			<RotationType>3</RotationType>
+		</Ball>
+		<Ball Type="AdvancedInterfaceBall" TableYPercent="0.55">
+			<BallNumber>3</BallNumber>
+			<NumberOfBalls>1</NumberOfBalls>
+			<WaitTime>1100</WaitTime>
+			<TopMotorSpeed>56</TopMotorSpeed>
+			<BottomMotorSpeed>15</BottomMotorSpeed>
+			<Height>75</Height>
+			<Oscillation>75</Oscillation>
+			<Rotation>0</Rotation>
+		</Ball>
+	</Drill>
+	<Drill Name="No-Spin Serves"
+	       Description="This drill gives you no-spin serves. You can choose whether to chop or attack each of these balls. Whichever you choose, make sure that you keep a relaxed grip and brush the ball to impart maximum spin."
+	       Delay="1.1"
+	       YouTubeVideoID="fVZG6X1Beno">
+		<Ball Type="RandomInterfaceBall" TableYPercent="0.45">
+			<BallNumber>1</BallNumber>
+			<NumberOfBallsLow>1</NumberOfBallsLow>
+			<NumberOfBallsHigh>1</NumberOfBallsHigh>
+			<NumberOfBallsType>3</NumberOfBallsType>
+			<WaitTime>1200</WaitTime>
+			<TopMotorLow>20</TopMotorLow>
+			<TopMotorHigh>20</TopMotorHigh>
+			<TopMotorType>3</TopMotorType>
+			<BottomMotorLow>20</BottomMotorLow>
+			<BottomMotorHigh>20</BottomMotorHigh>
+			<BottomMotorType>3</BottomMotorType>
+			<HeightLow>33</HeightLow>
+			<HeightHigh>33</HeightHigh>
+			<HeightType>3</HeightType>
+			<OscillationLow>22</OscillationLow>
+			<OscillationHigh>75</OscillationHigh>
+			<OscillationType>1</OscillationType>
+			<RotationLow>0</RotationLow>
+			<RotationHigh>0</RotationHigh>
+			<RotationType>3</RotationType>
+		</Ball>
+	</Drill>
+	<Drill Name="Serve, Two Speed Balls"
+	       Description="After returning the serve, get ready for two fast balls. Just meet the ball and focus on keeping it low!"
+	       Delay="2.5"
+	       YouTubeVideoID="JTKD6zXjmew">
+		<Ball Type="RandomInterfaceBall" TableYPercent="0.45">
+			<BallNumber>1</BallNumber>
+			<NumberOfBallsLow>1</NumberOfBallsLow>
+			<NumberOfBallsHigh>1</NumberOfBallsHigh>
+			<NumberOfBallsType>3</NumberOfBallsType>
+			<WaitTime>1550</WaitTime>
+			<TopMotorLow>30</TopMotorLow>
+			<TopMotorHigh>30</TopMotorHigh>
+			<TopMotorType>3</TopMotorType>
+			<BottomMotorLow>10</BottomMotorLow>
+			<BottomMotorHigh>10</BottomMotorHigh>
+			<BottomMotorType>3</BottomMotorType>
+			<HeightLow>34</HeightLow>
+			<HeightHigh>34</HeightHigh>
+			<HeightType>3</HeightType>
+			<OscillationLow>28</OscillationLow>
+			<OscillationHigh>72</OscillationHigh>
+			<OscillationType>1</OscillationType>
+			<RotationLow>0</RotationLow>
+			<RotationHigh>0</RotationHigh>
+			<RotationType>3</RotationType>
+		</Ball>
+		<Ball Type="RandomInterfaceBall" TableYPercent="0.5">
+			<BallNumber>2</BallNumber>
+			<NumberOfBallsLow>1</NumberOfBallsLow>
+			<NumberOfBallsHigh>1</NumberOfBallsHigh>
+			<NumberOfBallsType>3</NumberOfBallsType>
+			<WaitTime>1300</WaitTime>
+			<TopMotorLow>65</TopMotorLow>
+			<TopMotorHigh>65</TopMotorHigh>
+			<TopMotorType>3</TopMotorType>
+			<BottomMotorLow>5</BottomMotorLow>
+			<BottomMotorHigh>5</BottomMotorHigh>
+			<BottomMotorType>3</BottomMotorType>
+			<HeightLow>72</HeightLow>
+			<HeightHigh>72</HeightHigh>
+			<HeightType>3</HeightType>
+			<OscillationLow>28</OscillationLow>
+			<OscillationHigh>72</OscillationHigh>
+			<OscillationType>1</OscillationType>
+			<RotationLow>0</RotationLow>
+			<RotationHigh>0</RotationHigh>
+			<RotationType>3</RotationType>
+		</Ball>
+		<Ball Type="RandomInterfaceBall" TableYPercent="0.5">
+			<BallNumber>3</BallNumber>
+			<NumberOfBallsLow>1</NumberOfBallsLow>
+			<NumberOfBallsHigh>1</NumberOfBallsHigh>
+			<NumberOfBallsType>3</NumberOfBallsType>
+			<WaitTime>1000</WaitTime>
+			<TopMotorLow>65</TopMotorLow>
+			<TopMotorHigh>65</TopMotorHigh>
+			<TopMotorType>3</TopMotorType>
+			<BottomMotorLow>11</BottomMotorLow>
+			<BottomMotorHigh>11</BottomMotorHigh>
+			<BottomMotorType>3</BottomMotorType>
+			<HeightLow>70</HeightLow>
+			<HeightHigh>70</HeightHigh>
+			<HeightType>3</HeightType>
+			<OscillationLow>28</OscillationLow>
+			<OscillationHigh>72</OscillationHigh>
+			<OscillationType>1</OscillationType>
+			<RotationLow>0</RotationLow>
+			<RotationHigh>0</RotationHigh>
+			<RotationType>3</RotationType>
+		</Ball>
+	</Drill>
+	<Drill Name="Serve, High Forehand, High Backhand"
+	       Description="After returning the serve, you will get a high ball to your forehand then a high ball to the backhand. Get in position and smash both high balls with your powerful forehand!"
+	       Delay="2.1"
+	       YouTubeVideoID="tL-BphUMj1A">
+		<Ball Type="RandomInterfaceBall" TableYPercent="0.5">
+			<BallNumber>1</BallNumber>
+			<NumberOfBallsLow>1</NumberOfBallsLow>
+			<NumberOfBallsHigh>1</NumberOfBallsHigh>
+			<NumberOfBallsType>3</NumberOfBallsType>
+			<WaitTime>1150</WaitTime>
+			<TopMotorLow>25</TopMotorLow>
+			<TopMotorHigh>25</TopMotorHigh>
+			<TopMotorType>3</TopMotorType>
+			<BottomMotorLow>22</BottomMotorLow>
+			<BottomMotorHigh>22</BottomMotorHigh>
+			<BottomMotorType>3</BottomMotorType>
+			<HeightLow>35</HeightLow>
+			<HeightHigh>35</HeightHigh>
+			<HeightType>3</HeightType>
+			<OscillationLow>28</OscillationLow>
+			<OscillationHigh>72</OscillationHigh>
+			<OscillationType>1</OscillationType>
+			<RotationLow>0</RotationLow>
+			<RotationHigh>0</RotationHigh>
+			<RotationType>3</RotationType>
+		</Ball>
+		<Ball Type="AdvancedInterfaceBall" TableYPercent="0.6">
+			<BallNumber>2</BallNumber>
+			<NumberOfBalls>1</NumberOfBalls>
+			<WaitTime>1150</WaitTime>
+			<TopMotorSpeed>50</TopMotorSpeed>
+			<BottomMotorSpeed>-3</BottomMotorSpeed>
+			<Height>100</Height>
+			<Oscillation>72</Oscillation>
+			<Rotation>0</Rotation>
+		</Ball>
+		<Ball Type="AdvancedInterfaceBall" TableYPercent="0.6">
+			<BallNumber>3</BallNumber>
+			<NumberOfBalls>1</NumberOfBalls>
+			<WaitTime>1150</WaitTime>
+			<TopMotorSpeed>50</TopMotorSpeed>
+			<BottomMotorSpeed>-3</BottomMotorSpeed>
+			<Height>100</Height>
+			<Oscillation>25</Oscillation>
+			<Rotation>0</Rotation>
+		</Ball>
+	</Drill>
+	<Drill Name="Serve, Then Speed"
+	       Description="After returning the serve, be ready for three fast balls 
+ one to the forehand, one to the middle, then one to the backhand."
+	       Delay="2.1"
+	       YouTubeVideoID="IPYxu7adiwg">
+		<Ball Type="RandomInterfaceBall" TableYPercent="0.4">
+			<BallNumber>1</BallNumber>
+			<NumberOfBallsLow>1</NumberOfBallsLow>
+			<NumberOfBallsHigh>1</NumberOfBallsHigh>
+			<NumberOfBallsType>3</NumberOfBallsType>
+			<WaitTime>1150</WaitTime>
+			<TopMotorLow>5</TopMotorLow>
+			<TopMotorHigh>5</TopMotorHigh>
+			<TopMotorType>3</TopMotorType>
+			<BottomMotorLow>25</BottomMotorLow>
+			<BottomMotorHigh>25</BottomMotorHigh>
+			<BottomMotorType>3</BottomMotorType>
+			<HeightLow>29</HeightLow>
+			<HeightHigh>29</HeightHigh>
+			<HeightType>3</HeightType>
+			<OscillationLow>28</OscillationLow>
+			<OscillationHigh>72</OscillationHigh>
+			<OscillationType>1</OscillationType>
+			<RotationLow>0</RotationLow>
+			<RotationHigh>0</RotationHigh>
+			<RotationType>3</RotationType>
+		</Ball>
+		<Ball Type="AdvancedInterfaceBall" TableYPercent="0.55">
+			<BallNumber>2</BallNumber>
+			<NumberOfBalls>1</NumberOfBalls>
+			<WaitTime>1100</WaitTime>
+			<TopMotorSpeed>83</TopMotorSpeed>
+			<BottomMotorSpeed>0</BottomMotorSpeed>
+			<Height>75</Height>
+			<Oscillation>75</Oscillation>
+			<Rotation>0</Rotation>
+		</Ball>
+		<Ball Type="AdvancedInterfaceBall" TableYPercent="0.55">
+			<BallNumber>3</BallNumber>
+			<NumberOfBalls>1</NumberOfBalls>
+			<WaitTime>1000</WaitTime>
+			<TopMotorSpeed>83</TopMotorSpeed>
+			<BottomMotorSpeed>0</BottomMotorSpeed>
+			<Height>75</Height>
+			<Oscillation>50</Oscillation>
+			<Rotation>0</Rotation>
+		</Ball>
+		<Ball Type="AdvancedInterfaceBall" TableYPercent="0.55">
+			<BallNumber>4</BallNumber>
+			<NumberOfBalls>1</NumberOfBalls>
+			<WaitTime>1000</WaitTime>
+			<TopMotorSpeed>83</TopMotorSpeed>
+			<BottomMotorSpeed>0</BottomMotorSpeed>
+			<Height>75</Height>
+			<Oscillation>28</Oscillation>
+			<Rotation>0</Rotation>
+		</Ball>
+	</Drill>
+	<Drill Name="Forehand Game Situation"
+	       Description="First, you will get a backspin serve to the forehand, push it. Next you will get a deep backspin ball to the forehand, get down low and loop it up and over the net. Finally, you will get a deep topspin ball to the forehand, start your hand high and drive through the ball forward."
+	       Delay="2.8"
+	       YouTubeVideoID="l7VZ279DJBg">
+		<Ball Type="AdvancedInterfaceBall" TableYPercent="0.3">
+			<BallNumber>1</BallNumber>
+			<NumberOfBalls>1</NumberOfBalls>
+			<WaitTime>1350</WaitTime>
+			<TopMotorSpeed>5</TopMotorSpeed>
+			<BottomMotorSpeed>25</BottomMotorSpeed>
+			<Height>29</Height>
+			<Oscillation>72</Oscillation>
+			<Rotation>0</Rotation>
+		</Ball>
+		<Ball Type="AdvancedInterfaceBall" TableYPercent="0.5">
+			<BallNumber>2</BallNumber>
+			<NumberOfBalls>1</NumberOfBalls>
+			<WaitTime>1350</WaitTime>
+			<TopMotorSpeed>5</TopMotorSpeed>
+			<BottomMotorSpeed>35</BottomMotorSpeed>
+			<Height>77</Height>
+			<Oscillation>72</Oscillation>
+			<Rotation>0</Rotation>
+		</Ball>
+		<Ball Type="AdvancedInterfaceBall" TableYPercent="0.5">
+			<BallNumber>3</BallNumber>
+			<NumberOfBalls>1</NumberOfBalls>
+			<WaitTime>1250</WaitTime>
+			<TopMotorSpeed>50</TopMotorSpeed>
+			<BottomMotorSpeed>10</BottomMotorSpeed>
+			<Height>77</Height>
+			<Oscillation>72</Oscillation>
+			<Rotation>0</Rotation>
+		</Ball>
+	</Drill>
+	<Drill Name="Backhand Game Situation"
+	       Description="First, you will get a backspin serve to the backhand, push it. Next you will get a deep backspin ball to the backhand, get down low and loop it up and over the net. Finally, you will get a deep topspin ball to the backhand, start your hand high and drive through the ball forward."
+	       Delay="2.8"
+	       YouTubeVideoID="Qf2e2440hk0">
+		<Ball Type="AdvancedInterfaceBall" TableYPercent="0.3">
+			<BallNumber>1</BallNumber>
+			<NumberOfBalls>1</NumberOfBalls>
+			<WaitTime>1350</WaitTime>
+			<TopMotorSpeed>5</TopMotorSpeed>
+			<BottomMotorSpeed>25</BottomMotorSpeed>
+			<Height>29</Height>
+			<Oscillation>20</Oscillation>
+			<Rotation>0</Rotation>
+		</Ball>
+		<Ball Type="AdvancedInterfaceBall" TableYPercent="0.5">
+			<BallNumber>2</BallNumber>
+			<NumberOfBalls>1</NumberOfBalls>
+			<WaitTime>1350</WaitTime>
+			<TopMotorSpeed>5</TopMotorSpeed>
+			<BottomMotorSpeed>35</BottomMotorSpeed>
+			<Height>77</Height>
+			<Oscillation>28</Oscillation>
+			<Rotation>0</Rotation>
+		</Ball>
+		<Ball Type="AdvancedInterfaceBall" TableYPercent="0.5">
+			<BallNumber>3</BallNumber>
+			<NumberOfBalls>1</NumberOfBalls>
+			<WaitTime>1250</WaitTime>
+			<TopMotorSpeed>50</TopMotorSpeed>
+			<BottomMotorSpeed>10</BottomMotorSpeed>
+			<Height>77</Height>
+			<Oscillation>28</Oscillation>
+			<Rotation>0</Rotation>
+		</Ball>
+	</Drill>
+	<Drill Name="Short Serve Then 10 Balls"
+	       Description="You will get a short serve, step forward and push or flip this ball. Next, you will have a marathon rally of 10 topspin balls anywhere on the table. You will then have a short rest before the next rally."
+	       Delay="2.8"
+	       YouTubeVideoID="_nbeA1FoaJE">
+		<Ball Type="RandomInterfaceBall" TableYPercent="0.2">
+			<BallNumber>1</BallNumber>
+			<NumberOfBallsLow>1</NumberOfBallsLow>
+			<NumberOfBallsHigh>1</NumberOfBallsHigh>
+			<NumberOfBallsType>3</NumberOfBallsType>
+			<WaitTime>1350</WaitTime>
+			<TopMotorLow>24</TopMotorLow>
+			<TopMotorHigh>24</TopMotorHigh>
+			<TopMotorType>3</TopMotorType>
+			<BottomMotorLow>14</BottomMotorLow>
+			<BottomMotorHigh>14</BottomMotorHigh>
+			<BottomMotorType>3</BottomMotorType>
+			<HeightLow>35</HeightLow>
+			<HeightHigh>35</HeightHigh>
+			<HeightType>3</HeightType>
+			<OscillationLow>28</OscillationLow>
+			<OscillationHigh>72</OscillationHigh>
+			<OscillationType>1</OscillationType>
+			<RotationLow>0</RotationLow>
+			<RotationHigh>0</RotationHigh>
+			<RotationType>3</RotationType>
+		</Ball>
+		<Ball Type="RandomInterfaceBall" TableYPercent="0.5">
+			<BallNumber>2</BallNumber>
+			<NumberOfBallsLow>10</NumberOfBallsLow>
+			<NumberOfBallsHigh>10</NumberOfBallsHigh>
+			<NumberOfBallsType>3</NumberOfBallsType>
+			<WaitTime>1250</WaitTime>
+			<TopMotorLow>40</TopMotorLow>
+			<TopMotorHigh>40</TopMotorHigh>
+			<TopMotorType>3</TopMotorType>
+			<BottomMotorLow>28</BottomMotorLow>
+      <BottomMotorHigh>28</BottomMotorHigh>
+			<BottomMotorType>3</BottomMotorType>
+			<HeightLow>70</HeightLow>
+			<HeightHigh>70</HeightHigh>
+			<HeightType>3</HeightType>
+			<OscillationLow>25</OscillationLow>
+			<OscillationHigh>75</OscillationHigh>
+			<OscillationType>1</OscillationType>
+			<RotationLow>0</RotationLow>
+			<RotationHigh>0</RotationHigh>
+			<RotationType>3</RotationType>
+		</Ball>
+	</Drill>
+	<Drill Name="No Spin, Topspin"
+	       Description="Watch out for the tricky spin variations. The robot will alternate between no-spin serves and topspin serves! Pay attention and adjust your swing slightly for each ball!"
+	       Delay="0"
+	       YouTubeVideoID="JiQzg_pF3H4">
+		<Ball Type="RandomInterfaceBall" TableYPercent="0.5">
+			<BallNumber>1</BallNumber>
+			<NumberOfBallsLow>1</NumberOfBallsLow>
+			<NumberOfBallsHigh>1</NumberOfBallsHigh>
+			<NumberOfBallsType>3</NumberOfBallsType>
+			<WaitTime>1600</WaitTime>
+			<TopMotorLow>23</TopMotorLow>
+			<TopMotorHigh>23</TopMotorHigh>
+			<TopMotorType>3</TopMotorType>
+			<BottomMotorLow>23</BottomMotorLow>
+			<BottomMotorHigh>23</BottomMotorHigh>
+			<BottomMotorType>3</BottomMotorType>
+			<HeightLow>35</HeightLow>
+			<HeightHigh>35</HeightHigh>
+			<HeightType>3</HeightType>
+			<OscillationLow>28</OscillationLow>
+			<OscillationHigh>72</OscillationHigh>
+			<OscillationType>1</OscillationType>
+			<RotationLow>0</RotationLow>
+			<RotationHigh>0</RotationHigh>
+			<RotationType>3</RotationType>
+		</Ball>
+		<Ball Type="RandomInterfaceBall" TableYPercent="0.5">
+			<BallNumber>2</BallNumber>
+			<NumberOfBallsLow>1</NumberOfBallsLow>
+			<NumberOfBallsHigh>1</NumberOfBallsHigh>
+			<NumberOfBallsType>3</NumberOfBallsType>
+			<WaitTime>1600</WaitTime>
+			<TopMotorLow>44</TopMotorLow>
+			<TopMotorHigh>44</TopMotorHigh>
+			<TopMotorType>3</TopMotorType>
+			<BottomMotorLow>-45</BottomMotorLow>
+			<BottomMotorHigh>-45</BottomMotorHigh>
+			<BottomMotorType>3</BottomMotorType>
+			<HeightLow>40</HeightLow>
+			<HeightHigh>40</HeightHigh>
+			<HeightType>3</HeightType>
+			<OscillationLow>28</OscillationLow>
+			<OscillationHigh>72</OscillationHigh>
+			<OscillationType>1</OscillationType>
+			<RotationLow>0</RotationLow>
+			<RotationHigh>0</RotationHigh>
+			<RotationType>3</RotationType>
+		</Ball>
+	</Drill>
+	<Drill Name="Left Sidespin Serve Return"
+	       Description="Regardless if you choose to hit with your forehand or backhand, touch the right side of the ball to control it onto the table."
+	       Delay="0"
+	       YouTubeVideoID="SLvgXQhfHJQ">
+		<Ball Type="AdvancedInterfaceBall" TableYPercent="0.3">
+			<BallNumber>1</BallNumber>
+			<NumberOfBalls>1</NumberOfBalls>
+			<WaitTime>1650</WaitTime>
+			<TopMotorSpeed>49</TopMotorSpeed>
+			<BottomMotorSpeed>-54</BottomMotorSpeed>
+			<Height>49</Height>
+			<Oscillation>56</Oscillation>
+			<Rotation>-80</Rotation>
+		</Ball>
+	</Drill>
+	<Drill Name="Right Sidespin Serve Return"
+	       Description="If you contact the back of the ball, it will fly off your racket far to the left. In order to counter the spin, touch the left side of the ball."
+	       Delay="0"
+	       YouTubeVideoID="mV3QKBa2SXM">
+		<Ball Type="AdvancedInterfaceBall" TableYPercent="0.4">
+			<BallNumber>1</BallNumber>
+			<NumberOfBalls>1</NumberOfBalls>
+			<WaitTime>1650</WaitTime>
+			<TopMotorSpeed>49</TopMotorSpeed>
+			<BottomMotorSpeed>-54</BottomMotorSpeed>
+			<Height>52</Height>
+			<Oscillation>44</Oscillation>
+			<Rotation>80</Rotation>
+		</Ball>
+	</Drill>
+	<Drill Name="No-Spin Serve Return"
+	       Description="Against these serves, float the ball controlled over the net with a steady chop." Delay="0"
+	       YouTubeVideoID="noWuqsD0Ijs">
+		<Ball Type="RandomInterfaceBall" TableYPercent="0.45">
+			<BallNumber>1</BallNumber>
+			<NumberOfBallsLow>1</NumberOfBallsLow>
+			<NumberOfBallsHigh>1</NumberOfBallsHigh>
+			<NumberOfBallsType>3</NumberOfBallsType>
+			<WaitTime>1650</WaitTime>
+			<TopMotorLow>20</TopMotorLow>
+			<TopMotorHigh>20</TopMotorHigh>
+			<TopMotorType>3</TopMotorType>
+			<BottomMotorLow>20</BottomMotorLow>
+			<BottomMotorHigh>20</BottomMotorHigh>
+			<BottomMotorType>3</BottomMotorType>
+			<HeightLow>35</HeightLow>
+			<HeightHigh>35</HeightHigh>
+			<HeightType>3</HeightType>
+			<OscillationLow>28</OscillationLow>
+			<OscillationHigh>72</OscillationHigh>
+			<OscillationType>1</OscillationType>
+			<RotationLow>0</RotationLow>
+			<RotationHigh>0</RotationHigh>
+			<RotationType>3</RotationType>
+		</Ball>
+	</Drill>
+	<Drill Name="Topspin Serve Return"
+	       Description="Using a controlled stroke, contact the ball with a relaxed grip and a 60 degree racket angle."
+	       Delay="0"
+	       YouTubeVideoID="b0KtuUCRBZY">
+		<Ball Type="RandomInterfaceBall" TableYPercent="0.5">
+			<BallNumber>1</BallNumber>
+			<NumberOfBallsLow>1</NumberOfBallsLow>
+			<NumberOfBallsHigh>1</NumberOfBallsHigh>
+			<NumberOfBallsType>3</NumberOfBallsType>
+			<WaitTime>1600</WaitTime>
+			<TopMotorLow>47</TopMotorLow>
+			<TopMotorHigh>47</TopMotorHigh>
+			<TopMotorType>3</TopMotorType>
+			<BottomMotorLow>-50</BottomMotorLow>
+			<BottomMotorHigh>-50</BottomMotorHigh>
+			<BottomMotorType>3</BottomMotorType>
+			<HeightLow>26</HeightLow>
+			<HeightHigh>26</HeightHigh>
+			<HeightType>3</HeightType>
+			<OscillationLow>28</OscillationLow>
+			<OscillationHigh>72</OscillationHigh>
+			<OscillationType>1</OscillationType>
+			<RotationLow>0</RotationLow>
+			<RotationHigh>0</RotationHigh>
+			<RotationType>3</RotationType>
+		</Ball>
+	</Drill>
+	<Drill Name="Left Sidespin Serve Anywhere"
+	       Description="Be ready to adjust in-and-out as well as side-to-side for these very spinny left sidespin serves."
+	       Delay="0"
+	       YouTubeVideoID="K81A7FqPvoQ">
+		<Ball Type="RandomInterfaceBall" TableYPercent="0.5">
+			<BallNumber>1</BallNumber>
+			<NumberOfBallsLow>1</NumberOfBallsLow>
+			<NumberOfBallsHigh>1</NumberOfBallsHigh>
+			<NumberOfBallsType>3</NumberOfBallsType>
+			<WaitTime>1650</WaitTime>
+			<TopMotorLow>49</TopMotorLow>
+			<TopMotorHigh>52</TopMotorHigh>
+			<TopMotorType>2</TopMotorType>
+			<BottomMotorLow>-60</BottomMotorLow>
+			<BottomMotorHigh>-60</BottomMotorHigh>
+			<BottomMotorType>3</BottomMotorType>
+			<HeightLow>52</HeightLow>
+			<HeightHigh>52</HeightHigh>
+			<HeightType>3</HeightType>
+			<OscillationLow>28</OscillationLow>
+			<OscillationHigh>72</OscillationHigh>
+			<OscillationType>1</OscillationType>
+			<RotationLow>-80</RotationLow>
+			<RotationHigh>-80</RotationHigh>
+			<RotationType>3</RotationType>
+		</Ball>
+	</Drill>
+	<Drill Name="Right Sidespin Serve Anywhere"
+	       Description="Prepare for the long sidespin serve, but always be ready to move in slightly with the right foot for the surprise short one! To control the spin, touch the left side of the ball."
+	       Delay="0"
+	       YouTubeVideoID="UAy4ANNx2aY">
+		<Ball Type="RandomInterfaceBall" TableYPercent="0.45">
+			<BallNumber>1</BallNumber>
+			<NumberOfBallsLow>1</NumberOfBallsLow>
+			<NumberOfBallsHigh>1</NumberOfBallsHigh>
+			<NumberOfBallsType>3</NumberOfBallsType>
+			<WaitTime>1650</WaitTime>
+			<TopMotorLow>49</TopMotorLow>
+			<TopMotorHigh>52</TopMotorHigh>
+			<TopMotorType>2</TopMotorType>
+			<BottomMotorLow>-60</BottomMotorLow>
+			<BottomMotorHigh>-60</BottomMotorHigh>
+			<BottomMotorType>3</BottomMotorType>
+			<HeightLow>52</HeightLow>
+			<HeightHigh>52</HeightHigh>
+			<HeightType>3</HeightType>
+			<OscillationLow>28</OscillationLow>
+			<OscillationHigh>72</OscillationHigh>
+			<OscillationType>1</OscillationType>
+			<RotationLow>80</RotationLow>
+			<RotationHigh>80</RotationHigh>
+			<RotationType>3</RotationType>
+		</Ball>
+	</Drill>
+	<Drill Name="Left Sidespin Topspin Serve"
+	       Description="To return this combo serve, contact the top right of the ball. If you imagine that the ball is a globe with the United States facing you, you will touch the state of Maine."
+	       Delay="0"
+	       YouTubeVideoID="ZnBgwzS8HUs">
+		<Ball Type="RandomInterfaceBall" TableYPercent="0.5">
+			<BallNumber>1</BallNumber>
+			<NumberOfBallsLow>1</NumberOfBallsLow>
+			<NumberOfBallsHigh>1</NumberOfBallsHigh>
+			<NumberOfBallsType>3</NumberOfBallsType>
+			<WaitTime>1550</WaitTime>
+			<TopMotorLow>49</TopMotorLow>
+			<TopMotorHigh>52</TopMotorHigh>
+			<TopMotorType>2</TopMotorType>
+			<BottomMotorLow>-60</BottomMotorLow>
+			<BottomMotorHigh>-60</BottomMotorHigh>
+			<BottomMotorType>3</BottomMotorType>
+			<HeightLow>30</HeightLow>
+			<HeightHigh>30</HeightHigh>
+			<HeightType>3</HeightType>
+			<OscillationLow>28</OscillationLow>
+			<OscillationHigh>72</OscillationHigh>
+			<OscillationType>1</OscillationType>
+			<RotationLow>-50</RotationLow>
+			<RotationHigh>-50</RotationHigh>
+			<RotationType>3</RotationType>
+		</Ball>
+	</Drill>
+	<Drill Name="Right Sidespin Topspin Serve"
+	       Description="To return this combo serve, contact the top left of the ball. This serve is a simulation of a right handed player doing a backhand serve."
+	       Delay="0"
+	       YouTubeVideoID="j3vLbY_x7RE">
+		<Ball Type="RandomInterfaceBall" TableYPercent="0.5">
+			<BallNumber>1</BallNumber>
+			<NumberOfBallsLow>1</NumberOfBallsLow>
+			<NumberOfBallsHigh>1</NumberOfBallsHigh>
+			<NumberOfBallsType>3</NumberOfBallsType>
+			<WaitTime>1550</WaitTime>
+			<TopMotorLow>49</TopMotorLow>
+			<TopMotorHigh>52</TopMotorHigh>
+			<TopMotorType>2</TopMotorType>
+			<BottomMotorLow>-60</BottomMotorLow>
+			<BottomMotorHigh>-60</BottomMotorHigh>
+			<BottomMotorType>3</BottomMotorType>
+			<HeightLow>30</HeightLow>
+			<HeightHigh>30</HeightHigh>
+			<HeightType>3</HeightType>
+			<OscillationLow>28</OscillationLow>
+			<OscillationHigh>72</OscillationHigh>
+			<OscillationType>1</OscillationType>
+			<RotationLow>50</RotationLow>
+			<RotationHigh>50</RotationHigh>
+			<RotationType>3</RotationType>
+		</Ball>
+	</Drill>
+	<Drill Name="Backspin, Topspin"
+	       Description="After getting a backspin serve, you will then get five topspin balls anywhere. Try to keep score against the robot. Every time you get all 6 balls back, it is 1 point for you. Every time you miss during the six ball sequence, it is a point for Robo-Pong. Games to 11. Loser buys lunch."
+	       Delay="2.3"
+	       YouTubeVideoID="BQiBuevdYEI">
+		<Ball Type="RandomInterfaceBall" TableYPercent="0.5">
+			<BallNumber>1</BallNumber>
+			<NumberOfBallsLow>1</NumberOfBallsLow>
+			<NumberOfBallsHigh>1</NumberOfBallsHigh>
+			<NumberOfBallsType>3</NumberOfBallsType>
+			<WaitTime>1650</WaitTime>
+			<TopMotorLow>1</TopMotorLow>
+			<TopMotorHigh>1</TopMotorHigh>
+			<TopMotorType>3</TopMotorType>
+			<BottomMotorLow>35</BottomMotorLow>
+			<BottomMotorHigh>40</BottomMotorHigh>
+			<BottomMotorType>2</BottomMotorType>
+			<HeightLow>32</HeightLow>
+			<HeightHigh>32</HeightHigh>
+			<HeightType>3</HeightType>
+			<OscillationLow>31</OscillationLow>
+			<OscillationHigh>69</OscillationHigh>
+			<OscillationType>1</OscillationType>
+			<RotationLow>0</RotationLow>
+			<RotationHigh>0</RotationHigh>
+			<RotationType>3</RotationType>
+		</Ball>
+		<Ball Type="RandomInterfaceBall" TableYPercent="0.6">
+			<BallNumber>2</BallNumber>
+			<NumberOfBallsLow>5</NumberOfBallsLow>
+			<NumberOfBallsHigh>5</NumberOfBallsHigh>
+			<NumberOfBallsType>3</NumberOfBallsType>
+			<WaitTime>1200</WaitTime>
+			<TopMotorLow>50</TopMotorLow>
+			<TopMotorHigh>50</TopMotorHigh>
+			<TopMotorType>3</TopMotorType>
+			<BottomMotorLow>20</BottomMotorLow>
+			<BottomMotorHigh>20</BottomMotorHigh>
+			<BottomMotorType>3</BottomMotorType>
+			<HeightLow>72</HeightLow>
+			<HeightHigh>72</HeightHigh>
+			<HeightType>3</HeightType>
+			<OscillationLow>31</OscillationLow>
+			<OscillationHigh>69</OscillationHigh>
+			<OscillationType>1</OscillationType>
+			<RotationLow>0</RotationLow>
+			<RotationHigh>0</RotationHigh>
+			<RotationType>3</RotationType>
+		</Ball>
+	</Drill>
+</Training>
+<?xml version="1.0" encoding="utf-8"?>
+<Training Name="Bonus" Description="Bonus Drills" IsAdjustable="false">
+	<Drill Name="Topspin to either corner" Description="Topspin to either corner" Delay="0">
+		<Ball Type="RandomInterfaceBall" TableYPercent="0.7">
+			<BallNumber>1</BallNumber>
+			<NumberOfBallsLow>1</NumberOfBallsLow>
+			<NumberOfBallsHigh>1</NumberOfBallsHigh>
+			<NumberOfBallsType>3</NumberOfBallsType>
+			<WaitTime>950</WaitTime>
+			<TopMotorLow>75</TopMotorLow>
+			<TopMotorHigh>75</TopMotorHigh>
+			<TopMotorType>3</TopMotorType>
+			<BottomMotorLow>-5</BottomMotorLow>
+			<BottomMotorHigh>-5</BottomMotorHigh>
+			<BottomMotorType>3</BottomMotorType>
+			<HeightLow>75</HeightLow>
+			<HeightHigh>75</HeightHigh>
+			<HeightType>3</HeightType>
+			<OscillationLow>15</OscillationLow>
+			<OscillationHigh>80</OscillationHigh>
+			<OscillationType>2</OscillationType>
+			<RotationLow>0</RotationLow>
+			<RotationHigh>0</RotationHigh>
+			<RotationType>3</RotationType>
+		</Ball>
+	</Drill>
+	<Drill Name="Backhand topspin rally, the surprise forehand" Description="Backhand topspin rally, the surprise forehand" Delay="0">
+		<Ball Type="RandomInterfaceBall" TableYPercent="0.45">
+			<BallNumber>1</BallNumber>
+			<NumberOfBallsLow>1</NumberOfBallsLow>
+			<NumberOfBallsHigh>5</NumberOfBallsHigh>
+			<NumberOfBallsType>1</NumberOfBallsType>
+			<WaitTime>780</WaitTime>
+			<TopMotorLow>66</TopMotorLow>
+			<TopMotorHigh>66</TopMotorHigh>
+			<TopMotorType>3</TopMotorType>
+			<BottomMotorLow>0</BottomMotorLow>
+			<BottomMotorHigh>0</BottomMotorHigh>
+			<BottomMotorType>3</BottomMotorType>
+			<HeightLow>77</HeightLow>
+			<HeightHigh>77</HeightHigh>
+			<HeightType>3</HeightType>
+			<OscillationLow>25</OscillationLow>
+			<OscillationHigh>25</OscillationHigh>
+			<OscillationType>3</OscillationType>
+			<RotationLow>0</RotationLow>
+			<RotationHigh>0</RotationHigh>
+			<RotationType>3</RotationType>
+		</Ball>
+		<Ball Type="RandomInterfaceBall" TableYPercent="0.45">
+			<BallNumber>2</BallNumber>
+			<NumberOfBallsLow>1</NumberOfBallsLow>
+			<NumberOfBallsHigh>1</NumberOfBallsHigh>
+			<NumberOfBallsType>3</NumberOfBallsType>
+			<WaitTime>780</WaitTime>
+			<TopMotorLow>66</TopMotorLow>
+			<TopMotorHigh>66</TopMotorHigh>
+			<TopMotorType>3</TopMotorType>
+			<BottomMotorLow>0</BottomMotorLow>
+			<BottomMotorHigh>0</BottomMotorHigh>
+			<BottomMotorType>3</BottomMotorType>
+			<HeightLow>77</HeightLow>
+			<HeightHigh>77</HeightHigh>
+			<HeightType>3</HeightType>
+			<OscillationLow>55</OscillationLow>
+			<OscillationHigh>75</OscillationHigh>
+			<OscillationType>2</OscillationType>
+			<RotationLow>0</RotationLow>
+			<RotationHigh>0</RotationHigh>
+			<RotationType>3</RotationType>
+		</Ball>
+	</Drill>
+	<Drill Name="Topspin small movements" Description="Topspin small movements" Delay="0">
+		<Ball Type="AdvancedInterfaceBall" TableYPercent="0.4">
+			<BallNumber>1</BallNumber>
+			<NumberOfBalls>1</NumberOfBalls>
+			<WaitTime>840</WaitTime>
+			<TopMotorSpeed>66</TopMotorSpeed>
+			<BottomMotorSpeed>0</BottomMotorSpeed>
+			<Height>75</Height>
+			<Oscillation>25</Oscillation>
+			<Rotation>0</Rotation>
+		</Ball>
+		<Ball Type="AdvancedInterfaceBall" TableYPercent="0.4">
+			<BallNumber>2</BallNumber>
+			<NumberOfBalls>1</NumberOfBalls>
+			<WaitTime>840</WaitTime>
+			<TopMotorSpeed>66</TopMotorSpeed>
+			<BottomMotorSpeed>0</BottomMotorSpeed>
+			<Height>75</Height>
+			<Oscillation>33</Oscillation>
+			<Rotation>0</Rotation>
+		</Ball>
+		<Ball Type="AdvancedInterfaceBall" TableYPercent="0.4">
+			<BallNumber>3</BallNumber>
+			<NumberOfBalls>1</NumberOfBalls>
+			<WaitTime>840</WaitTime>
+			<TopMotorSpeed>66</TopMotorSpeed>
+			<BottomMotorSpeed>0</BottomMotorSpeed>
+			<Height>75</Height>
+			<Oscillation>42</Oscillation>
+			<Rotation>0</Rotation>
+		</Ball>
+		<Ball Type="AdvancedInterfaceBall" TableYPercent="0.4">
+			<BallNumber>4</BallNumber>
+			<NumberOfBalls>1</NumberOfBalls>
+			<WaitTime>840</WaitTime>
+			<TopMotorSpeed>66</TopMotorSpeed>
+			<BottomMotorSpeed>0</BottomMotorSpeed>
+			<Height>75</Height>
+			<Oscillation>50</Oscillation>
+			<Rotation>0</Rotation>
+		</Ball>
+		<Ball Type="AdvancedInterfaceBall" TableYPercent="0.4">
+			<BallNumber>5</BallNumber>
+			<NumberOfBalls>1</NumberOfBalls>
+			<WaitTime>840</WaitTime>
+			<TopMotorSpeed>66</TopMotorSpeed>
+			<BottomMotorSpeed>0</BottomMotorSpeed>
+			<Height>75</Height>
+			<Oscillation>58</Oscillation>
+			<Rotation>0</Rotation>
+		</Ball>
+		<Ball Type="AdvancedInterfaceBall" TableYPercent="0.4">
+			<BallNumber>6</BallNumber>
+			<NumberOfBalls>1</NumberOfBalls>
+			<WaitTime>840</WaitTime>
+			<TopMotorSpeed>66</TopMotorSpeed>
+			<BottomMotorSpeed>0</BottomMotorSpeed>
+			<Height>75</Height>
+			<Oscillation>67</Oscillation>
+			<Rotation>0</Rotation>
+		</Ball>
+		<Ball Type="AdvancedInterfaceBall" TableYPercent="0.4">
+			<BallNumber>7</BallNumber>
+			<NumberOfBalls>1</NumberOfBalls>
+			<WaitTime>840</WaitTime>
+			<TopMotorSpeed>66</TopMotorSpeed>
+			<BottomMotorSpeed>0</BottomMotorSpeed>
+			<Height>75</Height>
+			<Oscillation>75</Oscillation>
+			<Rotation>0</Rotation>
+		</Ball>
+		<Ball Type="AdvancedInterfaceBall" TableYPercent="0.4">
+			<BallNumber>8</BallNumber>
+			<NumberOfBalls>1</NumberOfBalls>
+			<WaitTime>840</WaitTime>
+			<TopMotorSpeed>66</TopMotorSpeed>
+			<BottomMotorSpeed>0</BottomMotorSpeed>
+			<Height>75</Height>
+			<Oscillation>67</Oscillation>
+			<Rotation>0</Rotation>
+		</Ball>
+		<Ball Type="AdvancedInterfaceBall" TableYPercent="0.4">
+			<BallNumber>9</BallNumber>
+			<NumberOfBalls>1</NumberOfBalls>
+			<WaitTime>840</WaitTime>
+			<TopMotorSpeed>66</TopMotorSpeed>
+			<BottomMotorSpeed>0</BottomMotorSpeed>
+			<Height>75</Height>
+			<Oscillation>58</Oscillation>
+			<Rotation>0</Rotation>
+		</Ball>
+		<Ball Type="AdvancedInterfaceBall" TableYPercent="0.4">
+			<BallNumber>10</BallNumber>
+			<NumberOfBalls>1</NumberOfBalls>
+			<WaitTime>840</WaitTime>
+			<TopMotorSpeed>66</TopMotorSpeed>
+			<BottomMotorSpeed>0</BottomMotorSpeed>
+			<Height>75</Height>
+			<Oscillation>50</Oscillation>
+			<Rotation>0</Rotation>
+		</Ball>
+		<Ball Type="AdvancedInterfaceBall" TableYPercent="0.4">
+			<BallNumber>11</BallNumber>
+			<NumberOfBalls>1</NumberOfBalls>
+			<WaitTime>840</WaitTime>
+			<TopMotorSpeed>66</TopMotorSpeed>
+			<BottomMotorSpeed>0</BottomMotorSpeed>
+			<Height>75</Height>
+			<Oscillation>42</Oscillation>
+			<Rotation>0</Rotation>
+		</Ball>
+		<Ball Type="AdvancedInterfaceBall" TableYPercent="0.4">
+			<BallNumber>12</BallNumber>
+			<NumberOfBalls>1</NumberOfBalls>
+			<WaitTime>840</WaitTime>
+			<TopMotorSpeed>66</TopMotorSpeed>
+			<BottomMotorSpeed>0</BottomMotorSpeed>
+			<Height>75</Height>
+			<Oscillation>33</Oscillation>
+			<Rotation>0</Rotation>
+		</Ball>
+	</Drill>
+	<Drill Name="Forehand topspin moving toward backhand" Description="Forehand topspin moving toward backhand" Delay="0">
+		<Ball Type="AdvancedInterfaceBall" TableYPercent="0.35">
+			<BallNumber>1</BallNumber>
+			<NumberOfBalls>1</NumberOfBalls>
+			<WaitTime>940</WaitTime>
+			<TopMotorSpeed>66</TopMotorSpeed>
+			<BottomMotorSpeed>0</BottomMotorSpeed>
+			<Height>78</Height>
+			<Oscillation>69</Oscillation>
+			<Rotation>0</Rotation>
+		</Ball>
+		<Ball Type="AdvancedInterfaceBall" TableYPercent="0.35">
+			<BallNumber>2</BallNumber>
+			<NumberOfBalls>1</NumberOfBalls>
+			<WaitTime>940</WaitTime>
+			<TopMotorSpeed>66</TopMotorSpeed>
+			<BottomMotorSpeed>0</BottomMotorSpeed>
+			<Height>75</Height>
+			<Oscillation>56</Oscillation>
+			<Rotation>0</Rotation>
+		</Ball>
+		<Ball Type="AdvancedInterfaceBall" TableYPercent="0.35">
+			<BallNumber>3</BallNumber>
+			<NumberOfBalls>1</NumberOfBalls>
+			<WaitTime>940</WaitTime>
+			<TopMotorSpeed>66</TopMotorSpeed>
+			<BottomMotorSpeed>0</BottomMotorSpeed>
+			<Height>75</Height>
+			<Oscillation>44</Oscillation>
+			<Rotation>0</Rotation>
+		</Ball>
+		<Ball Type="AdvancedInterfaceBall" TableYPercent="0.35">
+			<BallNumber>4</BallNumber>
+			<NumberOfBalls>1</NumberOfBalls>
+			<WaitTime>940</WaitTime>
+			<TopMotorSpeed>66</TopMotorSpeed>
+			<BottomMotorSpeed>0</BottomMotorSpeed>
+			<Height>75</Height>
+			<Oscillation>33</Oscillation>
+			<Rotation>0</Rotation>
+		</Ball>
+		<Ball Type="RandomInterfaceBall" TableYPercent="0.35">
+			<BallNumber>5</BallNumber>
+			<NumberOfBallsLow>1</NumberOfBallsLow>
+			<NumberOfBallsHigh>2</NumberOfBallsHigh>
+			<NumberOfBallsType>1</NumberOfBallsType>
+			<WaitTime>940</WaitTime>
+			<TopMotorLow>66</TopMotorLow>
+			<TopMotorHigh>66</TopMotorHigh>
+			<TopMotorType>3</TopMotorType>
+			<BottomMotorLow>0</BottomMotorLow>
+			<BottomMotorHigh>0</BottomMotorHigh>
+			<BottomMotorType>3</BottomMotorType>
+			<HeightLow>78</HeightLow>
+			<HeightHigh>78</HeightHigh>
+			<HeightType>3</HeightType>
+			<OscillationLow>28</OscillationLow>
+			<OscillationHigh>72</OscillationHigh>
+			<OscillationType>2</OscillationType>
+			<RotationLow>0</RotationLow>
+			<RotationHigh>0</RotationHigh>
+			<RotationType>3</RotationType>
+		</Ball>
+	</Drill>
+	<Drill Name="Spinny variation short serves" Description="Spinny variation short serves" Delay="0">
+		<Ball Type="RandomInterfaceBall" TableYPercent="0.20">
+			<BallNumber>1</BallNumber>
+			<NumberOfBallsLow>1</NumberOfBallsLow>
+			<NumberOfBallsHigh>1</NumberOfBallsHigh>
+			<NumberOfBallsType>3</NumberOfBallsType>
+			<WaitTime>1780</WaitTime>
+			<TopMotorLow>-85</TopMotorLow>
+			<TopMotorHigh>-85</TopMotorHigh>
+			<TopMotorType>3</TopMotorType>
+			<BottomMotorLow>52</BottomMotorLow>
+			<BottomMotorHigh>52</BottomMotorHigh>
+			<BottomMotorType>3</BottomMotorType>
+			<HeightLow>28</HeightLow>
+			<HeightHigh>28</HeightHigh>
+			<HeightType>3</HeightType>
+			<OscillationLow>22</OscillationLow>
+			<OscillationHigh>78</OscillationHigh>
+			<OscillationType>1</OscillationType>
+			<RotationLow>-90</RotationLow>
+			<RotationHigh>90</RotationHigh>
+			<RotationType>1</RotationType>
+		</Ball>
+	</Drill>
+	<Drill Name="Very spinny backspin serve" Description="Very spinny backspin serve" Delay="0">
+		<Ball Type="RandomInterfaceBall" TableYPercent="0.15">
+			<BallNumber>1</BallNumber>
+			<NumberOfBallsLow>1</NumberOfBallsLow>
+			<NumberOfBallsHigh>1</NumberOfBallsHigh>
+			<NumberOfBallsType>3</NumberOfBallsType>
+			<WaitTime>1780</WaitTime>
+			<TopMotorLow>-90</TopMotorLow>
+			<TopMotorHigh>-90</TopMotorHigh>
+			<TopMotorType>3</TopMotorType>
+			<BottomMotorLow>50</BottomMotorLow>
+			<BottomMotorHigh>50</BottomMotorHigh>
+			<BottomMotorType>3</BottomMotorType>
+			<HeightLow>28</HeightLow>
+			<HeightHigh>28</HeightHigh>
+			<HeightType>3</HeightType>
+			<OscillationLow>22</OscillationLow>
+			<OscillationHigh>78</OscillationHigh>
+			<OscillationType>1</OscillationType>
+			<RotationLow>0</RotationLow>
+			<RotationHigh>0</RotationHigh>
+			<RotationType>3</RotationType>
+		</Ball>
+	</Drill>
+	<Drill Name="One Topspin, One Sidespin" Description="One Topspin, One Sidespin" Delay="0">
+		<Ball Type="AdvancedInterfaceBall" TableYPercent="0.5">
+			<BallNumber>1</BallNumber>
+			<NumberOfBalls>1</NumberOfBalls>
+			<WaitTime>1250</WaitTime>
+			<TopMotorSpeed>61</TopMotorSpeed>
+			<BottomMotorSpeed>0</BottomMotorSpeed>
+			<Height>79</Height>
+			<Oscillation>50</Oscillation>
+			<Rotation>0</Rotation>
+		</Ball>
+		<Ball Type="RandomInterfaceBall" TableYPercent="0.5">
+			<BallNumber>2</BallNumber>
+			<NumberOfBallsLow>1</NumberOfBallsLow>
+			<NumberOfBallsHigh>1</NumberOfBallsHigh>
+			<NumberOfBallsType>3</NumberOfBallsType>
+			<WaitTime>1250</WaitTime>
+			<TopMotorLow>61</TopMotorLow>
+			<TopMotorHigh>61</TopMotorHigh>
+			<TopMotorType>3</TopMotorType>
+			<BottomMotorLow>0</BottomMotorLow>
+			<BottomMotorHigh>0</BottomMotorHigh>
+			<BottomMotorType>3</BottomMotorType>
+			<HeightLow>79</HeightLow>
+			<HeightHigh>79</HeightHigh>
+			<HeightType>3</HeightType>
+			<OscillationLow>50</OscillationLow>
+			<OscillationHigh>50</OscillationHigh>
+			<OscillationType>3</OscillationType>
+			<RotationLow>-32</RotationLow>
+			<RotationHigh>32</RotationHigh>
+			<RotationType>2</RotationType>
+		</Ball>
+	</Drill>
+	<Drill Name="Random placement one topspin, one sidespin" Description="Random placement one topspin, one sidespin" Delay="0">
+		<Ball Type="RandomInterfaceBall" TableYPercent="0.4">
+			<BallNumber>1</BallNumber>
+			<NumberOfBallsLow>1</NumberOfBallsLow>
+			<NumberOfBallsHigh>1</NumberOfBallsHigh>
+			<NumberOfBallsType>3</NumberOfBallsType>
+			<WaitTime>1250</WaitTime>
+			<TopMotorLow>61</TopMotorLow>
+			<TopMotorHigh>61</TopMotorHigh>
+			<TopMotorType>3</TopMotorType>
+			<BottomMotorLow>0</BottomMotorLow>
+			<BottomMotorHigh>0</BottomMotorHigh>
+			<BottomMotorType>3</BottomMotorType>
+			<HeightLow>79</HeightLow>
+			<HeightHigh>79</HeightHigh>
+			<HeightType>3</HeightType>
+			<OscillationLow>25</OscillationLow>
+			<OscillationHigh>75</OscillationHigh>
+			<OscillationType>1</OscillationType>
+			<RotationLow>0</RotationLow>
+			<RotationHigh>0</RotationHigh>
+			<RotationType>3</RotationType>
+		</Ball>
+		<Ball Type="RandomInterfaceBall" TableYPercent="0.4">
+			<BallNumber>2</BallNumber>
+			<NumberOfBallsLow>1</NumberOfBallsLow>
+			<NumberOfBallsHigh>1</NumberOfBallsHigh>
+			<NumberOfBallsType>3</NumberOfBallsType>
+			<WaitTime>1250</WaitTime>
+			<TopMotorLow>61</TopMotorLow>
+			<TopMotorHigh>61</TopMotorHigh>
+			<TopMotorType>3</TopMotorType>
+			<BottomMotorLow>0</BottomMotorLow>
+			<BottomMotorHigh>0</BottomMotorHigh>
+			<BottomMotorType>3</BottomMotorType>
+			<HeightLow>79</HeightLow>
+			<HeightHigh>79</HeightHigh>
+			<HeightType>3</HeightType>
+			<OscillationLow>25</OscillationLow>
+			<OscillationHigh>75</OscillationHigh>
+			<OscillationType>1</OscillationType>
+			<RotationLow>-32</RotationLow>
+			<RotationHigh>32</RotationHigh>
+			<RotationType>2</RotationType>
+		</Ball>
+	</Drill>
+	<Drill Name="Weird sidespin rally" Description="Weird sidespin rally" Delay="0">
+		<Ball Type="RandomInterfaceBall" TableYPercent="0.3">
+			<BallNumber>1</BallNumber>
+			<NumberOfBallsLow>1</NumberOfBallsLow>
+			<NumberOfBallsHigh>1</NumberOfBallsHigh>
+			<NumberOfBallsType>3</NumberOfBallsType>
+			<WaitTime>1770</WaitTime>
+			<TopMotorLow>-85</TopMotorLow>
+			<TopMotorHigh>-85</TopMotorHigh>
+			<TopMotorType>3</TopMotorType>
+			<BottomMotorLow>46</BottomMotorLow>
+			<BottomMotorHigh>46</BottomMotorHigh>
+			<BottomMotorType>3</BottomMotorType>
+			<HeightLow>90</HeightLow>
+			<HeightHigh>90</HeightHigh>
+			<HeightType>3</HeightType>
+			<OscillationLow>22</OscillationLow>
+			<OscillationHigh>78</OscillationHigh>
+			<OscillationType>1</OscillationType>
+			<RotationLow>-90</RotationLow>
+			<RotationHigh>90</RotationHigh>
+			<RotationType>1</RotationType>
+		</Ball>
+	</Drill>
+  <Drill Name="Spinny Long Serves"
+       Description="This drill will give you very spinny serves to either corner! Look at the lights to tell the direction and amount of spin. The more lights that are on, the stronger the spin."
+       Delay="0">
+    <Ball Type="RandomInterfaceBall" TableYPercent="0.5">
+      <BallNumber>1</BallNumber>
+      <NumberOfBallsLow>1</NumberOfBallsLow>
+      <NumberOfBallsHigh>1</NumberOfBallsHigh>
+      <NumberOfBallsType>3</NumberOfBallsType>
+      <WaitTime>1770</WaitTime>
+      <TopMotorLow>-35</TopMotorLow>
+      <TopMotorHigh>-35</TopMotorHigh>
+      <TopMotorType>3</TopMotorType>
+      <BottomMotorLow>55</BottomMotorLow>
+      <BottomMotorHigh>55</BottomMotorHigh>
+      <BottomMotorType>3</BottomMotorType>
+      <HeightLow>32</HeightLow>
+      <HeightHigh>32</HeightHigh>
+      <HeightType>3</HeightType>
+      <OscillationLow>20</OscillationLow>
+      <OscillationHigh>78</OscillationHigh>
+      <OscillationType>2</OscillationType>
+      <RotationLow>-75</RotationLow>
+      <RotationHigh>75</RotationHigh>
+      <RotationType>1</RotationType>
+    </Ball>
+  </Drill>
+</Training>
+<?xml version="1.0" encoding="utf-8"?>
+<Training Name="Intermediate" Description="Drills for the intermediate table tennis player" IsAdjustable="false">
+	<Drill Name="Intermediate Forehand Warmup"
+	       Description="Contact the top of the ball and swing forward toward the top of the net." Delay="0"
+	       YouTubeVideoID="_MQAiXG2CTI">
+		<Ball Type="RandomInterfaceBall" TableYPercent="0.5">
+			<BallNumber>1</BallNumber>
+			<NumberOfBallsLow>1</NumberOfBallsLow>
+			<NumberOfBallsHigh>1</NumberOfBallsHigh>
+			<NumberOfBallsType>3</NumberOfBallsType>
+			<WaitTime>950</WaitTime>
+      <TopMotorLow>70</TopMotorLow>
+			<TopMotorHigh>70</TopMotorHigh>
+			<TopMotorType>3</TopMotorType>
+			<BottomMotorLow>0</BottomMotorLow>
+			<BottomMotorHigh>0</BottomMotorHigh>
+			<BottomMotorType>3</BottomMotorType>
+			<HeightLow>78</HeightLow>
+			<HeightHigh>78</HeightHigh>
+			<HeightType>3</HeightType>
+			<OscillationLow>65</OscillationLow>
+			<OscillationHigh>75</OscillationHigh>
+			<OscillationType>1</OscillationType>
+			<RotationLow>0</RotationLow>
+			<RotationHigh>0</RotationHigh>
+			<RotationType>3</RotationType>
+		</Ball>
+	</Drill>
+	<Drill Name="Intermediate Backhand Warmup"
+	       Description="Use a quick, short stroke and get ready for a series of quick balls to your backhand." Delay="0"
+	       YouTubeVideoID="zerfXPAX_w4">
+		<Ball Type="RandomInterfaceBall" TableYPercent="0.5">
+			<BallNumber>1</BallNumber>
+			<NumberOfBallsLow>1</NumberOfBallsLow>
+			<NumberOfBallsHigh>1</NumberOfBallsHigh>
+			<NumberOfBallsType>3</NumberOfBallsType>
+			<WaitTime>930</WaitTime>
+			<TopMotorLow>70</TopMotorLow>
+			<TopMotorHigh>70</TopMotorHigh>
+			<TopMotorType>3</TopMotorType>
+			<BottomMotorLow>0</BottomMotorLow>
+			<BottomMotorHigh>0</BottomMotorHigh>
+			<BottomMotorType>3</BottomMotorType>
+			<HeightLow>78</HeightLow>
+			<HeightHigh>78</HeightHigh>
+			<HeightType>3</HeightType>
+			<OscillationLow>12</OscillationLow>
+			<OscillationHigh>30</OscillationHigh>
+			<OscillationType>1</OscillationType>
+			<RotationLow>0</RotationLow>
+			<RotationHigh>0</RotationHigh>
+			<RotationType>3</RotationType>
+		</Ball>
+	</Drill>
+	<Drill Name="Two Backhands, Two Forehands"
+	       Description="Practice varying your spin a bit. Hit the first ball at medium speed, then the next a bit faster. Alternate speeds between each hit 
+ medium backhand, hard backhand, medium forehand, hard forehand."
+	       Delay="0"
+	       YouTubeVideoID="3ynMpn3TG78">
+		<Ball Type="AdvancedInterfaceBall" TableYPercent="0.55">
+			<BallNumber>1</BallNumber>
+			<NumberOfBalls>2</NumberOfBalls>
+			<WaitTime>980</WaitTime>
+			<TopMotorSpeed>65</TopMotorSpeed>
+			<BottomMotorSpeed>0</BottomMotorSpeed>
+			<Height>78</Height>
+			<Oscillation>25</Oscillation>
+			<Rotation>0</Rotation>
+		</Ball>
+		<Ball Type="AdvancedInterfaceBall" TableYPercent="0.55">
+			<BallNumber>2</BallNumber>
+			<NumberOfBalls>2</NumberOfBalls>
+			<WaitTime>980</WaitTime>
+			<TopMotorSpeed>65</TopMotorSpeed>
+			<BottomMotorSpeed>0</BottomMotorSpeed>
+			<Height>78</Height>
+			<Oscillation>75</Oscillation>
+			<Rotation>0</Rotation>
+		</Ball>
+	</Drill>
+	<Drill Name="Forehand, Middle"
+	       Description="What a workout! Continuously move for every ball, playing one forehand from the forehand side then one forehand from the middle!"
+	       Delay="0"
+	       YouTubeVideoID="obSDAvtq-hE">
+		<Ball Type="AdvancedInterfaceBall" TableYPercent="0.4">
+			<BallNumber>1</BallNumber>
+			<NumberOfBalls>1</NumberOfBalls>
+			<WaitTime>980</WaitTime>
+			<TopMotorSpeed>65</TopMotorSpeed>
+			<BottomMotorSpeed>0</BottomMotorSpeed>
+			<Height>80</Height>
+			<Oscillation>75</Oscillation>
+			<Rotation>0</Rotation>
+		</Ball>
+		<Ball Type="AdvancedInterfaceBall" TableYPercent="0.4">
+			<BallNumber>2</BallNumber>
+			<NumberOfBalls>1</NumberOfBalls>
+			<WaitTime>980</WaitTime>
+			<TopMotorSpeed>65</TopMotorSpeed>
+			<BottomMotorSpeed>0</BottomMotorSpeed>
+			<Height>80</Height>
+			<Oscillation>50</Oscillation>
+			<Rotation>0</Rotation>
+		</Ball>
+	</Drill>
+	<Drill Name="Backhand, Middle"
+	       Description="Backhand footwork is one of the most neglected aspects of the game! Use your backhand from the backhand side then quickly move and use your backhand from the middle of the table."
+	       Delay="0"
+	       YouTubeVideoID="0VJgvhM3rtc">
+		<Ball Type="AdvancedInterfaceBall" TableYPercent="0.45">
+			<BallNumber>1</BallNumber>
+			<NumberOfBalls>1</NumberOfBalls>
+			<WaitTime>980</WaitTime>
+			<TopMotorSpeed>65</TopMotorSpeed>
+			<BottomMotorSpeed>0</BottomMotorSpeed>
+			<Height>80</Height>
+			<Oscillation>20</Oscillation>
+			<Rotation>0</Rotation>
+		</Ball>
+		<Ball Type="AdvancedInterfaceBall" TableYPercent="0.45">
+			<BallNumber>2</BallNumber>
+			<NumberOfBalls>1</NumberOfBalls>
+			<WaitTime>980</WaitTime>
+			<TopMotorSpeed>65</TopMotorSpeed>
+			<BottomMotorSpeed>0</BottomMotorSpeed>
+			<Height>80</Height>
+			<Oscillation>50</Oscillation>
+			<Rotation>0</Rotation>
+		</Ball>
+	</Drill>
+	<Drill Name="Backhand, Middle, Backhand, Forehand"
+	       Description="This systematic drill alternates between backhand and forehand with a unique pattern 
+ backhand, middle, backhand, forehand!"
+	       Delay="0"
+	       YouTubeVideoID="4JZp8BQBL1U">
+		<Ball Type="AdvancedInterfaceBall" TableYPercent="0.45">
+			<BallNumber>1</BallNumber>
+			<NumberOfBalls>1</NumberOfBalls>
+			<WaitTime>980</WaitTime>
+			<TopMotorSpeed>65</TopMotorSpeed>
+			<BottomMotorSpeed>0</BottomMotorSpeed>
+			<Height>80</Height>
+			<Oscillation>20</Oscillation>
+			<Rotation>0</Rotation>
+		</Ball>
+		<Ball Type="AdvancedInterfaceBall" TableYPercent="0.55">
+			<BallNumber>2</BallNumber>
+			<NumberOfBalls>1</NumberOfBalls>
+			<WaitTime>980</WaitTime>
+			<TopMotorSpeed>65</TopMotorSpeed>
+			<BottomMotorSpeed>0</BottomMotorSpeed>
+			<Height>80</Height>
+			<Oscillation>50</Oscillation>
+			<Rotation>0</Rotation>
+		</Ball>
+		<Ball Type="AdvancedInterfaceBall" TableYPercent="0.45">
+			<BallNumber>3</BallNumber>
+			<NumberOfBalls>1</NumberOfBalls>
+			<WaitTime>980</WaitTime>
+			<TopMotorSpeed>65</TopMotorSpeed>
+			<BottomMotorSpeed>0</BottomMotorSpeed>
+			<Height>80</Height>
+			<Oscillation>20</Oscillation>
+			<Rotation>0</Rotation>
+		</Ball>
+		<Ball Type="AdvancedInterfaceBall" TableYPercent="0.55">
+			<BallNumber>4</BallNumber>
+			<NumberOfBalls>1</NumberOfBalls>
+			<WaitTime>980</WaitTime>
+			<TopMotorSpeed>65</TopMotorSpeed>
+			<BottomMotorSpeed>0</BottomMotorSpeed>
+			<Height>80</Height>
+			<Oscillation>75</Oscillation>
+			<Rotation>0</Rotation>
+		</Ball>
+	</Drill>
+	<Drill Name="One or Two Backhands, One or Two Forehands"
+	       Description="I love this semi-systematic drill. Watch the robot
+s head to see where the ball is going, then focus on the ball as it approaches."
+	       Delay="0"
+	       YouTubeVideoID="pX6xD_7Fe6U">
+		<Ball Type="RandomInterfaceBall" TableYPercent="0.45">
+			<BallNumber>1</BallNumber>
+			<NumberOfBallsLow>1</NumberOfBallsLow>
+			<NumberOfBallsHigh>2</NumberOfBallsHigh>
+			<NumberOfBallsType>1</NumberOfBallsType>
+			<WaitTime>980</WaitTime>
+			<TopMotorLow>65</TopMotorLow>
+			<TopMotorHigh>65</TopMotorHigh>
+			<TopMotorType>3</TopMotorType>
+			<BottomMotorLow>0</BottomMotorLow>
+			<BottomMotorHigh>0</BottomMotorHigh>
+			<BottomMotorType>3</BottomMotorType>
+			<HeightLow>80</HeightLow>
+			<HeightHigh>80</HeightHigh>
+			<HeightType>3</HeightType>
+			<OscillationLow>20</OscillationLow>
+			<OscillationHigh>20</OscillationHigh>
+			<OscillationType>3</OscillationType>
+			<RotationLow>0</RotationLow>
+			<RotationHigh>0</RotationHigh>
+			<RotationType>3</RotationType>
+		</Ball>
+		<Ball Type="RandomInterfaceBall" TableYPercent="0.45">
+			<BallNumber>2</BallNumber>
+			<NumberOfBallsLow>1</NumberOfBallsLow>
+			<NumberOfBallsHigh>2</NumberOfBallsHigh>
+			<NumberOfBallsType>1</NumberOfBallsType>
+			<WaitTime>980</WaitTime>
+			<TopMotorLow>65</TopMotorLow>
+			<TopMotorHigh>65</TopMotorHigh>
+			<TopMotorType>3</TopMotorType>
+			<BottomMotorLow>0</BottomMotorLow>
+			<BottomMotorHigh>0</BottomMotorHigh>
+			<BottomMotorType>3</BottomMotorType>
+			<HeightLow>80</HeightLow>
+			<HeightHigh>80</HeightHigh>
+			<HeightType>3</HeightType>
+			<OscillationLow>50</OscillationLow>
+			<OscillationHigh>50</OscillationHigh>
+			<OscillationType>3</OscillationType>
+			<RotationLow>0</RotationLow>
+			<RotationHigh>0</RotationHigh>
+			<RotationType>3</RotationType>
+		</Ball>
+	</Drill>
+	<Drill Name="Middle, Either Corner"
+	       Description="This is one of the world
+s most popular drills! Play a forehand from the middle, then be ready to adjust for the surprise to either corner. The pattern continues, one middle then one to either corner. See if you can last for three full minutes!"
+	       Delay="0"
+	       YouTubeVideoID="mOS2DB_M2bc">
+		<Ball Type="AdvancedInterfaceBall" TableYPercent="0.50">
+			<BallNumber>1</BallNumber>
+			<NumberOfBalls>1</NumberOfBalls>
+			<WaitTime>980</WaitTime>
+			<TopMotorSpeed>65</TopMotorSpeed>
+			<BottomMotorSpeed>0</BottomMotorSpeed>
+			<Height>80</Height>
+			<Oscillation>50</Oscillation>
+			<Rotation>0</Rotation>
+		</Ball>
+		<Ball Type="RandomInterfaceBall" TableYPercent="0.40">
+			<BallNumber>2</BallNumber>
+			<NumberOfBallsLow>1</NumberOfBallsLow>
+			<NumberOfBallsHigh>1</NumberOfBallsHigh>
+			<NumberOfBallsType>3</NumberOfBallsType>
+			<WaitTime>980</WaitTime>
+			<TopMotorLow>65</TopMotorLow>
+			<TopMotorHigh>65</TopMotorHigh>
+			<TopMotorType>3</TopMotorType>
+			<BottomMotorLow>0</BottomMotorLow>
+			<BottomMotorHigh>0</BottomMotorHigh>
+			<BottomMotorType>3</BottomMotorType>
+			<HeightLow>80</HeightLow>
+			<HeightHigh>80</HeightHigh>
+			<HeightType>3</HeightType>
+			<OscillationLow>20</OscillationLow>
+			<OscillationHigh>78</OscillationHigh>
+			<OscillationType>2</OscillationType>
+			<RotationLow>0</RotationLow>
+			<RotationHigh>0</RotationHigh>
+			<RotationType>3</RotationType>
+		</Ball>
+	</Drill>
+	<Drill Name="Wide Faulkenberg"
+	       Description="This drill gives you two balls to the backhand then one ball to the wide forehand. Play the first ball with your backhand, play the second ball with your forehand from the backhand side, play the final ball with your forehand from the forehand side."
+	       Delay="0"
+	       YouTubeVideoID="WIpxLr7uL2Q">
+		<Ball Type="AdvancedInterfaceBall" TableYPercent="0.5">
+			<BallNumber>1</BallNumber>
+			<NumberOfBalls>1</NumberOfBalls>
+			<WaitTime>1400</WaitTime>
+			<TopMotorSpeed>55</TopMotorSpeed>
+			<BottomMotorSpeed>2</BottomMotorSpeed>
+			<Height>78</Height>
+			<Oscillation>22</Oscillation>
+			<Rotation>0</Rotation>
+		</Ball>
+		<Ball Type="AdvancedInterfaceBall" TableYPercent="0.5">
+			<BallNumber>1</BallNumber>
+			<NumberOfBalls>1</NumberOfBalls>
+			<WaitTime>1000</WaitTime>
+			<TopMotorSpeed>55</TopMotorSpeed>
+			<BottomMotorSpeed>2</BottomMotorSpeed>
+			<Height>78</Height>
+			<Oscillation>25</Oscillation>
+			<Rotation>0</Rotation>
+		</Ball>
+		<Ball Type="AdvancedInterfaceBall" TableYPercent="0.5">
+			<BallNumber>2</BallNumber>
+			<NumberOfBalls>1</NumberOfBalls>
+			<WaitTime>1050</WaitTime>
+			<TopMotorSpeed>55</TopMotorSpeed>
+			<BottomMotorSpeed>2</BottomMotorSpeed>
+			<Height>78</Height>
+			<Oscillation>75</Oscillation>
+			<Rotation>0</Rotation>
+		</Ball>
+	</Drill>
+	<Drill Name="Forehand Random"
+	       Description="You will be getting speed balls anywhere in the forehand side of the table. Take mini-steps and continue to move for every ball!"
+	       Delay="0"
+	       YouTubeVideoID="poSH016NoUc">
+		<Ball Type="RandomInterfaceBall" TableYPercent="0.55">
+			<BallNumber>1</BallNumber>
+			<NumberOfBallsLow>1</NumberOfBallsLow>
+			<NumberOfBallsHigh>1</NumberOfBallsHigh>
+			<NumberOfBallsType>3</NumberOfBallsType>
+			<WaitTime>950</WaitTime>
+			<TopMotorLow>70</TopMotorLow>
+			<TopMotorHigh>70</TopMotorHigh>
+			<TopMotorType>3</TopMotorType>
+			<BottomMotorLow>0</BottomMotorLow>
+			<BottomMotorHigh>0</BottomMotorHigh>
+			<BottomMotorType>3</BottomMotorType>
+			<HeightLow>78</HeightLow>
+			<HeightHigh>78</HeightHigh>
+			<HeightType>3</HeightType>
+			<OscillationLow>50</OscillationLow>
+			<OscillationHigh>85</OscillationHigh>
+			<OscillationType>1</OscillationType>
+			<RotationLow>0</RotationLow>
+			<RotationHigh>0</RotationHigh>
+			<RotationType>3</RotationType>
+		</Ball>
+	</Drill>
+	<Drill Name="Backhand Random"
+	       Description="Your choice, you can use all backhand or you can choose to use both backhand and forehand for this drill. As you improve, you can also vary the speed, spin, and placement of your shots!"
+	       Delay="0"
+	       YouTubeVideoID="7wa3FvOacmU">
+		<Ball Type="RandomInterfaceBall" TableYPercent="0.45">
+			<BallNumber>1</BallNumber>
+			<NumberOfBallsLow>1</NumberOfBallsLow>
+			<NumberOfBallsHigh>1</NumberOfBallsHigh>
+			<NumberOfBallsType>3</NumberOfBallsType>
+			<WaitTime>950</WaitTime>
+			<TopMotorLow>70</TopMotorLow>
+			<TopMotorHigh>70</TopMotorHigh>
+			<TopMotorType>3</TopMotorType>
+			<BottomMotorLow>0</BottomMotorLow>
+			<BottomMotorHigh>0</BottomMotorHigh>
+			<BottomMotorType>3</BottomMotorType>
+			<HeightLow>78</HeightLow>
+			<HeightHigh>78</HeightHigh>
+			<HeightType>3</HeightType>
+			<OscillationLow>15</OscillationLow>
+			<OscillationHigh>45</OscillationHigh>
+			<OscillationType>1</OscillationType>
+			<RotationLow>0</RotationLow>
+			<RotationHigh>0</RotationHigh>
+			<RotationType>3</RotationType>
+		</Ball>
+	</Drill>
+	<Drill Name="Random"
+	       Description="The fast topspin balls will now go anywhere on the table. Be ready to move, especially for the tricky middle ball. Keep your feet active, stay on your toes, and be ready to adjust!"
+	       Delay="0"
+	       YouTubeVideoID="VszRMTO930g">
+		<Ball Type="RandomInterfaceBall" TableYPercent="0.4">
+			<BallNumber>1</BallNumber>
+			<NumberOfBallsLow>1</NumberOfBallsLow>
+			<NumberOfBallsHigh>1</NumberOfBallsHigh>
+			<NumberOfBallsType>3</NumberOfBallsType>
+			<WaitTime>930</WaitTime>
+			<TopMotorLow>70</TopMotorLow>
+			<TopMotorHigh>70</TopMotorHigh>
+			<TopMotorType>3</TopMotorType>
+			<BottomMotorLow>0</BottomMotorLow>
+			<BottomMotorHigh>0</BottomMotorHigh>
+			<BottomMotorType>3</BottomMotorType>
+			<HeightLow>80</HeightLow>
+			<HeightHigh>80</HeightHigh>
+			<HeightType>3</HeightType>
+			<OscillationLow>15</OscillationLow>
+			<OscillationHigh>80</OscillationHigh>
+			<OscillationType>1</OscillationType>
+			<RotationLow>0</RotationLow>
+			<RotationHigh>0</RotationHigh>
+			<RotationType>3</RotationType>
+		</Ball>
+	</Drill>
+	<Drill Name="Short Forehand, Deep Backhand"
+	       Description="After getting a short backspin ball to the forehand, you will then get two quick topspin balls to the backhand. Push or flip the short one, then loop the two deep ones."
+	       Delay="2.4"
+	       YouTubeVideoID="VnncuuIcCR0">
+		<Ball Type="AdvancedInterfaceBall" TableYPercent="0.30">
+			<BallNumber>1</BallNumber>
+			<NumberOfBalls>1</NumberOfBalls>
+			<WaitTime>1400</WaitTime>
+			<TopMotorSpeed>0</TopMotorSpeed>
+			<BottomMotorSpeed>40</BottomMotorSpeed>
+			<Height>28</Height>
+			<Oscillation>78</Oscillation>
+			<Rotation>0</Rotation>
+		</Ball>
+		<Ball Type="AdvancedInterfaceBall" TableYPercent="0.5">
+			<BallNumber>2</BallNumber>
+			<NumberOfBalls>2</NumberOfBalls>
+			<WaitTime>1200</WaitTime>
+			<TopMotorSpeed>68</TopMotorSpeed>
+			<BottomMotorSpeed>0</BottomMotorSpeed>
+			<Height>80</Height>
+			<Oscillation>20</Oscillation>
+			<Rotation>0</Rotation>
+		</Ball>
+	</Drill>
+	<Drill Name="Serve Then Footwork"
+	       Description="After getting a short backspin ball to the backhand, you will then get three deep topspin balls 
+ one to the forehand, one to the middle, and one to the backhand. After these four balls, you will get a short rest before the next sequence."
+	       Delay="2.4"
+	       YouTubeVideoID="H8E5BqKwPWc">
+		<Ball Type="AdvancedInterfaceBall" TableYPercent="0.45">
+			<BallNumber>1</BallNumber>
+			<NumberOfBalls>1</NumberOfBalls>
+			<WaitTime>1450</WaitTime>
+			<TopMotorSpeed>0</TopMotorSpeed>
+			<BottomMotorSpeed>42</BottomMotorSpeed>
+			<Height>28</Height>
+			<Oscillation>20</Oscillation>
+			<Rotation>0</Rotation>
+		</Ball>
+		<Ball Type="AdvancedInterfaceBall" TableYPercent="0.5">
+			<BallNumber>2</BallNumber>
+			<NumberOfBalls>1</NumberOfBalls>
+			<WaitTime>1310</WaitTime>
+			<TopMotorSpeed>63</TopMotorSpeed>
+			<BottomMotorSpeed>0</BottomMotorSpeed>
+			<Height>80</Height>
+			<Oscillation>75</Oscillation>
+			<Rotation>0</Rotation>
+		</Ball>
+		<Ball Type="AdvancedInterfaceBall" TableYPercent="0.5">
+			<BallNumber>3</BallNumber>
+			<NumberOfBalls>1</NumberOfBalls>
+			<WaitTime>1150</WaitTime>
+			<TopMotorSpeed>63</TopMotorSpeed>
+			<BottomMotorSpeed>0</BottomMotorSpeed>
+			<Height>80</Height>
+			<Oscillation>50</Oscillation>
+			<Rotation>0</Rotation>
+		</Ball>
+		<Ball Type="AdvancedInterfaceBall" TableYPercent="0.5">
+			<BallNumber>4</BallNumber>
+			<NumberOfBalls>1</NumberOfBalls>
+			<WaitTime>1150</WaitTime>
+			<TopMotorSpeed>63</TopMotorSpeed>
+			<BottomMotorSpeed>0</BottomMotorSpeed>
+			<Height>80</Height>
+			<Oscillation>20</Oscillation>
+			<Rotation>0</Rotation>
+		</Ball>
+	</Drill>
+	<Drill Name="Three Ball Drill"
+	       Description="You will get a short backspin serve to the middle, followed by a heavy backspin ball to either corner, followed by a spinny topspin ball back to the middle!"
+	       Delay="2.4"
+	       YouTubeVideoID="PkVzlYtZ2bc">
+		<Ball Type="AdvancedInterfaceBall" TableYPercent="0.5">
+			<BallNumber>1</BallNumber>
+			<NumberOfBalls>1</NumberOfBalls>
+			<WaitTime>1500</WaitTime>
+			<TopMotorSpeed>0</TopMotorSpeed>
+			<BottomMotorSpeed>42</BottomMotorSpeed>
+			<Height>28</Height>
+			<Oscillation>50</Oscillation>
+			<Rotation>0</Rotation>
+		</Ball>
+		<Ball Type="RandomInterfaceBall" TableYPercent="0.3">
+			<BallNumber>2</BallNumber>
+			<NumberOfBallsLow>1</NumberOfBallsLow>
+			<NumberOfBallsHigh>1</NumberOfBallsHigh>
+			<NumberOfBallsType>3</NumberOfBallsType>
+			<WaitTime>1800</WaitTime>
+			<TopMotorLow>-2</TopMotorLow>
+			<TopMotorHigh>-2</TopMotorHigh>
+			<TopMotorType>3</TopMotorType>
+			<BottomMotorLow>44</BottomMotorLow>
+			<BottomMotorHigh>44</BottomMotorHigh>
+			<BottomMotorType>3</BottomMotorType>
+			<HeightLow>80</HeightLow>
+			<HeightHigh>80</HeightHigh>
+			<HeightType>3</HeightType>
+			<OscillationLow>22</OscillationLow>
+			<OscillationHigh>78</OscillationHigh>
+			<OscillationType>2</OscillationType>
+			<RotationLow>0</RotationLow>
+			<RotationHigh>0</RotationHigh>
+			<RotationType>3</RotationType>
+		</Ball>
+		<Ball Type="AdvancedInterfaceBall" TableYPercent="0.5">
+			<BallNumber>3</BallNumber>
+			<NumberOfBalls>1</NumberOfBalls>
+			<WaitTime>1150</WaitTime>
+			<TopMotorSpeed>70</TopMotorSpeed>
+			<BottomMotorSpeed>0</BottomMotorSpeed>
+			<Height>78</Height>
+			<Oscillation>50</Oscillation>
+			<Rotation>0</Rotation>
+		</Ball>
+	</Drill>
+	<Drill Name="Three Ball Random"
+	       Description="This is the same as the previous drill, but now all three balls are random! Short backspin then long backspin then long topspin!"
+	       Delay="2.4"
+	       YouTubeVideoID="vMLSvnNkRJs">
+		<Ball Type="RandomInterfaceBall" TableYPercent="0.5">
+			<BallNumber>1</BallNumber>
+			<NumberOfBallsLow>1</NumberOfBallsLow>
+			<NumberOfBallsHigh>1</NumberOfBallsHigh>
+			<NumberOfBallsType>3</NumberOfBallsType>
+			<WaitTime>1500</WaitTime>
+			<TopMotorLow>0</TopMotorLow>
+			<TopMotorHigh>0</TopMotorHigh>
+			<TopMotorType>3</TopMotorType>
+			<BottomMotorLow>42</BottomMotorLow>
+			<BottomMotorHigh>42</BottomMotorHigh>
+			<BottomMotorType>3</BottomMotorType>
+			<HeightLow>30</HeightLow>
+			<HeightHigh>30</HeightHigh>
+			<HeightType>3</HeightType>
+			<OscillationLow>25</OscillationLow>
+			<OscillationHigh>75</OscillationHigh>
+			<OscillationType>1</OscillationType>
+			<RotationLow>0</RotationLow>
+			<RotationHigh>0</RotationHigh>
+			<RotationType>3</RotationType>
+		</Ball>
+		<Ball Type="RandomInterfaceBall" TableYPercent="0.4">
+			<BallNumber>2</BallNumber>
+			<NumberOfBallsLow>1</NumberOfBallsLow>
+			<NumberOfBallsHigh>1</NumberOfBallsHigh>
+			<NumberOfBallsType>3</NumberOfBallsType>
+			<WaitTime>1800</WaitTime>
+			<TopMotorLow>-2</TopMotorLow>
+			<TopMotorHigh>-2</TopMotorHigh>
+			<TopMotorType>3</TopMotorType>
+			<BottomMotorLow>44</BottomMotorLow>
+			<BottomMotorHigh>44</BottomMotorHigh>
+			<BottomMotorType>3</BottomMotorType>
+			<HeightLow>80</HeightLow>
+			<HeightHigh>80</HeightHigh>
+			<HeightType>3</HeightType>
+			<OscillationLow>25</OscillationLow>
+			<OscillationHigh>75</OscillationHigh>
+			<OscillationType>1</OscillationType>
+			<RotationLow>0</RotationLow>
+			<RotationHigh>0</RotationHigh>
+			<RotationType>3</RotationType>
+		</Ball>
+		<Ball Type="RandomInterfaceBall" TableYPercent="0.5">
+			<BallNumber>3</BallNumber>
+			<NumberOfBallsLow>1</NumberOfBallsLow>
+			<NumberOfBallsHigh>1</NumberOfBallsHigh>
+			<NumberOfBallsType>3</NumberOfBallsType>
+			<WaitTime>1150</WaitTime>
+			<TopMotorLow>70</TopMotorLow>
+			<TopMotorHigh>70</TopMotorHigh>
+			<TopMotorType>3</TopMotorType>
+			<BottomMotorLow>0</BottomMotorLow>
+			<BottomMotorHigh>0</BottomMotorHigh>
+			<BottomMotorType>3</BottomMotorType>
+			<HeightLow>78</HeightLow>
+			<HeightHigh>78</HeightHigh>
+			<HeightType>3</HeightType>
+			<OscillationLow>25</OscillationLow>
+			<OscillationHigh>75</OscillationHigh>
+			<OscillationType>1</OscillationType>
+			<RotationLow>0</RotationLow>
+			<RotationHigh>0</RotationHigh>
+			<RotationType>3</RotationType>
+		</Ball>
+	</Drill>
+	<Drill Name="Twelve Ball Rally"
+	       Description="It all starts with a short backspin serve followed by a long backspin push, then the marathon begins 
+ ten fast topspins anywhere. It
+s like playing a blocker who never misses!"
+	       Delay="2.4"
+	       YouTubeVideoID="eZRSfXGaU5g">
+		<Ball Type="RandomInterfaceBall" TableYPercent="0.45">
+			<BallNumber>1</BallNumber>
+			<NumberOfBallsLow>1</NumberOfBallsLow>
+			<NumberOfBallsHigh>1</NumberOfBallsHigh>
+			<NumberOfBallsType>3</NumberOfBallsType>
+			<WaitTime>1600</WaitTime>
+			<TopMotorLow>0</TopMotorLow>
+			<TopMotorHigh>0</TopMotorHigh>
+			<TopMotorType>3</TopMotorType>
+			<BottomMotorLow>40</BottomMotorLow>
+			<BottomMotorHigh>40</BottomMotorHigh>
+			<BottomMotorType>3</BottomMotorType>
+			<HeightLow>28</HeightLow>
+			<HeightHigh>28</HeightHigh>
+			<HeightType>3</HeightType>
+			<OscillationLow>25</OscillationLow>
+			<OscillationHigh>75</OscillationHigh>
+			<OscillationType>1</OscillationType>
+			<RotationLow>0</RotationLow>
+			<RotationHigh>0</RotationHigh>
+			<RotationType>3</RotationType>
+		</Ball>
+		<Ball Type="RandomInterfaceBall" TableYPercent="0.5">
+			<BallNumber>2</BallNumber>
+			<NumberOfBallsLow>1</NumberOfBallsLow>
+			<NumberOfBallsHigh>1</NumberOfBallsHigh>
+			<NumberOfBallsType>3</NumberOfBallsType>
+			<WaitTime>1400</WaitTime>
+			<TopMotorLow>5</TopMotorLow>
+			<TopMotorHigh>5</TopMotorHigh>
+			<TopMotorType>3</TopMotorType>
+			<BottomMotorLow>45</BottomMotorLow>
+			<BottomMotorHigh>45</BottomMotorHigh>
+			<BottomMotorType>3</BottomMotorType>
+			<HeightLow>68</HeightLow>
+			<HeightHigh>68</HeightHigh>
+			<HeightType>3</HeightType>
+			<OscillationLow>25</OscillationLow>
+			<OscillationHigh>75</OscillationHigh>
+			<OscillationType>1</OscillationType>
+			<RotationLow>0</RotationLow>
+			<RotationHigh>0</RotationHigh>
+			<RotationType>3</RotationType>
+		</Ball>
+		<Ball Type="RandomInterfaceBall" TableYPercent="0.45">
+			<BallNumber>3</BallNumber>
+			<NumberOfBallsLow>10</NumberOfBallsLow>
+			<NumberOfBallsHigh>10</NumberOfBallsHigh>
+			<NumberOfBallsType>3</NumberOfBallsType>
+			<WaitTime>1000</WaitTime>
+			<TopMotorLow>68</TopMotorLow>
+			<TopMotorHigh>68</TopMotorHigh>
+			<TopMotorType>3</TopMotorType>
+			<BottomMotorLow>0</BottomMotorLow>
+			<BottomMotorHigh>0</BottomMotorHigh>
+			<BottomMotorType>3</BottomMotorType>
+			<HeightLow>78</HeightLow>
+			<HeightHigh>78</HeightHigh>
+			<HeightType>3</HeightType>
+			<OscillationLow>25</OscillationLow>
+			<OscillationHigh>75</OscillationHigh>
+			<OscillationType>1</OscillationType>
+			<RotationLow>0</RotationLow>
+			<RotationHigh>0</RotationHigh>
+			<RotationType>3</RotationType>
+		</Ball>
+	</Drill>
+	<Drill Name="No Spin, Topspin, High Ball"
+	       Description="This is what the 3050 XL is all about
+  Game-like variations! You will get a sequence of a no-spin balls, then a topspin ball, then a high ball."
+	       Delay="3"
+	       YouTubeVideoID="9tpwPcMjq2w">
+		<Ball Type="RandomInterfaceBall" TableYPercent="0.5">
+			<BallNumber>1</BallNumber>
+			<NumberOfBallsLow>1</NumberOfBallsLow>
+			<NumberOfBallsHigh>1</NumberOfBallsHigh>
+			<NumberOfBallsType>3</NumberOfBallsType>
+			<WaitTime>1350</WaitTime>
+			<TopMotorLow>20</TopMotorLow>
+			<TopMotorHigh>20</TopMotorHigh>
+			<TopMotorType>3</TopMotorType>
+			<BottomMotorLow>20</BottomMotorLow>
+			<BottomMotorHigh>20</BottomMotorHigh>
+			<BottomMotorType>3</BottomMotorType>
+			<HeightLow>35</HeightLow>
+			<HeightHigh>35</HeightHigh>
+			<HeightType>3</HeightType>
+			<OscillationLow>25</OscillationLow>
+			<OscillationHigh>75</OscillationHigh>
+			<OscillationType>1</OscillationType>
+			<RotationLow>0</RotationLow>
+			<RotationHigh>0</RotationHigh>
+			<RotationType>3</RotationType>
+		</Ball>
+		<Ball Type="RandomInterfaceBall" TableYPercent="0.5">
+			<BallNumber>2</BallNumber>
+			<NumberOfBallsLow>1</NumberOfBallsLow>
+			<NumberOfBallsHigh>1</NumberOfBallsHigh>
+			<NumberOfBallsType>3</NumberOfBallsType>
+			<WaitTime>1150</WaitTime>
+			<TopMotorLow>79</TopMotorLow>
+			<TopMotorHigh>79</TopMotorHigh>
+			<TopMotorType>3</TopMotorType>
+			<BottomMotorLow>0</BottomMotorLow>
+			<BottomMotorHigh>0</BottomMotorHigh>
+			<BottomMotorType>3</BottomMotorType>
+			<HeightLow>78</HeightLow>
+			<HeightHigh>78</HeightHigh>
+			<HeightType>3</HeightType>
+			<OscillationLow>28</OscillationLow>
+			<OscillationHigh>72</OscillationHigh>
+			<OscillationType>1</OscillationType>
+			<RotationLow>0</RotationLow>
+			<RotationHigh>0</RotationHigh>
+			<RotationType>3</RotationType>
+		</Ball>
+		<Ball Type="RandomInterfaceBall" TableYPercent="0.6">
+			<BallNumber>3</BallNumber>
+			<NumberOfBallsLow>1</NumberOfBallsLow>
+			<NumberOfBallsHigh>1</NumberOfBallsHigh>
+			<NumberOfBallsType>3</NumberOfBallsType>
+			<WaitTime>950</WaitTime>
+			<TopMotorLow>58</TopMotorLow>
+			<TopMotorHigh>62</TopMotorHigh>
+			<TopMotorType>1</TopMotorType>
+			<BottomMotorLow>0</BottomMotorLow>
+			<BottomMotorHigh>0</BottomMotorHigh>
+			<BottomMotorType>3</BottomMotorType>
+			<HeightLow>100</HeightLow>
+			<HeightHigh>100</HeightHigh>
+			<HeightType>3</HeightType>
+			<OscillationLow>75</OscillationLow>
+			<OscillationHigh>75</OscillationHigh>
+			<OscillationType>1</OscillationType>
+			<RotationLow>0</RotationLow>
+			<RotationHigh>0</RotationHigh>
+			<RotationType>3</RotationType>
+		</Ball>
+	</Drill>
+	<Drill Name="Left Sidespin Then Rally"
+	       Description="After returning the left sidespin serve, be prepared for three or four or five fast topspin balls. Keep track of the score, every time you have a perfect rally, you get one point. Every time you miss a ball during the rally, the robot gets one point! Games to 11! I never said he was an easy opponent!"
+	       Delay="3"
+	       YouTubeVideoID="SK_NlK6d9lw">
+		<Ball Type="RandomInterfaceBall" TableYPercent="0.3">
+			<BallNumber>1</BallNumber>
+			<NumberOfBallsLow>1</NumberOfBallsLow>
+			<NumberOfBallsHigh>1</NumberOfBallsHigh>
+			<NumberOfBallsType>3</NumberOfBallsType>
+			<WaitTime>1500</WaitTime>
+			<TopMotorLow>-9</TopMotorLow>
+			<TopMotorHigh>-9</TopMotorHigh>
+			<TopMotorType>3</TopMotorType>
+			<BottomMotorLow>41</BottomMotorLow>
+			<BottomMotorHigh>41</BottomMotorHigh>
+			<BottomMotorType>3</BottomMotorType>
+			<HeightLow>34</HeightLow>
+			<HeightHigh>34</HeightHigh>
+			<HeightType>3</HeightType>
+			<OscillationLow>25</OscillationLow>
+			<OscillationHigh>75</OscillationHigh>
+			<OscillationType>1</OscillationType>
+			<RotationLow>68</RotationLow>
+			<RotationHigh>68</RotationHigh>
+			<RotationType>3</RotationType>
+		</Ball>
+		<Ball Type="RandomInterfaceBall" TableYPercent="0.5">
+			<BallNumber>2</BallNumber>
+			<NumberOfBallsLow>3</NumberOfBallsLow>
+			<NumberOfBallsHigh>5</NumberOfBallsHigh>
+			<NumberOfBallsType>1</NumberOfBallsType>
+			<WaitTime>1300</WaitTime>
+			<TopMotorLow>77</TopMotorLow>
+			<TopMotorHigh>77</TopMotorHigh>
+			<TopMotorType>3</TopMotorType>
+			<BottomMotorLow>0</BottomMotorLow>
+			<BottomMotorHigh>0</BottomMotorHigh>
+			<BottomMotorType>3</BottomMotorType>
+			<HeightLow>78</HeightLow>
+			<HeightHigh>78</HeightHigh>
+			<HeightType>3</HeightType>
+			<OscillationLow>28</OscillationLow>
+			<OscillationHigh>72</OscillationHigh>
+			<OscillationType>1</OscillationType>
+			<RotationLow>0</RotationLow>
+			<RotationHigh>0</RotationHigh>
+			<RotationType>3</RotationType>
+		</Ball>
+	</Drill>
+	<Drill Name="Serve Then Backhand Random"
+	       Description="After returning the right sidespin serve, you will then get a tough rally of ten balls randomly to your backhand!"
+	       Delay="3"
+	       YouTubeVideoID="nM2r1vmJUzk">
+		<Ball Type="RandomInterfaceBall" TableYPercent="0.2">
+			<BallNumber>1</BallNumber>
+			<NumberOfBallsLow>1</NumberOfBallsLow>
+			<NumberOfBallsHigh>1</NumberOfBallsHigh>
+			<NumberOfBallsType>3</NumberOfBallsType>
+			<WaitTime>1450</WaitTime>
+			<TopMotorLow>-9</TopMotorLow>
+			<TopMotorHigh>-9</TopMotorHigh>
+			<TopMotorType>3</TopMotorType>
+			<BottomMotorLow>41</BottomMotorLow>
+			<BottomMotorHigh>41</BottomMotorHigh>
+			<BottomMotorType>3</BottomMotorType>
+			<HeightLow>38</HeightLow>
+			<HeightHigh>38</HeightHigh>
+			<HeightType>3</HeightType>
+			<OscillationLow>25</OscillationLow>
+			<OscillationHigh>75</OscillationHigh>
+			<OscillationType>1</OscillationType>
+			<RotationLow>-72</RotationLow>
+			<RotationHigh>-72</RotationHigh>
+			<RotationType>3</RotationType>
+		</Ball>
+		<Ball Type="RandomInterfaceBall" TableYPercent="0.5">
+			<BallNumber>2</BallNumber>
+			<NumberOfBallsLow>10</NumberOfBallsLow>
+			<NumberOfBallsHigh>10</NumberOfBallsHigh>
+			<NumberOfBallsType>3</NumberOfBallsType>
+			<WaitTime>1040</WaitTime>
+			<TopMotorLow>80</TopMotorLow>
+			<TopMotorHigh>80</TopMotorHigh>
+			<TopMotorType>3</TopMotorType>
+			<BottomMotorLow>0</BottomMotorLow>
+			<BottomMotorHigh>0</BottomMotorHigh>
+			<BottomMotorType>3</BottomMotorType>
+			<HeightLow>78</HeightLow>
+			<HeightHigh>78</HeightHigh>
+			<HeightType>3</HeightType>
+			<OscillationLow>18</OscillationLow>
+			<OscillationHigh>50</OscillationHigh>
+			<OscillationType>1</OscillationType>
+			<RotationLow>0</RotationLow>
+			<RotationHigh>0</RotationHigh>
+			<RotationType>3</RotationType>
+		</Ball>
+	</Drill>
+	<Drill Name="Serve Then Speed"
+	       Description="Attack the topspin serve then block the next two speed balls. To control your block, relax your grip and keep your hand in-front of your body and cushion the ball with a pillow grip."
+	       Delay="2.9"
+	       YouTubeVideoID="R136_2wvBSE">
+		<Ball Type="RandomInterfaceBall" TableYPercent="0.40">
+			<BallNumber>1</BallNumber>
+			<NumberOfBallsLow>1</NumberOfBallsLow>
+			<NumberOfBallsHigh>1</NumberOfBallsHigh>
+			<NumberOfBallsType>3</NumberOfBallsType>
+			<WaitTime>1400</WaitTime>
+			<TopMotorLow>42</TopMotorLow>
+			<TopMotorHigh>42</TopMotorHigh>
+			<TopMotorType>3</TopMotorType>
+			<BottomMotorLow>-76</BottomMotorLow>
+			<BottomMotorHigh>-76</BottomMotorHigh>
+			<BottomMotorType>3</BottomMotorType>
+			<HeightLow>32</HeightLow>
+			<HeightHigh>32</HeightHigh>
+			<HeightType>3</HeightType>
+			<OscillationLow>28</OscillationLow>
+			<OscillationHigh>72</OscillationHigh>
+			<OscillationType>1</OscillationType>
+			<RotationLow>0</RotationLow>
+			<RotationHigh>0</RotationHigh>
+			<RotationType>3</RotationType>
+		</Ball>
+		<Ball Type="RandomInterfaceBall" TableYPercent="0.75">
+			<BallNumber>2</BallNumber>
+			<NumberOfBallsLow>2</NumberOfBallsLow>
+			<NumberOfBallsHigh>2</NumberOfBallsHigh>
+			<NumberOfBallsType>3</NumberOfBallsType>
+			<WaitTime>1200</WaitTime>
+			<TopMotorLow>100</TopMotorLow>
+			<TopMotorHigh>100</TopMotorHigh>
+			<TopMotorType>3</TopMotorType>
+			<BottomMotorLow>0</BottomMotorLow>
+			<BottomMotorHigh>0</BottomMotorHigh>
+			<BottomMotorType>3</BottomMotorType>
+			<HeightLow>68</HeightLow>
+			<HeightHigh>68</HeightHigh>
+			<HeightType>3</HeightType>
+			<OscillationLow>28</OscillationLow>
+			<OscillationHigh>72</OscillationHigh>
+			<OscillationType>1</OscillationType>
+			<RotationLow>0</RotationLow>
+			<RotationHigh>0</RotationHigh>
+			<RotationType>3</RotationType>
+		</Ball>
+	</Drill>
+	<Drill Name="High Spins"
+	       Description="This difficult five ball drill gives you a serve, then a high backspin, high topspin, high backspin, high topspin. Smash the backspin by going up and forward. Smash the topspin by going down and forward."
+	       Delay="2.9"
+	       YouTubeVideoID="f_oZp0t0eHI">
+		<Ball Type="RandomInterfaceBall" TableYPercent="0.45">
+			<BallNumber>1</BallNumber>
+			<NumberOfBallsLow>1</NumberOfBallsLow>
+			<NumberOfBallsHigh>1</NumberOfBallsHigh>
+			<NumberOfBallsType>3</NumberOfBallsType>
+			<WaitTime>1500</WaitTime>
+			<TopMotorLow>0</TopMotorLow>
+			<TopMotorHigh>0</TopMotorHigh>
+			<TopMotorType>3</TopMotorType>
+			<BottomMotorLow>42</BottomMotorLow>
+			<BottomMotorHigh>42</BottomMotorHigh>
+			<BottomMotorType>3</BottomMotorType>
+			<HeightLow>30</HeightLow>
+			<HeightHigh>30</HeightHigh>
+			<HeightType>3</HeightType>
+			<OscillationLow>28</OscillationLow>
+			<OscillationHigh>72</OscillationHigh>
+			<OscillationType>1</OscillationType>
+			<RotationLow>0</RotationLow>
+			<RotationHigh>0</RotationHigh>
+			<RotationType>3</RotationType>
+		</Ball>
+		<Ball Type="RandomInterfaceBall" TableYPercent="0.5">
+			<BallNumber>2</BallNumber>
+			<NumberOfBallsLow>1</NumberOfBallsLow>
+			<NumberOfBallsHigh>1</NumberOfBallsHigh>
+			<NumberOfBallsType>3</NumberOfBallsType>
+			<WaitTime>1310</WaitTime>
+			<TopMotorLow>0</TopMotorLow>
+			<TopMotorHigh>0</TopMotorHigh>
+			<TopMotorType>3</TopMotorType>
+			<BottomMotorLow>42</BottomMotorLow>
+			<BottomMotorHigh>42</BottomMotorHigh>
+			<BottomMotorType>3</BottomMotorType>
+			<HeightLow>100</HeightLow>
+			<HeightHigh>100</HeightHigh>
+			<HeightType>3</HeightType>
+			<OscillationLow>28</OscillationLow>
+			<OscillationHigh>72</OscillationHigh>
+			<OscillationType>1</OscillationType>
+			<RotationLow>0</RotationLow>
+			<RotationHigh>0</RotationHigh>
+			<RotationType>3</RotationType>
+		</Ball>
+		<Ball Type="RandomInterfaceBall" TableYPercent="0.5">
+			<BallNumber>3</BallNumber>
+			<NumberOfBallsLow>1</NumberOfBallsLow>
+			<NumberOfBallsHigh>1</NumberOfBallsHigh>
+			<NumberOfBallsType>3</NumberOfBallsType>
+			<WaitTime>1310</WaitTime>
+			<TopMotorLow>50</TopMotorLow>
+			<TopMotorHigh>50</TopMotorHigh>
+			<TopMotorType>3</TopMotorType>
+			<BottomMotorLow>-10</BottomMotorLow>
+			<BottomMotorHigh>-10</BottomMotorHigh>
+			<BottomMotorType>3</BottomMotorType>
+			<HeightLow>100</HeightLow>
+			<HeightHigh>100</HeightHigh>
+			<HeightType>3</HeightType>
+			<OscillationLow>28</OscillationLow>
+			<OscillationHigh>72</OscillationHigh>
+			<OscillationType>1</OscillationType>
+			<RotationLow>0</RotationLow>
+			<RotationHigh>0</RotationHigh>
+			<RotationType>3</RotationType>
+		</Ball>
+		<Ball Type="RandomInterfaceBall" TableYPercent="0.25">
+			<BallNumber>4</BallNumber>
+			<NumberOfBallsLow>1</NumberOfBallsLow>
+			<NumberOfBallsHigh>1</NumberOfBallsHigh>
+			<NumberOfBallsType>3</NumberOfBallsType>
+			<WaitTime>1310</WaitTime>
+			<TopMotorLow>-2</TopMotorLow>
+			<TopMotorHigh>-2</TopMotorHigh>
+			<TopMotorType>3</TopMotorType>
+			<BottomMotorLow>36</BottomMotorLow>
+			<BottomMotorHigh>36</BottomMotorHigh>
+			<BottomMotorType>3</BottomMotorType>
+			<HeightLow>100</HeightLow>
+			<HeightHigh>100</HeightHigh>
+			<HeightType>3</HeightType>
+			<OscillationLow>28</OscillationLow>
+			<OscillationHigh>72</OscillationHigh>
+			<OscillationType>1</OscillationType>
+			<RotationLow>0</RotationLow>
+			<RotationHigh>0</RotationHigh>
+			<RotationType>3</RotationType>
+		</Ball>
+		<Ball Type="RandomInterfaceBall" TableYPercent="0.5">
+			<BallNumber>5</BallNumber>
+			<NumberOfBallsLow>1</NumberOfBallsLow>
+			<NumberOfBallsHigh>1</NumberOfBallsHigh>
+			<NumberOfBallsType>3</NumberOfBallsType>
+			<WaitTime>1300</WaitTime>
+			<TopMotorLow>50</TopMotorLow>
+			<TopMotorHigh>50</TopMotorHigh>
+			<TopMotorType>3</TopMotorType>
+			<BottomMotorLow>-5</BottomMotorLow>
+			<BottomMotorHigh>-5</BottomMotorHigh>
+			<BottomMotorType>3</BottomMotorType>
+			<HeightLow>100</HeightLow>
+			<HeightHigh>100</HeightHigh>
+			<HeightType>3</HeightType>
+			<OscillationLow>28</OscillationLow>
+			<OscillationHigh>72</OscillationHigh>
+			<OscillationType>1</OscillationType>
+			<RotationLow>0</RotationLow>
+			<RotationHigh>0</RotationHigh>
+			<RotationType>3</RotationType>
+		</Ball>
+	</Drill>
+	<Drill Name="High Backhand, High Forehand"
+	       Description="Use your forehand to smash both balls 
+ one high ball from the backhand side and one high ball from the forehand side."
+	       Delay="0"
+	       YouTubeVideoID="TvzzczKbB1M">
+		<Ball Type="AdvancedInterfaceBall" TableYPercent="0.75">
+			<BallNumber>1</BallNumber>
+			<NumberOfBalls>1</NumberOfBalls>
+			<WaitTime>1310</WaitTime>
+			<TopMotorSpeed>50</TopMotorSpeed>
+			<BottomMotorSpeed>1</BottomMotorSpeed>
+			<Height>100</Height>
+			<Oscillation>30</Oscillation>
+			<Rotation>0</Rotation>
+		</Ball>
+		<Ball Type="AdvancedInterfaceBall" TableYPercent="0.75">
+			<BallNumber>2</BallNumber>
+			<NumberOfBalls>1</NumberOfBalls>
+			<WaitTime>1310</WaitTime>
+			<TopMotorSpeed>50</TopMotorSpeed>
+			<BottomMotorSpeed>1</BottomMotorSpeed>
+			<Height>100</Height>
+			<Oscillation>70</Oscillation>
+			<Rotation>0</Rotation>
+		</Ball>
+	</Drill>
+	<Drill Name="High Spins Smashing"
+	       Description="Smash the high topspin ball by hitting slightly down and forward. Smash the high backspin ball by hitting slightly up and forward. This drill has a lot more spin than you might guess 
+ it is like playing a high level chopper!"
+	       Delay="0"
+	       YouTubeVideoID="I9Ao4pmgVEw">
+		<Ball Type="AdvancedInterfaceBall" TableYPercent="0.5">
+			<BallNumber>1</BallNumber>
+			<NumberOfBalls>1</NumberOfBalls>
+			<WaitTime>1410</WaitTime>
+			<TopMotorSpeed>50</TopMotorSpeed>
+			<BottomMotorSpeed>-5</BottomMotorSpeed>
+			<Height>100</Height>
+			<Oscillation>70</Oscillation>
+			<Rotation>0</Rotation>
+		</Ball>
+		<Ball Type="AdvancedInterfaceBall" TableYPercent="0.25">
+			<BallNumber>2</BallNumber>
+			<NumberOfBalls>1</NumberOfBalls>
+			<WaitTime>1410</WaitTime>
+			<TopMotorSpeed>-5</TopMotorSpeed>
+			<BottomMotorSpeed>38</BottomMotorSpeed>
+			<Height>100</Height>
+			<Oscillation>70</Oscillation>
+			<Rotation>0</Rotation>
+		</Ball>
+	</Drill>
+	<Drill Name="Forehand Speed"
+	       Description="The lightening speed balls to the forehand come fast and with a bit of topspin. Get close to the table and contact the ball early, on the rise."
+	       Delay="0"
+	       YouTubeVideoID="c3Umf1dv0w4">
+		<Ball Type="RandomInterfaceBall" TableYPercent="0.6">
+			<BallNumber>1</BallNumber>
+			<NumberOfBallsLow>1</NumberOfBallsLow>
+			<NumberOfBallsHigh>1</NumberOfBallsHigh>
+			<NumberOfBallsType>3</NumberOfBallsType>
+			<WaitTime>750</WaitTime>
+			<TopMotorLow>100</TopMotorLow>
+			<TopMotorHigh>100</TopMotorHigh>
+			<TopMotorType>3</TopMotorType>
+			<BottomMotorLow>0</BottomMotorLow>
+			<BottomMotorHigh>0</BottomMotorHigh>
+			<BottomMotorType>3</BottomMotorType>
+			<HeightLow>68</HeightLow>
+			<HeightHigh>68</HeightHigh>
+			<HeightType>3</HeightType>
+			<OscillationLow>55</OscillationLow>
+			<OscillationHigh>75</OscillationHigh>
+			<OscillationType>1</OscillationType>
+			<RotationLow>0</RotationLow>
+			<RotationHigh>0</RotationHigh>
+			<RotationType>3</RotationType>
+		</Ball>
+	</Drill>
+	<Drill Name="Backhand Speed"
+	       Description="To block these speed balls, crouch low in your ready position, keep your racket in front of your body, and block with control keeping the ball low."
+	       Delay="0"
+	       YouTubeVideoID="05AoSGikc8g">
+		<Ball Type="RandomInterfaceBall" TableYPercent="0.55">
+			<BallNumber>1</BallNumber>
+			<NumberOfBallsLow>1</NumberOfBallsLow>
+			<NumberOfBallsHigh>1</NumberOfBallsHigh>
+			<NumberOfBallsType>3</NumberOfBallsType>
+			<WaitTime>750</WaitTime>
+			<TopMotorLow>100</TopMotorLow>
+			<TopMotorHigh>100</TopMotorHigh>
+			<TopMotorType>3</TopMotorType>
+			<BottomMotorLow>0</BottomMotorLow>
+			<BottomMotorHigh>0</BottomMotorHigh>
+			<BottomMotorType>3</BottomMotorType>
+			<HeightLow>68</HeightLow>
+			<HeightHigh>68</HeightHigh>
+			<HeightType>3</HeightType>
+			<OscillationLow>12</OscillationLow>
+			<OscillationHigh>40</OscillationHigh>
+			<OscillationType>1</OscillationType>
+			<RotationLow>0</RotationLow>
+			<RotationHigh>0</RotationHigh>
+			<RotationType>3</RotationType>
+		</Ball>
+	</Drill>
+	<Drill Name="Left Sidespin Topspin Serve"
+	       Description="The left sidespin topspin serve is like a right handed player serving a forehand pendulum serve. To return this difficult spin, touch the top right side of the ball."
+	       Delay="0"
+	       YouTubeVideoID="Z-2GclsZDqc">
+		<Ball Type="RandomInterfaceBall" TableYPercent="0.45">
+			<BallNumber>1</BallNumber>
+			<NumberOfBallsLow>1</NumberOfBallsLow>
+			<NumberOfBallsHigh>1</NumberOfBallsHigh>
+			<NumberOfBallsType>3</NumberOfBallsType>
+			<WaitTime>1400</WaitTime>
+			<TopMotorLow>40</TopMotorLow>
+			<TopMotorHigh>44</TopMotorHigh>
+			<TopMotorType>1</TopMotorType>
+			<BottomMotorLow>-15</BottomMotorLow>
+			<BottomMotorHigh>-15</BottomMotorHigh>
+			<BottomMotorType>3</BottomMotorType>
+			<HeightLow>48</HeightLow>
+			<HeightHigh>48</HeightHigh>
+			<HeightType>3</HeightType>
+			<OscillationLow>25</OscillationLow>
+			<OscillationHigh>75</OscillationHigh>
+			<OscillationType>1</OscillationType>
+			<RotationLow>-48</RotationLow>
+			<RotationHigh>-48</RotationHigh>
+			<RotationType>3</RotationType>
+		</Ball>
+	</Drill>
+	<Drill Name="Right Sidespin Topspin Serve"
+	       Description="The right sidespin topspin serve is like a left handed player serving a forehand pendulum serve. To return this difficult spin, touch the top left side of the ball."
+	       Delay="0"
+	       YouTubeVideoID="v7POq0QYKWo">
+		<Ball Type="RandomInterfaceBall" TableYPercent="0.45">
+			<BallNumber>1</BallNumber>
+			<NumberOfBallsLow>1</NumberOfBallsLow>
+			<NumberOfBallsHigh>1</NumberOfBallsHigh>
+			<NumberOfBallsType>3</NumberOfBallsType>
+			<WaitTime>1400</WaitTime>
+			<TopMotorLow>40</TopMotorLow>
+			<TopMotorHigh>44</TopMotorHigh>
+			<TopMotorType>1</TopMotorType>
+			<BottomMotorLow>-15</BottomMotorLow>
+			<BottomMotorHigh>-15</BottomMotorHigh>
+			<BottomMotorType>3</BottomMotorType>
+			<HeightLow>48</HeightLow>
+			<HeightHigh>48</HeightHigh>
+			<HeightType>3</HeightType>
+			<OscillationLow>25</OscillationLow>
+			<OscillationHigh>75</OscillationHigh>
+			<OscillationType>1</OscillationType>
+			<RotationLow>48</RotationLow>
+			<RotationHigh>48</RotationHigh>
+			<RotationType>3</RotationType>
+		</Ball>
+	</Drill>
+	<Drill Name="Left Sidespin Backspin Serve"
+	       Description="To return this serve, you can either push it with control or loop it with spin. Touch the bottom right side of the ball."
+	       Delay="0"
+	       YouTubeVideoID="Fr1MspMrPto">
+		<Ball Type="RandomInterfaceBall" TableYPercent="0.20">
+			<BallNumber>1</BallNumber>
+			<NumberOfBallsLow>1</NumberOfBallsLow>
+			<NumberOfBallsHigh>1</NumberOfBallsHigh>
+			<NumberOfBallsType>3</NumberOfBallsType>
+			<WaitTime>1450</WaitTime>
+			<TopMotorLow>-8</TopMotorLow>
+			<TopMotorHigh>-8</TopMotorHigh>
+			<TopMotorType>3</TopMotorType>
+			<BottomMotorLow>42</BottomMotorLow>
+			<BottomMotorHigh>42</BottomMotorHigh>
+			<BottomMotorType>1</BottomMotorType>
+			<HeightLow>30</HeightLow>
+			<HeightHigh>30</HeightHigh>
+			<HeightType>3</HeightType>
+			<OscillationLow>25</OscillationLow>
+			<OscillationHigh>75</OscillationHigh>
+			<OscillationType>1</OscillationType>
+			<RotationLow>48</RotationLow>
+			<RotationHigh>48</RotationHigh>
+			<RotationType>3</RotationType>
+		</Ball>
+	</Drill>
+	<Drill Name="Right Sidespin Backspin Serve"
+	       Description="rTo return this serve, push or loop with spin. It is vitally important to impart your own spin so that your opponent
+s spin will have less effect on your rubber. Work on stroking through the ball slightly."
+	       Delay="0"
+	       YouTubeVideoID="ief4COw5yMw">
+		<Ball Type="RandomInterfaceBall" TableYPercent="0.3">
+			<BallNumber>1</BallNumber>
+			<NumberOfBallsLow>1</NumberOfBallsLow>
+			<NumberOfBallsHigh>1</NumberOfBallsHigh>
+			<NumberOfBallsType>3</NumberOfBallsType>
+			<WaitTime>1450</WaitTime>
+			<TopMotorLow>-10</TopMotorLow>
+			<TopMotorHigh>-10</TopMotorHigh>
+			<TopMotorType>3</TopMotorType>
+			<BottomMotorLow>44</BottomMotorLow>
+			<BottomMotorHigh>44</BottomMotorHigh>
+			<BottomMotorType>1</BottomMotorType>
+			<HeightLow>30</HeightLow>
+			<HeightHigh>30</HeightHigh>
+			<HeightType>3</HeightType>
+			<OscillationLow>25</OscillationLow>
+			<OscillationHigh>75</OscillationHigh>
+			<OscillationType>1</OscillationType>
+			<RotationLow>-48</RotationLow>
+			<RotationHigh>-48</RotationHigh>
+			<RotationType>3</RotationType>
+		</Ball>
+	</Drill>
+	<Drill Name="Smash, Topspin, Lob"
+	       Description="You will first get a speed ball, block it with control. Next, you will get a normal topspin ball, loop it with good topspin. Finally, you will get a high ball, smash it with every ounce of energy you have left!"
+	       Delay="0"
+	       YouTubeVideoID="gxi9G037EfA">
+		<Ball Type="AdvancedInterfaceBall" TableYPercent="0.8">
+			<BallNumber>1</BallNumber>
+			<NumberOfBalls>1</NumberOfBalls>
+			<WaitTime>1320</WaitTime>
+			<TopMotorSpeed>95</TopMotorSpeed>
+			<BottomMotorSpeed>15</BottomMotorSpeed>
+			<Height>62</Height>
+			<Oscillation>72</Oscillation>
+			<Rotation>0</Rotation>
+		</Ball>
+		<Ball Type="AdvancedInterfaceBall" TableYPercent="0.4">
+			<BallNumber>2</BallNumber>
+			<NumberOfBalls>1</NumberOfBalls>
+			<WaitTime>1320</WaitTime>
+			<TopMotorSpeed>85</TopMotorSpeed>
+			<BottomMotorSpeed>-50</BottomMotorSpeed>
+			<Height>75</Height>
+			<Oscillation>72</Oscillation>
+			<Rotation>0</Rotation>
+		</Ball>
+		<Ball Type="AdvancedInterfaceBall" TableYPercent="0.75">
+			<BallNumber>3</BallNumber>
+			<NumberOfBalls>1</NumberOfBalls>
+			<WaitTime>1320</WaitTime>
+			<TopMotorSpeed>40</TopMotorSpeed>
+			<BottomMotorSpeed>10</BottomMotorSpeed>
+			<Height>100</Height>
+			<Oscillation>72</Oscillation>
+			<Rotation>0</Rotation>
+		</Ball>
+	</Drill>
+	<Drill Name="Spinny Serves"
+	       Description="This drill will give you very spinny serves anywhere long! Look at the lights to tell the direction and amount of spin. The more lights that are on, the stronger the spin."
+	       Delay="0"
+	       YouTubeVideoID="twZYYQP2FbA">
+		<Ball Type="RandomInterfaceBall" TableYPercent="0.50">
+			<BallNumber>1</BallNumber>
+			<NumberOfBallsLow>1</NumberOfBallsLow>
+			<NumberOfBallsHigh>1</NumberOfBallsHigh>
+			<NumberOfBallsType>3</NumberOfBallsType>
+			<WaitTime>1770</WaitTime>
+			<TopMotorLow>-35</TopMotorLow>
+			<TopMotorHigh>-35</TopMotorHigh>
+			<TopMotorType>3</TopMotorType>
+			<BottomMotorLow>55</BottomMotorLow>
+			<BottomMotorHigh>55</BottomMotorHigh>
+			<BottomMotorType>3</BottomMotorType>
+			<HeightLow>32</HeightLow>
+			<HeightHigh>32</HeightHigh>
+			<HeightType>3</HeightType>
+			<OscillationLow>20</OscillationLow>
+			<OscillationHigh>78</OscillationHigh>
+			<OscillationType>1</OscillationType>
+			<RotationLow>-90</RotationLow>
+			<RotationHigh>90</RotationHigh>
+			<RotationType>1</RotationType>
+		</Ball>
+	</Drill>
+</Training>
+<?xml version="1.0" encoding="utf-8"?>
+<Training Name="Introductory" Description="Drills for the table tennis player just starting out" IsAdjustable="false">
+	<Drill Name="Forehand Warmup" Description="Warmup drill with topspin serve to the forehand" Delay="0">
+		<Ball Type="AdvancedInterfaceBall" TableYPercent="0.5">
+			<BallNumber>1</BallNumber>
+			<NumberOfBalls>1</NumberOfBalls>
+			<WaitTime>2100</WaitTime>
+			<TopMotorSpeed>48</TopMotorSpeed>
+			<BottomMotorSpeed>0</BottomMotorSpeed>
+			<Height>30</Height>
+			<Oscillation>80</Oscillation>
+			<Rotation>0</Rotation>
+		</Ball>
+	</Drill>
+	<Drill Name="Backhand Warmup" Description="Warmup drill with topspin serve to the backhand" Delay="0">
+		<Ball Type="AdvancedInterfaceBall" TableYPercent="0.5">
+			<BallNumber>1</BallNumber>
+			<NumberOfBalls>1</NumberOfBalls>
+			<WaitTime>2100</WaitTime>
+			<TopMotorSpeed>48</TopMotorSpeed>
+			<BottomMotorSpeed>0</BottomMotorSpeed>
+			<Height>30</Height>
+			<Oscillation>20</Oscillation>
+			<Rotation>0</Rotation>
+		</Ball>
+	</Drill>
+	<Drill Name="Forehand 2-Step Footwork" Description="Footwork drill with two serves to the forehand" Delay="0">
+		<Ball Type="AdvancedInterfaceBall" TableYPercent="0.5">
+			<BallNumber>1</BallNumber>
+			<NumberOfBalls>1</NumberOfBalls>
+			<WaitTime>2050</WaitTime>
+			<TopMotorSpeed>48</TopMotorSpeed>
+			<BottomMotorSpeed>0</BottomMotorSpeed>
+			<Height>30</Height>
+			<Oscillation>50</Oscillation>
+			<Rotation>0</Rotation>
+		</Ball>
+		<Ball Type="AdvancedInterfaceBall" TableYPercent="0.5">
+			<BallNumber>2</BallNumber>
+			<NumberOfBalls>1</NumberOfBalls>
+			<WaitTime>2050</WaitTime>
+			<TopMotorSpeed>48</TopMotorSpeed>
+			<BottomMotorSpeed>0</BottomMotorSpeed>
+			<Height>30</Height>
+			<Oscillation>80</Oscillation>
+			<Rotation>0</Rotation>
+		</Ball>
+	</Drill>
+	<Drill Name="Backhand 2-Step Footwork" Description="Footwork drill with two serves to the backhand" Delay="0">
+		<Ball Type="AdvancedInterfaceBall" TableYPercent="0.5">
+			<BallNumber>1</BallNumber>
+			<NumberOfBalls>1</NumberOfBalls>
+			<WaitTime>2050</WaitTime>
+			<TopMotorSpeed>48</TopMotorSpeed>
+			<BottomMotorSpeed>0</BottomMotorSpeed>
+			<Height>30</Height>
+			<Oscillation>30</Oscillation>
+			<Rotation>0</Rotation>
+		</Ball>
+		<Ball Type="AdvancedInterfaceBall" TableYPercent="0.5">
+			<BallNumber>2</BallNumber>
+			<NumberOfBalls>1</NumberOfBalls>
+			<WaitTime>2050</WaitTime>
+			<TopMotorSpeed>48</TopMotorSpeed>
+			<BottomMotorSpeed>0</BottomMotorSpeed>
+			<Height>30</Height>
+			<Oscillation>5</Oscillation>
+			<Rotation>0</Rotation>
+		</Ball>
+	</Drill>
+	<Drill Name="Forehand Push" Description="Warmup drill with backspin serve to the forehand" Delay="0">
+		<Ball Type="AdvancedInterfaceBall" TableYPercent="0.30">
+			<BallNumber>1</BallNumber>
+			<NumberOfBalls>1</NumberOfBalls>
+			<WaitTime>2050</WaitTime>
+			<TopMotorSpeed>-8</TopMotorSpeed>
+			<BottomMotorSpeed>40</BottomMotorSpeed>
+			<Height>30</Height>
+      <Oscillation>80</Oscillation>
+			<Rotation>0</Rotation>
+		</Ball>
+	</Drill>
+	<Drill Name="Backhand Push" Description="Warmup drill with backspin serve to the backhand" Delay="0">
+		<Ball Type="AdvancedInterfaceBall" TableYPercent="0.30">
+			<BallNumber>1</BallNumber>
+			<NumberOfBalls>1</NumberOfBalls>
+			<WaitTime>2050</WaitTime>
+			<TopMotorSpeed>-8</TopMotorSpeed>
+			<BottomMotorSpeed>40</BottomMotorSpeed>
+			<Height>30</Height>
+			<Oscillation>15</Oscillation>
+			<Rotation>0</Rotation>
+		</Ball>
+	</Drill>
+	<Drill Name="Forehand Push With Footwork" Description="Footwork drill with backspin serve to the forehand" Delay="0">
+		<Ball Type="AdvancedInterfaceBall" TableYPercent="0.3">
+			<BallNumber>1</BallNumber>
+			<NumberOfBalls>1</NumberOfBalls>
+			<WaitTime>2100</WaitTime>
+			<TopMotorSpeed>-5</TopMotorSpeed>
+			<BottomMotorSpeed>40</BottomMotorSpeed>
+			<Height>30</Height>
+			<Oscillation>50</Oscillation>
+			<Rotation>0</Rotation>
+		</Ball>
+		<Ball Type="AdvancedInterfaceBall" TableYPercent="0.3">
+			<BallNumber>2</BallNumber>
+			<NumberOfBalls>1</NumberOfBalls>
+			<WaitTime>2100</WaitTime>
+			<TopMotorSpeed>-5</TopMotorSpeed>
+			<BottomMotorSpeed>40</BottomMotorSpeed>
+			<Height>30</Height>
+			<Oscillation>80</Oscillation>
+			<Rotation>0</Rotation>
+		</Ball>
+	</Drill>
+	<Drill Name="Backhand Push With Footwork" Description="Footword drill with backspin serve to the backhand" Delay="0">
+		<Ball Type="AdvancedInterfaceBall" TableYPercent="0.3">
+			<BallNumber>1</BallNumber>
+			<NumberOfBalls>1</NumberOfBalls>
+			<WaitTime>2100</WaitTime>
+			<TopMotorSpeed>-5</TopMotorSpeed>
+			<BottomMotorSpeed>40</BottomMotorSpeed>
+			<Height>30</Height>
+			<Oscillation>35</Oscillation>
+			<Rotation>0</Rotation>
+		</Ball>
+		<Ball Type="AdvancedInterfaceBall" TableYPercent="0.3">
+			<BallNumber>2</BallNumber>
+			<NumberOfBalls>1</NumberOfBalls>
+			<WaitTime>2100</WaitTime>
+			<TopMotorSpeed>-5</TopMotorSpeed>
+			<BottomMotorSpeed>40</BottomMotorSpeed>
+			<Height>30</Height>
+			<Oscillation>5</Oscillation>
+			<Rotation>0</Rotation>
+		</Ball>
+	</Drill>
+	<Drill Name="Forehand Topspin" Description="Simple topspin ball to the forehand" Delay="0">
+		<Ball Type="AdvancedInterfaceBall" TableYPercent="0.5">
+			<BallNumber>1</BallNumber>
+			<NumberOfBalls>1</NumberOfBalls>
+			<WaitTime>2100</WaitTime>
+			<TopMotorSpeed>60</TopMotorSpeed>
+			<BottomMotorSpeed>-5</BottomMotorSpeed>
+			<Height>84</Height>
+			<Oscillation>80</Oscillation>
+			<Rotation>0</Rotation>
+		</Ball>
+	</Drill>
+	<Drill Name="Backhand Topspin" Description="Simple topspin ball to the backhand" Delay="0">
+		<Ball Type="AdvancedInterfaceBall" TableYPercent="0.5">
+			<BallNumber>1</BallNumber>
+			<NumberOfBalls>1</NumberOfBalls>
+			<WaitTime>2050</WaitTime>
+			<TopMotorSpeed>60</TopMotorSpeed>
+			<BottomMotorSpeed>-5</BottomMotorSpeed>
+			<Height>84</Height>
+			<Oscillation>15</Oscillation>
+			<Rotation>0</Rotation>
+		</Ball>
+	</Drill>
+	<Drill Name="Forehand Topspin With Footwork" Description="Footwork with topspin balls to the forehand" Delay="0">
+		<Ball Type="AdvancedInterfaceBall" TableYPercent="0.5">
+			<BallNumber>1</BallNumber>
+			<NumberOfBalls>1</NumberOfBalls>
+			<WaitTime>2000</WaitTime>
+			<TopMotorSpeed>60</TopMotorSpeed>
+			<BottomMotorSpeed>-5</BottomMotorSpeed>
+			<Height>84</Height>
+			<Oscillation>50</Oscillation>
+			<Rotation>0</Rotation>
+		</Ball>
+		<Ball Type="AdvancedInterfaceBall" TableYPercent="0.5">
+			<BallNumber>2</BallNumber>
+			<NumberOfBalls>1</NumberOfBalls>
+			<WaitTime>2000</WaitTime>
+			<TopMotorSpeed>60</TopMotorSpeed>
+			<BottomMotorSpeed>-5</BottomMotorSpeed>
+			<Height>84</Height>
+			<Oscillation>85</Oscillation>
+			<Rotation>0</Rotation>
+		</Ball>
+	</Drill>
+	<Drill Name="Backhand Topspin With Footwork" Description="Footwork with topspin balls to the backhand" Delay="0">
+		<Ball Type="AdvancedInterfaceBall" TableYPercent="0.5">
+			<BallNumber>1</BallNumber>
+			<NumberOfBalls>1</NumberOfBalls>
+			<WaitTime>2050</WaitTime>
+			<TopMotorSpeed>58</TopMotorSpeed>
+			<BottomMotorSpeed>-10</BottomMotorSpeed>
+			<Height>84</Height>
+			<Oscillation>30</Oscillation>
+			<Rotation>0</Rotation>
+		</Ball>
+		<Ball Type="AdvancedInterfaceBall" TableYPercent="0.5">
+			<BallNumber>2</BallNumber>
+			<NumberOfBalls>1</NumberOfBalls>
+			<WaitTime>2050</WaitTime>
+			<TopMotorSpeed>58</TopMotorSpeed>
+			<BottomMotorSpeed>-10</BottomMotorSpeed>
+			<Height>84</Height>
+			<Oscillation>5</Oscillation>
+			<Rotation>0</Rotation>
+		</Ball>
+	</Drill>
+	<Drill Name="Forehand Backspin" Description="Simple backspin ball to the forehand" Delay="0">
+		<Ball Type="AdvancedInterfaceBall" TableYPercent="0.5">
+			<BallNumber>1</BallNumber>
+			<NumberOfBalls>1</NumberOfBalls>
+			<WaitTime>2100</WaitTime>
+			<TopMotorSpeed>15</TopMotorSpeed>
+			<BottomMotorSpeed>30</BottomMotorSpeed>
+			<Height>75</Height>
+			<Oscillation>80</Oscillation>
+			<Rotation>0</Rotation>
+		</Ball>
+	</Drill>
+	<Drill Name="Backhand Backspin" Description="Simple backspin ball to the backhand" Delay="0">
+		<Ball Type="AdvancedInterfaceBall" TableYPercent="0.5">
+			<BallNumber>1</BallNumber>
+			<NumberOfBalls>1</NumberOfBalls>
+			<WaitTime>2100</WaitTime>
+			<TopMotorSpeed>15</TopMotorSpeed>
+			<BottomMotorSpeed>30</BottomMotorSpeed>
+			<Height>75</Height>
+			<Oscillation>15</Oscillation>
+			<Rotation>0</Rotation>
+		</Ball>
+	</Drill>
+	<Drill Name="Forehand Backspin With Footwork" Description="Footwork with backspin balls to the forehand" Delay="0">
+		<Ball Type="AdvancedInterfaceBall" TableYPercent="0.5">
+			<BallNumber>1</BallNumber>
+			<NumberOfBalls>1</NumberOfBalls>
+			<WaitTime>2100</WaitTime>
+			<TopMotorSpeed>15</TopMotorSpeed>
+			<BottomMotorSpeed>30</BottomMotorSpeed>
+			<Height>75</Height>
+			<Oscillation>50</Oscillation>
+			<Rotation>0</Rotation>
+		</Ball>
+		<Ball Type="AdvancedInterfaceBall" TableYPercent="0.5">
+			<BallNumber>2</BallNumber>
+			<NumberOfBalls>1</NumberOfBalls>
+			<WaitTime>2100</WaitTime>
+			<TopMotorSpeed>15</TopMotorSpeed>
+			<BottomMotorSpeed>30</BottomMotorSpeed>
+			<Height>75</Height>
+			<Oscillation>85</Oscillation>
+			<Rotation>0</Rotation>
+		</Ball>
+	</Drill>
+	<Drill Name="Backhand Backspin With Footwork" Description="Footwork with backspin balls to the backhand" Delay="0">
+		<Ball Type="AdvancedInterfaceBall" TableYPercent="0.5">
+			<BallNumber>1</BallNumber>
+			<NumberOfBalls>1</NumberOfBalls>
+			<WaitTime>2100</WaitTime>
+			<TopMotorSpeed>15</TopMotorSpeed>
+			<BottomMotorSpeed>30</BottomMotorSpeed>
+			<Height>75</Height>
+			<Oscillation>35</Oscillation>
+			<Rotation>0</Rotation>
+		</Ball>
+		<Ball Type="AdvancedInterfaceBall" TableYPercent="0.5">
+			<BallNumber>2</BallNumber>
+			<NumberOfBalls>1</NumberOfBalls>
+			<WaitTime>2100</WaitTime>
+			<TopMotorSpeed>15</TopMotorSpeed>
+			<BottomMotorSpeed>30</BottomMotorSpeed>
+			<Height>75</Height>
+			<Oscillation>10</Oscillation>
+			<Rotation>0</Rotation>
+		</Ball>
+	</Drill>
+	<Drill Name="Three Serve Balls" Description="Three serves - topspin, no spin, and backspin" Delay="0">
+		<Ball Type="AdvancedInterfaceBall" TableYPercent="0.5">
+			<BallNumber>1</BallNumber>
+			<NumberOfBalls>1</NumberOfBalls>
+			<WaitTime>2150</WaitTime>
+			<TopMotorSpeed>40</TopMotorSpeed>
+			<BottomMotorSpeed>0</BottomMotorSpeed>
+			<Height>35</Height>
+			<Oscillation>75</Oscillation>
+			<Rotation>0</Rotation>
+		</Ball>
+		<Ball Type="AdvancedInterfaceBall" TableYPercent="0.5">
+			<BallNumber>2</BallNumber>
+			<NumberOfBalls>1</NumberOfBalls>
+			<WaitTime>2150</WaitTime>
+			<TopMotorSpeed>20</TopMotorSpeed>
+			<BottomMotorSpeed>20</BottomMotorSpeed>
+			<Height>30</Height>
+			<Oscillation>75</Oscillation>
+			<Rotation>0</Rotation>
+		</Ball>
+		<Ball Type="AdvancedInterfaceBall" TableYPercent="0.5">
+			<BallNumber>3</BallNumber>
+			<NumberOfBalls>1</NumberOfBalls>
+			<WaitTime>2150</WaitTime>
+			<TopMotorSpeed>5</TopMotorSpeed>
+			<BottomMotorSpeed>35</BottomMotorSpeed>
+			<Height>30</Height>
+			<Oscillation>75</Oscillation>
+			<Rotation>0</Rotation>
+		</Ball>
+	</Drill>
+	<Drill Name="Three Balls" Description="Three balls - topspin, no spin, and backspin" Delay="0">
+		<Ball Type="AdvancedInterfaceBall" TableYPercent="0.5">
+			<BallNumber>1</BallNumber>
+			<NumberOfBalls>1</NumberOfBalls>
+			<WaitTime>2100</WaitTime>
+			<TopMotorSpeed>50</TopMotorSpeed>
+			<BottomMotorSpeed>5</BottomMotorSpeed>
+			<Height>80</Height>
+			<Oscillation>80</Oscillation>
+			<Rotation>0</Rotation>
+		</Ball>
+		<Ball Type="AdvancedInterfaceBall" TableYPercent="0.5">
+			<BallNumber>2</BallNumber>
+			<NumberOfBalls>1</NumberOfBalls>
+			<WaitTime>2100</WaitTime>
+			<TopMotorSpeed>25</TopMotorSpeed>
+			<BottomMotorSpeed>25</BottomMotorSpeed>
+			<Height>78</Height>
+			<Oscillation>80</Oscillation>
+			<Rotation>0</Rotation>
+		</Ball>
+		<Ball Type="AdvancedInterfaceBall" TableYPercent="0.5">
+			<BallNumber>3</BallNumber>
+			<NumberOfBalls>1</NumberOfBalls>
+			<WaitTime>2100</WaitTime>
+			<TopMotorSpeed>2</TopMotorSpeed>
+			<BottomMotorSpeed>40</BottomMotorSpeed>
+			<Height>83</Height>
+			<Oscillation>80</Oscillation>
+			<Rotation>0</Rotation>
+		</Ball>
+	</Drill>
+	<Drill Name="No Spin Forehand" Description="No spin to the forehand" Delay="0">
+		<Ball Type="AdvancedInterfaceBall" TableYPercent="0.4">
+			<BallNumber>1</BallNumber>
+			<NumberOfBalls>1</NumberOfBalls>
+			<WaitTime>2100</WaitTime>
+			<TopMotorSpeed>20</TopMotorSpeed>
+			<BottomMotorSpeed>20</BottomMotorSpeed>
+			<Height>80</Height>
+			<Oscillation>80</Oscillation>
+			<Rotation>0</Rotation>
+		</Ball>
+	</Drill>
+	<Drill Name="No Spin Backhand" Description="No spin to the backhand" Delay="0">
+		<Ball Type="AdvancedInterfaceBall" TableYPercent="0.5">
+			<BallNumber>1</BallNumber>
+			<NumberOfBalls>1</NumberOfBalls>
+			<WaitTime>2100</WaitTime>
+			<TopMotorSpeed>25</TopMotorSpeed>
+			<BottomMotorSpeed>25</BottomMotorSpeed>
+			<Height>82</Height>
+			<Oscillation>10</Oscillation>
+			<Rotation>0</Rotation>
+		</Ball>
+	</Drill>
+</Training>
+<?xml version="1.0" encoding="utf-8"?>
