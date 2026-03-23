@@ -674,14 +674,47 @@
       </div>
       <div v-if="openFolders.has(folder.id)" class="drill-list">
         <div v-if="folder.drills.length === 0" style="padding:8px 6px;font-size:12px;color:var(--muted)">Brak drilli</div>
-        <div v-for="(drill, idx) in folder.drills" :key="drill.id" class="drill-row">
-          <span class="drill-name" :title="drill.description || drill.name">{{ drill.name }}</span>
-          <div class="drill-actions">
-            <button class="btn-xs" @click="moveDrillUp(folder, idx)" :disabled="idx===0">↑</button>
-            <button class="btn-xs" @click="moveDrillDown(folder, idx)" :disabled="idx===folder.drills.length-1">↓</button>
-            <button class="btn-xs" @click="showMoveModal(drill)" title="Przenieś do folderu">→</button>
-            <button class="btn-xs" @click="deleteDrillConfirm(drill.id)" title="Usuń">🗑</button>
-            <button class="btn-start-xs" :disabled="!connected || drillRunning || myRole !== 'controller'" @click="runDrill(drill)">▶</button>
+        <div v-for="(drill, idx) in folder.drills" :key="drill.id">
+          <div class="drill-row" @click="openDrillPanel(drill, folder)" style="cursor:pointer">
+            <span class="drill-name" :title="drill.description || drill.name">{{ drill.name }}</span>
+            <div class="drill-actions" @click.stop>
+              <button class="btn-xs" @click="moveDrillUp(folder, idx)" :disabled="idx===0">↑</button>
+              <button class="btn-xs" @click="moveDrillDown(folder, idx)" :disabled="idx===folder.drills.length-1">↓</button>
+              <button class="btn-xs" @click="showMoveModal(drill)" title="Przenieś do folderu">→</button>
+              <button class="btn-xs" @click="deleteDrillConfirm(drill.id)" title="Usuń">🗑</button>
+            </div>
+          </div>
+          <!-- Panel drilla -->
+          <div v-if="activeDrill && activeDrill.id === drill.id" style="background:var(--card);border:1px solid var(--border);border-radius:0 0 12px 12px;margin-top:-4px;padding:12px;margin-bottom:6px">
+            <div v-if="activeDrill.description" style="font-size:12px;color:var(--muted);margin-bottom:10px">{{ activeDrill.description }}</div>
+            <!-- Parametry piłek -->
+            <div style="font-size:11px;color:var(--muted);margin-bottom:6px">{{ activeDrill.balls.length }} {{ activeDrill.balls.length === 1 ? 'piłka' : 'piłek' }}</div>
+            <div style="display:flex;gap:4px;flex-wrap:wrap;margin-bottom:12px">
+              <span v-for="(b, bi) in activeDrill.balls" :key="bi"
+                style="font-size:10px;padding:3px 6px;background:var(--surface);border-radius:6px;border:1px solid var(--border);font-family:monospace">
+                T{{ b.top_speed }}/B{{ b.bot_speed }} h{{ b.height }} o{{ b.oscillation }} r{{ b.rotation }}
+              </span>
+            </div>
+            <!-- Kontrolki -->
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px">
+              <div class="field" style="margin:0">
+                <label style="font-size:11px">Piłek <small>1–999</small></label>
+                <input type="number" v-model.number="drillRunCount" min="1" max="999" style="text-align:center">
+              </div>
+              <div class="field" style="margin:0">
+                <label style="font-size:11px">Tempo <small>25–200%</small></label>
+                <div style="display:flex;align-items:center;gap:4px">
+                  <input type="range" v-model.number="drillRunPercent" min="25" max="200" step="5" style="flex:1">
+                  <span style="font-size:12px;font-weight:600;min-width:36px;text-align:right">{{ drillRunPercent }}%</span>
+                </div>
+              </div>
+            </div>
+            <!-- Nawigacja + Start -->
+            <div style="display:flex;gap:6px;align-items:center">
+              <button class="btn btn-ghost" style="padding:6px 10px" @click="prevDrill(folder)" :disabled="idx===0" title="Poprzedni">◀</button>
+              <button class="btn btn-success" style="flex:1;padding:8px" :disabled="!connected || drillRunning || myRole !== 'controller'" @click="startDrill">▶ Start</button>
+              <button class="btn btn-ghost" style="padding:6px 10px" @click="nextDrill(folder)" :disabled="idx===folder.drills.length-1" title="Następny">▶</button>
+            </div>
           </div>
         </div>
       </div>
@@ -1160,15 +1193,47 @@ createApp({
       await loadDrillTree()
     }
 
-    function runDrill(drill) {
-      if (myRole.value !== 'controller') return
+    // ── Drill panel ───────────────────────────────────────────
+    const activeDrill    = ref(null)
+    const drillRunCount  = ref(60)
+    const drillRunPercent = ref(100)
+
+    function openDrillPanel(drill, folder) {
+      if (activeDrill.value && activeDrill.value.id === drill.id) {
+        activeDrill.value = null; return
+      }
+      activeDrill.value = drill
+      drillRunCount.value = drill.user_count || 60
+      drillRunPercent.value = 100
+    }
+
+    function prevDrill(folder) {
+      const idx = folder.drills.findIndex(d => d.id === activeDrill.value?.id)
+      if (idx > 0) openDrillPanel(folder.drills[idx - 1], folder)
+    }
+
+    function nextDrill(folder) {
+      const idx = folder.drills.findIndex(d => d.id === activeDrill.value?.id)
+      if (idx < folder.drills.length - 1) openDrillPanel(folder.drills[idx + 1], folder)
+    }
+
+    function startDrill() {
+      if (myRole.value !== 'controller' || !activeDrill.value) return
+      const drill = activeDrill.value
       drillScenario.value  = drill.name
       drillBall.value      = 0
       drillTotal.value     = drill.balls.length
       drillRun.value       = 0
       drillMaxRepeat.value = drill.repeat
       drillRunning.value   = true
-      send({ action: 'run_drill', id: drill.id })
+      send({ action: 'run_drill', id: drill.id, count: drillRunCount.value, percent: drillRunPercent.value })
+    }
+
+    function runDrill(drill) {
+      activeDrill.value = drill
+      drillRunCount.value = drill.user_count || 60
+      drillRunPercent.value = 100
+      startDrill()
     }
 
     function exportDrills() {
@@ -1449,6 +1514,8 @@ createApp({
       showMoveModal, moveDrillToFolder, deleteDrillConfirm, runDrill, exportDrills,
       toast, robotLog, logBox, serverLogs, serverLogBox, logLevel, filteredServerLogs,
       drillRunning, drillScenario, drillBall, drillTotal, drillRun, drillMaxRepeat,
+      activeDrill, drillRunCount, drillRunPercent,
+      openDrillPanel, prevDrill, nextDrill, startDrill,
       editId, editName, editDesc, editRepeat, editBalls,
       cal, calDirty, calMotorLocked, helpOpen,
       lastAddr, robotName, editingName, robotNameEdit, camErr, camSrc,
