@@ -453,14 +453,12 @@ def get_calibration():
 
 
 @app.put("/api/calibration")
-async def save_calibration(body: dict):
+def save_calibration(body: dict):
     allowed = {"top_speed", "bot_speed", "oscillation", "height", "rotation", "wait_ms"}
     cal = {k: v for k, v in body.items() if k in allowed}
     addr = _load_last_addr() if robot.is_connected else ""
     _log("Calibration saved for %s: %s", addr or "default", cal)
     _save_cal(cal, addr)
-    if robot.is_connected:
-        await robot.apply_calibration(cal)
     return cal
 
 
