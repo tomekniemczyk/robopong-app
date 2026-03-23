@@ -371,29 +371,42 @@ class Robot:
 
     # ── drill runner ──────────────────────────────────────────────────────────
 
-    async def run_drill(self, balls: List[Dict], repeat: int = 1):
+    async def run_drill(self, balls: List[Dict], repeat: int = 1,
+                        count: int = 0, percent: int = 100):
         if self._drill and not self._drill.done():
             self._drill.cancel()
 
+        min_wait_ms = 500 if len(balls) == 1 else 750
+
         async def _loop():
             run = 0
+            thrown = 0
             try:
                 while repeat == 0 or run < repeat:
                     for i, b in enumerate(balls):
+                        if count > 0 and thrown >= count:
+                            return
+                        # Newgy formula: wait * (100 + (100 - percent)) / 100
+                        raw_wait = b.get("wait_ms", 1500)
+                        adj_wait = max(min_wait_ms, int(raw_wait * (100 + (100 - percent)) / 100))
                         await self.set_ball(
                             b["top_speed"], b["bot_speed"],
                             b["oscillation"], b["height"],
-                            b["rotation"], b.get("wait_ms", 1500),
+                            b["rotation"], adj_wait,
                         )
                         await asyncio.sleep(0.15)
                         await self.throw()
+                        thrown += 1
                         self._emit("drill_progress", {
                             "ball":       i + 1,
                             "total":      len(balls),
                             "run":        run + 1,
                             "max_repeat": repeat,
+                            "thrown":     thrown,
+                            "count":      count,
+                            "percent":    percent,
                         })
-                        await asyncio.sleep(max(0.3, b.get("wait_ms", 1500) / 1000 - 0.15))
+                        await asyncio.sleep(max(0.3, adj_wait / 1000 - 0.15))
                     run += 1
             except asyncio.CancelledError:
                 pass

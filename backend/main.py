@@ -13,6 +13,7 @@ from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 
 import db
+import drills
 import presets
 from models import Ball, ScenarioIn, FolderIn, FolderUpdate, DrillIn, ReorderItem, DrillReorderItem
 from robot import Robot
@@ -349,13 +350,17 @@ async def _handle(msg: dict, ws: WebSocket):
         asyncio.create_task(robot.run_drill(s["balls"], s.get("repeat", 1)))
 
     elif action == "run_drill":
-        d = db.get_drill(msg["id"])
+        d = drills.get_drill(msg["id"])
         if not d:
             await _send(ws, "error", {"message": "Nie znaleziono drilla"})
             return
+        percent = msg.get("percent", 100)
+        count = msg.get("count", 0) or d.get("user_count") or 0
         repeat = d.get("repeat", 0)
-        _log("Drill start: \"%s\" — %d balls, repeat: %s", d.get("name", "?"), len(d["balls"]), "infinite" if repeat == 0 else repeat)
-        asyncio.create_task(robot.run_drill(d["balls"], d.get("repeat", 0)))
+        _log("Drill start: \"%s\" — %d balls, repeat=%s, percent=%d, count=%d",
+             d.get("name", "?"), len(d["balls"]),
+             "inf" if repeat == 0 else repeat, percent, count)
+        asyncio.create_task(robot.run_drill(d["balls"], repeat, count=count, percent=percent))
 
     elif action == "stop_drill":
         _log("Drill stop")
@@ -500,79 +505,46 @@ def delete_scenario(id: int):
     db.delete_scenario(id)
 
 
-# ── REST — drille ─────────────────────────────────────────────────────────────
+# ── REST — drille (plikowe) ───────────────────────────────────────────────────
 
 @app.get("/api/drills/tree")
 def get_drill_tree():
-    return db.get_drill_tree()
+    return drills.get_tree()
 
 
-@app.get("/api/drills/export")
-def export_drills():
-    return db.get_drill_tree()
-
-
-@app.post("/api/drills/folders", status_code=201)
-def create_folder(body: FolderIn):
-    fid = db.create_folder(body.name, body.description)
-    return db.get_drill_tree()
-
-
-@app.put("/api/drills/folders/reorder", status_code=204)
-def reorder_folders(body: list[ReorderItem]):
-    db.reorder_folders([i.model_dump() for i in body])
-
-
-@app.put("/api/drills/folders/{id}")
-def update_folder(id: int, body: FolderUpdate):
-    db.update_folder(id, **{k: v for k, v in body.model_dump().items() if v is not None})
-    return db.get_drill_tree()
-
-
-@app.delete("/api/drills/folders/{id}", status_code=204)
-def delete_folder(id: int):
-    db.delete_folder(id)
-
-
-@app.get("/api/drills/{id}")
-def get_drill(id: int):
-    d = db.get_drill(id)
+@app.get("/api/drills/{drill_id}")
+def get_drill_endpoint(drill_id: int):
+    d = drills.get_drill(drill_id)
     if not d:
         raise HTTPException(404)
     return d
 
 
-@app.post("/api/drills", status_code=201)
-def create_drill(body: DrillIn):
-    did = db.create_drill(
-        body.folder_id, body.name, body.description, body.youtube_id,
-        body.delay_s, [b.model_dump() for b in body.balls], body.repeat
-    )
-    return db.get_drill(did)
+@app.put("/api/drills/{drill_id}")
+def update_drill_endpoint(drill_id: int, body: dict):
+    _log("UPDATE DRILL id=%d", drill_id)
+    drills.save_override(drill_id, body)
+    return drills.get_drill(drill_id)
 
 
-@app.put("/api/drills/reorder", status_code=204)
-def reorder_drills(body: list[DrillReorderItem]):
-    db.reorder_drills([i.model_dump() for i in body])
+@app.put("/api/drills/{drill_id}/count")
+def set_drill_count(drill_id: int, body: dict):
+    drills.set_user_count(drill_id, body.get("count"))
+    return {"ok": True}
 
 
-@app.put("/api/drills/{id}")
-def update_drill(id: int, body: DrillIn):
-    if not db.get_drill(id):
-        raise HTTPException(404)
-    db.update_drill(id, name=body.name, description=body.description,
-                    youtube_id=body.youtube_id, delay_s=body.delay_s,
-                    balls=[b.model_dump() for b in body.balls],
-                    repeat=body.repeat, folder_id=body.folder_id,
-                    sort_order=body.sort_order)
-    return db.get_drill(id)
+@app.put("/api/drills/{drill_id}/reset")
+def reset_drill_endpoint(drill_id: int):
+    drills.reset_drill(drill_id)
+    _log("RESET DRILL id=%d", drill_id)
+    return {"ok": True}
 
 
-@app.delete("/api/drills/{id}", status_code=204)
-def delete_drill(id: int):
-    if not db.get_drill(id):
-        raise HTTPException(404)
-    db.delete_drill(id)
+@app.post("/api/drills/reset-all")
+def reset_all_drills():
+    drills.reset_all()
+    _log("RESET ALL DRILLS")
+    return {"ok": True}
 
 
 # ── Frontend ───────────────────────────────────────────────────────────────────
