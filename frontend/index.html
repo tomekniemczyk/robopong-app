@@ -613,65 +613,79 @@
   </div>
 
   <!-- ── Training runner overlay ─────────────────────────────────────────── -->
-  <div class="runner-overlay" v-if="trainingRunning" style="display:flex;flex-direction:column;align-items:center;gap:8px">
-    <h2 style="margin:0">{{ trainingScenarioName }}</h2>
+  <div class="runner-overlay" v-if="trainingRunning" style="display:flex;gap:16px;align-items:flex-start;justify-content:center;padding:24px 16px;flex-wrap:wrap">
 
-    <!-- Progress kroków -->
-    <div style="display:flex;gap:4px;margin:4px 0">
-      <span v-for="s in trainingTotalSteps" :key="s"
-        style="width:20px;height:4px;border-radius:2px"
-        :style="{background: s < trainingStep ? 'var(--accent)' : s === trainingStep ? '#ff9f0a' : 'rgba(255,255,255,.15)'}"></span>
+    <!-- Lewa: lista kroków -->
+    <div style="width:180px;flex-shrink:0">
+      <h3 style="margin:0 0 8px;font-size:13px;color:var(--muted)">{{ trainingScenarioName }}</h3>
+      <div v-for="(step, si) in trainingStepsList" :key="si"
+        style="display:flex;align-items:center;gap:6px;padding:5px 8px;margin-bottom:3px;border-radius:6px;font-size:11px"
+        :style="{
+          background: si+1 === trainingStep ? 'rgba(91,124,247,.2)' : 'transparent',
+          border: si+1 === trainingStep ? '1px solid rgba(91,124,247,.4)' : '1px solid transparent'
+        }">
+        <span style="width:14px;text-align:center;flex-shrink:0"
+          :style="{color: si+1 < trainingStep ? '#34c759' : si+1 === trainingStep ? '#ff9f0a' : 'var(--muted)'}">
+          {{ si+1 < trainingStep ? '✓' : si+1 === trainingStep ? '▶' : '○' }}
+        </span>
+        <span style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap"
+          :style="{color: si+1 === trainingStep ? '#fff' : 'var(--muted)'}">
+          {{ step.drill_name || 'Drill ' + (si+1) }}
+        </span>
+        <span style="font-size:9px;color:var(--muted)">{{ step.count }}p</span>
+      </div>
+      <div v-if="trainingEstRemaining" style="font-size:10px;color:var(--muted);margin-top:6px;text-align:center">
+        ~{{ Math.ceil(trainingEstRemaining/60) }} min do końca
+      </div>
     </div>
 
-    <!-- Info drilla -->
-    <div style="font-size:13px;color:var(--muted)">
-      Krok {{ trainingStep }}/{{ trainingTotalSteps }}
-      <span v-if="trainingEstRemaining"> · ~{{ Math.ceil(trainingEstRemaining/60) }} min</span>
-    </div>
-    <div style="font-size:16px;font-weight:600">{{ trainingDrillName }}</div>
+    <!-- Prawa: aktualny stan -->
+    <div style="flex:1;min-width:200px;max-width:360px;text-align:center">
+      <div style="font-size:16px;font-weight:600;margin-bottom:8px">{{ trainingDrillName }}</div>
 
-    <!-- Stół z piłkami drilla -->
-    <svg v-if="trainingBalls.length" viewBox="0 0 300 180" style="width:90%;max-width:260px;border-radius:4px">
-      <rect x="0" y="10" width="300" height="170" fill="#1a4a8a"/>
-      <rect x="0" y="10" width="300" height="170" fill="none" stroke="#fff" stroke-width="2"/>
-      <line x1="150" y1="10" x2="150" y2="180" stroke="#fff" stroke-width="1" opacity="0.5"/>
-      <rect x="-2" y="6" width="304" height="8" rx="1" fill="#555"/>
-      <rect x="125" y="0" width="50" height="8" rx="2" fill="#3a3d52" stroke="#6b6f8a" stroke-width="0.5"/>
-      <g v-for="(b, bi) in trainingBalls" :key="bi">
-        <circle :cx="ballTableX(b)" :cy="10+(ballTableY(b)-30)*170/180" r="9"
-          :fill="b.top_speed > b.bot_speed ? '#ff6b35' : b.top_speed < b.bot_speed ? '#4dabf7' : '#ffd43b'"
-          stroke="#fff" stroke-width="1" opacity="0.85"/>
-        <text :x="ballTableX(b)" :y="10+(ballTableY(b)-30)*170/180+3" text-anchor="middle" fill="#fff" font-size="7" font-weight="700">{{ bi+1 }}</text>
-      </g>
-    </svg>
+      <!-- Stół SVG -->
+      <svg v-if="trainingBalls.length" viewBox="0 0 300 180" style="width:100%;max-width:260px;margin:0 auto 8px;display:block;border-radius:4px">
+        <rect x="0" y="10" width="300" height="170" fill="#1a4a8a"/>
+        <rect x="0" y="10" width="300" height="170" fill="none" stroke="#fff" stroke-width="2"/>
+        <line x1="150" y1="10" x2="150" y2="180" stroke="#fff" stroke-width="1" opacity="0.5"/>
+        <rect x="-2" y="6" width="304" height="8" rx="1" fill="#555"/>
+        <rect x="125" y="0" width="50" height="8" rx="2" fill="#3a3d52" stroke="#6b6f8a" stroke-width="0.5"/>
+        <g v-for="(b, bi) in trainingBalls" :key="bi">
+          <circle :cx="ballTableX(b)" :cy="10+(ballTableY(b)-30)*170/180" r="9"
+            :fill="b.top_speed > b.bot_speed ? '#ff6b35' : b.top_speed < b.bot_speed ? '#4dabf7' : '#ffd43b'"
+            stroke="#fff" stroke-width="1" opacity="0.85"/>
+          <text :x="ballTableX(b)" :y="10+(ballTableY(b)-30)*170/180+3" text-anchor="middle" fill="#fff" font-size="7" font-weight="700">{{ bi+1 }}</text>
+        </g>
+      </svg>
 
-    <!-- Faza: countdown -->
-    <div v-if="trainingPhase === 'countdown'" style="text-align:center">
-      <div class="ball-counter">{{ trainingTimer }}</div>
-      <div class="ball-sub">Przygotuj się...</div>
-    </div>
+      <!-- Faza: countdown -->
+      <div v-if="trainingPhase === 'countdown'">
+        <div class="ball-counter">{{ trainingTimer }}</div>
+        <div class="ball-sub">Przygotuj się...</div>
+      </div>
 
-    <!-- Faza: drill -->
-    <div v-if="trainingPhase === 'drill'" style="text-align:center;width:80%">
-      <div class="ball-counter">{{ trainingBall }}<span style="font-size:32px;opacity:.5">/{{ trainingBallTotal }}</span></div>
-      <div class="progress-bar"><div class="fill" :style="{width: trainingBallTotal ? (trainingBall/trainingBallTotal*100)+'%' : '0'}"></div></div>
-    </div>
+      <!-- Faza: drill -->
+      <div v-if="trainingPhase === 'drill'" style="width:80%;margin:0 auto">
+        <div class="ball-counter">{{ trainingBall }}<span style="font-size:32px;opacity:.5">/{{ trainingBallTotal }}</span></div>
+        <div class="progress-bar"><div class="fill" :style="{width: trainingBallTotal ? (trainingBall/trainingBallTotal*100)+'%' : '0'}"></div></div>
+      </div>
 
-    <!-- Faza: pauza -->
-    <div v-if="trainingPhase === 'pause'" style="text-align:center">
-      <div class="ball-counter" style="color:#ff9f0a">{{ trainingTimer }}</div>
-      <div class="ball-sub">Odpoczynek</div>
-      <div style="font-size:12px;color:var(--muted);margin-top:4px">następny: {{ trainingNextDrill }}</div>
-    </div>
+      <!-- Faza: pauza -->
+      <div v-if="trainingPhase === 'pause'">
+        <div class="ball-counter" style="color:#ff9f0a">{{ trainingTimer }}</div>
+        <div class="ball-sub">Odpoczynek</div>
+        <div style="font-size:12px;color:var(--muted);margin-top:4px">następny: {{ trainingNextDrill }}</div>
+      </div>
 
-    <!-- Faza: paused -->
-    <div v-if="trainingIsPaused" style="font-size:16px;color:#ff9f0a;font-weight:700">⏸ WSTRZYMANO</div>
+      <!-- Paused -->
+      <div v-if="trainingIsPaused" style="font-size:16px;color:#ff9f0a;font-weight:700;margin:8px 0">⏸ WSTRZYMANO</div>
 
-    <!-- Przyciski -->
-    <div style="display:flex;gap:8px;margin-top:8px;width:80%">
-      <button class="btn" style="flex:1;background:#ff9f0a;color:#fff" v-if="!trainingIsPaused" @click="pauseTraining">⏸ Pauza</button>
-      <button class="btn btn-success" style="flex:1" v-if="trainingIsPaused" @click="resumeTraining">▶ Wznów</button>
-      <button class="btn btn-danger" style="flex:1" @click="stopTraining">⏹ Stop</button>
+      <!-- Przyciski -->
+      <div style="display:flex;gap:8px;margin-top:12px">
+        <button class="btn" style="flex:1;background:#ff9f0a;color:#fff" v-if="!trainingIsPaused" @click="pauseTraining">⏸ Pauza</button>
+        <button class="btn btn-success" style="flex:1" v-if="trainingIsPaused" @click="resumeTraining">▶ Wznów</button>
+        <button class="btn btn-danger" style="flex:1" @click="stopTraining">⏹ Stop</button>
+      </div>
     </div>
   </div>
 
@@ -1441,6 +1455,7 @@ createApp({
     const trainingBall = ref(0)
     const trainingBallTotal = ref(0)
     const trainingBalls = ref([])
+    const trainingStepsList = ref([])
     const trainingEstRemaining = ref(0)
     const trainingIsPaused = ref(false)
     const tEditId = ref(null)
@@ -1497,10 +1512,13 @@ createApp({
       await loadTrainings()
     }
     function runTraining(id) {
+      const t = trainings.value.find(t => t.id === id)
       trainingRunning.value = true
       trainingIsPaused.value = false
       trainingPhase.value = 'countdown'
-      trainingScenarioName.value = trainings.value.find(t => t.id === id)?.name || ''
+      trainingScenarioName.value = t?.name || ''
+      trainingStepsList.value = (t?.steps || []).map(s => ({...s}))
+      trainingStep.value = 0
       send({ action: 'run_training', id })
     }
     function pauseTraining() {
@@ -1690,7 +1708,7 @@ createApp({
       trainings, trainingRunning, trainingScenarioName, trainingPhase,
       trainingStep, trainingTotalSteps, trainingDrillName, trainingNextDrill,
       trainingTimer, trainingBall, trainingBallTotal,
-      trainingBalls, trainingEstRemaining, trainingIsPaused,
+      trainingBalls, trainingStepsList, trainingEstRemaining, trainingIsPaused,
       tEditId, tEditName, tEditDesc, tEditCountdown, tEditSteps,
       loadTrainings, openTrainingEditor, addTrainingStep, moveStep,
       pauseTraining, resumeTraining,

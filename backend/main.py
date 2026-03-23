@@ -383,7 +383,7 @@ async def _handle(msg: dict, ws: WebSocket):
             await _send(ws, "error", {"message": "Nie znaleziono treningu"})
             return
         _log("Training start: \"%s\" — %d steps", t.get("name", "?"), len(t.get("steps", [])))
-        _training_runner.start(t, broadcast, robot)
+        _training_runner.start(t, robot, broadcast)
 
     elif action == "stop_training":
         _log("Training stop")
