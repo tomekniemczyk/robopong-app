@@ -435,15 +435,24 @@ class Robot:
     # ── internal ──────────────────────────────────────────────────────────────
 
     async def _handshake(self):
+        # 1. Wake up — Z×3 + H (jak Android/iOS connectService)
         for _ in range(3):
             await self._write("Z")
             await asyncio.sleep(0.12)
         await self._write("H")
         await asyncio.sleep(0.4)
-        await self._write("F")
+        # 2. InitializeRobot — F, I, ClearBall (H + W000)
+        await self._write("F")         # GetFirmwareVersion
         await asyncio.sleep(0.5)
-        await self._write("J02")
+        await self._write("I")         # getRobotVersion (query)
         await asyncio.sleep(0.3)
+        await self._write("J02")       # SetVersion Gen2
+        await asyncio.sleep(0.2)
+        await self._write("H")         # ClearBall
+        await asyncio.sleep(0.1)
+        await self._write("W000")      # SetAdjustment(0)
+        await asyncio.sleep(0.2)
+        logger.info("handshake complete")
 
     async def _write(self, cmd: str):
         # USB takes priority if connected
