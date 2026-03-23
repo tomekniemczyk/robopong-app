@@ -585,6 +585,32 @@ def get_drill_tree():
     return drills.get_tree()
 
 
+@app.post("/api/drills/folders", status_code=201)
+def create_folder(body: dict):
+    return drills.create_folder(body.get("name", "Nowy folder"))
+
+
+@app.put("/api/drills/folders/reorder")
+def reorder_folders(body: list):
+    drills.reorder_folders(body)
+
+
+@app.put("/api/drills/folders/{folder_id}")
+def rename_folder(folder_id: int, body: dict):
+    if not drills.rename_folder(folder_id, body.get("name", "")):
+        raise HTTPException(404)
+
+
+@app.delete("/api/drills/folders/{folder_id}", status_code=204)
+def delete_folder(folder_id: int):
+    drills.delete_folder(folder_id)
+
+
+@app.put("/api/drills/reorder")
+def reorder_drills(body: list):
+    drills.reorder_drills(body)
+
+
 @app.get("/api/drills/{drill_id}")
 def get_drill_endpoint(drill_id: int):
     d = drills.get_drill(drill_id)
