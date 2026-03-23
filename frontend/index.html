@@ -752,6 +752,11 @@
       <div v-if="trainingPhase === 'exercise'" style="text-align:center;width:80%;margin:0 auto">
         <div class="ball-counter" style="color:#a855f7">{{ trainingTimer }}</div>
         <div class="ball-sub">{{ trainingDrillName }}</div>
+        <img v-if="trainingExerciseId"
+          :src="`/static/exercises/${trainingExerciseId}.gif`"
+          :alt="trainingDrillName"
+          @error="$event.target.style.display='none'"
+          style="display:block;width:140px;height:140px;object-fit:contain;margin:10px auto;border-radius:10px;background:rgba(168,85,247,.08)">
         <div class="progress-bar"><div class="fill" :style="{width: trainingBallTotal ? ((trainingBallTotal-trainingTimer)/trainingBallTotal*100)+'%' : '0', background:'#a855f7'}"></div></div>
       </div>
 
@@ -769,6 +774,7 @@
       <div style="display:flex;gap:8px;margin-top:12px">
         <button class="btn" style="flex:1;background:#ff9f0a;color:#fff" v-if="!trainingIsPaused" @click="pauseTraining">⏸ Pauza</button>
         <button class="btn btn-success" style="flex:1" v-if="trainingIsPaused" @click="resumeTraining">▶ Wznów</button>
+        <button class="btn" style="flex:1;background:#6366f1;color:#fff" v-if="trainingPhase !== 'countdown'" @click="skipTraining" title="Pomiń bieżący krok i przejdź do następnego">⏭ Skip</button>
         <button class="btn btn-danger" style="flex:1" @click="stopTraining">⏹ Stop</button>
       </div>
     </div>
@@ -974,10 +980,14 @@
             @error="$event.target.style.display='none'"
             style="display:block;width:160px;height:160px;object-fit:contain;margin:0 auto 10px;border-radius:8px;background:var(--surface)">
           <div style="font-size:12px;color:var(--text2);line-height:1.5;margin-bottom:8px">{{ selectedExercise.description }}</div>
-          <div style="display:flex;align-items:center;gap:6px">
+          <div style="display:flex;align-items:center;gap:8px;margin-top:8px">
             <span style="font-size:11px;color:var(--muted)">Czas:</span>
             <input type="number" v-model.number="selectedExercise.duration_sec" min="10" max="600" style="width:60px;text-align:center">
             <span style="font-size:11px;color:var(--muted)">sek</span>
+            <div style="flex:1"></div>
+            <button class="btn btn-success" style="padding:7px 18px;font-size:13px"
+              :disabled="!connected || myRole !== 'controller'"
+              @click="runExerciseSolo(selectedExercise)">▶ Start</button>
           </div>
         </div>
       </div>
@@ -1314,6 +1324,8 @@ createApp({
       } else if (m.type === 'drill_ended') {
         drillRunning.value = false
       } else if (m.type === 'training_info') {
+        trainingRunning.value = true
+        trainingIsPaused.value = false
         trainingScenarioName.value = m.name
         trainingTotalSteps.value = m.total_steps
       } else if (m.type === 'training_countdown') {
@@ -1339,6 +1351,7 @@ createApp({
         trainingDrillName.value = m.exercise_name
         trainingTimer.value = m.sec
         trainingBallTotal.value = m.total_sec
+        trainingExerciseId.value = m.exercise_id || null
       } else if (m.type === 'training_pause') {
         trainingPhase.value = 'pause'
         trainingTimer.value = m.sec
@@ -1745,6 +1758,7 @@ createApp({
     const trainingBalls = ref([])
     const trainingStepsList = ref([])
     const trainingEstRemaining = ref(0)
+    const trainingExerciseId   = ref(null)
     const trainingIsPaused = ref(false)
     // ── Training editor modal ─────────────────────────────────
     const showTrainingModal = ref(false)
@@ -1813,6 +1827,9 @@ createApp({
       trainingStep.value = 0
       send({ action: 'run_training', id })
     }
+    function runExerciseSolo(ex) {
+      send({ action: 'run_exercise_solo', exercise_id: ex.id, duration_sec: ex.duration_sec })
+    }
     function pauseTraining() {
       send({ action: 'pause_training' })
     }
@@ -1823,6 +1840,9 @@ createApp({
       send({ action: 'stop_training' })
       trainingRunning.value = false
       trainingIsPaused.value = false
+    }
+    function skipTraining() {
+      send({ action: 'skip_training' })
     }
     function totalTrainingTime(t) {
       if (!t.steps?.length) return '0s'
@@ -2047,10 +2067,10 @@ createApp({
       trainings, trainingRunning, trainingScenarioName, trainingPhase,
       trainingStep, trainingTotalSteps, trainingDrillName, trainingNextDrill,
       trainingTimer, trainingBall, trainingBallTotal,
-      trainingBalls, trainingStepsList, trainingEstRemaining, trainingIsPaused,
+      trainingBalls, trainingStepsList, trainingEstRemaining, trainingIsPaused, trainingExerciseId,
       tEditId, tEditName, tEditDesc, tEditCountdown, tEditSteps,
       loadTrainings, openTrainingEditor, addTrainingStep, moveStep,
-      pauseTraining, resumeTraining,
+      pauseTraining, resumeTraining, skipTraining, runExerciseSolo,
       onDrillSelect, saveTraining, deleteTraining, runTraining, stopTraining, totalTrainingTime,
       exerciseCategories, openExCats, selectedExercise, toggleExCat, loadExercises, onStepTypeSelect,
     }

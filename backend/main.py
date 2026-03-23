@@ -392,6 +392,21 @@ async def _handle(msg: dict, ws: WebSocket):
         _log("Training start: \"%s\" — %d steps", t.get("name", "?"), len(t.get("steps", [])))
         _training_runner.start(t, robot, broadcast)
 
+    elif action == "run_exercise_solo":
+        ex = exercises.get_exercise(msg["exercise_id"])
+        if not ex:
+            await _send(ws, "error", {"message": "Nie znaleziono ćwiczenia"})
+            return
+        duration = msg.get("duration_sec") or ex.get("duration_sec", 60)
+        _log("Exercise solo: \"%s\" %ds", ex.get("name", "?"), duration)
+        mini = {
+            "name": ex.get("name", "Ćwiczenie"),
+            "countdown_sec": 3,
+            "steps": [{"exercise_id": ex["id"], "exercise_name": ex.get("name", ""),
+                        "duration_sec": duration, "pause_after_sec": 0}],
+        }
+        _training_runner.start(mini, robot, broadcast)
+
     elif action == "stop_training":
         _log("Training stop")
         _training_runner.stop()
@@ -400,6 +415,11 @@ async def _handle(msg: dict, ws: WebSocket):
         _log("Training pause")
         _training_runner.pause()
         broadcast("training_paused", {})
+
+    elif action == "skip_training":
+        _log("Training skip")
+        _training_runner.skip()
+        broadcast("training_skipped", {})
 
     elif action == "resume_training":
         _log("Training resume")

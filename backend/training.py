@@ -64,6 +64,7 @@ class TrainingRunner:
         self._task: Optional[asyncio.Task] = None
         self._stopped = False
         self._paused = False
+        self._skip = False
         self._robot = None
 
     @property
@@ -75,6 +76,7 @@ class TrainingRunner:
             self.stop()
         self._stopped = False
         self._paused = False
+        self._skip = False
         self._robot = robot
         self._broadcast = broadcast
         self._task = asyncio.create_task(self._run(scenario, robot, broadcast))
@@ -82,6 +84,7 @@ class TrainingRunner:
     def stop(self):
         self._stopped = True
         self._paused = False
+        self._skip = False
         if self._task and not self._task.done():
             self._task.cancel()
         if self._robot:
@@ -96,6 +99,17 @@ class TrainingRunner:
 
     def resume(self):
         self._paused = False
+
+    def skip(self):
+        """Skip current step (drill/exercise/pause) immediately."""
+        self._skip = True
+
+    def _consume_skip(self) -> bool:
+        """Returns True and resets flag if skip was requested."""
+        if self._skip:
+            self._skip = False
+            return True
+        return False
 
     async def _wait_unpaused(self):
         while self._paused and not self._stopped:
@@ -193,10 +207,17 @@ class TrainingRunner:
                 robot._emit = _make_interceptor(step_idx, drill_name)
                 await robot.run_drill(drill["balls"], repeat=0, count=count, percent=percent)
 
-                try:
-                    await asyncio.wait_for(drill_done.wait(), timeout=max(300, count * 30))
-                except asyncio.TimeoutError:
-                    logger.warning("Drill timeout")
+                timeout = max(300, count * 30)
+                elapsed = 0.0
+                while not drill_done.is_set() and not self._stopped and not self._skip:
+                    await asyncio.sleep(0.2)
+                    elapsed += 0.2
+                    if elapsed > timeout:
+                        logger.warning("Drill timeout")
+                        break
+                if self._consume_skip():
+                    robot.stop_drill()
+                    await robot.stop()
 
                 robot._emit = original_emit
 
@@ -219,6 +240,7 @@ class TrainingRunner:
 
                     for sec in range(pause_sec, 0, -1):
                         if self._stopped: return
+                        if self._consume_skip(): break
                         await self._wait_unpaused()
                         broadcast("training_pause", {
                             "sec": sec, "total": pause_sec,
@@ -270,10 +292,12 @@ class TrainingRunner:
         # Countdown ćwiczenia
         for sec in range(duration, 0, -1):
             if self._stopped: return
+            if self._consume_skip(): break
             await self._wait_unpaused()
             broadcast("training_exercise_progress", {
                 "step": step_idx + 1, "total_steps": total_steps,
                 "exercise_name": name, "sec": sec, "total_sec": duration,
+                "exercise_id": ex.get("id"),
                 "description": ex.get("description", ""),
             })
             if sec <= 3:
@@ -290,6 +314,7 @@ class TrainingRunner:
         if step_idx < total_steps - 1 and pause_sec > 0:
             for sec in range(pause_sec, 0, -1):
                 if self._stopped: return
+                if self._consume_skip(): break
                 await self._wait_unpaused()
                 broadcast("training_pause", {
                     "sec": sec, "total": pause_sec,
