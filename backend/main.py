@@ -172,9 +172,6 @@ async def _do_connect(addr: str) -> bool:
         ok = await robot.connect_usb(addr[4:])
     else:
         ok = await robot.connect(addr)
-    if ok:
-        cal = _load_cal(addr)
-        await robot.apply_calibration(cal)
     return ok
 
 
@@ -299,8 +296,8 @@ async def _handle(msg: dict, ws: WebSocket):
             _save_last_addr(addr)
             _last_activity = time.monotonic()
             cal = _load_cal(addr)
+            cal = _load_cal(addr)
             _log("Calibration loaded for %s: %s", addr, cal)
-            await robot.apply_calibration(cal)
             broadcast("calibration_loaded", {"cal": cal})
         else:
             _log("Connection failed for %s", addr)
@@ -324,7 +321,6 @@ async def _handle(msg: dict, ws: WebSocket):
             _last_activity = time.monotonic()
             cal = _load_cal(addr)
             _log("Calibration loaded for %s: %s", addr, cal)
-            await robot.apply_calibration(cal)
             broadcast("calibration_loaded", {"cal": cal})
 
     elif action == "usb_disconnect":
