@@ -378,7 +378,17 @@ async def _handle(msg: dict, ws: WebSocket):
 
     elif action == "stop_training":
         _log("Training stop")
-        _training_runner.stop(robot)
+        _training_runner.stop()
+
+    elif action == "pause_training":
+        _log("Training pause")
+        _training_runner.pause()
+        broadcast("training_paused", {})
+
+    elif action == "resume_training":
+        _log("Training resume")
+        _training_runner.resume()
+        broadcast("training_resumed", {})
 
     elif action == "reset_ble":
         asyncio.create_task(robot.reset_ble())

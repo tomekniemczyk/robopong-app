@@ -612,25 +612,66 @@
   </div>
 
   <!-- ── Training runner overlay ─────────────────────────────────────────── -->
-  <div class="runner-overlay" v-if="trainingRunning">
-    <h2>{{ trainingScenarioName }}</h2>
-    <div style="font-size:14px;color:var(--muted);margin-bottom:8px">
-      Krok {{ trainingStep }}/{{ trainingTotalSteps }} · {{ trainingDrillName }}
+  <div class="runner-overlay" v-if="trainingRunning" style="display:flex;flex-direction:column;align-items:center;gap:8px">
+    <h2 style="margin:0">{{ trainingScenarioName }}</h2>
+
+    <!-- Progress kroków -->
+    <div style="display:flex;gap:4px;margin:4px 0">
+      <span v-for="s in trainingTotalSteps" :key="s"
+        style="width:20px;height:4px;border-radius:2px"
+        :style="{background: s < trainingStep ? 'var(--accent)' : s === trainingStep ? '#ff9f0a' : 'rgba(255,255,255,.15)'}"></span>
     </div>
+
+    <!-- Info drilla -->
+    <div style="font-size:13px;color:var(--muted)">
+      Krok {{ trainingStep }}/{{ trainingTotalSteps }}
+      <span v-if="trainingEstRemaining"> · ~{{ Math.ceil(trainingEstRemaining/60) }} min</span>
+    </div>
+    <div style="font-size:16px;font-weight:600">{{ trainingDrillName }}</div>
+
+    <!-- Stół z piłkami drilla -->
+    <svg v-if="trainingBalls.length" viewBox="0 0 300 180" style="width:90%;max-width:260px;border-radius:4px">
+      <rect x="0" y="10" width="300" height="170" fill="#1a4a8a"/>
+      <rect x="0" y="10" width="300" height="170" fill="none" stroke="#fff" stroke-width="2"/>
+      <line x1="150" y1="10" x2="150" y2="180" stroke="#fff" stroke-width="1" opacity="0.5"/>
+      <rect x="-2" y="6" width="304" height="8" rx="1" fill="#555"/>
+      <rect x="125" y="0" width="50" height="8" rx="2" fill="#3a3d52" stroke="#6b6f8a" stroke-width="0.5"/>
+      <g v-for="(b, bi) in trainingBalls" :key="bi">
+        <circle :cx="ballTableX(b)" :cy="10+(ballTableY(b)-30)*170/180" r="9"
+          :fill="b.top_speed > b.bot_speed ? '#ff6b35' : b.top_speed < b.bot_speed ? '#4dabf7' : '#ffd43b'"
+          stroke="#fff" stroke-width="1" opacity="0.85"/>
+        <text :x="ballTableX(b)" :y="10+(ballTableY(b)-30)*170/180+3" text-anchor="middle" fill="#fff" font-size="7" font-weight="700">{{ bi+1 }}</text>
+      </g>
+    </svg>
+
+    <!-- Faza: countdown -->
     <div v-if="trainingPhase === 'countdown'" style="text-align:center">
       <div class="ball-counter">{{ trainingTimer }}</div>
-      <div class="ball-sub">Odliczanie...</div>
+      <div class="ball-sub">Przygotuj się...</div>
     </div>
-    <div v-if="trainingPhase === 'drill'" style="text-align:center">
-      <div class="ball-counter">{{ trainingBall }}</div>
-      <div class="ball-sub">z {{ trainingBallTotal }} piłek</div>
+
+    <!-- Faza: drill -->
+    <div v-if="trainingPhase === 'drill'" style="text-align:center;width:80%">
+      <div class="ball-counter">{{ trainingBall }}<span style="font-size:32px;opacity:.5">/{{ trainingBallTotal }}</span></div>
       <div class="progress-bar"><div class="fill" :style="{width: trainingBallTotal ? (trainingBall/trainingBallTotal*100)+'%' : '0'}"></div></div>
     </div>
+
+    <!-- Faza: pauza -->
     <div v-if="trainingPhase === 'pause'" style="text-align:center">
-      <div class="ball-counter">{{ trainingTimer }}</div>
-      <div class="ball-sub">Pauza · następny: {{ trainingNextDrill }}</div>
+      <div class="ball-counter" style="color:#ff9f0a">{{ trainingTimer }}</div>
+      <div class="ball-sub">Odpoczynek</div>
+      <div style="font-size:12px;color:var(--muted);margin-top:4px">następny: {{ trainingNextDrill }}</div>
     </div>
-    <button class="btn btn-danger" style="margin-top:20px" @click="stopTraining">⏹ Zatrzymaj trening</button>
+
+    <!-- Faza: paused -->
+    <div v-if="trainingIsPaused" style="font-size:16px;color:#ff9f0a;font-weight:700">⏸ WSTRZYMANO</div>
+
+    <!-- Przyciski -->
+    <div style="display:flex;gap:8px;margin-top:8px;width:80%">
+      <button class="btn" style="flex:1;background:#ff9f0a;color:#fff" v-if="!trainingIsPaused" @click="pauseTraining">⏸ Pauza</button>
+      <button class="btn btn-success" style="flex:1" v-if="trainingIsPaused" @click="resumeTraining">▶ Wznów</button>
+      <button class="btn btn-danger" style="flex:1" @click="stopTraining">⏹ Stop</button>
+    </div>
   </div>
 
   <!-- ── Takeover request modal (dla kontrolera) ─────────────────────────── -->
@@ -1050,6 +1091,9 @@ createApp({
         drillMaxRepeat.value = m.max_repeat
       } else if (m.type === 'drill_ended') {
         drillRunning.value = false
+      } else if (m.type === 'training_info') {
+        trainingScenarioName.value = m.name
+        trainingTotalSteps.value = m.total_steps
       } else if (m.type === 'training_countdown') {
         trainingPhase.value = 'countdown'
         trainingTimer.value = m.sec
@@ -1060,16 +1104,26 @@ createApp({
         trainingDrillName.value = m.drill_name
         trainingBall.value = 0
         trainingBallTotal.value = m.count || 0
+        trainingBalls.value = m.balls || []
+        trainingEstRemaining.value = m.est_remaining_sec || 0
+      } else if (m.type === 'training_step_done') {
+        // step zakończony — nic specjalnego
       } else if (m.type === 'training_drill_progress') {
         trainingBall.value = m.thrown || m.ball
         trainingBallTotal.value = m.count || m.total
+        trainingEstRemaining.value = m.est_remaining_sec || 0
       } else if (m.type === 'training_pause') {
         trainingPhase.value = 'pause'
         trainingTimer.value = m.sec
         trainingNextDrill.value = m.next_drill || ''
+      } else if (m.type === 'training_paused') {
+        trainingIsPaused.value = true
+      } else if (m.type === 'training_resumed') {
+        trainingIsPaused.value = false
       } else if (m.type === 'training_ended') {
         trainingRunning.value = false
-        showToast('Trening zakończony!')
+        trainingIsPaused.value = false
+        showToast('🏁 Trening zakończony!')
       } else if (m.type === 'reconnecting') {
         showToast(`🔄 Ponowne łączenie…`)
       } else if (m.type === 'robot_response') {
@@ -1384,6 +1438,9 @@ createApp({
     const trainingTimer = ref(0)
     const trainingBall = ref(0)
     const trainingBallTotal = ref(0)
+    const trainingBalls = ref([])
+    const trainingEstRemaining = ref(0)
+    const trainingIsPaused = ref(false)
     const tEditId = ref(null)
     const tEditName = ref('')
     const tEditDesc = ref('')
@@ -1439,12 +1496,21 @@ createApp({
     }
     function runTraining(id) {
       trainingRunning.value = true
+      trainingIsPaused.value = false
+      trainingPhase.value = 'countdown'
       trainingScenarioName.value = trainings.value.find(t => t.id === id)?.name || ''
       send({ action: 'run_training', id })
+    }
+    function pauseTraining() {
+      send({ action: 'pause_training' })
+    }
+    function resumeTraining() {
+      send({ action: 'resume_training' })
     }
     function stopTraining() {
       send({ action: 'stop_training' })
       trainingRunning.value = false
+      trainingIsPaused.value = false
     }
     function totalTrainingTime(t) {
       if (!t.steps?.length) return '0s'
@@ -1600,8 +1666,10 @@ createApp({
       trainings, trainingRunning, trainingScenarioName, trainingPhase,
       trainingStep, trainingTotalSteps, trainingDrillName, trainingNextDrill,
       trainingTimer, trainingBall, trainingBallTotal,
+      trainingBalls, trainingEstRemaining, trainingIsPaused,
       tEditId, tEditName, tEditDesc, tEditCountdown, tEditSteps,
       loadTrainings, openTrainingEditor, addTrainingStep, moveStep,
+      pauseTraining, resumeTraining,
       onDrillSelect, saveTraining, deleteTraining, runTraining, stopTraining, totalTrainingTime,
     }
   }
