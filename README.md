@@ -1,32 +1,34 @@
-# robopong-app
+# AcePad
 
-Autorska aplikacja zastępująca Newgy dla robota pingpongowego **Donic Robopong 3050XL**.
+Aplikacja do sterowania robotami pingpongowymi, by **[tthub.pl](https://tthub.pl)**.
 
-## Cel projektu
+## O projekcie
 
-Stworzenie własnego klienta/aplikacji, która łączy się z robotem Donic Robopong 3050XL i zastępuje oficjalną aplikację Newgy. Aplikacja ma zapewniać pełną kontrolę nad robotem — regulację częstotliwości, kąta, prędkości, trybów ćwiczeń itd.
+**AcePad** zastępuje oficjalną aplikację Newgy dla robota **Donic Robopong 3050XL** i zapewnia pełną kontrolę nad robotem — regulację częstotliwości, kąta, prędkości, trybów ćwiczeń itd.
 
 ## Robot
 
 - **Model:** Donic Robopong 3050XL
-- **Producent:** Donic
-- **Protokół komunikacji:** TBD (do zbadania)
+- **Komunikacja:** BLE (Bluetooth Low Energy) + USB FTDI
 
-## Status
+## Architektura
 
-> W trakcie rozpoznania i planowania.
+- **Backend:** FastAPI + Bleak (BLE) + pyserial (USB), port 8000 (dev) / 8001 (prod)
+- **Frontend:** Vue 3 CDN, `frontend/index.html`
+- **Serwer produkcyjny:** `192.168.1.45`
 
-## Struktura repozytorium
+## Jak uruchomić
 
-```
-robopong-app/
-├── README.md
-├── CLAUDE.md        # Instrukcje dla Claude Code
-├── TASKS.md         # Board zadań projektowych
-└── .claude/
-    └── commands/    # Własne komendy slash dla Claude
+```bash
+./start.sh
 ```
 
-## Jak zacząć
+Otwórz `http://localhost:8000` w przeglądarce.
 
-TBD — po rozpoznaniu protokołu komunikacji z robotem.
+## Testy
+
+```bash
+cd backend
+venv/bin/pip install -r requirements-test.txt
+venv/bin/pytest
+```

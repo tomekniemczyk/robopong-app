@@ -2,11 +2,11 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
-# Instrukcje dla Claude — robopong-app
+# Instrukcje dla Claude — AcePad
 
 ## Kontekst projektu
 
-Ten projekt to **autorska aplikacja zastępująca Newgy** dla robota pingpongowego Donic Robopong 3050XL.
+**AcePad** (by tthub.pl) to aplikacja do sterowania robotami pingpongowymi, zastępująca Newgy dla Donic Robopong 3050XL.
 Celem jest stworzenie własnego klienta, który komunikuje się z robotem i daje pełną kontrolę nad jego parametrami.
 
 ## Komendy deweloperskie
@@ -74,6 +74,12 @@ Protokół Robopong 3050XL jest w pełni udokumentowany w `re/`:
 - Default kalibracji (Android Gen2): top=160, bot=0, osc=150, h=183, rot=150, wait=1000
 
 ## Zasady pracy
+
+### Git workflow (OBOWIĄZKOWE)
+- **Commituj prosto na `main`** — bez feature branchy, bez PRów
+- Lokalna praca Claude: używaj **worktree** (`git worktree add`) żeby uniknąć konfliktów z działającym serwerem
+- Push: `git push origin main`
+- Nie używaj `/commit-push-pr` — tylko `/commit` + push na main
 
 ### Zarządzanie zadaniami (OBOWIĄZKOWE)
 - Gdy użytkownik mówi "dodaj zadanie", "nowe zadanie", "task:", "TODO:" — **zawsze** twórz GitHub Issue
