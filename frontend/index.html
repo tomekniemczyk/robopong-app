@@ -1206,23 +1206,20 @@ createApp({
     function calSend() {
       _clampAllCal()
       send({ action: 'set_ball', ball: { ...cal } })
-      addLog(`→ top=${cal.top_speed} bot=${cal.bot_speed} osc=${cal.oscillation} h=${cal.height} r=${cal.rotation} ms=${cal.wait_ms}`)
+      addLog(`⚡ top=${cal.top_speed} bot=${cal.bot_speed} osc=${cal.oscillation} h=${cal.height} rot=${cal.rotation}`)
       calDirty.value = false
-      showToast('📡 Wysłano')
+      showToast('⚡ Silniki start')
     }
     function calThrow() {
-      _clampAllCal()
-      // rozgrzewka: wyślij pełne parametry, poczekaj na rozpędzenie, rzuć, stop
-      send({ action: 'set_ball', ball: { ...cal } })
-      addLog(`→ top=${cal.top_speed} bot=${cal.bot_speed} osc=${cal.oscillation} h=${cal.height} r=${cal.rotation}`)
-      calDirty.value = false
-      showToast('🔥 Rozgrzewka…')
-      setTimeout(() => {
-        send({ action:'throw' }); addLog('→ T (rzut)'); showToast('🏓 Rzut!')
-        setTimeout(() => { send({ action:'stop' }); addLog('→ H (stop po rzucie)') }, 1500)
-      }, 1500)  // 1.5s rozgrzewka silników
+      send({ action:'throw' })
+      addLog('→ T (rzut)')
+      showToast('🏓 Rzut!')
     }
-    function calStop()  { send({ action:'stop' }); addLog('→ H (stop)'); showToast('⏹ Stop') }
+    function calStop() {
+      send({ action:'stop' })
+      addLog('→ H (stop)')
+      showToast('⏹ Stop')
+    }
 
     // ── helpers ────────────────────────────────────────────────
     function addLog(line) {
