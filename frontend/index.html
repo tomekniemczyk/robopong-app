@@ -106,12 +106,12 @@
     /* ── Connection badge ─────────────────────────────────────── */
     .conn-badge {
       display:inline-flex; align-items:center; gap:5px;
-      padding:4px 8px 4px 11px; border-radius:20px;
+      padding:4px 11px; border-radius:20px;
       font-size:11px; font-weight:600; letter-spacing:.04em; text-transform:uppercase;
       background:rgba(233,69,96,.12); color:var(--danger);
       border:1px solid rgba(233,69,96,.25);
       transition:background .3s,color .3s,border-color .3s;
-      white-space:nowrap; user-select:none; max-width:200px;
+      white-space:nowrap; user-select:none;
     }
     .conn-badge.on {
       background:rgba(34,197,94,.1); color:var(--success);
@@ -126,13 +126,12 @@
       background:currentColor; flex-shrink:0;
     }
     .conn-badge.on .conn-dot { animation:pulse-dot 2s ease infinite; }
-    .conn-name { overflow:hidden; text-overflow:ellipsis; max-width:90px; }
     .conn-cal-btn {
-      background:rgba(255,255,255,.1); border:none; border-radius:9px;
-      color:inherit; font-size:10px; padding:2px 5px; cursor:pointer; line-height:1;
-      margin-left:2px; flex-shrink:0;
+      background:rgba(255,255,255,.1); border:1px solid rgba(255,255,255,.15);
+      border-radius:9px; color:var(--success); font-size:11px; padding:3px 7px;
+      cursor:pointer; line-height:1; flex-shrink:0;
     }
-    .conn-cal-btn:hover { background:rgba(255,255,255,.22); }
+    .conn-cal-btn:hover { background:rgba(255,255,255,.2); }
 
     /* ── Device info modal ─────────────────────────────────────── */
     .dinfo-table { display:flex; flex-direction:column; }
@@ -232,8 +231,8 @@
            style="cursor:pointer">
         <span class="conn-dot"></span>
         <span class="conn-name">{{ connected ? (robotName || 'Robopong') : simulationMode ? 'Symulacja' : 'Offline' }}</span>
-        <button v-if="connected" class="conn-cal-btn" @click.stop="page='calibration'" title="Kalibracja">⚙</button>
       </div>
+      <button v-if="connected" class="conn-cal-btn" @click="page='calibration'" title="Kalibracja">⚙</button>
       <!-- role pill -->
       <span class="role-pill ctrl"  v-if="myRole === 'controller'">🎮 Kontroler</span>
       <span class="role-pill obs"   v-else-if="myRole === 'observer'">👁 Obserwator</span>
@@ -1260,6 +1259,7 @@ createApp({
     }
     function releaseControl() {
       send({ action: 'release_control' })
+      if (ws) ws.close()
     }
 
     // ── WebSocket ──────────────────────────────────────────────
