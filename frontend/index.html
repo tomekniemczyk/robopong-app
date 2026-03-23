@@ -1385,6 +1385,7 @@ createApp({
       drillPaused.value = false
     }
     async function deleteScenario(id) {
+      if (!confirm('Usunąć scenariusz?')) return
       await fetch(`/api/scenarios/${id}`, { method: 'DELETE' })
       await loadScenarios()
     }
@@ -1554,6 +1555,7 @@ createApp({
       showToast('Wczytano: ' + p.name)
     }
     async function setDefaultPreset(id) {
+      if (!confirm('Ustawić ten preset jako domyślny?')) return
       await fetch(`/api/presets/${id}/default`, { method: 'PUT' })
       await loadPresets()
     }
@@ -1568,6 +1570,7 @@ createApp({
       showToast('💾 Nadpisano: ' + p.name)
     }
     async function deletePreset(id) {
+      if (!confirm('Usunąć preset?')) return
       await fetch(`/api/presets/${id}`, { method: 'DELETE' })
       await loadPresets()
     }
