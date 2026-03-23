@@ -22,6 +22,7 @@ from robot import Robot
 
 
 logging.basicConfig(level=logging.DEBUG, format="%(asctime)s %(levelname)-5s %(name)s  %(message)s", datefmt="%H:%M:%S")
+logging.getLogger("bleak").setLevel(logging.WARNING)
 logger = logging.getLogger(__name__)
 
 VERBOSE = True  # globalny przełącznik logowania — False żeby wyciszyć
@@ -685,6 +686,9 @@ def delete_training_endpoint(tid: int):
 
 # ── Frontend ───────────────────────────────────────────────────────────────────
 
+_exercises_dir = FRONTEND / "static" / "exercises"
+if _exercises_dir.exists():
+    app.mount("/static/exercises", StaticFiles(directory=str(_exercises_dir)), name="exercises")
 app.mount("/static", StaticFiles(directory=str(FRONTEND)), name="static")
 
 
