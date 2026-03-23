@@ -687,28 +687,37 @@
           <!-- Panel drilla -->
           <div v-if="activeDrill && activeDrill.id === drill.id" style="background:var(--card);border:1px solid var(--border);border-radius:0 0 12px 12px;margin-top:-4px;padding:12px;margin-bottom:6px">
             <div v-if="activeDrill.description" style="font-size:12px;color:var(--muted);margin-bottom:10px">{{ activeDrill.description }}</div>
-            <!-- Stół z piłkami SVG -->
-            <svg :viewBox="'0 0 300 400'" style="width:100%;max-width:280px;margin:0 auto 12px;display:block;border-radius:8px;background:#1a5c2a">
-              <!-- Stół -->
-              <rect x="10" y="10" width="280" height="380" rx="4" fill="#2d8c3f" stroke="#1a5c2a" stroke-width="2"/>
-              <!-- Linie stołu -->
-              <line x1="150" y1="10" x2="150" y2="390" stroke="rgba(255,255,255,.25)" stroke-width="1"/>
-              <line x1="10" y1="200" x2="290" y2="200" stroke="rgba(255,255,255,.25)" stroke-width="1"/>
-              <!-- Siatka -->
-              <rect x="60" y="196" width="180" height="8" rx="1" fill="rgba(255,255,255,.15)"/>
-              <!-- Robot (góra) -->
-              <rect x="120" y="2" width="60" height="14" rx="3" fill="#555" stroke="#888" stroke-width="1"/>
-              <text x="150" y="11" text-anchor="middle" fill="#ccc" font-size="7" font-family="sans-serif">ROBOT</text>
+            <!-- Połowa stołu gracza — niebieski, białe linie -->
+            <svg viewBox="0 0 300 220" style="width:100%;max-width:300px;margin:0 auto 12px;display:block;border-radius:4px;overflow:visible">
+              <!-- Blat stołu — niebieski -->
+              <rect x="0" y="20" width="300" height="200" fill="#1a4a8a"/>
+              <!-- Obramowanie stołu -->
+              <rect x="0" y="20" width="300" height="200" fill="none" stroke="#fff" stroke-width="2.5"/>
+              <!-- Linia środkowa (podłużna) -->
+              <line x1="150" y1="20" x2="150" y2="220" stroke="#fff" stroke-width="1.5" opacity="0.7"/>
+              <!-- Linia końcowa gracza (dół) -->
+              <line x1="0" y1="220" x2="300" y2="220" stroke="#fff" stroke-width="2.5"/>
+              <!-- Siatka na górze -->
+              <rect x="-4" y="16" width="308" height="8" rx="1" fill="#666" stroke="#888" stroke-width="0.5"/>
+              <line x1="0" y1="20" x2="300" y2="20" stroke="#fff" stroke-width="1" opacity="0.4"/>
+              <!-- Robot nad siatką -->
+              <rect x="115" y="0" width="70" height="16" rx="4" fill="#3a3d52" stroke="#6b6f8a" stroke-width="1"/>
+              <text x="150" y="11" text-anchor="middle" fill="#aaa" font-size="8" font-family="sans-serif" font-weight="600">ROBOT</text>
               <!-- Piłki -->
               <g v-for="(b, bi) in activeDrill.balls" :key="bi">
                 <circle
                   :cx="ballTableX(b)"
                   :cy="ballTableY(b)"
-                  r="10"
+                  r="12"
                   :fill="b.top_speed > b.bot_speed ? '#ff6b35' : b.top_speed < b.bot_speed ? '#4dabf7' : '#ffd43b'"
-                  stroke="rgba(255,255,255,.5)" stroke-width="1.5"
-                  :opacity="0.85"/>
-                <text :x="ballTableX(b)" :y="ballTableY(b)+4" text-anchor="middle" fill="#fff" font-size="8" font-weight="700">{{ bi+1 }}</text>
+                  stroke="#fff" stroke-width="1.5" opacity="0.9"/>
+                <text :x="ballTableX(b)" :y="ballTableY(b)+4" text-anchor="middle" fill="#fff" font-size="9" font-weight="700">{{ bi+1 }}</text>
+              </g>
+              <!-- Legenda -->
+              <g transform="translate(8, 232)">
+                <circle cx="6" cy="0" r="4" fill="#ff6b35"/><text x="14" y="3" fill="var(--muted)" font-size="8">topspin</text>
+                <circle cx="66" cy="0" r="4" fill="#4dabf7"/><text x="74" y="3" fill="var(--muted)" font-size="8">backspin</text>
+                <circle cx="136" cy="0" r="4" fill="#ffd43b"/><text x="144" y="3" fill="var(--muted)" font-size="8">nospin</text>
               </g>
             </svg>
             <!-- Kontrolki -->
@@ -1214,16 +1223,16 @@ createApp({
     const drillRunCount  = ref(60)
     const drillRunPercent = ref(100)
 
-    // Pozycja piłki na stole SVG (300×400) z parametrów raw
-    // Oscillation 127-173 → X (173=left=30, 150=center=150, 127=right=270)
-    // Height 75-210 → Y (75=blisko robota=50, 210=daleko=370)
+    // Pozycja piłki na stole SVG (300×220, połowa gracza)
+    // Oscillation 127-173 → X: 173=lewa=20, 150=środek=150, 127=prawa=280
+    // Height 75-210 → Y: 75=blisko siatki=30, 210=blisko gracza=210
     function ballTableX(b) {
       const osc = Math.max(127, Math.min(173, b.oscillation))
-      return 30 + (173 - osc) / (173 - 127) * 240  // 173→30, 127→270
+      return 20 + (173 - osc) / (173 - 127) * 260
     }
     function ballTableY(b) {
       const h = Math.max(75, Math.min(210, b.height))
-      return 50 + (h - 75) / (210 - 75) * 320  // 75→50 (blisko robota), 210→370 (daleko)
+      return 30 + (h - 75) / (210 - 75) * 180
     }
 
     function openDrillPanel(drill, folder) {
