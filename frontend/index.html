@@ -687,14 +687,30 @@
           <!-- Panel drilla -->
           <div v-if="activeDrill && activeDrill.id === drill.id" style="background:var(--card);border:1px solid var(--border);border-radius:0 0 12px 12px;margin-top:-4px;padding:12px;margin-bottom:6px">
             <div v-if="activeDrill.description" style="font-size:12px;color:var(--muted);margin-bottom:10px">{{ activeDrill.description }}</div>
-            <!-- Parametry piłek -->
-            <div style="font-size:11px;color:var(--muted);margin-bottom:6px">{{ activeDrill.balls.length }} {{ activeDrill.balls.length === 1 ? 'piłka' : 'piłek' }}</div>
-            <div style="display:flex;gap:4px;flex-wrap:wrap;margin-bottom:12px">
-              <span v-for="(b, bi) in activeDrill.balls" :key="bi"
-                style="font-size:10px;padding:3px 6px;background:var(--surface);border-radius:6px;border:1px solid var(--border);font-family:monospace">
-                T{{ b.top_speed }}/B{{ b.bot_speed }} h{{ b.height }} o{{ b.oscillation }} r{{ b.rotation }}
-              </span>
-            </div>
+            <!-- Stół z piłkami SVG -->
+            <svg :viewBox="'0 0 300 400'" style="width:100%;max-width:280px;margin:0 auto 12px;display:block;border-radius:8px;background:#1a5c2a">
+              <!-- Stół -->
+              <rect x="10" y="10" width="280" height="380" rx="4" fill="#2d8c3f" stroke="#1a5c2a" stroke-width="2"/>
+              <!-- Linie stołu -->
+              <line x1="150" y1="10" x2="150" y2="390" stroke="rgba(255,255,255,.25)" stroke-width="1"/>
+              <line x1="10" y1="200" x2="290" y2="200" stroke="rgba(255,255,255,.25)" stroke-width="1"/>
+              <!-- Siatka -->
+              <rect x="60" y="196" width="180" height="8" rx="1" fill="rgba(255,255,255,.15)"/>
+              <!-- Robot (góra) -->
+              <rect x="120" y="2" width="60" height="14" rx="3" fill="#555" stroke="#888" stroke-width="1"/>
+              <text x="150" y="11" text-anchor="middle" fill="#ccc" font-size="7" font-family="sans-serif">ROBOT</text>
+              <!-- Piłki -->
+              <g v-for="(b, bi) in activeDrill.balls" :key="bi">
+                <circle
+                  :cx="ballTableX(b)"
+                  :cy="ballTableY(b)"
+                  r="10"
+                  :fill="b.top_speed > b.bot_speed ? '#ff6b35' : b.top_speed < b.bot_speed ? '#4dabf7' : '#ffd43b'"
+                  stroke="rgba(255,255,255,.5)" stroke-width="1.5"
+                  :opacity="0.85"/>
+                <text :x="ballTableX(b)" :y="ballTableY(b)+4" text-anchor="middle" fill="#fff" font-size="8" font-weight="700">{{ bi+1 }}</text>
+              </g>
+            </svg>
             <!-- Kontrolki -->
             <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px">
               <div class="field" style="margin:0">
@@ -1198,6 +1214,18 @@ createApp({
     const drillRunCount  = ref(60)
     const drillRunPercent = ref(100)
 
+    // Pozycja piłki na stole SVG (300×400) z parametrów raw
+    // Oscillation 127-173 → X (173=left=30, 150=center=150, 127=right=270)
+    // Height 75-210 → Y (75=blisko robota=50, 210=daleko=370)
+    function ballTableX(b) {
+      const osc = Math.max(127, Math.min(173, b.oscillation))
+      return 30 + (173 - osc) / (173 - 127) * 240  // 173→30, 127→270
+    }
+    function ballTableY(b) {
+      const h = Math.max(75, Math.min(210, b.height))
+      return 50 + (h - 75) / (210 - 75) * 320  // 75→50 (blisko robota), 210→370 (daleko)
+    }
+
     function openDrillPanel(drill, folder) {
       if (activeDrill.value && activeDrill.value.id === drill.id) {
         activeDrill.value = null; return
@@ -1516,6 +1544,7 @@ createApp({
       drillRunning, drillScenario, drillBall, drillTotal, drillRun, drillMaxRepeat,
       activeDrill, drillRunCount, drillRunPercent,
       openDrillPanel, prevDrill, nextDrill, startDrill,
+      ballTableX, ballTableY,
       editId, editName, editDesc, editRepeat, editBalls,
       cal, calDirty, calMotorLocked, helpOpen,
       lastAddr, robotName, editingName, robotNameEdit, camErr, camSrc,
