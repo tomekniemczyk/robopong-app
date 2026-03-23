@@ -6,6 +6,8 @@ import threading
 import time
 from typing import Callable, Dict, List, Optional
 
+import audio
+
 from bleak import BleakClient, BleakScanner
 from bleak.exc import BleakError
 
@@ -364,15 +366,21 @@ class Robot:
 
         logger.debug("Sending ball: top=%d bot=%d osc=%d height=%d rot=%d leds=%d", top, bot, osc, height, rotation, leds)
         await self._write(cmd)
+        if self.simulation:
+            audio.play("sim_motor_start")
 
     async def throw(self):
         logger.debug("Sending throw command")
         await self._write("T")
+        if self.simulation:
+            audio.play("sim_throw")
 
     async def stop(self):
         logger.debug("Sending stop command")
         self._stop_drill_nowait()
         await self._write("H")
+        if self.simulation:
+            audio.play("sim_motor_stop")
 
     async def apply_calibration(self, cal: dict):
         """Wyślij offsety kalibracji do firmware (Q/U/O/R).

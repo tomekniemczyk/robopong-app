@@ -407,6 +407,11 @@ async def _handle(msg: dict, ws: WebSocket):
         _log("Simulation mode: %s", robot.simulation)
         robot.device = "SIMULATION" if robot.simulation else ""
         robot.firmware = 999 if robot.simulation else 0
+        # auto-controller w symulacji
+        if robot.simulation and sess:
+            sess.role = Role.CONTROLLER
+            await _send(ws, "session_role", {"role": Role.CONTROLLER, "session_id": sess.id})
+            _broadcast_sessions()
         robot._push_status()
 
     # ── Zarządzanie sesjami ──────────────────────────────────────────────────
