@@ -406,7 +406,7 @@
           <li>Min <code>200</code> ms, max <code>10000</code> ms</li>
         </ul>
         <div style="margin-top:10px;padding:8px 12px;background:rgba(91,124,247,.08);border-radius:8px;font-size:12px;color:var(--muted)">
-          <strong>Procedura:</strong> Ustaw Wysokość / Oscylację (krok 1) → odblokuj silniki kłódką (krok 2) → ustaw Góra/Dół → Wyślij ustawienia → poczekaj ~1.5 s → Rzut → oceń → popraw → powtórz. Gdy zadowolony — Zapisz preset.
+          <strong>Procedura:</strong> Po wejściu silniki startują automatycznie. Ustaw Wysokość / Oscylację i Góra/Dół — każda zmiana strzałkami od razu wysyła ustawienia. Naciśnij Rzut, oceń wynik, popraw wartości i rzuć ponownie. Gdy zadowolony — Zapisz preset. Silniki zatrzymają się po 5 min bezczynności.
         </div>
       </div>
     </div>
@@ -517,44 +517,33 @@
 
       <!-- ── Etap 2: Silniki ── -->
       <div style="margin-bottom:14px">
-        <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
-          <h3 style="margin:0">2. Silniki</h3>
-          <button @click="calUnlocked=!calUnlocked" :disabled="!connected || myRole!=='controller'"
-            style="background:none;border:none;cursor:pointer;font-size:18px;padding:2px 4px;line-height:1;opacity:0.85"
-            :title="calUnlocked ? 'Zablokuj silniki' : 'Odblokuj silniki'">
-            {{ calUnlocked ? '🔓' : '🔒' }}
-          </button>
+        <h3 style="margin-bottom:10px">2. Silniki</h3>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px">
+          <div class="field" style="margin:0">
+            <label>Góra <small>-249…249</small></label>
+            <div style="display:flex;align-items:center;gap:4px">
+              <button class="btn btn-ghost" style="padding:4px 8px" :disabled="!connected || myRole!=='controller'" @click="calStep('top_speed',-2)">−</button>
+              <input type="number" v-model.number="cal.top_speed" min="-249" max="249" style="flex:1;text-align:center"
+                @change="clampCal('top_speed',-249,249);calDirty=true">
+              <button class="btn btn-ghost" style="padding:4px 8px" :disabled="!connected || myRole!=='controller'" @click="calStep('top_speed',2)">+</button>
+            </div>
+          </div>
+          <div class="field" style="margin:0">
+            <label>Dół <small>-249…249</small></label>
+            <div style="display:flex;align-items:center;gap:4px">
+              <button class="btn btn-ghost" style="padding:4px 8px" :disabled="!connected || myRole!=='controller'" @click="calStep('bot_speed',-2)">−</button>
+              <input type="number" v-model.number="cal.bot_speed" min="-249" max="249" style="flex:1;text-align:center"
+                @change="clampCal('bot_speed',-249,249);calDirty=true">
+              <button class="btn btn-ghost" style="padding:4px 8px" :disabled="!connected || myRole!=='controller'" @click="calStep('bot_speed',2)">+</button>
+            </div>
+          </div>
         </div>
-        <div :style="!calUnlocked ? 'opacity:0.35;pointer-events:none' : ''">
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px">
-            <div class="field" style="margin:0">
-              <label>Góra <small>-249…249</small></label>
-              <div style="display:flex;align-items:center;gap:4px">
-                <button class="btn btn-ghost" style="padding:4px 8px" :disabled="!connected || myRole!=='controller'" @click="calStep('top_speed',-2)">−</button>
-                <input type="number" v-model.number="cal.top_speed" min="-249" max="249" style="flex:1;text-align:center"
-                  @change="clampCal('top_speed',-249,249);calDirty=true">
-                <button class="btn btn-ghost" style="padding:4px 8px" :disabled="!connected || myRole!=='controller'" @click="calStep('top_speed',2)">+</button>
-              </div>
-            </div>
-            <div class="field" style="margin:0">
-              <label>Dół <small>-249…249</small></label>
-              <div style="display:flex;align-items:center;gap:4px">
-                <button class="btn btn-ghost" style="padding:4px 8px" :disabled="!connected || myRole!=='controller'" @click="calStep('bot_speed',-2)">−</button>
-                <input type="number" v-model.number="cal.bot_speed" min="-249" max="249" style="flex:1;text-align:center"
-                  @change="clampCal('bot_speed',-249,249);calDirty=true">
-                <button class="btn btn-ghost" style="padding:4px 8px" :disabled="!connected || myRole!=='controller'" @click="calStep('bot_speed',2)">+</button>
-              </div>
-            </div>
-          </div>
-          <div class="field" style="margin-bottom:10px">
-            <label>Czas oczekiwania ms <small>200–10000</small></label>
-            <input type="number" v-model.number="cal.wait_ms" min="200" max="10000" @change="clampCal('wait_ms',200,10000);calDirty=true">
-          </div>
-          <div class="cal-actions">
-            <button class="btn" :disabled="!connected || myRole !== 'controller'" @click="calSend" style="background:var(--accent);color:#fff">⚡ Wyślij ustawienia</button>
-            <button class="btn btn-success" :disabled="!connected || myRole !== 'controller' || !calActive" @click="calThrow">🏓 Rzut</button>
-            <button class="btn btn-danger" :disabled="!connected || myRole !== 'controller' || !calActive" @click="calStop">⏹ Stop</button>
-          </div>
+        <div class="field" style="margin-bottom:10px">
+          <label>Czas oczekiwania ms <small>200–10000</small></label>
+          <input type="number" v-model.number="cal.wait_ms" min="200" max="10000" @change="clampCal('wait_ms',200,10000);calDirty=true">
+        </div>
+        <div class="cal-actions">
+          <button class="btn btn-success" :disabled="!connected || myRole !== 'controller'" @click="calThrow">🏓 Rzut</button>
         </div>
       </div>
 
@@ -562,6 +551,10 @@
         <div class="row" style="margin-bottom:8px">
           <span style="font-size:12px;font-weight:600;color:var(--muted)">PRESETY</span>
           <div class="spacer"></div>
+          <button class="btn btn-ghost btn-icon" style="font-size:16px;padding:4px 8px" @click="exportCalibration" title="Pobierz konfigurację kalibracji">⬇</button>
+          <label class="btn btn-ghost btn-icon" style="font-size:16px;padding:4px 8px;cursor:pointer" title="Importuj konfigurację kalibracji">
+            ⬆<input ref="importCalRef" type="file" accept=".json" style="display:none" @change="importCalibration">
+          </label>
           <button class="btn btn-primary" style="font-size:12px;padding:6px 12px" @click="savePreset">+ Zapisz jako…</button>
         </div>
         <ul class="device-list" v-if="presets.length">
@@ -579,9 +572,13 @@
         <div v-else style="font-size:12px;color:var(--muted);padding:6px 0">Brak zapisanych presetów.</div>
       </div>
 
-      <div class="log-box" ref="logBox">
-        <div v-for="(l, i) in robotLog" :key="i">{{ l }}</div>
+      <div style="margin-top:16px;padding-top:14px;border-top:1px solid var(--border)">
+        <button class="btn btn-success" style="width:100%;padding:12px;font-size:14px;font-weight:700"
+          :disabled="!connected || myRole !== 'controller'" @click="calDone">
+          ✅ Kalibracja udana — zapisz ustawienia
+        </button>
       </div>
+
     </div>
   </div>
 
@@ -1050,7 +1047,7 @@
       <div style="font-size:15px;margin-bottom:20px;line-height:1.4">{{ confirmMsg }}</div>
       <div style="display:flex;gap:10px;justify-content:center">
         <button class="btn btn-ghost" style="flex:1" @click="confirmCb=null">Anuluj</button>
-        <button class="btn" :style="{ flex: 1, background: confirmOkColor, color: '#fff', fontWeight: 700 }" @click="_runConfirm()">{{ confirmOkLabel }}</button>
+        <button class="btn" :style="{ flex: 1, background: confirmOkColor, color: '#fff', fontWeight: 700 }" @click="runConfirm()">{{ confirmOkLabel }}</button>
       </div>
     </div>
   </div>
@@ -1250,7 +1247,7 @@ createApp({
     function showConfirm(msg, cb, okLabel = 'Usuń', okColor = 'var(--danger)') {
       confirmMsg.value = msg; confirmOkLabel.value = okLabel; confirmOkColor.value = okColor; confirmCb.value = cb
     }
-    function _runConfirm() { const cb = confirmCb.value; confirmCb.value = null; cb && cb() }
+    function runConfirm() { const cb = confirmCb.value; confirmCb.value = null; cb && cb() }
 
     // ── Drill editor modal ────────────────────────────────────
     const showDrillModal = ref(false)
@@ -1267,9 +1264,6 @@ createApp({
     const helpOpen       = ref(false)
     const calImgOpen     = ref(null)
     const presets        = ref([])
-    const calThrownOnce  = ref(false)
-    const calActive      = ref(false)
-    const calUnlocked    = ref(false)
     const isCalibrated   = ref(!!localStorage.getItem('lastAddr') && localStorage.getItem(`cal_done:${localStorage.getItem('lastAddr')}`) === '1')
 
     const lastAddr      = ref(localStorage.getItem('lastAddr') || '')
@@ -1981,6 +1975,83 @@ createApp({
         await loadPresets()
       })
     }
+    async function calDone() {
+      _clampAllCal()
+      const name = `Kalibracja ${robotName.value || device.value || 'Robopong'}`
+      const existing = presets.value.find(p => p.name === name)
+      if (existing) {
+        await fetch(`/api/presets/${existing.id}`, {
+          method: 'PUT', headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ name, ...cal, is_default: true }),
+        })
+      } else {
+        await fetch('/api/presets', {
+          method: 'POST', headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ name, ...cal, is_default: true }),
+        })
+      }
+      await loadPresets()
+      localStorage.setItem(`cal_done:${lastAddr.value}`, '1')
+      isCalibrated.value = true
+      showToast('✅ Kalibracja zapisana!')
+    }
+
+    const importCalRef = ref(null)
+    function exportCalibration() {
+      const data = {
+        firmware: firmware.value,
+        device: device.value,
+        mac: lastAddr.value,
+        robotName: robotName.value,
+        exportedAt: new Date().toISOString(),
+        presets: presets.value,
+      }
+      const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' })
+      const url = URL.createObjectURL(blob)
+      const a = document.createElement('a')
+      const name = [robotName.value || 'Robopong', device.value || 'device']
+        .join('_').replace(/[^a-z0-9_\-]/gi, '_').replace(/_+/g, '_')
+      a.href = url; a.download = `cal_${name}.json`; a.click()
+      URL.revokeObjectURL(url)
+    }
+    function importCalibration(event) {
+      const file = event.target.files[0]
+      if (!file) return
+      const reader = new FileReader()
+      reader.onload = async e => {
+        if (importCalRef.value) importCalRef.value.value = ''
+        let data
+        try { data = JSON.parse(e.target.result) } catch { showToast('❌ Błąd parsowania pliku'); return }
+        if (!data.presets || !Array.isArray(data.presets)) { showToast('❌ Nieprawidłowy format pliku'); return }
+        if (data.firmware !== firmware.value) {
+          showToast(`❌ Niezgodna wersja firmware (plik: ${data.firmware}, urządzenie: ${firmware.value})`); return
+        }
+        if (data.device !== device.value) {
+          showToast(`❌ Niezgodny model urządzenia (plik: ${data.device})`); return
+        }
+        if (data.mac !== lastAddr.value) {
+          showToast(`❌ Konfiguracja pochodzi z innego urządzenia (MAC: ${data.mac}) — import odrzucony`); return
+        }
+        showConfirm(
+          `Zaimportować ${data.presets.length} preset(ów) z "${data.robotName || data.device}"?\nNadpisze wszystkie istniejące presety.`,
+          async () => {
+            for (const p of presets.value) await fetch(`/api/presets/${p.id}`, { method: 'DELETE' })
+            for (const p of data.presets) {
+              await fetch('/api/presets', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ name: p.name, top_speed: p.top_speed, bot_speed: p.bot_speed, oscillation: p.oscillation, height: p.height, rotation: p.rotation, wait_ms: p.wait_ms, is_default: !!p.is_default }),
+              })
+            }
+            await loadPresets()
+            showToast(`✅ Zaimportowano ${data.presets.length} preset(ów)`)
+          },
+          'Importuj', 'var(--accent)'
+        )
+      }
+      reader.readAsText(file)
+    }
+
     function calReset() {
       Object.assign(cal, CAL_DEFAULTS)
       calDirty.value = true
@@ -2002,11 +2073,10 @@ createApp({
       calDirty.value = true
       clearTimeout(_stepTimer)
       _stepTimer = setTimeout(() => {
-        // pozycja głowicy: wyślij set_ball z silnikami OFF
-        if (HEAD_KEYS.has(key)) {
-          send({ action: 'set_ball', ball: { top_speed: 0, bot_speed: 0, oscillation: cal.oscillation, height: cal.height, rotation: cal.rotation, wait_ms: 1000 } })
-          addLog(`→ pozycja: osc=${cal.oscillation} h=${cal.height} rot=${cal.rotation}`)
-        }
+        _clampAllCal()
+        _resetCalIdle()
+        send({ action: 'set_ball', ball: { ...cal } })
+        addLog(`→ osc=${cal.oscillation} h=${cal.height} top=${cal.top_speed} bot=${cal.bot_speed}`)
       }, 300)
     }
 
@@ -2016,21 +2086,17 @@ createApp({
       send({ action: 'set_ball', ball: { ...cal } })
       addLog(`⚡ top=${cal.top_speed} bot=${cal.bot_speed} osc=${cal.oscillation} h=${cal.height} rot=${cal.rotation}`)
       calDirty.value = false
-      calActive.value = true
       showToast('⚡ Silniki start')
     }
     function calThrow() {
       _resetCalIdle()
       send({ action:'throw' })
       addLog('→ T (rzut)')
-      calThrownOnce.value = true
-      calActive.value = true
       showToast('🏓 Rzut!')
     }
     function calStop() {
       send({ action:'stop' })
       addLog('→ H (stop)')
-      calActive.value = false
       showToast('⏹ Stop')
     }
     function calSetup() {
@@ -2048,24 +2114,18 @@ createApp({
           send({ action:'stop' })
           addLog('→ H (auto-idle 60s)')
         }
-      }, 60000)
+      }, 300000)
     }
-    watch(page, (p, oldP) => {
+    watch(page, (p) => {
       if (p === 'calibration') {
-        calThrownOnce.value = false
-        calActive.value = false
-        calUnlocked.value = false
         _resetCalIdle()
+        if (connected.value && myRole.value === 'controller') {
+          _clampAllCal()
+          send({ action: 'set_ball', ball: { ...cal } })
+          addLog('⚡ kalibracja — silniki start')
+        }
       } else {
         clearTimeout(_calIdleTimer)
-        calActive.value = false
-        if (oldP === 'calibration' && calThrownOnce.value && connected.value) {
-          showConfirm(
-            'Czy kalibracja się udała?\nZapisać ustawienia i odblokować treningi/drille?',
-            () => { localStorage.setItem(`cal_done:${lastAddr.value}`, '1'); isCalibrated.value = true; showToast('✅ Kalibracja zapisana') },
-            'Tak, zapisz', 'var(--success)'
-          )
-        }
       }
     })
     watch(connected, (val, old) => {
@@ -2170,11 +2230,11 @@ createApp({
       activeDrill, drillRunCount, drillRunPercent, liveBall,
       openDrillPanel, prevDrill, nextDrill, startDrill,
       ballTableX, ballTableY,
-      confirmMsg, confirmOkLabel, confirmOkColor, confirmCb, _runConfirm,
+      confirmMsg, confirmOkLabel, confirmOkColor, confirmCb, runConfirm,
       showDrillModal, drillModalId, openDrillModal, saveDrillModal,
       showTrainingModal, openTrainingModal,
       editId, editName, editDesc, editRepeat, editBalls,
-      cal, calDirty, calMotorLocked, calActive, calUnlocked, isCalibrated, calThrownOnce, helpOpen, calImgOpen,
+      cal, calDirty, calMotorLocked, isCalibrated, helpOpen, calImgOpen,
       lastAddr, robotName, editingName, robotNameEdit, camErr, camSrc,
       transport, deployTime, usbPorts, usbScanning, simulationMode, toggleSimulation,
       myRole, mySessionId, sessionsList, showSessions, showDeviceInfo, copyDiagReport, diagModalText, diagModalOpen, diagModalCopy, sessionAge, parseUA,
@@ -2185,6 +2245,7 @@ createApp({
       clamp, clampCal,
       calStep, calSend, calThrow, calStop, calSetup, calReset, loadCal,
       presets, savePreset, updatePreset, loadPreset, setDefaultPreset, deletePreset,
+      calDone, importCalRef, exportCalibration, importCalibration,
       roleLabel, rolePillClass,
       requestTakeover, cancelTakeover, respondTakeover, releaseControl,
       ballWord,
