@@ -600,10 +600,16 @@
     <h2>{{ drillScenario }}</h2>
     <div class="ball-counter">{{ drillBall }}</div>
     <div class="ball-sub">z {{ drillTotal }} piłek · runda {{ drillRun }}/{{ drillMaxRepeat === 0 ? '∞' : drillMaxRepeat }}</div>
+    <div v-if="drillPaused" style="font-size:14px;color:#ff9f0a;font-weight:700;margin:8px 0">⏸ PAUZA</div>
     <div class="progress-bar">
       <div class="fill" :style="{ width: drillTotal ? (drillBall / drillTotal * 100) + '%' : '0%' }"></div>
     </div>
-    <button class="btn btn-danger" @click="stopDrill">⏹ Zatrzymaj</button>
+    <div style="display:flex;gap:8px;margin-top:12px">
+      <button class="btn" style="flex:1;background:#ff9f0a;color:#fff" @click="pauseDrill" v-if="!drillPaused">⏸ Pauza</button>
+      <button class="btn btn-success" style="flex:1" @click="resumeDrill" v-if="drillPaused">▶ Wznów</button>
+      <button class="btn btn-danger" style="flex:1" @click="stopDrill">⏹ Stop</button>
+      <button class="btn btn-ghost" style="flex:1" @click="endDrill">✕ Koniec</button>
+    </div>
   </div>
 
   <!-- ── Training runner overlay ─────────────────────────────────────────── -->
@@ -910,6 +916,7 @@ createApp({
     const drillTotal     = ref(0)
     const drillRun       = ref(0)
     const drillMaxRepeat = ref(1)
+    const drillPaused    = ref(false)
 
     const editId     = ref(null)
     const editName   = ref('')
@@ -1301,7 +1308,28 @@ createApp({
       drillRunning.value   = true
       send({ action: 'run_scenario', id: s.id })
     }
-    function stopDrill() { send({ action: 'stop_drill' }) }
+    function pauseDrill() {
+      send({ action: 'stop_drill' })
+      send({ action: 'stop' })
+      drillPaused.value = true
+    }
+    function resumeDrill() {
+      drillPaused.value = false
+      if (activeDrill.value) {
+        send({ action: 'run_drill', id: activeDrill.value.id, count: drillRunCount.value, percent: drillRunPercent.value })
+      }
+    }
+    function stopDrill() {
+      send({ action: 'stop_drill' })
+      send({ action: 'stop' })
+      drillPaused.value = false
+    }
+    function endDrill() {
+      send({ action: 'stop_drill' })
+      send({ action: 'stop' })
+      drillRunning.value = false
+      drillPaused.value = false
+    }
     async function deleteScenario(id) {
       await fetch(`/api/scenarios/${id}`, { method: 'DELETE' })
       await loadScenarios()
@@ -1561,7 +1589,8 @@ createApp({
       myRole, mySessionId, sessionsList, showSessions,
       takeoverReq, takeoverCountdown, takeoverCooldown,
       scan, connect, disconnect, saveName, usbScan, usbConnect, reconnectLast,
-      runScenario, stopDrill, deleteScenario, openEditor, addBall, removeBall, saveScenario,
+      runScenario, pauseDrill, resumeDrill, stopDrill, endDrill, drillPaused,
+      deleteScenario, openEditor, addBall, removeBall, saveScenario,
       clamp, clampCal,
       calStep, calSend, calThrow, calStop, calReset, loadCal,
       presets, savePreset, updatePreset, loadPreset, setDefaultPreset, deletePreset,
