@@ -240,7 +240,7 @@ async def ws_endpoint(ws: WebSocket):
     _log("Browser connected — session %s (%s), total: %d", sess.id, sess.role, len(sessions))
     _broadcast_sessions()
 
-    transport = "usb" if (hasattr(robot, "_usb") and getattr(robot._usb, "is_connected", False)) else "ble"
+    transport = robot.transport_type or "ble"
     await ws.send_text(json.dumps({
         "type":       "status",
         "connected":  robot.is_connected,
@@ -347,9 +347,9 @@ async def _handle(msg: dict, ws: WebSocket):
 
     elif action == "begin_calibration":
         _log("Begin calibration — V (reset head)")
-        await robot._write("V")
+        await robot.write_raw("V")
         await asyncio.sleep(0.5)
-        await robot._write("V")
+        await robot.write_raw("V")
 
     elif action == "run_scenario":
         s = db.get_scenario(msg["id"])
@@ -403,16 +403,16 @@ async def _handle(msg: dict, ws: WebSocket):
         asyncio.create_task(robot.reset_ble())
 
     elif action == "set_simulation":
-        robot.simulation = msg.get("enabled", False)
-        _log("Simulation mode: %s", robot.simulation)
-        robot.device = "SIMULATION" if robot.simulation else ""
-        robot.firmware = 999 if robot.simulation else 0
-        # auto-controller w symulacji
-        if robot.simulation and sess:
+        enabled = msg.get("enabled", False)
+        if enabled:
+            robot.enable_simulation()
+        else:
+            robot.disable_simulation()
+        _log("Simulation mode: %s", enabled)
+        if enabled and sess:
             sess.role = Role.CONTROLLER
             await _send(ws, "session_role", {"role": Role.CONTROLLER, "session_id": sess.id})
             _broadcast_sessions()
-        robot._push_status()
 
     # ── Zarządzanie sesjami ──────────────────────────────────────────────────
 
