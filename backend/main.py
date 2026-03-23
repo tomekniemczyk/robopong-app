@@ -169,8 +169,13 @@ def _save_last_addr(addr: str):
 
 async def _do_connect(addr: str) -> bool:
     if addr.startswith("USB:"):
-        return await robot.connect_usb(addr[4:])
-    return await robot.connect(addr)
+        ok = await robot.connect_usb(addr[4:])
+    else:
+        ok = await robot.connect(addr)
+    if ok:
+        cal = _load_cal(addr)
+        await robot.apply_calibration(cal)
+    return ok
 
 
 async def _reconnect_loop():
@@ -294,7 +299,8 @@ async def _handle(msg: dict, ws: WebSocket):
             _save_last_addr(addr)
             _last_activity = time.monotonic()
             cal = _load_cal(addr)
-            _log("Calibration loaded for %s", addr)
+            _log("Calibration loaded for %s: %s", addr, cal)
+            await robot.apply_calibration(cal)
             broadcast("calibration_loaded", {"cal": cal})
         else:
             _log("Connection failed for %s", addr)
@@ -317,7 +323,8 @@ async def _handle(msg: dict, ws: WebSocket):
             _save_last_addr(addr)
             _last_activity = time.monotonic()
             cal = _load_cal(addr)
-            _log("Calibration loaded for %s", addr)
+            _log("Calibration loaded for %s: %s", addr, cal)
+            await robot.apply_calibration(cal)
             broadcast("calibration_loaded", {"cal": cal})
 
     elif action == "usb_disconnect":
@@ -450,12 +457,14 @@ def get_calibration():
 
 
 @app.put("/api/calibration")
-def save_calibration(body: dict):
+async def save_calibration(body: dict):
     allowed = {"top_speed", "bot_speed", "oscillation", "height", "rotation", "wait_ms"}
     cal = {k: v for k, v in body.items() if k in allowed}
     addr = _load_last_addr() if robot.is_connected else ""
-    _log("Calibration saved for %s", addr or "default")
+    _log("Calibration saved for %s: %s", addr or "default", cal)
     _save_cal(cal, addr)
+    if robot.is_connected:
+        await robot.apply_calibration(cal)
     return cal
 
 

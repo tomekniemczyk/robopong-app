@@ -369,6 +369,39 @@ class Robot:
         self._stop_drill_nowait()
         await self._write("H")
 
+    async def apply_calibration(self, cal: dict):
+        """Wyślij offsety kalibracji do firmware (Q/U/O/R).
+
+        Kalibracja = punkt odniesienia. Firmware zapamiętuje offsety
+        i stosuje je do wszystkich kolejnych komend B/A.
+        Gen2: SpeedCAL = top_speed - 161
+        Height/Osc/Rot: offset = value - 150 (centrum)
+        """
+        # SpeedCAL — tylko jeśli > 0 (jak w oryginale)
+        top = cal.get("top_speed", 161)
+        speed_cal = top - 161  # Gen2 zero point
+        if speed_cal > 0:
+            await self._write(f"Q{speed_cal:03d}")
+            await asyncio.sleep(0.3)
+            logger.info("SpeedCAL Q%03d (top=%d)", speed_cal, top)
+
+        # Height offset
+        h = cal.get("height", 183)
+        await self._write(f"U{h}")
+        await asyncio.sleep(0.2)
+
+        # Oscillation offset
+        osc = cal.get("oscillation", 150)
+        await self._write(f"O{osc}")
+        await asyncio.sleep(0.2)
+
+        # Rotation offset
+        rot = cal.get("rotation", 150)
+        await self._write(f"R{rot}")
+        await asyncio.sleep(0.2)
+
+        logger.info("Calibration applied: Q=%d U=%d O=%d R=%d", speed_cal, h, osc, rot)
+
     # ── drill runner ──────────────────────────────────────────────────────────
 
     async def run_drill(self, balls: List[Dict], repeat: int = 1,
