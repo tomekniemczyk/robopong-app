@@ -382,6 +382,7 @@
       <div style="display:flex;align-items:center;gap:8px;margin-bottom:14px">
         <h2 style="flex:1">Kalibracja</h2>
         <button class="btn btn-ghost" style="padding:7px 14px;font-size:12px" @click="calReset" :disabled="myRole !== 'controller'">↺ Reset</button>
+        <button class="btn" style="padding:7px 14px;font-size:12px;background:var(--accent);color:#fff" @click="calSetup" :disabled="!connected || myRole !== 'controller'">⚙ Setup</button>
       </div>
 
       <!-- ── Etap 1: Pozycja głowicy (silniki OFF) ── -->
@@ -1601,12 +1602,14 @@ createApp({
 
     function calSend() {
       _clampAllCal()
+      _resetCalIdle()
       send({ action: 'set_ball', ball: { ...cal } })
       addLog(`⚡ top=${cal.top_speed} bot=${cal.bot_speed} osc=${cal.oscillation} h=${cal.height} rot=${cal.rotation}`)
       calDirty.value = false
       showToast('⚡ Silniki start')
     }
     function calThrow() {
+      _resetCalIdle()
       send({ action:'throw' })
       addLog('→ T (rzut)')
       showToast('🏓 Rzut!')
@@ -1616,6 +1619,24 @@ createApp({
       addLog('→ H (stop)')
       showToast('⏹ Stop')
     }
+    function calSetup() {
+      send({ action: 'begin_calibration' })
+      addLog('→ V (setup — reset głowicy)')
+      showToast('⚙ Głowica resetowana do pozycji domyślnej')
+    }
+
+    // Auto-idle: 60s bez aktywności w kalibracji → H (głowica wisi swobodnie)
+    let _calIdleTimer = null
+    function _resetCalIdle() {
+      clearTimeout(_calIdleTimer)
+      _calIdleTimer = setTimeout(() => {
+        if (page.value === 'calibration' && connected.value) {
+          send({ action:'stop' })
+          addLog('→ H (auto-idle 60s)')
+        }
+      }, 60000)
+    }
+    watch(page, (p) => { if (p === 'calibration') _resetCalIdle(); else clearTimeout(_calIdleTimer) })
 
     // ── helpers ────────────────────────────────────────────────
     function addLog(line) {
@@ -1661,7 +1682,7 @@ createApp({
       runScenario, pauseDrill, resumeDrill, stopDrill, endDrill, drillPaused,
       deleteScenario, openEditor, addBall, removeBall, saveScenario,
       clamp, clampCal,
-      calStep, calSend, calThrow, calStop, calReset, loadCal,
+      calStep, calSend, calThrow, calStop, calSetup, calReset, loadCal,
       presets, savePreset, updatePreset, loadPreset, setDefaultPreset, deletePreset,
       roleLabel, rolePillClass,
       requestTakeover, cancelTakeover, respondTakeover, releaseControl,

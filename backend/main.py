@@ -261,7 +261,7 @@ async def ws_endpoint(ws: WebSocket):
         _broadcast_sessions()
 
 
-ROBOT_ACTIONS  = {"set_ball", "throw", "run_scenario", "run_drill", "run_training"}  # stop/stop_drill/stop_training dozwolone dla każdego
+ROBOT_ACTIONS  = {"set_ball", "throw", "run_scenario", "run_drill", "run_training", "begin_calibration"}
 STANDBY_SECS   = 5 * 60
 _last_activity: float = 0.0
 _training_runner = training.TrainingRunner()
@@ -344,6 +344,12 @@ async def _handle(msg: dict, ws: WebSocket):
     elif action == "stop":
         _log("Motors stop")
         await robot.stop()
+
+    elif action == "begin_calibration":
+        _log("Begin calibration — V (reset head)")
+        await robot._write("V")
+        await asyncio.sleep(0.5)
+        await robot._write("V")
 
     elif action == "run_scenario":
         s = db.get_scenario(msg["id"])
