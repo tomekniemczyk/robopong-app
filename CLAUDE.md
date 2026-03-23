@@ -1,3 +1,7 @@
+# CLAUDE.md
+
+This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+
 # Instrukcje dla Claude — robopong-app
 
 ## Kontekst projektu
@@ -5,13 +9,41 @@
 Ten projekt to **autorska aplikacja zastępująca Newgy** dla robota pingpongowego Donic Robopong 3050XL.
 Celem jest stworzenie własnego klienta, który komunikuje się z robotem i daje pełną kontrolę nad jego parametrami.
 
+## Komendy deweloperskie
+
+```bash
+# Start serwera (dev, port 8000)
+./start.sh
+
+# Instalacja zależności testowych + testy
+cd backend
+venv/bin/pip install -r requirements-test.txt
+venv/bin/pytest
+
+# Pojedynczy test
+venv/bin/pytest tests/test_api.py::nazwa_testu
+
+# Prod deploy (auto-deploy co 15s z CI pass check)
+./deploy.sh
+```
+
 ## Architektura
 
 - **Backend:** FastAPI + Bleak (BLE) + pyserial (USB FTDI), plik `backend/main.py` + `backend/robot.py`
-- **Frontend:** Vue 3 CDN, jeden plik `frontend/index.html`
+- **Frontend:** Vue 3 CDN, jeden plik `frontend/index.html`, i18n w `frontend/i18n.js`
 - **Serwer produkcyjny:** `192.168.1.45`, user `robopong`, port `8001`
-- **Deploy:** `ssh robopong@192.168.1.45` → `git pull` → restart uvicorn
+- **Deploy:** `./deploy.sh` — polling co 15s, deploy tylko po CI pass (`gh run`)
 - **Kamera:** motion, port `8081`
+
+### Warstwy backendu
+
+- `transport.py` — ABC `RobotTransport` → `BLETransport` (Bleak/MLDP), `USBTransport` (pyserial FTDI), `SimulationTransport`
+- `robot.py` — `Robot`: orkiestracja połączenia, reconnect, wysyłanie komend, zarządzanie drill loop
+- `main.py` — FastAPI app, REST endpoints + WebSocket (`/ws`), broadcast logów do przeglądarki
+- `db.py` — SQLite (`robopong.db`): tabele `scenarios`, `drills`, `drill_folders`
+- `presets.py` + `presets.db` — osobna baza presetów konfiguracji robota
+- `drills.py`, `exercises.py`, `training.py` — CRUD dla odpowiednich encji
+- `audio.py` — dźwięki (pliki w `backend/sounds/`)
 
 ## Protokół robota (ZBADANY — patrz `re/`)
 
