@@ -436,6 +436,15 @@ def create_preset(body: dict):
     return {"id": new_id, "name": body["name"], **data, "is_default": body.get("is_default", False)}
 
 
+@app.put("/api/presets/{preset_id}")
+def update_preset_endpoint(preset_id: int, body: dict):
+    allowed = {"top_speed", "bot_speed", "oscillation", "height", "rotation", "wait_ms"}
+    data = {k: v for k, v in body.items() if k in allowed}
+    presets.update_preset(preset_id, body.get("name", ""), data, body.get("is_default", False))
+    _log("UPDATE PRESET id=%d name=%s data=%s", preset_id, body.get("name"), data)
+    return {"ok": True}
+
+
 @app.put("/api/presets/{preset_id}/default", status_code=204)
 def set_default_preset(preset_id: int):
     presets.set_default(preset_id)

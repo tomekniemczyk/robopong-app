@@ -422,6 +422,7 @@
               <span v-if="p.is_default" style="margin-left:6px;font-size:10px;color:var(--accent);text-transform:uppercase">domyślny</span>
             </div>
             <button class="btn btn-ghost btn-icon" style="font-size:11px;padding:4px 8px" @click="loadPreset(p)" title="Wczytaj">↓</button>
+            <button class="btn btn-ghost btn-icon" style="font-size:11px;padding:4px 8px" @click="updatePreset(p)" title="Nadpisz aktualnymi">↑</button>
             <button class="btn btn-ghost btn-icon" style="font-size:11px;padding:4px 8px" @click="setDefaultPreset(p.id)" title="Ustaw domyślny" v-if="!p.is_default">★</button>
             <button class="btn btn-ghost btn-icon" style="font-size:11px;padding:4px 8px;color:var(--danger)" @click="deletePreset(p.id)" title="Usuń">✕</button>
           </li>
@@ -871,10 +872,15 @@ createApp({
     }
 
     // ── Calibration ────────────────────────────────────────────
+    const CAL_DEFAULTS = { top_speed: 161, bot_speed: 0, oscillation: 150, height: 183, rotation: 150, wait_ms: 1000 }
     async function loadCal() {
-      const r = await fetch('/api/calibration')
-      const j = await r.json()
-      Object.assign(cal, j)
+      await loadPresets()
+      const def = presets.value.find(p => p.is_default)
+      if (def) {
+        Object.assign(cal, { top_speed: def.top_speed, bot_speed: def.bot_speed, oscillation: def.oscillation, height: def.height, rotation: def.rotation, wait_ms: def.wait_ms })
+      } else {
+        Object.assign(cal, CAL_DEFAULTS)
+      }
     }
     async function loadPresets() {
       const r = await fetch('/api/presets')
@@ -900,12 +906,27 @@ createApp({
       await fetch(`/api/presets/${id}/default`, { method: 'PUT' })
       await loadPresets()
     }
+    async function updatePreset(p) {
+      if (!confirm(`Nadpisać "${p.name}" aktualnymi wartościami?`)) return
+      await fetch(`/api/presets/${p.id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name: p.name, ...cal, is_default: !!p.is_default }),
+      })
+      await loadPresets()
+      showToast('💾 Nadpisano: ' + p.name)
+    }
     async function deletePreset(id) {
       await fetch(`/api/presets/${id}`, { method: 'DELETE' })
       await loadPresets()
     }
     function calReset() {
-      Object.assign(cal, { top_speed: 161, bot_speed: 0, oscillation: 150, height: 183, rotation: 150, wait_ms: 1000 })
+      const def = presets.value.find(p => p.is_default)
+      if (def) {
+        Object.assign(cal, { top_speed: def.top_speed, bot_speed: def.bot_speed, oscillation: def.oscillation, height: def.height, rotation: def.rotation, wait_ms: def.wait_ms })
+      } else {
+        Object.assign(cal, CAL_DEFAULTS)
+      }
       calDirty.value = true
     }
     function _clampAllCal() {
@@ -969,7 +990,7 @@ createApp({
     }
 
     onMounted(() => {
-      wsConnect(); loadScenarios(); loadCal(); loadPresets()
+      wsConnect(); loadScenarios(); loadCal()
       fetch('/api/deploy-time').then(r=>r.json()).then(d => { deployTime.value = d.deploy_time }).catch(()=>{})
     })
 
@@ -987,7 +1008,7 @@ createApp({
       runScenario, stopDrill, deleteScenario, openEditor, addBall, removeBall, saveScenario,
       clamp, clampCal,
       calStep, calSend, calThrow, calStop, calReset, loadCal,
-      presets, savePreset, loadPreset, setDefaultPreset, deletePreset,
+      presets, savePreset, updatePreset, loadPreset, setDefaultPreset, deletePreset,
       roleLabel, rolePillClass,
       requestTakeover, cancelTakeover, respondTakeover, releaseControl,
       ballWord,

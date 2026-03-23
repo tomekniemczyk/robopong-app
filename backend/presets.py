@@ -52,6 +52,17 @@ def set_default(preset_id: int):
         c.execute("UPDATE presets SET is_default=1 WHERE id=?", (preset_id,))
 
 
+def update_preset(preset_id: int, name: str, data: dict, is_default: bool = False):
+    with _conn() as c:
+        if is_default:
+            c.execute("UPDATE presets SET is_default=0")
+        c.execute(
+            "UPDATE presets SET name=?, is_default=?, top_speed=?, bot_speed=?, oscillation=?, height=?, rotation=?, wait_ms=? WHERE id=?",
+            (name, int(is_default), data["top_speed"], data["bot_speed"],
+             data["oscillation"], data["height"], data["rotation"], data["wait_ms"], preset_id),
+        )
+
+
 def delete_preset(preset_id: int):
     with _conn() as c:
         c.execute("DELETE FROM presets WHERE id=?", (preset_id,))
