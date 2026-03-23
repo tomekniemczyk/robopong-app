@@ -392,22 +392,15 @@
 
       <!-- ── Etap 1: Pozycja głowicy (silniki OFF) ── -->
       <div style="margin-bottom:16px">
-        <h3 style="margin-bottom:10px">1. Pozycja głowicy <small style="color:var(--muted);font-weight:400">(silniki wyłączone)</small></h3>
+        <h3 style="margin-bottom:8px">1. Pozycja głowicy <small style="color:var(--muted);font-weight:400">(silniki wyłączone)</small></h3>
+        <div style="font-size:11px;color:var(--accent);background:rgba(91,124,247,.1);border-radius:6px;padding:6px 10px;margin-bottom:10px;display:flex;align-items:center;gap:6px">
+          <span style="font-size:14px;flex-shrink:0">ℹ️</span>
+          <span>Do kalibracji wystarczy dostosowanie <strong>Góra/Dół</strong> i <strong>Lewo/Prawo</strong>. Rotacja jest zablokowana na centrum.</span>
+        </div>
         <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px">
-          <!-- Rotacja -->
-          <div style="text-align:center">
-            <img src="/static/img/rotation.svg" alt="Rotacja" style="width:80px;height:64px;margin-bottom:4px">
-            <div style="font-size:11px;color:var(--muted);margin-bottom:2px;font-weight:600">Rotacja</div>
-            <div style="display:flex;align-items:center;justify-content:center;gap:4px">
-              <button class="btn btn-ghost" style="padding:6px 10px;font-size:16px" :disabled="!connected || myRole!=='controller'" @click="calStep('rotation',-2)">◀</button>
-              <span style="font-size:18px;font-weight:700;min-width:40px;display:inline-block;text-align:center">{{ cal.rotation }}</span>
-              <button class="btn btn-ghost" style="padding:6px 10px;font-size:16px" :disabled="!connected || myRole!=='controller'" @click="calStep('rotation',2)">▶</button>
-            </div>
-            <div style="font-size:10px;color:var(--muted)">90 ◀ 150 ▶ 210</div>
-          </div>
           <!-- Wysokość -->
           <div style="text-align:center">
-            <img src="/static/img/height.svg" alt="Wysokość" style="width:80px;height:64px;margin-bottom:4px">
+            <img src="/static/img/height.svg" alt="Wysokość" style="width:80px;height:64px;margin-bottom:4px;cursor:zoom-in" @click="calImgOpen='/static/img/height.svg'" title="Kliknij by powiększyć">
             <div style="font-size:11px;color:var(--muted);margin-bottom:2px;font-weight:600">Wysokość</div>
             <div style="display:flex;align-items:center;justify-content:center;gap:4px">
               <button class="btn btn-ghost" style="padding:6px 10px;font-size:16px" :disabled="!connected || myRole!=='controller'" @click="calStep('height',-2)">▼</button>
@@ -418,7 +411,7 @@
           </div>
           <!-- Oscylacja -->
           <div style="text-align:center">
-            <img src="/static/img/oscillation.svg" alt="Oscylacja" style="width:80px;height:64px;margin-bottom:4px">
+            <img src="/static/img/oscillation.svg" alt="Oscylacja" style="width:80px;height:64px;margin-bottom:4px;cursor:zoom-in" @click="calImgOpen='/static/img/oscillation.svg'" title="Kliknij by powiększyć">
             <div style="font-size:11px;color:var(--muted);margin-bottom:2px;font-weight:600">Oscylacja</div>
             <div style="display:flex;align-items:center;justify-content:center;gap:4px">
               <button class="btn btn-ghost" style="padding:6px 10px;font-size:16px" :disabled="!connected || myRole!=='controller'" @click="calStep('oscillation',-2)">◀</button>
@@ -426,6 +419,25 @@
               <button class="btn btn-ghost" style="padding:6px 10px;font-size:16px" :disabled="!connected || myRole!=='controller'" @click="calStep('oscillation',2)">▶</button>
             </div>
             <div style="font-size:10px;color:var(--muted)">173 ◀ 150 środek ▶ 127</div>
+          </div>
+          <!-- Rotacja — zablokowana -->
+          <div style="text-align:center;opacity:0.35;pointer-events:none">
+            <img src="/static/img/rotation.svg" alt="Rotacja" style="width:80px;height:64px;margin-bottom:4px">
+            <div style="font-size:11px;color:var(--muted);margin-bottom:2px;font-weight:600">Rotacja 🔒</div>
+            <div style="display:flex;align-items:center;justify-content:center;gap:4px">
+              <button class="btn btn-ghost" style="padding:6px 10px;font-size:16px" disabled>◀</button>
+              <span style="font-size:18px;font-weight:700;min-width:40px;display:inline-block;text-align:center">{{ cal.rotation }}</span>
+              <button class="btn btn-ghost" style="padding:6px 10px;font-size:16px" disabled>▶</button>
+            </div>
+            <div style="font-size:10px;color:var(--muted)">centrum = 150</div>
+          </div>
+        </div>
+        <!-- Lightbox — powiększenie obrazka -->
+        <div v-if="calImgOpen" class="modal-overlay" @click="calImgOpen=null"
+             style="z-index:1000;display:flex;align-items:center;justify-content:center;padding:20px">
+          <div style="background:var(--surface);border-radius:12px;padding:16px;max-width:90vw;max-height:80vh;position:relative" @click.stop>
+            <button @click="calImgOpen=null" style="position:absolute;top:8px;right:8px;background:none;border:none;color:var(--muted);font-size:20px;cursor:pointer">✕</button>
+            <img :src="calImgOpen" style="max-width:70vw;max-height:65vh;display:block;margin:0 auto">
           </div>
         </div>
       </div>
@@ -446,7 +458,12 @@
           <text x="150" y="11" text-anchor="middle" fill="#aaa" font-size="8" font-family="sans-serif" font-weight="600">ROBOT</text>
           <!-- Linia końcowa gracza -->
           <line x1="0" y1="220" x2="300" y2="220" stroke="#fff" stroke-width="2.5"/>
-          <!-- Piłka — pozycja z cal.oscillation + cal.height -->
+          <!-- Statyczny cel — gdzie piłka powinna spaść po kalibracji -->
+          <circle cx="150" cy="174" r="30"
+            fill="rgba(255,255,255,0.1)" stroke="rgba(255,255,255,0.45)" stroke-width="1.5" stroke-dasharray="4 3"/>
+          <text x="150" y="170" text-anchor="middle" fill="rgba(255,255,255,0.55)" font-size="18" font-weight="700">↓</text>
+          <text x="150" y="182" text-anchor="middle" fill="rgba(255,255,255,0.35)" font-size="7" font-family="sans-serif" letter-spacing="0.5">CEL</text>
+          <!-- Piłka — aktualna pozycja głowicy -->
           <circle
             :cx="ballTableX(cal)"
             :cy="ballTableY(cal)"
@@ -454,23 +471,20 @@
             fill="#ffd43b"
             stroke="#fff" stroke-width="2"
             opacity="0.95"/>
-          <!-- Strzałka rotacji wewnątrz piłki -->
           <text
             :x="ballTableX(cal)"
             :y="ballTableY(cal) + 4"
             text-anchor="middle"
             fill="#333"
             font-size="11"
-            font-weight="700">
-            {{ cal.rotation < 148 ? '↙' : cal.rotation > 152 ? '↘' : '↓' }}
-          </text>
+            font-weight="700">↓</text>
           <!-- Krzyżyk celownika -->
           <line :x1="ballTableX(cal)-22" :y1="ballTableY(cal)" :x2="ballTableX(cal)-17" :y2="ballTableY(cal)" stroke="#ffd43b" stroke-width="1" opacity="0.6"/>
           <line :x1="ballTableX(cal)+17" :y1="ballTableY(cal)" :x2="ballTableX(cal)+22" :y2="ballTableY(cal)" stroke="#ffd43b" stroke-width="1" opacity="0.6"/>
           <line :x1="ballTableX(cal)" :y1="ballTableY(cal)-22" :x2="ballTableX(cal)" :y2="ballTableY(cal)-17" stroke="#ffd43b" stroke-width="1" opacity="0.6"/>
           <line :x1="ballTableX(cal)" :y1="ballTableY(cal)+17" :x2="ballTableX(cal)" :y2="ballTableY(cal)+22" stroke="#ffd43b" stroke-width="1" opacity="0.6"/>
           <!-- Etykiety osi -->
-          <text x="150" y="235" text-anchor="middle" fill="#666" font-size="8" font-family="sans-serif">oscylacja: {{ cal.oscillation }} · wysokość: {{ cal.height }} · rotacja: {{ cal.rotation }}</text>
+          <text x="150" y="235" text-anchor="middle" fill="#666" font-size="8" font-family="sans-serif">lewo/prawo: {{ cal.oscillation }} · góra/dół: {{ cal.height }}</text>
         </svg>
       </div>
 
@@ -1195,6 +1209,7 @@ createApp({
     const calDirty       = ref(true)
     const calMotorLocked = ref(true)
     const helpOpen       = ref(false)
+    const calImgOpen     = ref(null)
     const presets        = ref([])
 
     const lastAddr      = ref(localStorage.getItem('lastAddr') || '')
@@ -2047,7 +2062,7 @@ createApp({
       showDrillModal, drillModalId, openDrillModal, saveDrillModal,
       showTrainingModal, openTrainingModal,
       editId, editName, editDesc, editRepeat, editBalls,
-      cal, calDirty, calMotorLocked, helpOpen,
+      cal, calDirty, calMotorLocked, helpOpen, calImgOpen,
       lastAddr, robotName, editingName, robotNameEdit, camErr, camSrc,
       transport, deployTime, usbPorts, usbScanning, simulationMode, toggleSimulation,
       myRole, mySessionId, sessionsList, showSessions, showDeviceInfo, copyDiagReport, sessionAge, parseUA,
