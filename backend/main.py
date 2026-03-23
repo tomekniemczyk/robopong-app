@@ -14,6 +14,7 @@ from fastapi.staticfiles import StaticFiles
 
 import db
 import drills
+import exercises
 import training
 import presets
 from models import Ball, ScenarioIn, FolderIn, FolderUpdate, DrillIn, ReorderItem, DrillReorderItem
@@ -589,6 +590,25 @@ def reset_drill_endpoint(drill_id: int):
 def reset_all_drills():
     drills.reset_all()
     _log("RESET ALL DRILLS")
+    return {"ok": True}
+
+
+# ── REST — ćwiczenia fizyczne ─────────────────────────────────────────────────
+
+@app.get("/api/exercises")
+def list_exercises():
+    return exercises.get_exercises()
+
+
+@app.put("/api/exercises/{eid}/duration")
+def set_exercise_duration(eid: int, body: dict):
+    exercises.save_override(eid, body["duration_sec"])
+    return {"ok": True}
+
+
+@app.post("/api/exercises/reset-all")
+def reset_all_exercises():
+    exercises.reset_all()
     return {"ok": True}
 
 

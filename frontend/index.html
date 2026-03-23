@@ -659,9 +659,9 @@
         </span>
         <span style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap"
           :style="{color: si+1 === trainingStep ? '#fff' : 'var(--muted)'}">
-          {{ step.drill_name || 'Drill ' + (si+1) }}
+          {{ step.drill_name || step.exercise_name || 'Krok ' + (si+1) }}
         </span>
-        <span style="font-size:9px;color:var(--muted)">{{ step.count }}p</span>
+        <span style="font-size:9px;color:var(--muted)">{{ step.exercise_id ? (step.duration_sec+'s') : (step.count+'p') }}</span>
       </div>
       <div v-if="trainingEstRemaining" style="font-size:10px;color:var(--muted);margin-top:6px;text-align:center">
         ~{{ Math.ceil(trainingEstRemaining/60) }} min do końca
@@ -697,6 +697,13 @@
       <div v-if="trainingPhase === 'drill'" style="width:80%;margin:0 auto">
         <div class="ball-counter">{{ trainingBall }}<span style="font-size:32px;opacity:.5">/{{ trainingBallTotal }}</span></div>
         <div class="progress-bar"><div class="fill" :style="{width: trainingBallTotal ? (trainingBall/trainingBallTotal*100)+'%' : '0'}"></div></div>
+      </div>
+
+      <!-- Faza: exercise -->
+      <div v-if="trainingPhase === 'exercise'" style="text-align:center;width:80%;margin:0 auto">
+        <div class="ball-counter" style="color:#a855f7">{{ trainingTimer }}</div>
+        <div class="ball-sub">{{ trainingDrillName }}</div>
+        <div class="progress-bar"><div class="fill" :style="{width: trainingBallTotal ? ((trainingBallTotal-trainingTimer)/trainingBallTotal*100)+'%' : '0', background:'#a855f7'}"></div></div>
       </div>
 
       <!-- Faza: pauza -->
@@ -887,20 +894,32 @@
       <h3 style="margin-top:14px">Kroki</h3>
       <div v-for="(step, i) in tEditSteps" :key="i" class="card" style="margin:8px 0;padding:10px 12px">
         <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
-          <select v-model="step.drill_id" @change="onDrillSelect(step)" style="flex:1;min-width:120px;background:var(--surface);color:var(--text);border:1px solid var(--border);border-radius:8px;padding:6px 8px;font-size:12px">
-            <option :value="null" disabled>-- wybierz drill --</option>
-            <optgroup v-for="f in drillTree.folders" :label="f.name" :key="f.id">
-              <option v-for="d in f.drills" :value="d.id" :key="d.id">{{ d.name }}</option>
+          <select @change="onStepTypeSelect(step, $event.target.value)" style="flex:1;min-width:120px;background:var(--surface);color:var(--text);border:1px solid var(--border);border-radius:8px;padding:6px 8px;font-size:12px">
+            <option value="">-- Wybierz --</option>
+            <optgroup v-for="f in drillTree.folders" :label="'🏓 '+f.name" :key="f.id">
+              <option v-for="d in f.drills" :value="'drill:'+d.id" :key="d.id" :selected="step.drill_id===d.id">{{ d.name }}</option>
+            </optgroup>
+            <optgroup v-for="cat in exerciseCategories" :label="cat.icon+' '+cat.name" :key="'ex-'+cat.id">
+              <option v-for="ex in cat.exercises" :value="'exercise:'+ex.id" :key="'ex-'+ex.id" :selected="step.exercise_id===ex.id">{{ ex.name }}</option>
             </optgroup>
           </select>
-          <div style="display:flex;align-items:center;gap:4px;font-size:11px">
-            <label style="color:var(--muted)">Ilość</label>
-            <input type="number" v-model.number="step.count" min="1" max="999" style="width:50px;text-align:center">
-          </div>
-          <div style="display:flex;align-items:center;gap:4px;font-size:11px">
-            <label style="color:var(--muted)">%</label>
-            <input type="number" v-model.number="step.percent" min="50" max="150" style="width:50px;text-align:center">
-          </div>
+          <template v-if="!step.exercise_id">
+            <div style="display:flex;align-items:center;gap:4px;font-size:11px">
+              <label style="color:var(--muted)">Ilość</label>
+              <input type="number" v-model.number="step.count" min="1" max="999" style="width:50px;text-align:center">
+            </div>
+            <div style="display:flex;align-items:center;gap:4px;font-size:11px">
+              <label style="color:var(--muted)">%</label>
+              <input type="number" v-model.number="step.percent" min="50" max="150" style="width:50px;text-align:center">
+            </div>
+          </template>
+          <template v-else>
+            <div style="display:flex;align-items:center;gap:4px;font-size:11px">
+              <label style="color:var(--muted)">Czas</label>
+              <input type="number" v-model.number="step.duration_sec" min="10" max="600" style="width:50px;text-align:center">
+              <span style="color:var(--muted)">s</span>
+            </div>
+          </template>
           <div style="display:flex;align-items:center;gap:4px;font-size:11px">
             <label style="color:var(--muted)">Pauza</label>
             <input type="number" v-model.number="step.pause_after_sec" min="0" max="600" style="width:50px;text-align:center">
@@ -936,6 +955,36 @@
     </div>
   </div>
 
+  <!-- ── Ćwiczenia ─────────────────────────────────────────────────────────── -->
+  <div class="page" v-show="page === 'exercises'">
+    <div class="row" style="margin-bottom:8px">
+      <span class="section-title" style="margin-bottom:0">Ćwiczenia fizyczne</span>
+    </div>
+    <div v-for="cat in exerciseCategories" :key="cat.id" class="drill-folder">
+      <div class="drill-folder-header" @click="toggleExCat(cat.id)">
+        <span class="drill-folder-arrow">{{ openExCats.has(cat.id) ? '▼' : '▶' }}</span>
+        <span class="drill-folder-name">{{ cat.icon }} {{ cat.name }}</span>
+        <span class="chip">{{ cat.exercises.length }}</span>
+      </div>
+      <div v-if="openExCats.has(cat.id)" class="drill-list">
+        <div v-for="ex in cat.exercises" :key="ex.id" class="drill-row" @click="selectedExercise = selectedExercise?.id === ex.id ? null : ex" style="cursor:pointer">
+          <span class="drill-name">{{ ex.name }}</span>
+          <span style="font-size:10px;color:var(--muted)">{{ ex.duration_sec }}s</span>
+        </div>
+        <!-- Wybrany exercise detail -->
+        <div v-if="selectedExercise && cat.exercises.some(e => e.id === selectedExercise.id)"
+          style="background:var(--card);border:1px solid var(--border);border-radius:0 0 8px 8px;padding:10px;margin-top:-2px;margin-bottom:4px">
+          <div style="font-size:12px;color:var(--text2);line-height:1.5;margin-bottom:8px">{{ selectedExercise.description }}</div>
+          <div style="display:flex;align-items:center;gap:6px">
+            <span style="font-size:11px;color:var(--muted)">Czas:</span>
+            <input type="number" v-model.number="selectedExercise.duration_sec" min="10" max="600" style="width:60px;text-align:center">
+            <span style="font-size:11px;color:var(--muted)">sek</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- ── Bottom nav ───────────────────────────────────────────────────────── -->
   <nav class="nav">
     <button :class="{ active: page === 'drills' }" @click="page='drills'">
@@ -946,6 +995,9 @@
     </button>
     <button :class="{ active: page === 'training' || page === 'training-editor' }" @click="page='training'">
       <span class="nav-icon">🏋</span>Trening
+    </button>
+    <button :class="{active: page==='exercises'}" @click="page='exercises'">
+      <span class="nav-icon">🏋</span>Ćwiczenia
     </button>
     <button :class="{ active: page === 'editor' }" @click="openEditor(null)">
       <span class="nav-icon">✏️</span>Edytor
@@ -1157,6 +1209,11 @@ createApp({
         trainingBall.value = m.thrown || m.ball
         trainingBallTotal.value = m.count || m.total
         trainingEstRemaining.value = m.est_remaining_sec || 0
+      } else if (m.type === 'training_exercise_progress') {
+        trainingPhase.value = 'exercise'
+        trainingDrillName.value = m.exercise_name
+        trainingTimer.value = m.sec
+        trainingBallTotal.value = m.total_sec
       } else if (m.type === 'training_pause') {
         trainingPhase.value = 'pause'
         trainingTimer.value = m.sec
@@ -1225,6 +1282,43 @@ createApp({
     const drillTree    = reactive({ folders: [], unfiled: [] })
     const openFolders  = reactive(new Set())
     const moveModalDrill = ref(null)
+
+    // ── Exercises ──────────────────────────────────────────────
+    const exerciseCategories = ref([])
+    const openExCats = reactive(new Set())
+    const selectedExercise = ref(null)
+
+    function toggleExCat(id) {
+      openExCats.has(id) ? openExCats.delete(id) : openExCats.add(id)
+    }
+
+    async function loadExercises() {
+      const r = await fetch('/api/exercises')
+      const d = await r.json()
+      exerciseCategories.value = d.categories || []
+    }
+
+    function onStepTypeSelect(step, val) {
+      if (val.startsWith('drill:')) {
+        step.drill_id = parseInt(val.split(':')[1])
+        step.exercise_id = null
+        step.exercise_name = ''
+        for (const f of (drillTree.folders || [])) {
+          for (const d of f.drills) {
+            if (d.id === step.drill_id) { step.drill_name = d.name; return }
+          }
+        }
+      } else if (val.startsWith('exercise:')) {
+        step.exercise_id = parseInt(val.split(':')[1])
+        step.drill_id = null
+        step.drill_name = ''
+        for (const cat of exerciseCategories.value) {
+          for (const ex of cat.exercises) {
+            if (ex.id === step.exercise_id) { step.exercise_name = ex.name; step.duration_sec = ex.duration_sec; return }
+          }
+        }
+      }
+    }
 
     async function loadDrillTree() {
       const r = await fetch('/api/drills/tree')
@@ -1520,7 +1614,7 @@ createApp({
       page.value = 'training-editor'
     }
     function addTrainingStep() {
-      tEditSteps.value.push({ drill_id: null, drill_name: '', count: 60, percent: 100, pause_after_sec: 30 })
+      tEditSteps.value.push({ drill_id: null, drill_name: '', count: 60, percent: 100, pause_after_sec: 30, exercise_id: null, exercise_name: '', duration_sec: 60 })
     }
     function moveStep(i, dir) {
       const arr = tEditSteps.value
@@ -1715,7 +1809,7 @@ createApp({
     }
 
     onMounted(() => {
-      wsConnect(); loadScenarios(); loadCal(); loadDrillTree(); loadTrainings()
+      wsConnect(); loadScenarios(); loadCal(); loadDrillTree(); loadTrainings(); loadExercises()
       fetch('/api/deploy-time').then(r=>r.json()).then(d => { deployTime.value = d.deploy_time }).catch(()=>{})
     })
 
@@ -1753,6 +1847,7 @@ createApp({
       loadTrainings, openTrainingEditor, addTrainingStep, moveStep,
       pauseTraining, resumeTraining,
       onDrillSelect, saveTraining, deleteTraining, runTraining, stopTraining, totalTrainingTime,
+      exerciseCategories, openExCats, selectedExercise, toggleExCat, loadExercises, onStepTypeSelect,
     }
   }
 }).mount('#app')

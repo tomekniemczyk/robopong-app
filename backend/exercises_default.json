@@ -1,0 +1,74 @@
+{
+  "categories": [
+    {
+      "name": "Warmup",
+      "icon": "🔥",
+      "exercises": [
+        {"name": "Jogging in Place", "duration_sec": 60, "description": "Jog in place with light, bouncy steps, keeping knees slightly bent. Gradually increase pace. Raises heart rate and prepares legs for lateral movement."},
+        {"name": "Arm Circles", "duration_sec": 30, "description": "Extend arms to sides, make small circles growing to large circles. 15s forward, 15s backward. Loosens shoulder joints for stroke mechanics."},
+        {"name": "Wrist Rotations", "duration_sec": 30, "description": "Hold arms in front, rotate wrists in circles. 15s clockwise, 15s counterclockwise. Warms up wrist joint for spin generation."},
+        {"name": "Trunk Rotations", "duration_sec": 45, "description": "Feet shoulder-width, rotate upper body left-right letting arms swing freely. Keep hips stable. Mimics rotational movement in strokes."},
+        {"name": "Hip Circles", "duration_sec": 30, "description": "Hands on hips, make large circular motions. 15s each direction. Mobilizes hip joints for low stance and weight transfer."},
+        {"name": "High Knees", "duration_sec": 45, "description": "Jog in place driving knees to waist height. Pump arms in sync. Activates hip flexors and explosive leg drive."},
+        {"name": "Dynamic Lunges", "duration_sec": 60, "description": "Step forward into lunge, lower back knee toward ground, push back, alternate legs. Keep torso upright. Stretches hip flexors, activates glutes."},
+        {"name": "Shadow Play", "duration_sec": 90, "description": "Without ball, perform forehand and backhand strokes with proper footwork. Focus on weight transfer and follow-through. Grooves muscle memory."}
+      ]
+    },
+    {
+      "name": "Footwork",
+      "icon": "👟",
+      "exercises": [
+        {"name": "Side Shuffle", "duration_sec": 60, "description": "Shuffle laterally from forehand to backhand corner and back. Stay low, feet wide, never cross feet. Foundational footwork for table coverage."},
+        {"name": "Crossover Step", "duration_sec": 60, "description": "From backhand corner, cross right foot over left to reach forehand corner, shuffle back. Covers larger distances faster than shuffling."},
+        {"name": "Falkenberg Footwork", "duration_sec": 120, "description": "Classic 3-point: forehand from BH corner → backhand from BH side → forehand from FH corner. Repeat. Gold-standard professional footwork pattern."},
+        {"name": "In-Out Movement", "duration_sec": 60, "description": "Step in toward table for short ball, quickly step back for deep ball. Alternate. Trains forward-backward movement for short serves."},
+        {"name": "Two-Point Rally", "duration_sec": 90, "description": "Ball alternates to FH and BH. Move using shuffle steps, return to center between shots. Focus on being in position before ball arrives."},
+        {"name": "Triangle Footwork", "duration_sec": 90, "description": "3 markers in triangle behind table. Move to each using shuffle/crossover steps, simulate stroke at each. Combines lateral and forward-backward."},
+        {"name": "Pivot Drill", "duration_sec": 60, "description": "From BH corner, pivot around left foot to play forehand from BH side. Rotate hips and shoulders fully, recover. Critical for aggressive FH players."}
+      ]
+    },
+    {
+      "name": "Speed",
+      "icon": "⚡",
+      "exercises": [
+        {"name": "Reaction Ball", "duration_sec": 60, "description": "Drop/throw reaction ball against floor or wall, catch quickly. Unpredictable bounce forces rapid hand-eye adjustments. Use regular ball if no reaction ball."},
+        {"name": "Fast Hands Counter", "duration_sec": 120, "description": "Stand close to table, rally fast counter-drives. Minimize backswing, short punchy strokes, quick recovery. Trains fast-twitch reflexes."},
+        {"name": "Multi-Ball Speed", "duration_sec": 90, "description": "Feeder rapidly sends balls to alternating locations. Move and return each ball quickly without sacrificing form. Increase speed as consistency improves."},
+        {"name": "Quick-Fire Serves", "duration_sec": 90, "description": "Serve 20-30 balls in rapid succession with minimal pause. Vary spin and placement. Builds serve consistency under time pressure."}
+      ]
+    },
+    {
+      "name": "Agility",
+      "icon": "🏃",
+      "exercises": [
+        {"name": "Ladder Lateral", "duration_sec": 60, "description": "Move laterally through agility ladder, both feet in each square. Stay low in ready stance. Develops quick precise foot placement."},
+        {"name": "Ladder In-Out", "duration_sec": 60, "description": "Move forward through ladder: both feet in, both feet out wide on each rung. Stay on balls of feet, arms ready. Trains rapid foot coordination."},
+        {"name": "Cone Touch", "duration_sec": 60, "description": "4-5 cones in semicircle 2m from center. Sprint to touch each, return to center. Simulates explosive direction changes during rallies."},
+        {"name": "Random Direction", "duration_sec": 60, "description": "Partner calls directions (left/right/forward/back), react with 2-3 explosive steps, return to center. Trains game-like reaction to unpredictable placement."}
+      ]
+    },
+    {
+      "name": "Strength",
+      "icon": "💪",
+      "exercises": [
+        {"name": "Box Jumps", "duration_sec": 60, "description": "Jump onto low box (30-40cm) with both feet, land softly in squat, step down. 10-15 reps. Builds explosive leg power for fast recovery."},
+        {"name": "Bodyweight Squats", "duration_sec": 60, "description": "Feet shoulder-width, lower until thighs parallel, drive up. Chest up, weight on heels. Builds leg endurance for low ready position."},
+        {"name": "Forearm Plank", "duration_sec": 45, "description": "Hold plank on forearms, body straight head-to-heels. Engage core, avoid hip sag. Core stability for rotational power in strokes."},
+        {"name": "Side Plank", "duration_sec": 30, "description": "Support on forearm, feet stacked, hips lifted in line. 30s per side. Strengthens obliques for forehand loop rotation."},
+        {"name": "Resistance Band FH", "duration_sec": 60, "description": "Band at waist height behind you, hold like racket. Perform forehand motion against resistance, 15-20 reps. Strengthens forehand stroke muscles."},
+        {"name": "Calf Raises", "duration_sec": 45, "description": "Rise on balls of feet, lower slowly. 20-25 reps. Strong calves support ready stance and explosive first-step movement."}
+      ]
+    },
+    {
+      "name": "Cool-down",
+      "icon": "🧊",
+      "exercises": [
+        {"name": "Quad Stretch Walk", "duration_sec": 60, "description": "Walk slowly, pull rear foot to glute each step, hold 2-3s. Keep upright. Stretches quads fatigued from low playing stance."},
+        {"name": "Hamstring Stretch", "duration_sec": 45, "description": "Heel on low surface, hinge forward at hips with straight back. Hold 20-25s per leg. Releases tension from bent-knee posture."},
+        {"name": "Shoulder Stretch", "duration_sec": 30, "description": "Pull one arm across chest with opposite hand, hold 15s per arm. Keep shoulder down. Releases posterior shoulder from stroke fatigue."},
+        {"name": "Wrist Flexor Stretch", "duration_sec": 30, "description": "Extend arm palm up, gently pull fingers back. Hold 15s per arm. Prevents wrist strain from racket grip."},
+        {"name": "Deep Breathing", "duration_sec": 60, "description": "Inhale through nose 4s, hold 4s, exhale through mouth 6s. Repeat 5-6 times. Activates parasympathetic system, accelerates recovery."}
+      ]
+    }
+  ]
+}

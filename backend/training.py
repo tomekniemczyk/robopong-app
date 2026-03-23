@@ -9,6 +9,7 @@ from typing import Callable, Optional
 
 import audio
 import drills
+import exercises
 
 logger = logging.getLogger(__name__)
 TRAININGS_FILE = Path(__file__).parent / ".trainings.json"
@@ -138,6 +139,12 @@ class TrainingRunner:
                 if self._stopped: return
                 await self._wait_unpaused()
 
+                # Rozgałęzienie: drill vs exercise
+                is_exercise = bool(step.get("exercise_id"))
+                if is_exercise:
+                    await self._run_exercise_step(step_idx, step, steps, total_steps, broadcast)
+                    continue
+
                 drill = self._resolve_drill(step)
                 if not drill:
                     logger.warning("Drill %s not found, skipping", step.get("drill_id"))
@@ -242,6 +249,56 @@ class TrainingRunner:
                 await robot.stop()
             except Exception:
                 pass
+
+    async def _run_exercise_step(self, step_idx, step, steps, total_steps, broadcast):
+        ex = exercises.get_exercise(step["exercise_id"])
+        if not ex:
+            logger.warning("Exercise %s not found, skipping", step.get("exercise_id"))
+            return
+        name = step.get("exercise_name") or ex.get("name", "?")
+        duration = step.get("duration_sec") or ex.get("duration_sec", 60)
+        pause_sec = step.get("pause_after_sec", 30)
+
+        broadcast("training_step", {
+            "step": step_idx + 1, "total": total_steps,
+            "drill_name": f"🏋 {name}", "phase": "exercise",
+            "exercise": ex, "duration_sec": duration,
+            "completed_steps": step_idx,
+        })
+        audio.play("beep")
+
+        # Countdown ćwiczenia
+        for sec in range(duration, 0, -1):
+            if self._stopped: return
+            await self._wait_unpaused()
+            broadcast("training_exercise_progress", {
+                "step": step_idx + 1, "total_steps": total_steps,
+                "exercise_name": name, "sec": sec, "total_sec": duration,
+                "description": ex.get("description", ""),
+            })
+            if sec <= 3:
+                audio.play("beep_high")
+            await asyncio.sleep(1)
+
+        audio.play("drill_finished")
+        broadcast("training_step_done", {
+            "step": step_idx + 1, "total": total_steps,
+            "drill_name": f"🏋 {name}",
+        })
+
+        # Pauza
+        if step_idx < total_steps - 1 and pause_sec > 0:
+            for sec in range(pause_sec, 0, -1):
+                if self._stopped: return
+                await self._wait_unpaused()
+                broadcast("training_pause", {
+                    "sec": sec, "total": pause_sec,
+                    "step": step_idx + 1, "total_steps": total_steps,
+                    "next_drill": steps[step_idx + 1].get("drill_name") or steps[step_idx + 1].get("exercise_name", ""),
+                })
+                if sec <= 3:
+                    audio.play("beep_high")
+                await asyncio.sleep(1)
 
     def _resolve_drill(self, step: dict) -> dict | None:
         drill_id = step.get("drill_id")
