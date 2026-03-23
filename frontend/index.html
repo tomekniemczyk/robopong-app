@@ -1321,6 +1321,7 @@ createApp({
     function stopDrill() {
       send({ action: 'stop_drill' })
       send({ action: 'stop' })
+      drillRunning.value = false
       drillPaused.value = false
     }
     function endDrill() {
