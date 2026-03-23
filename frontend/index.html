@@ -226,10 +226,10 @@
   <div class="topbar">
     <h1>🏓 RoboPong <span v-if="deployTime" style="font-size:9px;color:var(--muted);font-weight:400;font-family:monospace;letter-spacing:0">{{ deployTime }}</span></h1>
     <div style="display:flex;align-items:center;gap:6px">
-      <!-- connection badge — klik otwiera info o urządzeniu -->
+      <!-- connection badge — połączony: info, offline: otwiera stronę połączenia -->
       <div class="conn-badge" :class="{ on: connected, sim: simulationMode && !connected }"
-           @click="(connected || simulationMode) && (showDeviceInfo=true)"
-           :style="(connected || simulationMode) ? 'cursor:pointer' : ''">
+           @click="(connected || simulationMode) ? showDeviceInfo=true : page='connect'"
+           style="cursor:pointer">
         <span class="conn-dot"></span>
         <span class="conn-name">{{ connected ? (robotName || 'Robopong') : simulationMode ? 'Symulacja' : 'Offline' }}</span>
         <button v-if="connected" class="conn-cal-btn" @click.stop="page='calibration'" title="Kalibracja">⚙</button>
@@ -1129,9 +1129,6 @@
     </button>
     <button :class="{ active: page === 'camera' }" @click="page='camera'">
       <span class="nav-icon">📷</span>Kamera
-    </button>
-    <button :class="{ active: page === 'connect' }" @click="page='connect'">
-      <span class="nav-icon">📡</span>BLE
     </button>
     <button :class="{ active: page === 'logs' }" @click="page='logs'">
       <span class="nav-icon">🖥</span>Logi
