@@ -986,14 +986,14 @@
       </div>
       <div v-if="!trainings.length" style="color:var(--muted);font-size:13px">{{ t('tr.empty') }}</div>
       <ul class="device-list" v-else>
-        <li v-for="t in trainings" :key="t.id">
+        <li v-for="tr in trainings" :key="tr.id">
           <div style="flex:1">
-            <div style="font-weight:600">{{ t.name }}</div>
-            <div style="font-size:11px;color:var(--muted)">{{ t.steps?.length || 0 }} drilli · {{ totalTrainingTime(t) }}</div>
+            <div style="font-weight:600">{{ tr.name }}</div>
+            <div style="font-size:11px;color:var(--muted)">{{ tr.steps?.length || 0 }} drilli · {{ totalTrainingTime(tr) }}</div>
           </div>
-          <button class="btn btn-ghost btn-icon" @click="openTrainingModal(t)" title="Edytuj">✏</button>
-          <button class="btn btn-success btn-icon" @click="runTraining(t.id)" :disabled="!connected || myRole!=='controller'" title="Start">▶</button>
-          <button class="btn btn-ghost btn-icon" style="color:var(--danger)" @click="deleteTraining(t.id)" :title="t('btn.delete')">✕</button>
+          <button class="btn btn-ghost btn-icon" @click="openTrainingModal(tr)" title="Edytuj">✏</button>
+          <button class="btn btn-success btn-icon" @click="runTraining(tr.id)" :disabled="!connected || myRole!=='controller'" title="Start">▶</button>
+          <button class="btn btn-ghost btn-icon" style="color:var(--danger)" @click="deleteTraining(tr.id)" :title="t('btn.delete')">✕</button>
         </li>
       </ul>
     </div>
