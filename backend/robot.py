@@ -208,6 +208,7 @@ class _USBTransport:
 
 class Robot:
     def __init__(self, on_event: Optional[Callable] = None):
+        self.simulation: bool = False  # tryb symulacji — nie wysyła do robota
         # BLE
         self._client:      Optional[BleakClient] = None
         self._drill:       Optional[asyncio.Task] = None
@@ -537,6 +538,9 @@ class Robot:
         logger.info("handshake complete: fw=%d version=%d", self.firmware, self.robot_version)
 
     async def _write(self, cmd: str):
+        if self.simulation:
+            logger.debug("SIM → %s", cmd)
+            return
         # USB takes priority if connected
         if self._usb.is_connected:
             logger.debug("USB send: %s", cmd)
@@ -646,6 +650,8 @@ class Robot:
 
     @property
     def is_connected(self) -> bool:
+        if self.simulation:
+            return True
         if self._usb.is_connected:
             return True
         return self._client is not None and self._client.is_connected

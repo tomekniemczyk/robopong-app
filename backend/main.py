@@ -402,6 +402,13 @@ async def _handle(msg: dict, ws: WebSocket):
     elif action == "reset_ble":
         asyncio.create_task(robot.reset_ble())
 
+    elif action == "set_simulation":
+        robot.simulation = msg.get("enabled", False)
+        _log("Simulation mode: %s", robot.simulation)
+        robot.device = "SIMULATION" if robot.simulation else ""
+        robot.firmware = 999 if robot.simulation else 0
+        robot._push_status()
+
     # ── Zarządzanie sesjami ──────────────────────────────────────────────────
 
     elif action == "request_takeover":

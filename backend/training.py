@@ -110,6 +110,9 @@ class TrainingRunner:
             # ── Countdown ────────────────────────────────────────
             first_drill = self._resolve_drill(steps[0]) if steps else None
 
+            audio.play("training_starting")
+            await asyncio.sleep(2)  # daj czas na "Training starting"
+
             broadcast("training_info", {
                 "name": scenario.get("name", ""),
                 "total_steps": total_steps,
@@ -159,7 +162,7 @@ class TrainingRunner:
                     "completed_steps": step_idx,
                     "est_remaining_sec": est_remaining,
                 })
-                audio.play("start")
+                audio.play("drill_starting")
                 await asyncio.sleep(1.5)
 
                 if self._stopped: return
@@ -193,7 +196,7 @@ class TrainingRunner:
                 if self._stopped: return
 
                 # END DRILL
-                audio.play("end")
+                audio.play("drill_finished")
                 await robot.stop()
                 broadcast("training_step_done", {
                     "step": step_idx + 1, "total": total_steps,
@@ -226,7 +229,7 @@ class TrainingRunner:
 
             # ── Done ─────────────────────────────────────────────
             elapsed = int(time.monotonic() - start_time)
-            audio.play("training_ended")
+            audio.play("training_complete")
             broadcast("training_ended", {"elapsed_sec": elapsed})
 
         except asyncio.CancelledError:

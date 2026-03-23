@@ -594,11 +594,40 @@
       </div>
     </div>
 
+    <!-- Symulacja -->
+    <div class="card" style="border:1px dashed var(--border)">
+      <div style="display:flex;align-items:center;gap:8px">
+        <span style="font-size:13px;font-weight:600">🧪 Tryb symulacji</span>
+        <div class="spacer"></div>
+        <button class="btn" :style="{background: simulationMode ? 'var(--danger)' : 'var(--accent)', color:'#fff'}"
+          style="padding:6px 14px;font-size:12px"
+          @click="toggleSimulation">{{ simulationMode ? '⏹ Wyłącz' : '▶ Włącz' }}</button>
+      </div>
+      <div style="font-size:11px;color:var(--muted);margin-top:4px">Drille i treningi bez robota — tylko wizualizacja i dźwięki</div>
+    </div>
+
   </div>
 
   <!-- ── Runner overlay ──────────────────────────────────────────────────── -->
   <div class="runner-overlay" v-if="drillRunning">
     <h2>{{ drillScenario }}</h2>
+    <!-- Wizualizacja live piłki -->
+    <svg v-if="activeDrill && activeDrill.balls.length" viewBox="0 0 300 180" style="width:90%;max-width:260px;margin:0 auto 8px;display:block;border-radius:4px">
+      <rect x="0" y="10" width="300" height="170" fill="#1a4a8a"/>
+      <rect x="0" y="10" width="300" height="170" fill="none" stroke="#fff" stroke-width="2"/>
+      <line x1="150" y1="10" x2="150" y2="180" stroke="#fff" stroke-width="1" opacity="0.5"/>
+      <rect x="-2" y="6" width="304" height="8" rx="1" fill="#555"/>
+      <rect x="125" y="0" width="50" height="8" rx="2" fill="#3a3d52" stroke="#6b6f8a" stroke-width="0.5"/>
+      <!-- Aktualna piłka (pulsuje) -->
+      <g v-if="liveBall">
+        <circle :cx="ballTableX(liveBall)" :cy="10+(ballTableY(liveBall)-30)*170/180" r="12"
+          :fill="liveBall.top_speed > liveBall.bot_speed ? '#ff6b35' : liveBall.top_speed < liveBall.bot_speed ? '#4dabf7' : '#ffd43b'"
+          stroke="#fff" stroke-width="2" opacity="0.9">
+          <animate attributeName="r" values="10;14;10" dur="0.8s" repeatCount="indefinite"/>
+        </circle>
+        <text :x="ballTableX(liveBall)" :y="10+(ballTableY(liveBall)-30)*170/180+4" text-anchor="middle" fill="#fff" font-size="9" font-weight="700">{{ drillBall }}</text>
+      </g>
+    </svg>
     <div class="ball-counter">{{ drillBall }}</div>
     <div class="ball-sub">z {{ drillTotal }} piłek · runda {{ drillRun }}/{{ drillMaxRepeat === 0 ? '∞' : drillMaxRepeat }}</div>
     <div v-if="drillPaused" style="font-size:14px;color:#ff9f0a;font-weight:700;margin:8px 0">⏸ PAUZA</div>
@@ -995,6 +1024,7 @@ createApp({
     const deployTime    = ref('')
     const usbPorts      = ref([])
     const usbScanning   = ref(false)
+    const simulationMode = ref(false)
 
     // ── Session management ─────────────────────────────────────
     const myRole          = ref('observer')
@@ -1180,6 +1210,11 @@ createApp({
         connect(lastAddr.value)
       }
     }
+    function toggleSimulation() {
+      simulationMode.value = !simulationMode.value
+      send({ action: 'set_simulation', enabled: simulationMode.value })
+      showToast(simulationMode.value ? '🧪 Symulacja włączona' : '⏹ Symulacja wyłączona')
+    }
     function saveName() {
       robotName.value = robotNameEdit.value.trim() || robotName.value
       localStorage.setItem('robotName', robotName.value)
@@ -1295,6 +1330,11 @@ createApp({
 
     // ── Drill panel ───────────────────────────────────────────
     const activeDrill    = ref(null)
+    const liveBall = computed(() => {
+      if (!activeDrill.value || !activeDrill.value.balls.length || !drillRunning.value) return null
+      const idx = Math.max(0, (drillBall.value - 1) % activeDrill.value.balls.length)
+      return activeDrill.value.balls[idx]
+    })
     const drillRunCount  = ref(60)
     const drillRunPercent = ref(100)
 
@@ -1687,13 +1727,13 @@ createApp({
       showMoveModal, moveDrillToFolder, deleteDrillConfirm, runDrill, exportDrills,
       toast, robotLog, logBox, serverLogs, serverLogBox, logLevel, filteredServerLogs,
       drillRunning, drillScenario, drillBall, drillTotal, drillRun, drillMaxRepeat,
-      activeDrill, drillRunCount, drillRunPercent,
+      activeDrill, drillRunCount, drillRunPercent, liveBall,
       openDrillPanel, prevDrill, nextDrill, startDrill,
       ballTableX, ballTableY,
       editId, editName, editDesc, editRepeat, editBalls,
       cal, calDirty, calMotorLocked, helpOpen,
       lastAddr, robotName, editingName, robotNameEdit, camErr, camSrc,
-      transport, deployTime, usbPorts, usbScanning,
+      transport, deployTime, usbPorts, usbScanning, simulationMode, toggleSimulation,
       myRole, mySessionId, sessionsList, showSessions,
       takeoverReq, takeoverCountdown, takeoverCooldown,
       scan, connect, disconnect, saveName, usbScan, usbConnect, reconnectLast,
