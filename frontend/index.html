@@ -406,7 +406,7 @@
           <li>Min <code>200</code> ms, max <code>10000</code> ms</li>
         </ul>
         <div style="margin-top:10px;padding:8px 12px;background:rgba(91,124,247,.08);border-radius:8px;font-size:12px;color:var(--muted)">
-          <strong>Procedura:</strong> Wyślij → poczekaj ~1.5 s na rozpędzenie silników → Rzut → oceń wynik → popraw → powtórz. Gdy zadowolony — Zapisz preset.
+          <strong>Procedura:</strong> Ustaw Wysokość / Oscylację (krok 1) → odblokuj silniki kłódką (krok 2) → ustaw Góra/Dół → Wyślij ustawienia → poczekaj ~1.5 s → Rzut → oceń → popraw → powtórz. Gdy zadowolony — Zapisz preset.
         </div>
       </div>
     </div>
@@ -415,7 +415,6 @@
       <div style="display:flex;align-items:center;gap:8px;margin-bottom:14px">
         <h2 style="flex:1">Kalibracja</h2>
         <button class="btn btn-ghost" style="padding:7px 14px;font-size:12px" @click="calReset" :disabled="myRole !== 'controller'">↺ Reset</button>
-        <button class="btn" style="padding:7px 14px;font-size:12px;background:var(--accent);color:#fff" @click="calSetup" :disabled="!connected || myRole !== 'controller'">⚙ Setup</button>
       </div>
 
       <!-- ── Etap 1: Pozycja głowicy (silniki OFF) ── -->
@@ -516,37 +515,46 @@
         </svg>
       </div>
 
-      <!-- ── Etap 2: Silniki + Rzut ── -->
+      <!-- ── Etap 2: Silniki ── -->
       <div style="margin-bottom:14px">
-        <h3 style="margin-bottom:10px">2. Silniki + Rzut</h3>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px">
-          <div class="field" style="margin:0">
-            <label>Góra <small>-249…249</small></label>
-            <div style="display:flex;align-items:center;gap:4px">
-              <button class="btn btn-ghost" style="padding:4px 8px" :disabled="!connected || myRole!=='controller'" @click="calStep('top_speed',-2)">−</button>
-              <input type="number" v-model.number="cal.top_speed" min="-249" max="249" style="flex:1;text-align:center"
-                @change="clampCal('top_speed',-249,249);calDirty=true">
-              <button class="btn btn-ghost" style="padding:4px 8px" :disabled="!connected || myRole!=='controller'" @click="calStep('top_speed',2)">+</button>
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
+          <h3 style="margin:0">2. Silniki</h3>
+          <button @click="calUnlocked=!calUnlocked" :disabled="!connected || myRole!=='controller'"
+            style="background:none;border:none;cursor:pointer;font-size:18px;padding:2px 4px;line-height:1;opacity:0.85"
+            :title="calUnlocked ? 'Zablokuj silniki' : 'Odblokuj silniki'">
+            {{ calUnlocked ? '🔓' : '🔒' }}
+          </button>
+        </div>
+        <div :style="!calUnlocked ? 'opacity:0.35;pointer-events:none' : ''">
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px">
+            <div class="field" style="margin:0">
+              <label>Góra <small>-249…249</small></label>
+              <div style="display:flex;align-items:center;gap:4px">
+                <button class="btn btn-ghost" style="padding:4px 8px" :disabled="!connected || myRole!=='controller'" @click="calStep('top_speed',-2)">−</button>
+                <input type="number" v-model.number="cal.top_speed" min="-249" max="249" style="flex:1;text-align:center"
+                  @change="clampCal('top_speed',-249,249);calDirty=true">
+                <button class="btn btn-ghost" style="padding:4px 8px" :disabled="!connected || myRole!=='controller'" @click="calStep('top_speed',2)">+</button>
+              </div>
+            </div>
+            <div class="field" style="margin:0">
+              <label>Dół <small>-249…249</small></label>
+              <div style="display:flex;align-items:center;gap:4px">
+                <button class="btn btn-ghost" style="padding:4px 8px" :disabled="!connected || myRole!=='controller'" @click="calStep('bot_speed',-2)">−</button>
+                <input type="number" v-model.number="cal.bot_speed" min="-249" max="249" style="flex:1;text-align:center"
+                  @change="clampCal('bot_speed',-249,249);calDirty=true">
+                <button class="btn btn-ghost" style="padding:4px 8px" :disabled="!connected || myRole!=='controller'" @click="calStep('bot_speed',2)">+</button>
+              </div>
             </div>
           </div>
-          <div class="field" style="margin:0">
-            <label>Dół <small>-249…249</small></label>
-            <div style="display:flex;align-items:center;gap:4px">
-              <button class="btn btn-ghost" style="padding:4px 8px" :disabled="!connected || myRole!=='controller'" @click="calStep('bot_speed',-2)">−</button>
-              <input type="number" v-model.number="cal.bot_speed" min="-249" max="249" style="flex:1;text-align:center"
-                @change="clampCal('bot_speed',-249,249);calDirty=true">
-              <button class="btn btn-ghost" style="padding:4px 8px" :disabled="!connected || myRole!=='controller'" @click="calStep('bot_speed',2)">+</button>
-            </div>
+          <div class="field" style="margin-bottom:10px">
+            <label>Czas oczekiwania ms <small>200–10000</small></label>
+            <input type="number" v-model.number="cal.wait_ms" min="200" max="10000" @change="clampCal('wait_ms',200,10000);calDirty=true">
           </div>
-        </div>
-        <div class="field" style="margin-bottom:10px">
-          <label>Czas oczekiwania ms <small>200–10000</small></label>
-          <input type="number" v-model.number="cal.wait_ms" min="200" max="10000" @change="clampCal('wait_ms',200,10000);calDirty=true">
-        </div>
-        <div class="cal-actions">
-          <button class="btn" :disabled="!connected || myRole !== 'controller'" @click="calSend" style="background:var(--accent);color:#fff">⚡ Kalibruj</button>
-          <button class="btn btn-success" :disabled="!connected || myRole !== 'controller'" @click="calThrow">🏓 Rzut</button>
-          <button class="btn btn-danger" :disabled="!connected || myRole !== 'controller'" @click="calStop">⏹ Stop</button>
+          <div class="cal-actions">
+            <button class="btn" :disabled="!connected || myRole !== 'controller'" @click="calSend" style="background:var(--accent);color:#fff">⚡ Wyślij ustawienia</button>
+            <button class="btn btn-success" :disabled="!connected || myRole !== 'controller' || !calActive" @click="calThrow">🏓 Rzut</button>
+            <button class="btn btn-danger" :disabled="!connected || myRole !== 'controller' || !calActive" @click="calStop">⏹ Stop</button>
+          </div>
         </div>
       </div>
 
@@ -1042,7 +1050,7 @@
       <div style="font-size:15px;margin-bottom:20px;line-height:1.4">{{ confirmMsg }}</div>
       <div style="display:flex;gap:10px;justify-content:center">
         <button class="btn btn-ghost" style="flex:1" @click="confirmCb=null">Anuluj</button>
-        <button class="btn" style="flex:1;background:var(--danger);color:#fff;font-weight:700" @click="_runConfirm()">{{ confirmOkLabel }}</button>
+        <button class="btn" :style="{ flex: 1, background: confirmOkColor, color: '#fff', fontWeight: 700 }" @click="_runConfirm()">{{ confirmOkLabel }}</button>
       </div>
     </div>
   </div>
@@ -1160,7 +1168,7 @@
 
   <!-- ── Bottom nav ───────────────────────────────────────────────────────── -->
   <nav class="nav">
-    <button :class="{ active: page === 'drills' }" @click="page='drills'">
+    <button :class="{ active: page === 'drills' }" :style="connected && !isCalibrated ? 'opacity:0.4' : ''" @click="connected && !isCalibrated ? (showToast('⚠ Wymagana kalibracja'), page='calibration') : page='drills'" :title="connected && !isCalibrated ? 'Wymagana kalibracja' : ''">
       <span class="nav-icon">
         <svg width="22" height="18" viewBox="0 0 22 18" fill="none" xmlns="http://www.w3.org/2000/svg">
           <!-- stół przekrzywiony w lewo -->
@@ -1182,7 +1190,7 @@
         </svg>
       </span>Drille
     </button>
-    <button :class="{ active: page === 'training' }" @click="page='training'">
+    <button :class="{ active: page === 'training' }" :style="connected && !isCalibrated ? 'opacity:0.4' : ''" @click="connected && !isCalibrated ? (showToast('⚠ Wymagana kalibracja'), page='calibration') : page='training'" :title="connected && !isCalibrated ? 'Wymagana kalibracja' : ''">
       <span class="nav-icon">🏋</span>Trening
     </button>
     <button :class="{active: page==='exercises'}" @click="page='exercises'">
@@ -1237,9 +1245,10 @@ createApp({
     // ── Confirm modal ────────────────────────────────────────
     const confirmMsg      = ref('')
     const confirmOkLabel  = ref('Usuń')
+    const confirmOkColor  = ref('var(--danger)')
     const confirmCb       = ref(null)
-    function showConfirm(msg, cb, okLabel = 'Usuń') {
-      confirmMsg.value = msg; confirmOkLabel.value = okLabel; confirmCb.value = cb
+    function showConfirm(msg, cb, okLabel = 'Usuń', okColor = 'var(--danger)') {
+      confirmMsg.value = msg; confirmOkLabel.value = okLabel; confirmOkColor.value = okColor; confirmCb.value = cb
     }
     function _runConfirm() { const cb = confirmCb.value; confirmCb.value = null; cb && cb() }
 
@@ -1258,6 +1267,10 @@ createApp({
     const helpOpen       = ref(false)
     const calImgOpen     = ref(null)
     const presets        = ref([])
+    const calThrownOnce  = ref(false)
+    const calActive      = ref(false)
+    const calUnlocked    = ref(false)
+    const isCalibrated   = ref(!!localStorage.getItem('lastAddr') && localStorage.getItem(`cal_done:${localStorage.getItem('lastAddr')}`) === '1')
 
     const lastAddr      = ref(localStorage.getItem('lastAddr') || '')
     const robotName     = ref(localStorage.getItem('robotName') || '')
@@ -1971,6 +1984,10 @@ createApp({
     function calReset() {
       Object.assign(cal, CAL_DEFAULTS)
       calDirty.value = true
+      if (connected.value) {
+        send({ action: 'begin_calibration' })
+        addLog('→ V (reset głowicy)')
+      }
     }
     function _clampAllCal() {
       const limits = { top_speed:[-249,249], bot_speed:[-249,249], oscillation:[0,255], height:[0,255], rotation:[0,255], wait_ms:[200,10000] }
@@ -1999,17 +2016,21 @@ createApp({
       send({ action: 'set_ball', ball: { ...cal } })
       addLog(`⚡ top=${cal.top_speed} bot=${cal.bot_speed} osc=${cal.oscillation} h=${cal.height} rot=${cal.rotation}`)
       calDirty.value = false
+      calActive.value = true
       showToast('⚡ Silniki start')
     }
     function calThrow() {
       _resetCalIdle()
       send({ action:'throw' })
       addLog('→ T (rzut)')
+      calThrownOnce.value = true
+      calActive.value = true
       showToast('🏓 Rzut!')
     }
     function calStop() {
       send({ action:'stop' })
       addLog('→ H (stop)')
+      calActive.value = false
       showToast('⏹ Stop')
     }
     function calSetup() {
@@ -2029,7 +2050,33 @@ createApp({
         }
       }, 60000)
     }
-    watch(page, (p) => { if (p === 'calibration') _resetCalIdle(); else clearTimeout(_calIdleTimer) })
+    watch(page, (p, oldP) => {
+      if (p === 'calibration') {
+        calThrownOnce.value = false
+        calActive.value = false
+        calUnlocked.value = false
+        _resetCalIdle()
+      } else {
+        clearTimeout(_calIdleTimer)
+        calActive.value = false
+        if (oldP === 'calibration' && calThrownOnce.value && connected.value) {
+          showConfirm(
+            'Czy kalibracja się udała?\nZapisać ustawienia i odblokować treningi/drille?',
+            () => { localStorage.setItem(`cal_done:${lastAddr.value}`, '1'); isCalibrated.value = true; showToast('✅ Kalibracja zapisana') },
+            'Tak, zapisz', 'var(--success)'
+          )
+        }
+      }
+    })
+    watch(connected, (val, old) => {
+      if (val && !old && !isCalibrated.value) {
+        page.value = 'calibration'
+        showToast('⚠ Urządzenie nie skalibrowane — skalibruj przed użyciem')
+      }
+    })
+    watch(lastAddr, addr => {
+      isCalibrated.value = !!addr && localStorage.getItem(`cal_done:${addr}`) === '1'
+    })
 
     // ── helpers ────────────────────────────────────────────────
     function addLog(line) {
@@ -2123,11 +2170,11 @@ createApp({
       activeDrill, drillRunCount, drillRunPercent, liveBall,
       openDrillPanel, prevDrill, nextDrill, startDrill,
       ballTableX, ballTableY,
-      confirmMsg, confirmOkLabel, confirmCb, _runConfirm,
+      confirmMsg, confirmOkLabel, confirmOkColor, confirmCb, _runConfirm,
       showDrillModal, drillModalId, openDrillModal, saveDrillModal,
       showTrainingModal, openTrainingModal,
       editId, editName, editDesc, editRepeat, editBalls,
-      cal, calDirty, calMotorLocked, helpOpen, calImgOpen,
+      cal, calDirty, calMotorLocked, calActive, calUnlocked, isCalibrated, calThrownOnce, helpOpen, calImgOpen,
       lastAddr, robotName, editingName, robotNameEdit, camErr, camSrc,
       transport, deployTime, usbPorts, usbScanning, simulationMode, toggleSimulation,
       myRole, mySessionId, sessionsList, showSessions, showDeviceInfo, copyDiagReport, diagModalText, diagModalOpen, diagModalCopy, sessionAge, parseUA,
