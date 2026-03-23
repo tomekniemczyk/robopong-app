@@ -1,0 +1,66 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 252 110">
+  <!-- Frame 1: Step left — weight right, left arm out -->
+  <g transform="translate(0,0)">
+    <rect width="80" height="110" fill="#f0f8ff"/>
+    <ellipse cx="38" cy="107" rx="14" ry="3" fill="rgba(0,0,0,.1)"/>
+    <ellipse cx="38" cy="12" rx="9" ry="10" fill="#f0c090"/>
+    <path d="M29,7 Q38,1 47,7 L47,13 Q38,8 29,13Z" fill="#5c3a1e"/>
+    <rect x="35" y="21" width="7" height="5" rx="2" fill="#f0c090"/>
+    <!-- torso leaning left slightly -->
+    <path d="M23,26 Q38,23 52,27 L53,62 Q37,67 21,62Z" fill="#3b82f6"/>
+    <!-- L arm out wide -->
+    <path d="M23,30 Q12,34 4,36" stroke="#f0c090" stroke-width="7" stroke-linecap="round" fill="none"/>
+    <circle cx="3" cy="36" r="4" fill="#f0c090"/>
+    <!-- R arm slightly out -->
+    <path d="M52,30 Q58,37 62,46" stroke="#f0c090" stroke-width="7" stroke-linecap="round" fill="none"/>
+    <circle cx="62" cy="47" r="4" fill="#f0c090"/>
+    <!-- L leg stepped wide left -->
+    <path d="M34,62 Q26,78 20,97" stroke="#1e3a5f" stroke-width="9" stroke-linecap="round" fill="none"/>
+    <ellipse cx="17" cy="98" rx="7" ry="4" fill="#111" transform="rotate(-8 17 98)"/>
+    <!-- R leg bearing weight -->
+    <path d="M42,62 Q44,80 46,97" stroke="#1e3a5f" stroke-width="9" stroke-linecap="round" fill="none"/>
+    <ellipse cx="49" cy="98" rx="7" ry="4" fill="#111" transform="rotate(5 49 98)"/>
+  </g>
+  <!-- Frame 2: Feet together, athletic stance -->
+  <g transform="translate(86,0)">
+    <rect width="80" height="110" fill="#f0f8ff"/>
+    <ellipse cx="40" cy="107" rx="14" ry="3" fill="rgba(0,0,0,.1)"/>
+    <ellipse cx="40" cy="13" rx="9" ry="10" fill="#f0c090"/>
+    <path d="M31,8 Q40,2 49,8 L49,14 Q40,9 31,14Z" fill="#5c3a1e"/>
+    <rect x="37" y="22" width="7" height="5" rx="2" fill="#f0c090"/>
+    <!-- slight squat stance -->
+    <path d="M25,27 Q40,24 55,27 L56,63 Q40,68 24,63Z" fill="#3b82f6"/>
+    <!-- arms bent, ready position -->
+    <path d="M25,30 Q19,38 16,46" stroke="#f0c090" stroke-width="7" stroke-linecap="round" fill="none"/>
+    <circle cx="16" cy="47" r="4" fill="#f0c090"/>
+    <path d="M55,30 Q61,38 64,46" stroke="#f0c090" stroke-width="7" stroke-linecap="round" fill="none"/>
+    <circle cx="64" cy="47" r="4" fill="#f0c090"/>
+    <!-- legs slightly bent, together -->
+    <path d="M36,63 Q34,79 33,95" stroke="#1e3a5f" stroke-width="9" stroke-linecap="round" fill="none"/>
+    <ellipse cx="30" cy="97" rx="7" ry="4" fill="#111" transform="rotate(-5 30 97)"/>
+    <path d="M44,63 Q46,79 47,95" stroke="#1e3a5f" stroke-width="9" stroke-linecap="round" fill="none"/>
+    <ellipse cx="50" cy="97" rx="7" ry="4" fill="#111" transform="rotate(5 50 97)"/>
+  </g>
+  <!-- Frame 3: Step right — weight left, right arm out -->
+  <g transform="translate(172,0)">
+    <rect width="80" height="110" fill="#f0f8ff"/>
+    <ellipse cx="42" cy="107" rx="14" ry="3" fill="rgba(0,0,0,.1)"/>
+    <ellipse cx="42" cy="12" rx="9" ry="10" fill="#f0c090"/>
+    <path d="M33,7 Q42,1 51,7 L51,13 Q42,8 33,13Z" fill="#5c3a1e"/>
+    <rect x="39" y="21" width="7" height="5" rx="2" fill="#f0c090"/>
+    <!-- torso lean right -->
+    <path d="M28,26 Q42,23 57,27 L58,62 Q42,67 27,62Z" fill="#3b82f6"/>
+    <!-- L arm slightly out -->
+    <path d="M28,30 Q22,37 18,46" stroke="#f0c090" stroke-width="7" stroke-linecap="round" fill="none"/>
+    <circle cx="18" cy="47" r="4" fill="#f0c090"/>
+    <!-- R arm wide out right -->
+    <path d="M57,30 Q68,34 76,36" stroke="#f0c090" stroke-width="7" stroke-linecap="round" fill="none"/>
+    <circle cx="77" cy="36" r="4" fill="#f0c090"/>
+    <!-- L leg bearing weight -->
+    <path d="M36,62 Q34,80 33,97" stroke="#1e3a5f" stroke-width="9" stroke-linecap="round" fill="none"/>
+    <ellipse cx="30" cy="98" rx="7" ry="4" fill="#111" transform="rotate(-5 30 98)"/>
+    <!-- R leg stepped wide right -->
+    <path d="M46,62 Q54,78 60,97" stroke="#1e3a5f" stroke-width="9" stroke-linecap="round" fill="none"/>
+    <ellipse cx="63" cy="98" rx="7" ry="4" fill="#111" transform="rotate(8 63 98)"/>
+  </g>
+</svg>

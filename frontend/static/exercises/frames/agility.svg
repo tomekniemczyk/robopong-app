@@ -1,0 +1,64 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 252 110">
+  <!-- Frame 1: Ready position — low stance, arms wide -->
+  <g transform="translate(0,0)">
+    <rect width="80" height="110" fill="#f0fff6"/>
+    <ellipse cx="40" cy="107" rx="14" ry="3" fill="rgba(0,0,0,.1)"/>
+    <ellipse cx="40" cy="13" rx="9" ry="10" fill="#f0c090"/>
+    <path d="M31,8 Q40,2 49,8 L49,14 Q40,9 31,14Z" fill="#5c3a1e"/>
+    <rect x="37" y="22" width="7" height="5" rx="2" fill="#f0c090"/>
+    <!-- torso lowered (squat-ish) -->
+    <path d="M24,27 Q40,24 56,27 L57,62 Q40,68 23,62Z" fill="#10b981"/>
+    <!-- arms out wide, ready -->
+    <path d="M24,31 Q13,35 5,38" stroke="#f0c090" stroke-width="7" stroke-linecap="round" fill="none"/>
+    <circle cx="4" cy="38" r="4" fill="#f0c090"/>
+    <path d="M56,31 Q67,35 75,38" stroke="#f0c090" stroke-width="7" stroke-linecap="round" fill="none"/>
+    <circle cx="76" cy="38" r="4" fill="#f0c090"/>
+    <!-- legs wide, bent -->
+    <path d="M36,62 Q28,76 22,91" stroke="#1e3a5f" stroke-width="9" stroke-linecap="round" fill="none"/>
+    <ellipse cx="19" cy="92" rx="7" ry="4" fill="#111" transform="rotate(-8 19 92)"/>
+    <path d="M44,62 Q52,76 58,91" stroke="#1e3a5f" stroke-width="9" stroke-linecap="round" fill="none"/>
+    <ellipse cx="61" cy="92" rx="7" ry="4" fill="#111" transform="rotate(8 61 92)"/>
+  </g>
+  <!-- Frame 2: Explosive cut left — body driving left -->
+  <g transform="translate(86,0)">
+    <rect width="80" height="110" fill="#f0fff6"/>
+    <ellipse cx="36" cy="107" rx="14" ry="3" fill="rgba(0,0,0,.1)"/>
+    <ellipse cx="36" cy="13" rx="9" ry="10" fill="#f0c090"/>
+    <path d="M27,8 Q36,2 45,8 L45,14 Q36,9 27,14Z" fill="#5c3a1e"/>
+    <rect x="33" y="22" width="7" height="5" rx="2" fill="#f0c090"/>
+    <!-- torso driving left -->
+    <path d="M21,26 Q36,23 50,27 L50,62 Q35,67 19,62Z" fill="#10b981"/>
+    <!-- arms driving cut -->
+    <path d="M21,30 Q12,23 7,16" stroke="#f0c090" stroke-width="7" stroke-linecap="round" fill="none"/>
+    <circle cx="6" cy="15" r="4" fill="#f0c090"/>
+    <path d="M50,30 Q56,38 60,47" stroke="#f0c090" stroke-width="7" stroke-linecap="round" fill="none"/>
+    <circle cx="60" cy="48" r="4" fill="#f0c090"/>
+    <!-- L leg pushing off left -->
+    <path d="M32,62 Q22,76 15,92" stroke="#1e3a5f" stroke-width="9" stroke-linecap="round" fill="none"/>
+    <ellipse cx="13" cy="93" rx="7" ry="4" fill="#111" transform="rotate(-10 13 93)"/>
+    <!-- R leg planted, bent -->
+    <path d="M40,62 Q42,78 43,94" stroke="#1e3a5f" stroke-width="9" stroke-linecap="round" fill="none"/>
+    <ellipse cx="44" cy="95" rx="7" ry="4" fill="#111" transform="rotate(3 44 95)"/>
+  </g>
+  <!-- Frame 3: Cut right — change of direction -->
+  <g transform="translate(172,0)">
+    <rect width="80" height="110" fill="#f0fff6"/>
+    <ellipse cx="44" cy="107" rx="14" ry="3" fill="rgba(0,0,0,.1)"/>
+    <ellipse cx="44" cy="13" rx="9" ry="10" fill="#f0c090"/>
+    <path d="M35,8 Q44,2 53,8 L53,14 Q44,9 35,14Z" fill="#5c3a1e"/>
+    <rect x="41" y="22" width="7" height="5" rx="2" fill="#f0c090"/>
+    <!-- torso driving right -->
+    <path d="M29,26 Q44,23 58,27 L58,62 Q43,67 28,62Z" fill="#10b981"/>
+    <!-- arms driving right cut -->
+    <path d="M58,30 Q67,23 73,16" stroke="#f0c090" stroke-width="7" stroke-linecap="round" fill="none"/>
+    <circle cx="74" cy="15" r="4" fill="#f0c090"/>
+    <path d="M29,30 Q23,38 19,47" stroke="#f0c090" stroke-width="7" stroke-linecap="round" fill="none"/>
+    <circle cx="19" cy="48" r="4" fill="#f0c090"/>
+    <!-- R leg pushing off right -->
+    <path d="M48,62 Q57,76 65,92" stroke="#1e3a5f" stroke-width="9" stroke-linecap="round" fill="none"/>
+    <ellipse cx="67" cy="93" rx="7" ry="4" fill="#111" transform="rotate(10 67 93)"/>
+    <!-- L leg planted -->
+    <path d="M38,62 Q37,78 37,94" stroke="#1e3a5f" stroke-width="9" stroke-linecap="round" fill="none"/>
+    <ellipse cx="36" cy="95" rx="7" ry="4" fill="#111" transform="rotate(-3 36 95)"/>
+  </g>
+</svg>

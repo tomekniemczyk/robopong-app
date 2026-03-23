@@ -1,0 +1,63 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 252 110">
+  <!-- Frame 1: Standing — feet shoulder-width -->
+  <g transform="translate(0,0)">
+    <rect width="80" height="110" fill="#faf5ff"/>
+    <ellipse cx="40" cy="107" rx="14" ry="3" fill="rgba(0,0,0,.1)"/>
+    <ellipse cx="40" cy="12" rx="9" ry="10" fill="#f0c090"/>
+    <path d="M31,7 Q40,1 49,7 L49,13 Q40,8 31,13Z" fill="#5c3a1e"/>
+    <rect x="37" y="21" width="7" height="5" rx="2" fill="#f0c090"/>
+    <path d="M25,26 Q40,22 55,26 L57,62 Q40,67 23,62Z" fill="#8b5cf6"/>
+    <!-- arms at sides, slightly bent -->
+    <path d="M25,29 Q20,42 18,55" stroke="#f0c090" stroke-width="7" stroke-linecap="round" fill="none"/>
+    <circle cx="18" cy="56" r="4" fill="#f0c090"/>
+    <path d="M55,29 Q60,42 62,55" stroke="#f0c090" stroke-width="7" stroke-linecap="round" fill="none"/>
+    <circle cx="62" cy="56" r="4" fill="#f0c090"/>
+    <!-- legs shoulder-width -->
+    <path d="M35,62 Q33,80 31,97" stroke="#1e3a5f" stroke-width="9" stroke-linecap="round" fill="none"/>
+    <ellipse cx="28" cy="98" rx="7" ry="4" fill="#111" transform="rotate(-5 28 98)"/>
+    <path d="M45,62 Q47,80 49,97" stroke="#1e3a5f" stroke-width="9" stroke-linecap="round" fill="none"/>
+    <ellipse cx="52" cy="98" rx="7" ry="4" fill="#111" transform="rotate(5 52 98)"/>
+  </g>
+  <!-- Frame 2: Deep squat — arms out front, knees bent -->
+  <g transform="translate(86,0)">
+    <rect width="80" height="110" fill="#faf5ff"/>
+    <ellipse cx="40" cy="107" rx="14" ry="3" fill="rgba(0,0,0,.1)"/>
+    <!-- head lower due to squat -->
+    <ellipse cx="40" cy="20" rx="9" ry="10" fill="#f0c090"/>
+    <path d="M31,15 Q40,9 49,15 L49,21 Q40,16 31,21Z" fill="#5c3a1e"/>
+    <rect x="37" y="29" width="7" height="5" rx="2" fill="#f0c090"/>
+    <!-- torso lowered -->
+    <path d="M25,34 Q40,30 55,34 L55,65 Q40,70 24,65Z" fill="#8b5cf6"/>
+    <!-- arms extended forward for balance -->
+    <path d="M25,37 Q18,42 12,47" stroke="#f0c090" stroke-width="7" stroke-linecap="round" fill="none"/>
+    <circle cx="11" cy="48" r="4" fill="#f0c090"/>
+    <path d="M55,37 Q62,42 68,47" stroke="#f0c090" stroke-width="7" stroke-linecap="round" fill="none"/>
+    <circle cx="69" cy="48" r="4" fill="#f0c090"/>
+    <!-- legs bent in deep squat -->
+    <path d="M34,65 Q24,76 18,87" stroke="#1e3a5f" stroke-width="9" stroke-linecap="round" fill="none"/>
+    <path d="M18,87 Q20,95 24,100" stroke="#1e3a5f" stroke-width="9" stroke-linecap="round" fill="none"/>
+    <ellipse cx="26" cy="101" rx="7" ry="4" fill="#111" transform="rotate(-6 26 101)"/>
+    <path d="M46,65 Q56,76 62,87" stroke="#1e3a5f" stroke-width="9" stroke-linecap="round" fill="none"/>
+    <path d="M62,87 Q60,95 56,100" stroke="#1e3a5f" stroke-width="9" stroke-linecap="round" fill="none"/>
+    <ellipse cx="54" cy="101" rx="7" ry="4" fill="#111" transform="rotate(6 54 101)"/>
+  </g>
+  <!-- Frame 3: Rising — half squat, driving up -->
+  <g transform="translate(172,0)">
+    <rect width="80" height="110" fill="#faf5ff"/>
+    <ellipse cx="40" cy="107" rx="14" ry="3" fill="rgba(0,0,0,.1)"/>
+    <ellipse cx="40" cy="15" rx="9" ry="10" fill="#f0c090"/>
+    <path d="M31,10 Q40,4 49,10 L49,16 Q40,11 31,16Z" fill="#5c3a1e"/>
+    <rect x="37" y="24" width="7" height="5" rx="2" fill="#f0c090"/>
+    <path d="M25,28 Q40,24 55,28 L56,64 Q40,69 24,64Z" fill="#8b5cf6"/>
+    <!-- arms pushing down alongside body -->
+    <path d="M25,31 Q21,44 19,57" stroke="#f0c090" stroke-width="7" stroke-linecap="round" fill="none"/>
+    <circle cx="19" cy="58" r="4" fill="#f0c090"/>
+    <path d="M55,31 Q59,44 61,57" stroke="#f0c090" stroke-width="7" stroke-linecap="round" fill="none"/>
+    <circle cx="61" cy="58" r="4" fill="#f0c090"/>
+    <!-- legs half-bent, rising -->
+    <path d="M35,64 Q30,78 27,94" stroke="#1e3a5f" stroke-width="9" stroke-linecap="round" fill="none"/>
+    <ellipse cx="25" cy="95" rx="7" ry="4" fill="#111" transform="rotate(-5 25 95)"/>
+    <path d="M45,64 Q50,78 53,94" stroke="#1e3a5f" stroke-width="9" stroke-linecap="round" fill="none"/>
+    <ellipse cx="56" cy="95" rx="7" ry="4" fill="#111" transform="rotate(5 56 95)"/>
+  </g>
+</svg>

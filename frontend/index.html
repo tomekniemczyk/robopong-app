@@ -217,6 +217,12 @@
       color:var(--text); font-size:14px; cursor:pointer;
     }
     .move-btn:hover { border-color:rgba(91,124,247,.5); }
+
+    /* ── Language picker ── */
+    .lang-picker { display:flex; gap:2px; align-items:center; }
+    .lang-btn { background:none; border:1px solid transparent; color:var(--muted); font-size:10px; padding:2px 4px; border-radius:4px; cursor:pointer; font-weight:700; letter-spacing:.02em; line-height:1; }
+    .lang-btn:hover { color:var(--text); border-color:var(--border); }
+    .lang-btn.active { color:var(--accent); border-color:rgba(91,124,247,.4); background:rgba(91,124,247,.1); }
   </style>
 </head>
 <body>
@@ -225,14 +231,16 @@
   <div class="topbar">
     <h1>🏓 RoboPong <span v-if="deployTime" style="font-size:9px;color:var(--muted);font-weight:400;font-family:monospace;letter-spacing:0">{{ deployTime }}</span></h1>
     <div style="display:flex;align-items:center;gap:6px">
+      <!-- language picker -->
+      <div class="lang-picker"><button v-for="l in ['pl','en','de','fr','zh']" :key="l" class="lang-btn" :class="{active:lang===l}" @click="setLang(l)">{{l.toUpperCase()}}</button></div>
       <!-- connection badge — połączony: info, offline: otwiera stronę połączenia -->
       <div class="conn-badge" :class="{ on: connected, sim: simulationMode && !connected }"
            @click="(connected || simulationMode) ? showDeviceInfo=true : page='connect'"
            style="cursor:pointer">
         <span class="conn-dot"></span>
-        <span class="conn-name">{{ connected ? (robotName || 'Robopong') : simulationMode ? 'Symulacja' : 'Offline' }}</span>
+        <span class="conn-name">{{ connected ? (robotName || 'Robopong') : simulationMode ? t('conn.simulation') : t('conn.offline') }}</span>
       </div>
-      <button v-if="connected" class="conn-cal-btn" @click="page='calibration'" title="Kalibracja">
+      <button v-if="connected" class="conn-cal-btn" @click="page='calibration'" :title="t('conn.calibration')">
         <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
           <circle cx="10" cy="10" r="9" fill="#e02020" stroke="#fff" stroke-width="1"/>
           <circle cx="10" cy="10" r="6.5" fill="#fff"/>
@@ -245,11 +253,11 @@
         </svg>
       </button>
       <!-- role pill -->
-      <span class="role-pill ctrl"  v-if="myRole === 'controller'">🎮 Kontroler</span>
-      <span class="role-pill obs"   v-else-if="myRole === 'observer'">👁 Obserwator</span>
-      <span class="role-pill pend"  v-else-if="myRole === 'pending'">⏳ Czeka</span>
+      <span class="role-pill ctrl"  v-if="myRole === 'controller'">{{ t('role.controller') }}</span>
+      <span class="role-pill obs"   v-else-if="myRole === 'observer'">{{ t('role.observer') }}</span>
+      <span class="role-pill pend"  v-else-if="myRole === 'pending'">{{ t('role.pending') }}</span>
       <!-- sessions button -->
-      <button class="sessions-btn" @click="showSessions=!showSessions" title="Aktywne sesje">
+      <button class="sessions-btn" @click="showSessions=!showSessions" :title="t('sessions.title')">
         👥 {{ sessionsList.length }}
       </button>
     </div>
@@ -258,23 +266,23 @@
   <!-- ── Sessions panel ──────────────────────────────────────────────────── -->
   <div class="sessions-backdrop" v-if="showSessions" @click="showSessions=false"></div>
   <div class="sessions-panel" v-if="showSessions">
-    <h4>Aktywne sesje ({{ sessionsList.length }})</h4>
+    <h4>{{ t('sessions.title') }} ({{ sessionsList.length }})</h4>
     <div class="session-row" v-for="s in sessionsList" :key="s.id" style="flex-direction:column;align-items:flex-start;gap:4px;padding:8px 0">
       <div style="display:flex;align-items:center;gap:6px;width:100%">
         <span :class="['role-pill', rolePillClass(s.role)]" style="font-size:9px;padding:2px 6px">{{ roleLabel(s.role) }}</span>
         <span class="s-id">{{ s.id }}</span>
-        <span class="s-you" v-if="s.id === mySessionId">← Ty</span>
+        <span class="s-you" v-if="s.id === mySessionId">{{ t('sessions.you') }}</span>
         <span style="flex:1"></span>
         <span style="font-size:10px;color:var(--muted)" v-if="s.since">{{ sessionAge(s.since) }}</span>
       </div>
       <div v-if="s.ip" style="font-size:10px;color:var(--muted);font-family:monospace;padding-left:2px">{{ s.ip }}</div>
       <div v-if="s.ua" style="font-size:10px;color:var(--muted);padding-left:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:200px" :title="s.ua">{{ parseUA(s.ua) }}</div>
     </div>
-    <div v-if="!sessionsList.length" style="font-size:12px;color:var(--muted);padding:4px 0">Brak sesji</div>
+    <div v-if="!sessionsList.length" style="font-size:12px;color:var(--muted);padding:4px 0">{{ t('sessions.none') }}</div>
     <button v-if="myRole === 'controller'" class="btn btn-ghost"
       style="font-size:12px;margin-top:10px;width:100%;padding:8px"
       @click="releaseControl();showSessions=false">
-      🔄 Oddaj kontrolę
+      {{ t('sessions.release') }}
     </button>
   </div>
 
@@ -285,7 +293,7 @@
         <div>
           <div style="font-size:16px;font-weight:700">{{ robotName || 'Robopong' }}</div>
           <div style="font-size:11px;color:var(--muted);margin-top:2px">
-            {{ simulationMode && !connected ? '🧪 Tryb symulacji' : transport==='usb' ? '🔌 USB / FTDI' : '📡 Bluetooth LE' }}
+            {{ simulationMode && !connected ? t('device.sim_mode') : transport==='usb' ? t('device.usb_ftdi') : t('device.ble') }}
           </div>
         </div>
         <div style="flex:1"></div>
@@ -294,7 +302,7 @@
 
       <div class="dinfo-table">
         <div class="dinfo-row">
-          <span class="dinfo-key">Nazwa</span>
+          <span class="dinfo-key">{{ t('device.name') }}</span>
           <div v-if="!editingName" style="display:flex;align-items:center;gap:6px;flex:1">
             <span style="font-weight:600;font-size:13px">{{ robotName || 'Robopong' }}</span>
             <button class="btn-xs" @click="editingName=true;robotNameEdit=robotName">✏️</button>
@@ -307,29 +315,29 @@
           </div>
         </div>
         <div class="dinfo-row" v-if="lastAddr">
-          <span class="dinfo-key">{{ transport==='usb' ? 'Port' : 'MAC' }}</span>
+          <span class="dinfo-key">{{ transport==='usb' ? t('device.port') : t('device.mac') }}</span>
           <span style="font-family:monospace;font-size:12px;color:var(--text2)">{{ lastAddr }}</span>
         </div>
         <div class="dinfo-row">
-          <span class="dinfo-key">Transport</span>
-          <span style="font-size:13px">{{ simulationMode && !connected ? 'Symulacja' : transport==='usb' ? 'USB / FTDI 9600' : 'BLE GATT' }}</span>
+          <span class="dinfo-key">{{ t('device.transport') }}</span>
+          <span style="font-size:13px">{{ simulationMode && !connected ? t('conn.simulation') : transport==='usb' ? 'USB / FTDI 9600' : 'BLE GATT' }}</span>
         </div>
         <div class="dinfo-row" v-if="firmware">
-          <span class="dinfo-key">Firmware</span>
+          <span class="dinfo-key">{{ t('device.firmware') }}</span>
           <span style="font-size:13px">{{ firmware }}</span>
         </div>
         <div class="dinfo-row">
-          <span class="dinfo-key">Kalibracja</span>
-          <span v-if="presets.length" style="font-size:13px;color:var(--success)">✓ {{ presets.length }} preset{{ presets.length > 1 ? 'ów' : '' }}</span>
-          <span v-else style="font-size:12px;color:var(--muted)">Brak zapisanych presetów</span>
+          <span class="dinfo-key">{{ t('device.calibration') }}</span>
+          <span v-if="presets.length" style="font-size:13px;color:var(--success)">✓ {{ presets.length }} {{ t('device.presets_n') }}</span>
+          <span v-else style="font-size:12px;color:var(--muted)">{{ t('device.no_presets') }}</span>
         </div>
       </div>
 
       <div style="display:flex;flex-direction:column;gap:8px;margin-top:16px">
         <button class="btn" style="width:100%;background:var(--accent);color:#fff;padding:11px;font-size:13px"
-          @click="showDeviceInfo=false;page='calibration'">🎯 Przejdź do kalibracji</button>
+          @click="showDeviceInfo=false;page='calibration'">{{ t('device.goto_cal') }}</button>
         <button class="btn btn-ghost" style="width:100%;padding:11px;font-size:13px"
-          @click="copyDiagReport">📋 Kopiuj raport diagnostyczny</button>
+          @click="copyDiagReport">{{ t('device.copy_report') }}</button>
       </div>
     </div>
   </div>
@@ -338,30 +346,30 @@
   <div v-if="diagModalOpen" style="position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:9999;display:flex;align-items:center;justify-content:center;padding:16px">
     <div style="background:var(--card);border-radius:12px;width:100%;max-width:520px;padding:20px;display:flex;flex-direction:column;gap:12px">
       <div style="display:flex;justify-content:space-between;align-items:center">
-        <span style="font-weight:600;font-size:14px">📋 Raport diagnostyczny</span>
+        <span style="font-weight:600;font-size:14px">{{ t('diag.title') }}</span>
         <button class="btn btn-ghost" style="padding:4px 10px;font-size:12px" @click="diagModalOpen=false">✕</button>
       </div>
-      <p style="font-size:12px;color:var(--muted)">Zaznacz wszystko (Ctrl+A) i skopiuj (Ctrl+C)</p>
+      <p style="font-size:12px;color:var(--muted)">{{ t('diag.hint') }}</p>
       <textarea id="diag-textarea" readonly :value="diagModalText"
         style="width:100%;height:260px;background:var(--bg);color:var(--text);border:1px solid var(--border);border-radius:8px;padding:10px;font-family:monospace;font-size:11px;resize:none;box-sizing:border-box"
         @click="$event.target.select()"></textarea>
       <div style="display:flex;gap:8px">
-        <button class="btn" style="flex:1;background:var(--accent);color:#fff;padding:10px;font-size:13px" @click="diagModalCopy">Kopiuj</button>
-        <button class="btn btn-ghost" style="flex:1;padding:10px;font-size:13px" @click="diagModalOpen=false">Zamknij</button>
+        <button class="btn" style="flex:1;background:var(--accent);color:#fff;padding:10px;font-size:13px" @click="diagModalCopy">{{ t('diag.copy') }}</button>
+        <button class="btn btn-ghost" style="flex:1;padding:10px;font-size:13px" @click="diagModalOpen=false">{{ t('diag.close') }}</button>
       </div>
     </div>
   </div>
 
   <!-- ── Observer / Pending banner ───────────────────────────────────────── -->
   <div v-if="myRole === 'observer'" class="role-banner obs-banner">
-    <span>👁 Obserwujesz — robot jest kontrolowany przez inną sesję.</span>
+    <span>{{ t('banner.observing') }}</span>
     <button class="btn-takeover" :disabled="takeoverCooldown > 0" @click="requestTakeover">
-      {{ takeoverCooldown > 0 ? `Odczekaj ${takeoverCooldown}s` : 'Przejmij kontrolę' }}
+      {{ takeoverCooldown > 0 ? t('banner.wait_n', {n: takeoverCooldown}) : t('banner.takeover') }}
     </button>
   </div>
   <div v-if="myRole === 'pending'" class="role-banner pend-banner">
-    <span>⏳ Czekasz na akceptację przejęcia kontroli…</span>
-    <button class="btn-cancel-takeover" @click="cancelTakeover">Anuluj</button>
+    <span>{{ t('banner.pending_msg') }}</span>
+    <button class="btn-cancel-takeover" @click="cancelTakeover">{{ t('btn.cancel') }}</button>
   </div>
 
 
@@ -371,92 +379,92 @@
     <!-- instrukcja -->
     <div class="card" style="margin-bottom:12px">
       <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;cursor:pointer" @click="helpOpen=!helpOpen">
-        <span class="section-title" style="margin-bottom:0">Jak kalibrować?</span>
-        <span style="color:var(--muted);font-size:12px;margin-left:auto">{{ helpOpen ? '▲ zwiń' : '▼ rozwiń' }}</span>
+        <span class="section-title" style="margin-bottom:0">{{ t('cal.how_to') }}</span>
+        <span style="color:var(--muted);font-size:12px;margin-left:auto">{{ helpOpen ? t('cal.collapse') : t('cal.expand') }}</span>
       </div>
       <div v-if="helpOpen" style="font-size:13px;line-height:1.8;color:var(--text2)">
-        <p style="margin-bottom:8px"><strong style="color:var(--text)">Silniki (Góra / Dół):</strong> zakres <code>-249…249</code></p>
+        <p style="margin-bottom:8px"><strong style="color:var(--text)">{{ t('cal.motors_info') }}</strong> zakres <code>-249…249</code></p>
         <ul style="padding-left:16px;margin-bottom:10px">
-          <li><code>80 / 80</code> — brak spinu, prosta piłka</li>
-          <li><code>120 / 40</code> — topspin (górny silnik szybciej)</li>
-          <li><code>40 / 120</code> — backspin (dolny silnik szybciej)</li>
-          <li>Wartości ujemne odwracają kierunek silnika (mocniejszy spin)</li>
-          <li>Im wyższe cyfry, tym szybsza piłka</li>
+          <li><code>80 / 80</code> — {{ t('cal.no_spin') }}</li>
+          <li><code>120 / 40</code> — {{ t('cal.topspin_desc') }}</li>
+          <li><code>40 / 120</code> — {{ t('cal.backspin_desc') }}</li>
+          <li>{{ t('cal.neg_reverse') }}</li>
+          <li>{{ t('cal.higher_faster') }}</li>
         </ul>
-        <p style="margin-bottom:8px"><strong style="color:var(--text)">Oscylacja:</strong> zakres <code>127–173</code>, środek = <code>150</code></p>
+        <p style="margin-bottom:8px"><strong style="color:var(--text)">{{ t('cal.osc_info') }}</strong> {{ t('cal.osc_range') }}</p>
         <ul style="padding-left:16px;margin-bottom:10px">
-          <li><code>150</code> — głowica stoi w miejscu (centrum)</li>
-          <li><code>173</code> — pełne wychylenie w lewo</li>
-          <li><code>127</code> — pełne wychylenie w prawo</li>
+          <li><code>150</code> — {{ t('cal.head_center') }}</li>
+          <li><code>173</code> — {{ t('cal.full_left') }}</li>
+          <li><code>127</code> — {{ t('cal.full_right') }}</li>
         </ul>
-        <p style="margin-bottom:8px"><strong style="color:var(--text)">Wysokość:</strong> zakres <code>75–210</code>, środek = <code>150</code></p>
+        <p style="margin-bottom:8px"><strong style="color:var(--text)">{{ t('cal.height_info') }}</strong> {{ t('cal.height_range') }}</p>
         <ul style="padding-left:16px;margin-bottom:10px">
-          <li><code>150</code> — środkowa pozycja głowicy</li>
-          <li><code>75</code> — najniżej</li>
-          <li><code>210</code> — najwyżej</li>
+          <li><code>150</code> — {{ t('cal.middle_pos') }}</li>
+          <li><code>75</code> — {{ t('cal.lowest') }}</li>
+          <li><code>210</code> — {{ t('cal.highest') }}</li>
         </ul>
-        <p style="margin-bottom:8px"><strong style="color:var(--text)">Rotacja:</strong> zakres <code>90–210</code>, środek = <code>150</code></p>
+        <p style="margin-bottom:8px"><strong style="color:var(--text)">{{ t('cal.rot_info') }}</strong> {{ t('cal.rot_range') }}</p>
         <ul style="padding-left:16px;margin-bottom:10px">
-          <li><code>150</code> — głowica skierowana prosto</li>
-          <li><code>90</code> — max w lewo, <code>210</code> — max w prawo</li>
+          <li><code>150</code> — {{ t('cal.head_straight') }}</li>
+          <li><code>90</code> — {{ t('cal.max_lr') }}, <code>210</code> — {{ t('cal.max_rr') }}</li>
         </ul>
-        <p style="margin-bottom:4px"><strong style="color:var(--text)">Czas oczekiwania (ms):</strong></p>
+        <p style="margin-bottom:4px"><strong style="color:var(--text)">{{ t('cal.wait_title') }}</strong></p>
         <ul style="padding-left:16px">
-          <li><code>1500</code> — domyślny odstęp między piłkami</li>
-          <li>Min <code>200</code> ms, max <code>10000</code> ms</li>
+          <li><code>1500</code> — {{ t('cal.default_int') }}</li>
+          <li>{{ t('cal.min_max_ms') }}</li>
         </ul>
         <div style="margin-top:10px;padding:8px 12px;background:rgba(91,124,247,.08);border-radius:8px;font-size:12px;color:var(--muted)">
-          <strong>Procedura:</strong> Po wejściu silniki startują automatycznie. Ustaw Wysokość / Oscylację i Góra/Dół — każda zmiana strzałkami od razu wysyła ustawienia. Naciśnij Rzut, oceń wynik, popraw wartości i rzuć ponownie. Gdy zadowolony — Zapisz preset. Silniki zatrzymają się po 5 min bezczynności.
+          <strong>{{ t('cal.procedure_label') }}</strong> {{ t('cal.auto_info') }}
         </div>
       </div>
     </div>
 
     <div class="card" :class="{ 'observer-lock': myRole !== 'controller' }">
       <div style="display:flex;align-items:center;gap:8px;margin-bottom:14px">
-        <h2 style="flex:1">Kalibracja</h2>
-        <button class="btn btn-ghost" style="padding:7px 14px;font-size:12px" @click="calReset" :disabled="myRole !== 'controller'">↺ Reset</button>
+        <h2 style="flex:1">{{ t('cal.title') }}</h2>
+        <button class="btn btn-ghost" style="padding:7px 14px;font-size:12px" @click="calReset" :disabled="myRole !== 'controller'">{{ t('cal.reset') }}</button>
       </div>
 
       <!-- ── Etap 1: Pozycja głowicy (silniki OFF) ── -->
       <div style="margin-bottom:16px">
-        <h3 style="margin-bottom:8px">1. Pozycja głowicy <small style="color:var(--muted);font-weight:400">(silniki wyłączone)</small></h3>
+        <h3 style="margin-bottom:8px">{{ t('cal.head_pos') }} <small style="color:var(--muted);font-weight:400">{{ t('cal.motors_off') }}</small></h3>
         <div style="font-size:11px;color:var(--accent);background:rgba(91,124,247,.1);border-radius:6px;padding:6px 10px;margin-bottom:10px;display:flex;align-items:center;gap:6px">
           <span style="font-size:14px;flex-shrink:0">ℹ️</span>
-          <span>Do kalibracji wystarczy dostosowanie <strong>Góra/Dół</strong> i <strong>Lewo/Prawo</strong>. Rotacja jest zablokowana na centrum.</span>
+          <span>{{ t('cal.head_info') }}</span>
         </div>
         <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px">
           <!-- Wysokość -->
           <div style="text-align:center">
-            <img src="/static/img/height.svg" alt="Wysokość" style="width:80px;height:64px;margin-bottom:4px;cursor:zoom-in" @click="calImgOpen='/static/img/height.svg'" title="Kliknij by powiększyć">
-            <div style="font-size:11px;color:var(--muted);margin-bottom:2px;font-weight:600">Wysokość</div>
+            <img src="/static/img/height.svg" :alt="t('cal.height_label')" style="width:80px;height:64px;margin-bottom:4px;cursor:zoom-in" @click="calImgOpen='/static/img/height.svg'" :title="t('cal.click_zoom')">
+            <div style="font-size:11px;color:var(--muted);margin-bottom:2px;font-weight:600">{{ t('cal.height_label') }}</div>
             <div style="display:flex;align-items:center;justify-content:center;gap:4px">
               <button class="btn btn-ghost" style="padding:6px 10px;font-size:16px" :disabled="!connected || myRole!=='controller'" @click="calStep('height',-2)">▼</button>
               <span style="font-size:18px;font-weight:700;min-width:40px;display:inline-block;text-align:center">{{ cal.height }}</span>
               <button class="btn btn-ghost" style="padding:6px 10px;font-size:16px" :disabled="!connected || myRole!=='controller'" @click="calStep('height',2)">▲</button>
             </div>
-            <div style="font-size:10px;color:var(--muted)">75 nisko ▲ 210 wysoko</div>
+            <div style="font-size:10px;color:var(--muted)">{{ t('cal.height_hint') }}</div>
           </div>
           <!-- Oscylacja -->
           <div style="text-align:center">
-            <img src="/static/img/oscillation.svg" alt="Oscylacja" style="width:80px;height:64px;margin-bottom:4px;cursor:zoom-in" @click="calImgOpen='/static/img/oscillation.svg'" title="Kliknij by powiększyć">
-            <div style="font-size:11px;color:var(--muted);margin-bottom:2px;font-weight:600">Oscylacja</div>
+            <img src="/static/img/oscillation.svg" :alt="t('cal.osc_label')" style="width:80px;height:64px;margin-bottom:4px;cursor:zoom-in" @click="calImgOpen='/static/img/oscillation.svg'" :title="t('cal.click_zoom')">
+            <div style="font-size:11px;color:var(--muted);margin-bottom:2px;font-weight:600">{{ t('cal.osc_label') }}</div>
             <div style="display:flex;align-items:center;justify-content:center;gap:4px">
               <button class="btn btn-ghost" style="padding:6px 10px;font-size:16px" :disabled="!connected || myRole!=='controller'" @click="calStep('oscillation',-2)">◀</button>
               <span style="font-size:18px;font-weight:700;min-width:40px;display:inline-block;text-align:center">{{ cal.oscillation }}</span>
               <button class="btn btn-ghost" style="padding:6px 10px;font-size:16px" :disabled="!connected || myRole!=='controller'" @click="calStep('oscillation',2)">▶</button>
             </div>
-            <div style="font-size:10px;color:var(--muted)">173 ◀ 150 środek ▶ 127</div>
+            <div style="font-size:10px;color:var(--muted)">{{ t('cal.osc_hint') }}</div>
           </div>
           <!-- Rotacja — zablokowana -->
           <div style="text-align:center;opacity:0.35;pointer-events:none">
             <img src="/static/img/rotation.svg" alt="Rotacja" style="width:80px;height:64px;margin-bottom:4px">
-            <div style="font-size:11px;color:var(--muted);margin-bottom:2px;font-weight:600">Rotacja 🔒</div>
+            <div style="font-size:11px;color:var(--muted);margin-bottom:2px;font-weight:600">{{ t('cal.rot_label') }}</div>
             <div style="display:flex;align-items:center;justify-content:center;gap:4px">
               <button class="btn btn-ghost" style="padding:6px 10px;font-size:16px" disabled>◀</button>
               <span style="font-size:18px;font-weight:700;min-width:40px;display:inline-block;text-align:center">{{ cal.rotation }}</span>
               <button class="btn btn-ghost" style="padding:6px 10px;font-size:16px" disabled>▶</button>
             </div>
-            <div style="font-size:10px;color:var(--muted)">centrum = 150</div>
+            <div style="font-size:10px;color:var(--muted)">{{ t('cal.rot_hint') }}</div>
           </div>
         </div>
         <!-- Lightbox — powiększenie obrazka -->
@@ -489,7 +497,7 @@
           <circle cx="150" cy="174" r="30"
             fill="rgba(255,255,255,0.1)" stroke="rgba(255,255,255,0.45)" stroke-width="1.5" stroke-dasharray="4 3"/>
           <text x="150" y="170" text-anchor="middle" fill="rgba(255,255,255,0.55)" font-size="18" font-weight="700">↓</text>
-          <text x="150" y="182" text-anchor="middle" fill="rgba(255,255,255,0.35)" font-size="7" font-family="sans-serif" letter-spacing="0.5">CEL</text>
+          <text x="150" y="182" text-anchor="middle" fill="rgba(255,255,255,0.35)" font-size="7" font-family="sans-serif" letter-spacing="0.5">{{ t('misc.target') }}</text>
           <!-- Piłka — aktualna pozycja głowicy -->
           <circle
             :cx="ballTableX(cal)"
@@ -511,16 +519,16 @@
           <line :x1="ballTableX(cal)" :y1="ballTableY(cal)-22" :x2="ballTableX(cal)" :y2="ballTableY(cal)-17" stroke="#ffd43b" stroke-width="1" opacity="0.6"/>
           <line :x1="ballTableX(cal)" :y1="ballTableY(cal)+17" :x2="ballTableX(cal)" :y2="ballTableY(cal)+22" stroke="#ffd43b" stroke-width="1" opacity="0.6"/>
           <!-- Etykiety osi -->
-          <text x="150" y="235" text-anchor="middle" fill="#666" font-size="8" font-family="sans-serif">lewo/prawo: {{ cal.oscillation }} · góra/dół: {{ cal.height }}</text>
+          <text x="150" y="235" text-anchor="middle" fill="#666" font-size="8" font-family="sans-serif">{{ t('cal.axis_labels', {osc: cal.oscillation, h: cal.height}) }}</text>
         </svg>
       </div>
 
       <!-- ── Etap 2: Silniki ── -->
       <div style="margin-bottom:14px">
-        <h3 style="margin-bottom:10px">2. Silniki</h3>
+        <h3 style="margin-bottom:10px">{{ t('cal.motors_section') }}</h3>
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px">
           <div class="field" style="margin:0">
-            <label>Góra <small>-249…249</small></label>
+            <label>{{ t('cal.top') }} <small>-249…249</small></label>
             <div style="display:flex;align-items:center;gap:4px">
               <button class="btn btn-ghost" style="padding:4px 8px" :disabled="!connected || myRole!=='controller'" @click="calStep('top_speed',-2)">−</button>
               <input type="number" v-model.number="cal.top_speed" min="-249" max="249" style="flex:1;text-align:center"
@@ -529,7 +537,7 @@
             </div>
           </div>
           <div class="field" style="margin:0">
-            <label>Dół <small>-249…249</small></label>
+            <label>{{ t('cal.bottom') }} <small>-249…249</small></label>
             <div style="display:flex;align-items:center;gap:4px">
               <button class="btn btn-ghost" style="padding:4px 8px" :disabled="!connected || myRole!=='controller'" @click="calStep('bot_speed',-2)">−</button>
               <input type="number" v-model.number="cal.bot_speed" min="-249" max="249" style="flex:1;text-align:center"
@@ -539,43 +547,47 @@
           </div>
         </div>
         <div class="field" style="margin-bottom:10px">
-          <label>Czas oczekiwania ms <small>200–10000</small></label>
+          <label>{{ t('cal.wait_ms') }} <small>200–10000</small></label>
           <input type="number" v-model.number="cal.wait_ms" min="200" max="10000" @change="clampCal('wait_ms',200,10000);calDirty=true">
         </div>
         <div class="cal-actions">
-          <button class="btn btn-success" :disabled="!connected || myRole !== 'controller'" @click="calThrow">🏓 Rzut</button>
+          <button class="btn btn-success" :disabled="!connected || myRole !== 'controller'" @click="calThrow">{{ t('cal.throw') }}</button>
         </div>
       </div>
 
       <div style="margin-top:12px">
         <div class="row" style="margin-bottom:8px">
-          <span style="font-size:12px;font-weight:600;color:var(--muted)">PRESETY</span>
+          <span style="font-size:12px;font-weight:600;color:var(--muted)">{{ t('presets.title') }}</span>
           <div class="spacer"></div>
-          <button class="btn btn-ghost btn-icon" style="font-size:16px;padding:4px 8px" @click="exportCalibration" title="Pobierz konfigurację kalibracji">⬇</button>
-          <label class="btn btn-ghost btn-icon" style="font-size:16px;padding:4px 8px;cursor:pointer" title="Importuj konfigurację kalibracji">
-            ⬆<input ref="importCalRef" type="file" accept=".json" style="display:none" @change="importCalibration">
+          <button class="btn btn-ghost" style="font-size:11px;padding:5px 10px;display:flex;align-items:center;gap:4px" @click="exportCalibration" title="Pobierz konfigurację">
+            <svg width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M6.5 1v8M3 6l3.5 3.5L10 6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M1 11h11" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+            Eksport
+          </button>
+          <label class="btn btn-ghost" style="font-size:11px;padding:5px 10px;cursor:pointer;display:flex;align-items:center;gap:4px" title="Importuj konfigurację">
+            <svg width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M6.5 9V1M3 4l3.5-3.5L10 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M1 11h11" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+            Import<input ref="importCalRef" type="file" accept=".json" style="display:none" @change="importCalibration">
           </label>
-          <button class="btn btn-primary" style="font-size:12px;padding:6px 12px" @click="savePreset">+ Zapisz jako…</button>
+          <button class="btn btn-primary" style="font-size:12px;padding:6px 12px" @click="savePreset">{{ t('presets.save_as') }}</button>
         </div>
         <ul class="device-list" v-if="presets.length">
           <li v-for="p in presets" :key="p.id" style="align-items:center">
             <div style="flex:1;min-width:0">
               <span style="font-weight:600;font-size:13px">{{ p.name }}</span>
-              <span v-if="p.is_default" style="margin-left:6px;font-size:10px;color:var(--accent);text-transform:uppercase">domyślny</span>
+              <span v-if="p.is_default" style="margin-left:6px;font-size:10px;color:var(--accent);text-transform:uppercase">{{ t('presets.default') }}</span>
             </div>
-            <button class="btn btn-ghost btn-icon" style="font-size:11px;padding:4px 8px" @click="loadPreset(p)" title="Wczytaj">↓</button>
-            <button class="btn btn-ghost btn-icon" style="font-size:11px;padding:4px 8px" @click="updatePreset(p)" title="Nadpisz aktualnymi">↑</button>
-            <button class="btn btn-ghost btn-icon" style="font-size:11px;padding:4px 8px" @click="setDefaultPreset(p.id)" title="Ustaw domyślny" v-if="!p.is_default">★</button>
-            <button class="btn btn-ghost btn-icon" style="font-size:11px;padding:4px 8px;color:var(--danger)" @click="deletePreset(p.id)" title="Usuń">✕</button>
+            <button class="btn btn-ghost btn-icon" style="font-size:10px;padding:4px 7px" @click="loadPreset(p)" title="Wczytaj">Wczytaj</button>
+            <button class="btn btn-ghost btn-icon" style="font-size:10px;padding:4px 7px;color:var(--accent)" @click="updatePreset(p)" title="Nadpisz aktualnymi">Nadpisz</button>
+            <button class="btn btn-ghost btn-icon" style="font-size:11px;padding:4px 8px" @click="setDefaultPreset(p.id)" :title="t('presets.set_default')" v-if="!p.is_default">★</button>
+            <button class="btn btn-ghost btn-icon" style="font-size:11px;padding:4px 8px;color:var(--danger)" @click="deletePreset(p.id)" :title="t('presets.delete')">✕</button>
           </li>
         </ul>
-        <div v-else style="font-size:12px;color:var(--muted);padding:6px 0">Brak zapisanych presetów.</div>
+        <div v-else style="font-size:12px;color:var(--muted);padding:6px 0">{{ t('presets.none') }}</div>
       </div>
 
       <div style="margin-top:16px;padding-top:14px;border-top:1px solid var(--border)">
         <button class="btn btn-success" style="width:100%;padding:12px;font-size:14px;font-weight:700"
           :disabled="!connected || myRole !== 'controller'" @click="calDone">
-          ✅ Kalibracja udana — zapisz ustawienia
+          {{ t('cal.done_save') }}
         </button>
       </div>
 
@@ -585,7 +597,7 @@
   <!-- ── Logi serwera ──────────────────────────────────────────────────── -->
   <div class="page" v-show="page === 'logs'">
     <div class="row" style="margin-bottom:10px">
-      <span class="section-title" style="margin-bottom:0">Logi serwera</span>
+      <span class="section-title" style="margin-bottom:0">{{ t('logs.title') }}</span>
       <div class="spacer"></div>
       <select v-model="logLevel" style="background:var(--surface);color:var(--text);border:1px solid var(--border);border-radius:8px;padding:4px 8px;font-size:11px">
         <option value="DEBUG">DEBUG</option>
@@ -593,7 +605,7 @@
         <option value="WARNING">WARNING</option>
         <option value="ERROR">ERROR</option>
       </select>
-      <button class="btn btn-ghost" style="font-size:11px;padding:4px 10px;margin-left:6px" @click="serverLogs=[]">Wyczyść</button>
+      <button class="btn btn-ghost" style="font-size:11px;padding:4px 10px;margin-left:6px" @click="serverLogs=[]">{{ t('logs.clear') }}</button>
     </div>
     <div class="server-log-box" ref="serverLogBox">
       <div v-for="(l, i) in filteredServerLogs" :key="i" class="slog-line" :class="'slog-' + l.level.toLowerCase()">
@@ -603,7 +615,7 @@
         <span class="slog-msg">{{ l.message }}</span>
       </div>
       <div v-if="!filteredServerLogs.length" style="color:var(--muted);font-size:12px;padding:20px;text-align:center">
-        Brak logów{{ logLevel !== 'DEBUG' ? ' (filtr: ' + logLevel + ')' : '' }}
+        {{ t('logs.empty') }}{{ logLevel !== 'DEBUG' ? ' (' + t('logs.filter') + ': ' + logLevel + ')' : '' }}
       </div>
     </div>
   </div>
@@ -615,7 +627,7 @@
         <img id="cam-img" :src="camSrc" alt="kamera" @error="camErr=true" v-if="!camErr">
         <div class="cam-off" v-else>
           <div style="font-size:36px;margin-bottom:6px">📷</div>
-          <p>Kamera niedostępna (motion :8081)</p>
+          <p>{{ t('camera.unavailable') }}</p>
         </div>
       </div>
       <p style="font-size:11px;color:var(--muted)">Stream motion — port 8081</p>
@@ -629,7 +641,7 @@
     <div class="card" v-if="lastAddr" style="margin-bottom:8px">
       <div style="display:flex;align-items:center;gap:10px">
         <div style="flex:1;min-width:0">
-          <div style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin-bottom:3px">Ostatnie urządzenie</div>
+          <div style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin-bottom:3px">{{ t('conn.last_device') }}</div>
           <div v-if="!editingName" style="display:flex;align-items:center;gap:8px">
             <span style="font-weight:600;font-size:14px">{{ robotName || 'Robopong' }}</span>
             <button class="btn btn-ghost btn-icon" style="padding:3px 7px;font-size:11px" @click="editingName=true">✏️</button>
@@ -640,38 +652,38 @@
           </div>
           <div style="font-size:11px;color:var(--muted);margin-top:2px;font-family:monospace">{{ lastAddr }}</div>
         </div>
-        <button class="btn btn-primary" v-if="!connected" @click="reconnectLast">Połącz</button>
-        <button class="btn btn-danger"  v-else @click="disconnect">Rozłącz</button>
+        <button class="btn btn-primary" v-if="!connected" @click="reconnectLast">{{ t('conn.connect') }}</button>
+        <button class="btn btn-danger"  v-else @click="disconnect">{{ t('conn.disconnect') }}</button>
       </div>
     </div>
 
     <!-- USB -->
     <div class="card" style="margin-bottom:8px">
       <div class="row" style="margin-bottom:10px">
-        <span style="font-size:13px;font-weight:600">🔌 USB (kabel)</span>
+        <span style="font-size:13px;font-weight:600">🔌 {{ t('conn.usb_cable') }}</span>
         <div class="spacer"></div>
         <button class="btn btn-primary" :disabled="usbScanning || connected" @click="usbScan">
-          {{ usbScanning ? '🔍…' : '🔍 Szukaj' }}
+          {{ usbScanning ? '🔍…' : '🔍 ' + t('conn.search') }}
         </button>
       </div>
       <ul class="device-list" v-if="usbPorts.length">
         <li v-for="p in usbPorts" :key="p">
           <div style="flex:1;font-family:monospace;font-size:13px">{{ p }}</div>
-          <button class="btn btn-primary" :disabled="connected" @click="usbConnect(p)">Połącz</button>
+          <button class="btn btn-primary" :disabled="connected" @click="usbConnect(p)">{{ t('conn.connect') }}</button>
         </li>
       </ul>
       <div v-else-if="!usbScanning" style="font-size:12px;color:var(--muted);padding:6px 0">
-        Podłącz robot kablem USB, kliknij Szukaj.
+        {{ t('conn.usb_hint') }}
       </div>
     </div>
 
     <!-- BLE -->
     <div class="card">
       <div class="row" style="margin-bottom:10px">
-        <span style="font-size:13px;font-weight:600">📡 Bluetooth (BLE)</span>
+        <span style="font-size:13px;font-weight:600">📡 {{ t('conn.bluetooth') }}</span>
         <div class="spacer"></div>
         <button class="btn btn-primary" :disabled="scanning || connected" @click="scan">
-          {{ scanning ? '🔍 Skanowanie…' : '🔍 Skanuj' }}
+          {{ scanning ? '🔍 ' + t('conn.scanning') : '🔍 ' + t('conn.scan') }}
         </button>
       </div>
 
@@ -681,25 +693,25 @@
             <div class="dev-name">{{ d.name }}</div>
             <div class="dev-addr">{{ d.address }}</div>
           </div>
-          <button class="btn btn-primary" :disabled="connected" @click="connect(d.address)">Połącz</button>
+          <button class="btn btn-primary" :disabled="connected" @click="connect(d.address)">{{ t('conn.connect') }}</button>
         </li>
       </ul>
 
       <div class="empty" v-else-if="!scanning" style="padding:16px 0">
-        <p style="font-size:13px">Kliknij Skanuj — widoczne będą tylko roboty Donic/Newgy.</p>
+        <p style="font-size:13px">{{ t('conn.scan_hint') }}</p>
       </div>
     </div>
 
     <!-- Symulacja -->
     <div class="card" style="border:1px dashed var(--border)">
       <div style="display:flex;align-items:center;gap:8px">
-        <span style="font-size:13px;font-weight:600">🧪 Tryb symulacji</span>
+        <span style="font-size:13px;font-weight:600">🧪 {{ t('conn.sim_mode') }}</span>
         <div class="spacer"></div>
         <button class="btn" :style="{background: simulationMode ? 'var(--danger)' : 'var(--accent)', color:'#fff'}"
           style="padding:6px 14px;font-size:12px"
-          @click="toggleSimulation">{{ simulationMode ? '⏹ Wyłącz' : '▶ Włącz' }}</button>
+          @click="toggleSimulation">{{ simulationMode ? t('conn.sim_disable') : t('conn.sim_enable') }}</button>
       </div>
-      <div style="font-size:11px;color:var(--muted);margin-top:4px">Drille i treningi bez robota — tylko wizualizacja i dźwięki</div>
+      <div style="font-size:11px;color:var(--muted);margin-top:4px">{{ t('conn.sim_desc') }}</div>
     </div>
 
   </div>
@@ -725,15 +737,15 @@
       </g>
     </svg>
     <div class="ball-counter">{{ drillBall }}</div>
-    <div class="ball-sub">z {{ drillTotal }} piłek · runda {{ drillRun }}/{{ drillMaxRepeat === 0 ? '∞' : drillMaxRepeat }}</div>
-    <div v-if="drillPaused" style="font-size:14px;color:#ff9f0a;font-weight:700;margin:8px 0">⏸ PAUZA</div>
+    <div class="ball-sub">{{ t('drills.ball_counter', {total: drillTotal, run: drillRun, max: drillMaxRepeat === 0 ? '∞' : drillMaxRepeat}) }}</div>
+    <div v-if="drillPaused" style="font-size:14px;color:#ff9f0a;font-weight:700;margin:8px 0">{{ t('drills.paused') }}</div>
     <div class="progress-bar">
       <div class="fill" :style="{ width: drillTotal ? (drillBall / drillTotal * 100) + '%' : '0%' }"></div>
     </div>
     <div style="display:flex;gap:8px;margin-top:12px">
-      <button class="btn" style="flex:1;background:#ff9f0a;color:#fff" @click="pauseDrill" v-if="!drillPaused">⏸ Pauza</button>
-      <button class="btn btn-success" style="flex:1" @click="resumeDrill" v-if="drillPaused">▶ Wznów</button>
-      <button class="btn btn-danger" style="flex:1" @click="stopDrill">⏹ Stop</button>
+      <button class="btn" style="flex:1;background:#ff9f0a;color:#fff" @click="pauseDrill" v-if="!drillPaused">{{ t('drills.pause') }}</button>
+      <button class="btn btn-success" style="flex:1" @click="resumeDrill" v-if="drillPaused">{{ t('drills.resume') }}</button>
+      <button class="btn btn-danger" style="flex:1" @click="stopDrill">{{ t('cal.stop') }}</button>
     </div>
   </div>
 
@@ -755,12 +767,12 @@
         </span>
         <span style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap"
           :style="{color: si+1 === trainingStep ? '#fff' : 'var(--muted)'}">
-          {{ step.drill_name || step.exercise_name || 'Krok ' + (si+1) }}
+          {{ step.drill_name || step.exercise_name || t('tr.step_prefix') + ' ' + (si+1) }}
         </span>
         <span style="font-size:9px;color:var(--muted)">{{ step.exercise_id ? (step.duration_sec+'s') : (step.count+'p') }}</span>
       </div>
       <div v-if="trainingEstRemaining" style="font-size:10px;color:var(--muted);margin-top:6px;text-align:center">
-        ~{{ Math.ceil(trainingEstRemaining/60) }} min do końca
+        ~{{ Math.ceil(trainingEstRemaining/60) }} {{ t('tr.min_left') }}
       </div>
     </div>
 
@@ -786,7 +798,7 @@
       <!-- Faza: countdown -->
       <div v-if="trainingPhase === 'countdown'">
         <div class="ball-counter">{{ trainingTimer }}</div>
-        <div class="ball-sub">Przygotuj się...</div>
+        <div class="ball-sub">{{ t('tr.get_ready') }}</div>
       </div>
 
       <!-- Faza: drill -->
@@ -810,18 +822,18 @@
       <!-- Faza: pauza -->
       <div v-if="trainingPhase === 'pause'">
         <div class="ball-counter" style="color:#ff9f0a">{{ trainingTimer }}</div>
-        <div class="ball-sub">Odpoczynek</div>
-        <div style="font-size:12px;color:var(--muted);margin-top:4px">następny: {{ trainingNextDrill }}</div>
+        <div class="ball-sub">{{ t('tr.rest') }}</div>
+        <div style="font-size:12px;color:var(--muted);margin-top:4px">{{ t('tr.next_prefix') }}: {{ trainingNextDrill }}</div>
       </div>
 
       <!-- Paused -->
-      <div v-if="trainingIsPaused" style="font-size:16px;color:#ff9f0a;font-weight:700;margin:8px 0">⏸ WSTRZYMANO</div>
+      <div v-if="trainingIsPaused" style="font-size:16px;color:#ff9f0a;font-weight:700;margin:8px 0">{{ t('tr.paused') }}</div>
 
       <!-- Przyciski -->
       <div style="display:flex;gap:8px;margin-top:12px">
         <button class="btn" style="flex:1;background:#ff9f0a;color:#fff" v-if="!trainingIsPaused" @click="pauseTraining">⏸ Pauza</button>
-        <button class="btn btn-success" style="flex:1" v-if="trainingIsPaused" @click="resumeTraining">▶ Wznów</button>
-        <button class="btn" style="flex:1;background:#6366f1;color:#fff" v-if="trainingPhase !== 'countdown'" @click="skipTraining" title="Pomiń bieżący krok i przejdź do następnego">⏭ Skip</button>
+        <button class="btn btn-success" style="flex:1" v-if="trainingIsPaused" @click="resumeTraining">{{ t('drills.resume_btn') }}</button>
+        <button class="btn" style="flex:1;background:#6366f1;color:#fff" v-if="trainingPhase !== 'countdown'" @click="skipTraining" :title="t('tr.skip_hint')">{{ t('tr.skip') }}</button>
         <button class="btn btn-danger" style="flex:1" @click="stopTraining">⏹ Stop</button>
       </div>
     </div>
@@ -831,31 +843,31 @@
   <div class="takeover-backdrop" v-if="takeoverReq">
     <div class="takeover-card">
       <div class="takeover-icon">⚡</div>
-      <h3>Żądanie przejęcia kontroli</h3>
-      <p>Sesja <code style="background:rgba(255,255,255,.08);padding:1px 5px;border-radius:4px">{{ takeoverReq.id }}</code> chce przejąć kontrolę nad robotem.</p>
+      <h3>{{ t('takeover.title') }}</h3>
+      <p>{{ t('takeover.msg', {id: takeoverReq.id}) }}</p>
       <div class="countdown-ring" :style="`--p:${takeoverCountdown / 30 * 100}`">
         <span>{{ takeoverCountdown }}</span>
       </div>
       <div class="takeover-btns">
-        <button class="btn btn-danger"  @click="respondTakeover(false)">✕ Odmów</button>
-        <button class="btn btn-success" @click="respondTakeover(true)">✓ Akceptuj</button>
+        <button class="btn btn-danger"  @click="respondTakeover(false)">{{ t('takeover.decline') }}</button>
+        <button class="btn btn-success" @click="respondTakeover(true)">{{ t('takeover.accept') }}</button>
       </div>
-      <p style="font-size:11px;color:var(--muted);margin-top:10px;margin-bottom:0">Brak odpowiedzi = automatyczna odmowa</p>
+      <p style="font-size:11px;color:var(--muted);margin-top:10px;margin-bottom:0">{{ t('takeover.no_response') }}</p>
     </div>
   </div>
 
   <!-- ── Drille ──────────────────────────────────────────────────────────── -->
   <div class="page" v-show="page === 'drills'">
     <div class="row" style="margin-bottom:14px">
-      <span class="section-title" style="margin-bottom:0">Drille</span>
+      <span class="section-title" style="margin-bottom:0">{{ t('drills.title') }}</span>
       <div class="spacer"></div>
-      <button class="btn btn-ghost" style="padding:8px 12px;font-size:12px" @click="exportDrills">⬇ Export</button>
-      <button class="btn btn-primary" style="padding:8px 12px;font-size:12px" @click="addFolder">+ Folder</button>
+      <button class="btn btn-ghost" style="padding:8px 12px;font-size:12px" @click="exportDrills">{{ t('drills.export') }}</button>
+      <button class="btn btn-primary" style="padding:8px 12px;font-size:12px" @click="addFolder">{{ t('drills.add_folder') }}</button>
     </div>
 
     <div v-if="drillTree.folders.length === 0 && (!drillTree.unfiled || drillTree.unfiled.length === 0)" class="empty">
       <div class="empty-icon">📚</div>
-      <p>Brak drilli. Dodaj folder.</p>
+      <p>{{ t('drills.empty') }}</p>
     </div>
 
     <div v-for="folder in drillTree.folders" :key="folder.id" class="drill-folder">
@@ -865,24 +877,24 @@
         <span class="chip" style="margin-left:4px;font-size:10px">{{ folder.drills.length }}</span>
         <div class="spacer"></div>
         <div class="drill-folder-actions" @click.stop>
-          <button class="btn-xs" @click="openDrillModal(null, folder)" title="Dodaj drill" style="font-weight:700">+</button>
-          <button class="btn-xs" @click="moveFolderUp(folder)" :disabled="drillTree.folders.indexOf(folder)===0" title="W górę">↑</button>
-          <button class="btn-xs" @click="moveFolderDown(folder)" :disabled="drillTree.folders.indexOf(folder)===drillTree.folders.length-1" title="W dół">↓</button>
-          <button class="btn-xs" @click="renameFolder(folder)" title="Zmień nazwę">✏</button>
-          <button class="btn-xs" @click="deleteFolderConfirm(folder.id)" title="Usuń folder">🗑</button>
+          <button class="btn-xs" @click="openDrillModal(null, folder)" :title="t('drills.add_drill')" style="font-weight:700">+</button>
+          <button class="btn-xs" @click="moveFolderUp(folder)" :disabled="drillTree.folders.indexOf(folder)===0" :title="t('drills.move_up')">↑</button>
+          <button class="btn-xs" @click="moveFolderDown(folder)" :disabled="drillTree.folders.indexOf(folder)===drillTree.folders.length-1" :title="t('drills.move_down')">↓</button>
+          <button class="btn-xs" @click="renameFolder(folder)" :title="t('drills.rename')">✏</button>
+          <button class="btn-xs" @click="deleteFolderConfirm(folder.id)" :title="t('drills.delete_folder')">🗑</button>
         </div>
       </div>
       <div v-if="openFolders.has(folder.id)" class="drill-list">
-        <div v-if="folder.drills.length === 0" style="padding:8px 6px;font-size:12px;color:var(--muted)">Brak drilli</div>
+        <div v-if="folder.drills.length === 0" style="padding:8px 6px;font-size:12px;color:var(--muted)">{{ t('drills.no_drills') }}</div>
         <div v-for="(drill, idx) in folder.drills" :key="drill.id">
           <div class="drill-row" @click="openDrillPanel(drill, folder)" style="cursor:pointer">
             <span class="drill-name" :title="drill.description || drill.name">{{ drill.name }}</span>
             <div class="drill-actions" @click.stop>
               <button class="btn-xs" @click="moveDrillUp(folder, idx)" :disabled="idx===0">↑</button>
               <button class="btn-xs" @click="moveDrillDown(folder, idx)" :disabled="idx===folder.drills.length-1">↓</button>
-              <button class="btn-xs" @click="showMoveModal(drill)" title="Przenieś do folderu">→</button>
-              <button class="btn-xs" @click="openDrillModal(drill, folder)" title="Edytuj">✏</button>
-              <button class="btn-xs" @click="deleteDrillConfirm(drill.id)" title="Usuń">🗑</button>
+              <button class="btn-xs" @click="showMoveModal(drill)" :title="t('drills.move_to')">→</button>
+              <button class="btn-xs" @click="openDrillModal(drill, folder)" :title="t('drills.edit')">✏</button>
+              <button class="btn-xs" @click="deleteDrillConfirm(drill.id)" :title="t('presets.delete')">🗑</button>
             </div>
           </div>
           <!-- Panel drilla -->
@@ -916,19 +928,19 @@
               </g>
               <!-- Legenda -->
               <g transform="translate(8, 232)">
-                <circle cx="6" cy="0" r="4" fill="#ff6b35"/><text x="14" y="3" fill="var(--muted)" font-size="8">topspin</text>
-                <circle cx="66" cy="0" r="4" fill="#4dabf7"/><text x="74" y="3" fill="var(--muted)" font-size="8">backspin</text>
-                <circle cx="136" cy="0" r="4" fill="#ffd43b"/><text x="144" y="3" fill="var(--muted)" font-size="8">nospin</text>
+                <circle cx="6" cy="0" r="4" fill="#ff6b35"/><text x="14" y="3" fill="var(--muted)" font-size="8">{{ t('misc.topspin') }}</text>
+                <circle cx="66" cy="0" r="4" fill="#4dabf7"/><text x="74" y="3" fill="var(--muted)" font-size="8">{{ t('misc.backspin') }}</text>
+                <circle cx="136" cy="0" r="4" fill="#ffd43b"/><text x="144" y="3" fill="var(--muted)" font-size="8">{{ t('misc.nospin') }}</text>
               </g>
             </svg>
             <!-- Kontrolki -->
             <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px">
               <div class="field" style="margin:0">
-                <label style="font-size:11px">Piłek <small>1–999</small></label>
+                <label style="font-size:11px">{{ t('drills.balls_count') }} <small>1–999</small></label>
                 <input type="number" v-model.number="drillRunCount" min="1" max="999" style="text-align:center">
               </div>
               <div class="field" style="margin:0">
-                <label style="font-size:11px">Tempo <small>25–200%</small></label>
+                <label style="font-size:11px">{{ t('drills.tempo') }} <small>25–200%</small></label>
                 <div style="display:flex;align-items:center;gap:4px">
                   <input type="range" v-model.number="drillRunPercent" min="50" max="150" step="5" style="flex:1">
                   <span style="font-size:12px;font-weight:600;min-width:36px;text-align:right">{{ drillRunPercent }}%</span>
@@ -937,9 +949,9 @@
             </div>
             <!-- Nawigacja + Start -->
             <div style="display:flex;gap:6px;align-items:center">
-              <button class="btn btn-ghost" style="padding:6px 10px" @click="prevDrill(folder)" :disabled="idx===0" title="Poprzedni">◀</button>
-              <button class="btn btn-success" style="flex:1;padding:8px" :disabled="!connected || drillRunning || myRole !== 'controller'" @click="startDrill">▶ Start</button>
-              <button class="btn btn-ghost" style="padding:6px 10px" @click="nextDrill(folder)" :disabled="idx===folder.drills.length-1" title="Następny">▶</button>
+              <button class="btn btn-ghost" style="padding:6px 10px" @click="prevDrill(folder)" :disabled="idx===0" :title="t('drills.prev')">◀</button>
+              <button class="btn btn-success" style="flex:1;padding:8px" :disabled="!connected || drillRunning || myRole !== 'controller'" @click="startDrill">{{ t('btn.start') }}</button>
+              <button class="btn btn-ghost" style="padding:6px 10px" @click="nextDrill(folder)" :disabled="idx===folder.drills.length-1" :title="t('drills.next')">▶</button>
             </div>
           </div>
         </div>
@@ -949,14 +961,14 @@
     <div v-if="drillTree.unfiled && drillTree.unfiled.length > 0" class="drill-folder" style="margin-top:8px">
       <div class="drill-folder-header" @click="toggleFolder('unfiled')">
         <span class="drill-folder-arrow">{{ openFolders.has('unfiled') ? '▼' : '▶' }}</span>
-        <span class="drill-folder-name" style="color:var(--muted)">Bez folderu</span>
+        <span class="drill-folder-name" style="color:var(--muted)">{{ t('drills.unfiled') }}</span>
         <span class="chip" style="margin-left:4px;font-size:10px">{{ drillTree.unfiled.length }}</span>
       </div>
       <div v-if="openFolders.has('unfiled')" class="drill-list">
         <div v-for="drill in drillTree.unfiled" :key="drill.id" class="drill-row">
           <span class="drill-name">{{ drill.name }}</span>
           <div class="drill-actions">
-            <button class="btn-xs" @click="showMoveModal(drill)" title="Przenieś do folderu">→</button>
+            <button class="btn-xs" @click="showMoveModal(drill)" :title="t('drills.move_to')">→</button>
             <button class="btn-xs" @click="deleteDrillConfirm(drill.id)">🗑</button>
             <button class="btn-start-xs" :disabled="!connected || drillRunning || myRole !== 'controller'" @click="runDrill(drill)">▶</button>
           </div>
@@ -969,10 +981,10 @@
   <div class="page" v-show="page === 'training'">
     <div class="card">
       <div style="display:flex;align-items:center;gap:8px;margin-bottom:14px">
-        <h2 style="flex:1">Treningi</h2>
-        <button class="btn btn-primary" @click="openTrainingModal(null)">+ Nowy</button>
+        <h2 style="flex:1">{{ t('tr.title') }}</h2>
+        <button class="btn btn-primary" @click="openTrainingModal(null)">{{ t('tr.new') }}</button>
       </div>
-      <div v-if="!trainings.length" style="color:var(--muted);font-size:13px">Brak treningów</div>
+      <div v-if="!trainings.length" style="color:var(--muted);font-size:13px">{{ t('tr.empty') }}</div>
       <ul class="device-list" v-else>
         <li v-for="t in trainings" :key="t.id">
           <div style="flex:1">
@@ -981,7 +993,7 @@
           </div>
           <button class="btn btn-ghost btn-icon" @click="openTrainingModal(t)" title="Edytuj">✏</button>
           <button class="btn btn-success btn-icon" @click="runTraining(t.id)" :disabled="!connected || myRole!=='controller'" title="Start">▶</button>
-          <button class="btn btn-ghost btn-icon" style="color:var(--danger)" @click="deleteTraining(t.id)" title="Usuń">✕</button>
+          <button class="btn btn-ghost btn-icon" style="color:var(--danger)" @click="deleteTraining(t.id)" :title="t('btn.delete')">✕</button>
         </li>
       </ul>
     </div>
@@ -991,21 +1003,21 @@
   <!-- ── Move drill modal ─────────────────────────────────────────────────── -->
   <div class="move-overlay" v-if="moveModalDrill" @click.self="moveModalDrill=null">
     <div class="move-sheet">
-      <h3>Przenieś: {{ moveModalDrill.name }}</h3>
+      <h3>{{ t('move.title', {name: moveModalDrill.name}) }}</h3>
       <button v-for="f in drillTree.folders" :key="f.id" class="move-btn" @click="moveDrillToFolder(moveModalDrill.id, f.id)">
         📁 {{ f.name }}
       </button>
       <button class="move-btn" style="color:var(--muted)" @click="moveDrillToFolder(moveModalDrill.id, null)">
-        — Bez folderu
+        {{ t('move.no_folder') }}
       </button>
-      <button class="btn btn-ghost" style="width:100%;margin-top:10px" @click="moveModalDrill=null">Anuluj</button>
+      <button class="btn btn-ghost" style="width:100%;margin-top:10px" @click="moveModalDrill=null">{{ t('btn.cancel') }}</button>
     </div>
   </div>
 
   <!-- ── Ćwiczenia ─────────────────────────────────────────────────────────── -->
   <div class="page" v-show="page === 'exercises'">
     <div class="row" style="margin-bottom:8px">
-      <span class="section-title" style="margin-bottom:0">Ćwiczenia fizyczne</span>
+      <span class="section-title" style="margin-bottom:0">{{ t('ex.title') }}</span>
     </div>
     <div v-for="cat in exerciseCategories" :key="cat.id" class="drill-folder">
       <div class="drill-folder-header" @click="toggleExCat(cat.id)">
@@ -1021,16 +1033,23 @@
         <!-- Wybrany exercise detail -->
         <div v-if="selectedExercise && cat.exercises.some(e => e.id === selectedExercise.id)"
           style="background:var(--card);border:1px solid var(--border);border-radius:0 0 8px 8px;padding:10px;margin-top:-2px;margin-bottom:4px">
-          <img
-            :src="`/static/exercises/${selectedExercise.id}.gif`"
-            :alt="selectedExercise.name"
-            @error="$event.target.style.display='none'"
-            style="display:block;width:160px;height:160px;object-fit:contain;margin:0 auto 10px;border-radius:8px;background:var(--surface)">
+          <!-- Filmstrip -->
+          <div style="background:#1a1a2e;border-radius:10px;padding:7px 8px;margin-bottom:10px">
+            <div style="display:flex;justify-content:space-around;margin-bottom:5px">
+              <div v-for="n in 7" :key="n" style="width:9px;height:7px;background:#111;border-radius:2px;border:1px solid #2a2a3e"></div>
+            </div>
+            <img :src="getExFrameSrc(selectedExercise)" :alt="selectedExercise.name"
+              style="width:100%;display:block;border-radius:4px"
+              @error="$event.target.style.display='none'"/>
+            <div style="display:flex;justify-content:space-around;margin-top:5px">
+              <div v-for="n in 7" :key="n" style="width:9px;height:7px;background:#111;border-radius:2px;border:1px solid #2a2a3e"></div>
+            </div>
+          </div>
           <div style="font-size:12px;color:var(--text2);line-height:1.5;margin-bottom:8px">{{ selectedExercise.description }}</div>
           <div style="display:flex;align-items:center;gap:8px;margin-top:8px">
-            <span style="font-size:11px;color:var(--muted)">Czas:</span>
+            <span style="font-size:11px;color:var(--muted)">{{ t('ex.time') }}</span>
             <input type="number" v-model.number="selectedExercise.duration_sec" min="10" max="600" style="width:60px;text-align:center">
-            <span style="font-size:11px;color:var(--muted)">sek</span>
+            <span style="font-size:11px;color:var(--muted)">{{ t('ex.sec') }}</span>
             <div style="flex:1"></div>
             <button class="btn btn-success" style="padding:7px 18px;font-size:13px"
               :disabled="!connected || myRole !== 'controller'"
@@ -1046,7 +1065,7 @@
     <div class="modal-sheet" style="max-width:320px;text-align:center">
       <div style="font-size:15px;margin-bottom:20px;line-height:1.4">{{ confirmMsg }}</div>
       <div style="display:flex;gap:10px;justify-content:center">
-        <button class="btn btn-ghost" style="flex:1" @click="confirmCb=null">Anuluj</button>
+        <button class="btn btn-ghost" style="flex:1" @click="confirmCb=null">{{ t('btn.cancel') }}</button>
         <button class="btn" :style="{ flex: 1, background: confirmOkColor, color: '#fff', fontWeight: 700 }" @click="runConfirm()">{{ confirmOkLabel }}</button>
       </div>
     </div>
@@ -1056,28 +1075,28 @@
   <div v-if="showDrillModal" class="modal-overlay" @click.self="showDrillModal=false" style="z-index:200;align-items:flex-start;padding-top:20px">
     <div class="modal-sheet" style="max-width:480px;max-height:85vh;overflow-y:auto">
       <div class="row" style="margin-bottom:14px;align-items:center">
-        <span style="font-size:16px;font-weight:700">{{ drillModalId ? 'Edytuj drill' : 'Nowy drill' }}</span>
+        <span style="font-size:16px;font-weight:700">{{ drillModalId ? t('dm.edit') : t('dm.new') }}</span>
         <div class="spacer"></div>
         <button class="btn btn-ghost btn-icon" @click="showDrillModal=false">✕</button>
       </div>
       <div class="field">
-        <label>Nazwa</label>
-        <input type="text" v-model="editName" placeholder="np. Forhend topspin">
+        <label>{{ t('dm.name') }}</label>
+        <input type="text" v-model="editName" :placeholder="t('dm.name_ph')">
       </div>
       <div class="field">
-        <label>Opis (opcjonalny)</label>
-        <input type="text" v-model="editDesc" placeholder="Krótki opis">
+        <label>{{ t('dm.desc') }}</label>
+        <input type="text" v-model="editDesc" :placeholder="t('dm.desc_ph')">
       </div>
       <div class="field">
-        <label>Powtórzenia &nbsp;<small style="color:var(--muted);font-size:10px">0 = ∞</small></label>
+        <label>{{ t('dm.repeat') }} &nbsp;<small style="color:var(--muted);font-size:10px">0 = ∞</small></label>
         <input type="number" v-model.number="editRepeat" min="0" max="999">
       </div>
       <div class="row" style="margin:14px 0 10px;align-items:center">
-        <span style="font-weight:600;font-size:13px">Piłki</span>
+        <span style="font-weight:600;font-size:13px">{{ t('dm.balls') }}</span>
         <div class="spacer"></div>
-        <button class="btn btn-ghost" style="padding:6px 12px;font-size:12px" @click="addBall">+ Dodaj</button>
+        <button class="btn btn-ghost" style="padding:6px 12px;font-size:12px" @click="addBall">{{ t('dm.add') }}</button>
       </div>
-      <div v-if="editBalls.length === 0" style="padding:16px 0;text-align:center;color:var(--muted);font-size:13px">Dodaj pierwszą piłkę</div>
+      <div v-if="editBalls.length === 0" style="padding:16px 0;text-align:center;color:var(--muted);font-size:13px">{{ t('dm.add_first') }}</div>
       <div class="ball-list">
         <div class="ball-card" v-for="(b, i) in editBalls" :key="i">
           <div class="ball-card-header">
@@ -1085,18 +1104,18 @@
             <button class="btn-remove" @click="removeBall(i)">✕</button>
           </div>
           <div class="ball-fields">
-            <div class="ball-field"><label>Góra <small>±249</small></label><input type="number" v-model.number="b.top_speed" min="-249" max="249" @change="clamp(b,'top_speed',-249,249)"></div>
-            <div class="ball-field"><label>Dół <small>±249</small></label><input type="number" v-model.number="b.bot_speed" min="-249" max="249" @change="clamp(b,'bot_speed',-249,249)"></div>
-            <div class="ball-field"><label>Osc <small>0–255</small></label><input type="number" v-model.number="b.oscillation" min="0" max="255" @change="clamp(b,'oscillation',0,255)"></div>
-            <div class="ball-field"><label>Wys <small>0–255</small></label><input type="number" v-model.number="b.height" min="0" max="255" @change="clamp(b,'height',0,255)"></div>
-            <div class="ball-field"><label>Rot <small>0–255</small></label><input type="number" v-model.number="b.rotation" min="0" max="255" @change="clamp(b,'rotation',0,255)"></div>
-            <div class="ball-field"><label>ms <small>200–10000</small></label><input type="number" v-model.number="b.wait_ms" min="200" max="10000" @change="clamp(b,'wait_ms',200,10000)"></div>
+            <div class="ball-field"><label>{{ t('dm.top') }} <small>±249</small></label><input type="number" v-model.number="b.top_speed" min="-249" max="249" @change="clamp(b,'top_speed',-249,249)"></div>
+            <div class="ball-field"><label>{{ t('dm.bottom') }} <small>±249</small></label><input type="number" v-model.number="b.bot_speed" min="-249" max="249" @change="clamp(b,'bot_speed',-249,249)"></div>
+            <div class="ball-field"><label>{{ t('dm.osc') }} <small>0–255</small></label><input type="number" v-model.number="b.oscillation" min="0" max="255" @change="clamp(b,'oscillation',0,255)"></div>
+            <div class="ball-field"><label>{{ t('dm.height') }} <small>0–255</small></label><input type="number" v-model.number="b.height" min="0" max="255" @change="clamp(b,'height',0,255)"></div>
+            <div class="ball-field"><label>{{ t('dm.rot') }} <small>0–255</small></label><input type="number" v-model.number="b.rotation" min="0" max="255" @change="clamp(b,'rotation',0,255)"></div>
+            <div class="ball-field"><label>{{ t('dm.ms') }} <small>200–10000</small></label><input type="number" v-model.number="b.wait_ms" min="200" max="10000" @change="clamp(b,'wait_ms',200,10000)"></div>
           </div>
         </div>
       </div>
       <button class="btn btn-primary" style="width:100%;margin-top:16px;padding:12px"
         :disabled="!editName || editBalls.length === 0" @click="saveDrillModal">
-        💾 Zapisz drill
+        {{ t('dm.save') }}
       </button>
     </div>
   </div>
@@ -1105,19 +1124,19 @@
   <div v-if="showTrainingModal" class="modal-overlay" @click.self="showTrainingModal=false" style="z-index:200;align-items:flex-start;padding-top:20px">
     <div class="modal-sheet" style="max-width:520px;max-height:85vh;overflow-y:auto">
       <div class="row" style="margin-bottom:14px;align-items:center">
-        <span style="font-size:16px;font-weight:700">{{ tEditId ? 'Edytuj trening' : 'Nowy trening' }}</span>
+        <span style="font-size:16px;font-weight:700">{{ tEditId ? t('tr.edit_title') : t('tr.new_title') }}</span>
         <div class="spacer"></div>
         <button class="btn btn-ghost btn-icon" @click="showTrainingModal=false">✕</button>
       </div>
-      <div class="field"><label>Nazwa</label><input v-model="tEditName"></div>
-      <div class="field"><label>Opis</label><input v-model="tEditDesc"></div>
-      <div class="field"><label>Odliczanie (sek) <small>3–120</small></label><input type="number" v-model.number="tEditCountdown" min="3" max="120"></div>
+      <div class="field"><label>{{ t('tr.name') }}</label><input v-model="tEditName"></div>
+      <div class="field"><label>{{ t('tr.desc') }}</label><input v-model="tEditDesc"></div>
+      <div class="field"><label>{{ t('tr.countdown') }} <small>3–120</small></label><input type="number" v-model.number="tEditCountdown" min="3" max="120"></div>
 
-      <h3 style="margin-top:14px">Kroki</h3>
+      <h3 style="margin-top:14px">{{ t('tr.steps') }}</h3>
       <div v-for="(step, i) in tEditSteps" :key="i" class="card" style="margin:8px 0;padding:10px 12px">
         <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
           <select @change="onStepTypeSelect(step, $event.target.value)" style="flex:1;min-width:120px;background:var(--surface);color:var(--text);border:1px solid var(--border);border-radius:8px;padding:6px 8px;font-size:12px">
-            <option value="">-- Wybierz --</option>
+            <option value="">{{ t('tr.select') }}</option>
             <optgroup v-for="f in drillTree.folders" :label="'🏓 '+f.name" :key="f.id">
               <option v-for="d in f.drills" :value="'drill:'+d.id" :key="d.id" :selected="step.drill_id===d.id">{{ d.name }}</option>
             </optgroup>
@@ -1127,7 +1146,7 @@
           </select>
           <template v-if="!step.exercise_id">
             <div style="display:flex;align-items:center;gap:4px;font-size:11px">
-              <label style="color:var(--muted)">Ilość</label>
+              <label style="color:var(--muted)">{{ t('tr.count') }}</label>
               <input type="number" v-model.number="step.count" min="1" max="999" style="width:50px;text-align:center">
             </div>
             <div style="display:flex;align-items:center;gap:4px;font-size:11px">
@@ -1137,13 +1156,13 @@
           </template>
           <template v-else>
             <div style="display:flex;align-items:center;gap:4px;font-size:11px">
-              <label style="color:var(--muted)">Czas</label>
+              <label style="color:var(--muted)">{{ t('tr.time') }}</label>
               <input type="number" v-model.number="step.duration_sec" min="10" max="600" style="width:50px;text-align:center">
               <span style="color:var(--muted)">s</span>
             </div>
           </template>
           <div style="display:flex;align-items:center;gap:4px;font-size:11px">
-            <label style="color:var(--muted)">Pauza</label>
+            <label style="color:var(--muted)">{{ t('tr.pause_label') }}</label>
             <input type="number" v-model.number="step.pause_after_sec" min="0" max="600" style="width:50px;text-align:center">
             <span style="color:var(--muted)">s</span>
           </div>
@@ -1154,50 +1173,81 @@
           </div>
         </div>
       </div>
-      <button class="btn btn-ghost" @click="addTrainingStep" style="margin-top:6px">+ Dodaj krok</button>
+      <button class="btn btn-ghost" @click="addTrainingStep" style="margin-top:6px">{{ t('tr.add_step') }}</button>
 
       <div style="display:flex;gap:10px;margin-top:16px">
-        <button class="btn btn-ghost" style="flex:1" @click="showTrainingModal=false">Anuluj</button>
-        <button class="btn btn-primary" style="flex:1" @click="saveTraining" :disabled="!tEditName || !tEditSteps.length">💾 Zapisz</button>
+        <button class="btn btn-ghost" style="flex:1" @click="showTrainingModal=false">{{ t('btn.cancel') }}</button>
+        <button class="btn btn-primary" style="flex:1" @click="saveTraining" :disabled="!tEditName || !tEditSteps.length">{{ t('tr.save') }}</button>
       </div>
     </div>
   </div>
 
   <!-- ── Bottom nav ───────────────────────────────────────────────────────── -->
   <nav class="nav">
-    <button :class="{ active: page === 'drills' }" :style="connected && !isCalibrated ? 'opacity:0.4' : ''" @click="connected && !isCalibrated ? (showToast('⚠ Wymagana kalibracja'), page='calibration') : page='drills'" :title="connected && !isCalibrated ? 'Wymagana kalibracja' : ''">
+    <button :class="{ active: page === 'drills' }" :style="connected && !isCalibrated ? 'opacity:0.4' : ''" @click="connected && !isCalibrated ? (showToast(t('toast.cal_required')), page='calibration') : page='drills'" ::title="connected && !isCalibrated ? t('toast.cal_required') : ''">
       <span class="nav-icon">
         <svg width="22" height="18" viewBox="0 0 22 18" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <!-- stół przekrzywiony w lewo -->
-          <rect x="1" y="8" width="13" height="7" rx="1" fill="currentColor" opacity="0.85" transform="rotate(-12 1 8)"/>
+          <!-- stół — niebieski -->
+          <rect x="1" y="9" width="13" height="6.5" rx="1" fill="#2271c8" opacity="0.92" transform="rotate(-10 1 9)"/>
           <!-- linia środkowa stołu -->
-          <line x1="7.5" y1="7.2" x2="6.2" y2="14.8" stroke="white" stroke-width="0.7" opacity="0.5"/>
+          <line x1="7.8" y1="8.2" x2="6.8" y2="15.5" stroke="white" stroke-width="0.65" opacity="0.55"/>
           <!-- siatka -->
-          <rect x="6.8" y="7.8" width="1" height="4.2" rx="0.4" fill="white" opacity="0.7" transform="rotate(-12 6.8 7.8)"/>
-          <!-- piłka w locie (po odbiciu, góra-prawa) -->
-          <circle cx="14.5" cy="3.5" r="2" fill="currentColor" opacity="0.9"/>
-          <circle cx="14.5" cy="3.5" r="2" fill="white" opacity="0.2"/>
-          <!-- ślad piłki / trajektoria -->
-          <path d="M 10 9.5 Q 12 5 14.5 3.5" stroke="currentColor" stroke-width="0.7" stroke-dasharray="1.2 1" opacity="0.4" fill="none"/>
-          <!-- rakietka (prawa strona) -->
-          <ellipse cx="19.5" cy="7" rx="2.2" ry="2.8" fill="currentColor" opacity="0.85" transform="rotate(30 19.5 7)"/>
-          <ellipse cx="19.5" cy="7" rx="1.1" ry="1.6" fill="none" stroke="white" stroke-width="0.5" opacity="0.4" transform="rotate(30 19.5 7)"/>
+          <rect x="7" y="8.8" width="1" height="4" rx="0.4" fill="white" opacity="0.75" transform="rotate(-10 7 8.8)"/>
+          <!-- rakietka — drewno -->
+          <ellipse cx="19" cy="7.5" rx="2.2" ry="2.7" fill="#c8843a" opacity="0.95" transform="rotate(30 19 7.5)"/>
+          <!-- guma czerwona -->
+          <ellipse cx="19" cy="7.5" rx="1.7" ry="2.15" fill="#e03030" opacity="0.92" transform="rotate(30 19 7.5)"/>
           <!-- rączka rakietki -->
-          <line x1="18" y1="9.2" x2="16.5" y2="11.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" opacity="0.85"/>
+          <line x1="17.6" y1="9.8" x2="16" y2="12.2" stroke="#c8843a" stroke-width="1.6" stroke-linecap="round"/>
+          <!-- piłka biała — większa niż rakietka -->
+          <circle cx="12.5" cy="3.5" r="3.2" fill="white" opacity="0.95"/>
+          <circle cx="12.5" cy="3.5" r="3.2" fill="none" stroke="#ccc" stroke-width="0.4"/>
+          <!-- ślad trajektorii -->
+          <path d="M 9 10 Q 11 6 12.5 3.5" stroke="white" stroke-width="0.6" stroke-dasharray="1.2 1" opacity="0.35" fill="none"/>
         </svg>
-      </span>Drille
+      </span>{{ t('nav.drills') }}
     </button>
-    <button :class="{ active: page === 'training' }" :style="connected && !isCalibrated ? 'opacity:0.4' : ''" @click="connected && !isCalibrated ? (showToast('⚠ Wymagana kalibracja'), page='calibration') : page='training'" :title="connected && !isCalibrated ? 'Wymagana kalibracja' : ''">
-      <span class="nav-icon">🏋</span>Trening
+    <button :class="{ active: page === 'training' }" :style="connected && !isCalibrated ? 'opacity:0.4' : ''" @click="connected && !isCalibrated ? (showToast(t('toast.cal_required')), page='calibration') : page='training'" ::title="connected && !isCalibrated ? t('toast.cal_required') : ''">
+      <span class="nav-icon">
+        <svg width="22" height="20" viewBox="0 0 22 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <!-- stół pingpongowy -->
+          <rect x="0.5" y="14" width="21" height="3" rx="0.8" fill="currentColor" opacity="0.75"/>
+          <!-- nogi stołu -->
+          <line x1="2.5" y1="17" x2="2.5" y2="19.5" stroke="currentColor" stroke-width="1" stroke-linecap="round" opacity="0.5"/>
+          <line x1="19.5" y1="17" x2="19.5" y2="19.5" stroke="currentColor" stroke-width="1" stroke-linecap="round" opacity="0.5"/>
+          <!-- siatka -->
+          <rect x="10.3" y="12" width="1" height="3.5" rx="0.4" fill="white" opacity="0.7"/>
+          <!-- ludzik — czerwony -->
+          <!-- głowa -->
+          <circle cx="16.5" cy="1.8" r="1.6" fill="#e53935"/>
+          <!-- tułów -->
+          <line x1="16.5" y1="3.4" x2="16" y2="8.5" stroke="#e53935" stroke-width="1.4" stroke-linecap="round"/>
+          <!-- nogi -->
+          <line x1="16" y1="8.5" x2="14.5" y2="13.5" stroke="#e53935" stroke-width="1.3" stroke-linecap="round"/>
+          <line x1="16" y1="8.5" x2="17.5" y2="13.5" stroke="#e53935" stroke-width="1.3" stroke-linecap="round"/>
+          <!-- ramię z rakietką (wyciągnięte do przodu/w lewo) -->
+          <line x1="16.5" y1="5" x2="12" y2="7" stroke="#e53935" stroke-width="1.3" stroke-linecap="round"/>
+          <!-- drugie ramię (w tył) -->
+          <line x1="16.5" y1="5" x2="18.5" y2="7" stroke="#e53935" stroke-width="1.3" stroke-linecap="round"/>
+          <!-- rakietka — czerwona owalna -->
+          <ellipse cx="9.8" cy="6.8" rx="2.3" ry="2.9" fill="#e53935" transform="rotate(-20 9.8 6.8)"/>
+          <ellipse cx="9.8" cy="6.8" rx="1.15" ry="1.6" fill="none" stroke="white" stroke-width="0.55" opacity="0.5" transform="rotate(-20 9.8 6.8)"/>
+          <!-- rączka rakietki -->
+          <line x1="11.3" y1="8.5" x2="12.3" y2="10.2" stroke="#b71c1c" stroke-width="1.5" stroke-linecap="round"/>
+          <!-- piłka pingpongowa -->
+          <circle cx="5.5" cy="11.5" r="1.5" fill="white" opacity="0.9"/>
+          <circle cx="5.5" cy="11.5" r="1.5" fill="none" stroke="#e53935" stroke-width="0.4" opacity="0.6"/>
+        </svg>
+      </span>{{ t('nav.training') }}
     </button>
     <button :class="{active: page==='exercises'}" @click="page='exercises'">
-      <span class="nav-icon">🏋</span>Ćwiczenia
+      <span class="nav-icon">🏋</span>{{ t('nav.exercises') }}
     </button>
     <button :class="{ active: page === 'camera' }" @click="page='camera'">
-      <span class="nav-icon">📷</span>Kamera
+      <span class="nav-icon">📷</span>{{ t('nav.camera') }}
     </button>
     <button :class="{ active: page === 'logs' }" @click="page='logs'">
-      <span class="nav-icon">🖥</span>Logi
+      <span class="nav-icon">🖥</span>{{ t('nav.logs') }}
     </button>
   </nav>
 
@@ -1207,11 +1257,27 @@
 </div>
 
 <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+<script src="/static/i18n.js"></script>
 <script>
 const { createApp, ref, reactive, computed, watch, onMounted, nextTick } = Vue
 
 createApp({
   setup() {
+    // ── i18n ──
+    const lang = ref(localStorage.getItem('lang') || 'pl')
+    function t(key, params) {
+      const entry = window.I18N[key]
+      if (!entry) return key
+      let s = entry[lang.value] || entry.en || key
+      if (params) Object.entries(params).forEach(([k, v]) => { s = s.replaceAll('{' + k + '}', v) })
+      return s
+    }
+    function setLang(l) {
+      lang.value = l
+      localStorage.setItem('lang', l)
+      document.documentElement.lang = l === 'zh' ? 'zh-CN' : l
+    }
+
     const page      = ref('scenarios')
     const connected = ref(false)
     const firmware  = ref(0)
@@ -1241,11 +1307,11 @@ createApp({
 
     // ── Confirm modal ────────────────────────────────────────
     const confirmMsg      = ref('')
-    const confirmOkLabel  = ref('Usuń')
+    const confirmOkLabel  = ref('')
     const confirmOkColor  = ref('var(--danger)')
     const confirmCb       = ref(null)
-    function showConfirm(msg, cb, okLabel = 'Usuń', okColor = 'var(--danger)') {
-      confirmMsg.value = msg; confirmOkLabel.value = okLabel; confirmOkColor.value = okColor; confirmCb.value = cb
+    function showConfirm(msg, cb, okLabel, okColor = 'var(--danger)') {
+      confirmMsg.value = msg; confirmOkLabel.value = okLabel || t('btn.delete'); confirmOkColor.value = okColor; confirmCb.value = cb
     }
     function runConfirm() { const cb = confirmCb.value; confirmCb.value = null; cb && cb() }
 
@@ -1339,8 +1405,8 @@ createApp({
 
       } else if (m.type === 'session_role') {
         myRole.value = m.role
-        if (m.role === 'controller') showToast('🎮 Jesteś kontrolerem')
-        else if (m.role === 'observer') showToast('👁 Oddałeś kontrolę')
+        if (m.role === 'controller') showToast(t('toast.controller'))
+        else if (m.role === 'observer') showToast(t('toast.released'))
 
       } else if (m.type === 'sessions') {
         sessionsList.value = m.sessions
@@ -1361,10 +1427,10 @@ createApp({
       } else if (m.type === 'takeover_response') {
         if (m.accepted) {
           myRole.value = 'controller'
-          showToast('🎮 Przejąłeś kontrolę!')
+          showToast(t('toast.took_control'))
         } else {
           myRole.value = 'observer'
-          showToast('❌ Odmówiono przejęcia kontroli')
+          showToast(t('toast.denied'))
           takeoverCooldown.value = 60
           clearInterval(_cooldownTimer)
           _cooldownTimer = setInterval(() => {
@@ -1376,9 +1442,9 @@ createApp({
       } else if (m.type === 'usb_ports') {
         usbScanning.value = false
         usbPorts.value = m.ports
-        if (!m.ports.length) showToast('Nie znaleziono portów USB')
+        if (!m.ports.length) showToast(t('toast.no_usb'))
       } else if (m.type === 'usb_connected') {
-        showToast(`🔌 USB: ${m.port}`)
+        showToast(t('toast.usb', {port: m.port}))
       } else if (m.type === 'scan_result') {
         scanning.value = false
         devices.value  = m.devices.filter(d => ROBOT_FILTER.test(d.name || ''))
@@ -1430,9 +1496,9 @@ createApp({
       } else if (m.type === 'training_ended') {
         trainingRunning.value = false
         trainingIsPaused.value = false
-        showToast('🏁 Trening zakończony!')
+        showToast(t('toast.training_ended'))
       } else if (m.type === 'reconnecting') {
-        showToast(`🔄 Ponowne łączenie…`)
+        showToast(t('toast.reconnecting'))
       } else if (m.type === 'robot_response') {
         addLog(`← ${m.data}`)
       } else if (m.type === 'error') {
@@ -1475,7 +1541,7 @@ createApp({
     function toggleSimulation() {
       simulationMode.value = !simulationMode.value
       send({ action: 'set_simulation', enabled: simulationMode.value })
-      showToast(simulationMode.value ? '🧪 Symulacja włączona' : '⏹ Symulacja wyłączona')
+      showToast(simulationMode.value ? t('toast.sim_on') : t('toast.sim_off'))
     }
     function saveName() {
       robotName.value = robotNameEdit.value.trim() || robotName.value
@@ -1537,7 +1603,7 @@ createApp({
     }
 
     async function addFolder() {
-      const name = prompt('Nazwa folderu:')
+      const name = prompt(t('prompt.folder_name'))
       if (!name?.trim()) return
       await fetch('/api/drills/folders', {
         method: 'POST', headers: { 'Content-Type': 'application/json' },
@@ -1547,7 +1613,7 @@ createApp({
     }
 
     async function renameFolder(folder) {
-      const name = prompt('Nowa nazwa:', folder.name)
+      const name = prompt(t('prompt.new_name'), folder.name)
       if (!name?.trim() || name.trim() === folder.name) return
       await fetch(`/api/drills/folders/${folder.id}`, {
         method: 'PUT', headers: { 'Content-Type': 'application/json' },
@@ -1557,7 +1623,7 @@ createApp({
     }
 
     async function deleteFolderConfirm(id) {
-      showConfirm('Usunąć folder? Drille przejdą do "Bez folderu".', async () => {
+      showConfirm(t('confirm.delete_folder'), async () => {
         await fetch(`/api/drills/folders/${id}`, { method: 'DELETE' })
         await loadDrillTree()
       })
@@ -1623,7 +1689,7 @@ createApp({
     }
 
     async function deleteDrillConfirm(id) {
-      showConfirm('Usunąć drill?', async () => {
+      showConfirm(t('confirm.delete_drill'), async () => {
         await fetch(`/api/drills/${id}`, { method: 'DELETE' })
         await loadDrillTree()
       })
@@ -1741,7 +1807,7 @@ createApp({
       drillPaused.value = false
     }
     async function deleteScenario(id) {
-      if (!confirm('Usunąć scenariusz?')) return
+      if (!confirm(t('confirm.delete_scenario'))) return
       await fetch(`/api/scenarios/${id}`, { method: 'DELETE' })
       await loadScenarios()
     }
@@ -1771,7 +1837,7 @@ createApp({
       }
       await loadDrillTree()
       showDrillModal.value = false
-      showToast('✅ Zapisano drill')
+      showToast(t('toast.drill_saved'))
     }
     function openEditor(s) {
       if (s) {
@@ -1807,7 +1873,7 @@ createApp({
       }
       await loadScenarios()
       page.value = 'scenarios'
-      showToast('✅ Zapisano!')
+      showToast(t('toast.saved'))
     }
 
     // ── Trainings ─────────────────────────────────────────────
@@ -1876,10 +1942,10 @@ createApp({
       }
       await loadTrainings()
       showTrainingModal.value = false
-      showToast('Trening zapisany')
+      showToast(t('toast.training_saved'))
     }
     async function deleteTraining(id) {
-      showConfirm('Usunąć trening?', async () => {
+      showConfirm(t('confirm.delete_training'), async () => {
         await fetch(`/api/trainings/${id}`, { method: 'DELETE' })
         await loadTrainings()
       })
@@ -1894,6 +1960,21 @@ createApp({
       trainingStep.value = 0
       send({ action: 'run_training', id })
     }
+    const EX_FRAME_MAP = {
+      101:'warmup', 102:'warmup', 103:'warmup', 104:'warmup',
+      105:'warmup', 106:'warmup', 107:'warmup', 108:'strength',
+      201:'footwork', 202:'footwork', 203:'footwork', 204:'speed',
+      205:'footwork', 206:'speed', 207:'speed',
+      301:'speed', 302:'speed', 303:'warmup', 304:'footwork',
+      401:'speed', 402:'footwork', 403:'agility', 404:'agility',
+      501:'strength', 502:'lunge', 503:'strength', 504:'pushup',
+      505:'pushup', 506:'strength',
+      601:'cooldown', 602:'cooldown', 603:'hamstring', 604:'lunge', 605:'cooldown',
+    }
+    function getExFrameSrc(ex) {
+      return `/static/exercises/frames/${EX_FRAME_MAP[ex.id] || 'warmup'}.svg`
+    }
+
     function runExerciseSolo(ex) {
       send({ action: 'run_exercise_solo', exercise_id: ex.id, duration_sec: ex.duration_sec })
     }
@@ -1937,7 +2018,7 @@ createApp({
       presets.value = await r.json()
     }
     async function savePreset() {
-      const name = prompt('Nazwa presetu:')
+      const name = prompt(t('prompt.preset_name'))
       if (!name) return
       await fetch('/api/presets', {
         method: 'POST',
@@ -1945,39 +2026,39 @@ createApp({
         body: JSON.stringify({ name, ...cal, is_default: presets.value.length === 0 }),
       })
       await loadPresets()
-      showToast('💾 Preset zapisany: ' + name)
+      showToast(t('toast.preset_saved', {name}))
     }
     function loadPreset(p) {
       Object.assign(cal, { top_speed: p.top_speed, bot_speed: p.bot_speed, oscillation: p.oscillation, height: p.height, rotation: p.rotation, wait_ms: p.wait_ms })
       calDirty.value = true
-      showToast('Wczytano: ' + p.name)
+      showToast(t('toast.preset_loaded', {name: p.name}))
     }
     async function setDefaultPreset(id) {
-      showConfirm('Ustawić ten preset jako domyślny?', async () => {
+      showConfirm(t('confirm.set_default'), async () => {
         await fetch(`/api/presets/${id}/default`, { method: 'PUT' })
         await loadPresets()
-      }, 'Ustaw')
+      }, t('btn.set'))
     }
     async function updatePreset(p) {
-      showConfirm(`Nadpisać "${p.name}" aktualnymi wartościami?`, async () => {
+      showConfirm(t('confirm.overwrite', {name: p.name}), async () => {
         await fetch(`/api/presets/${p.id}`, {
           method: 'PUT',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ name: p.name, ...cal, is_default: !!p.is_default }),
         })
         await loadPresets()
-        showToast('💾 Nadpisano: ' + p.name)
-      }, 'Nadpisz')
+        showToast(t('toast.preset_overwritten', {name: p.name}))
+      }, t('btn.overwrite'))
     }
     async function deletePreset(id) {
-      showConfirm('Usunąć preset?', async () => {
+      showConfirm(t('confirm.delete_preset'), async () => {
         await fetch(`/api/presets/${id}`, { method: 'DELETE' })
         await loadPresets()
       })
     }
     async function calDone() {
       _clampAllCal()
-      const name = `Kalibracja ${robotName.value || device.value || 'Robopong'}`
+      const name = t('cal.preset_name', {name: robotName.value || device.value || 'Robopong'})
       const existing = presets.value.find(p => p.name === name)
       if (existing) {
         await fetch(`/api/presets/${existing.id}`, {
@@ -1993,7 +2074,7 @@ createApp({
       await loadPresets()
       localStorage.setItem(`cal_done:${lastAddr.value}`, '1')
       isCalibrated.value = true
-      showToast('✅ Kalibracja zapisana!')
+      showToast(t('toast.cal_saved'))
     }
 
     const importCalRef = ref(null)
@@ -2021,8 +2102,8 @@ createApp({
       reader.onload = async e => {
         if (importCalRef.value) importCalRef.value.value = ''
         let data
-        try { data = JSON.parse(e.target.result) } catch { showToast('❌ Błąd parsowania pliku'); return }
-        if (!data.presets || !Array.isArray(data.presets)) { showToast('❌ Nieprawidłowy format pliku'); return }
+        try { data = JSON.parse(e.target.result) } catch { showToast(t('toast.parse_error')); return }
+        if (!data.presets || !Array.isArray(data.presets)) { showToast(t('toast.bad_format')); return }
         if (data.firmware !== firmware.value) {
           showToast(`❌ Niezgodna wersja firmware (plik: ${data.firmware}, urządzenie: ${firmware.value})`); return
         }
@@ -2044,7 +2125,7 @@ createApp({
               })
             }
             await loadPresets()
-            showToast(`✅ Zaimportowano ${data.presets.length} preset(ów)`)
+            showToast(t('import.imported', {n: data.presets.length}))
           },
           'Importuj', 'var(--accent)'
         )
@@ -2086,23 +2167,23 @@ createApp({
       send({ action: 'set_ball', ball: { ...cal } })
       addLog(`⚡ top=${cal.top_speed} bot=${cal.bot_speed} osc=${cal.oscillation} h=${cal.height} rot=${cal.rotation}`)
       calDirty.value = false
-      showToast('⚡ Silniki start')
+      showToast(t('toast.motors_start'))
     }
     function calThrow() {
       _resetCalIdle()
       send({ action:'throw' })
-      addLog('→ T (rzut)')
-      showToast('🏓 Rzut!')
+      addLog('→ T (throw)')
+      showToast(t('toast.throw'))
     }
     function calStop() {
       send({ action:'stop' })
       addLog('→ H (stop)')
-      showToast('⏹ Stop')
+      showToast(t('toast.stop'))
     }
     function calSetup() {
       send({ action: 'begin_calibration' })
-      addLog('→ V (setup — reset głowicy)')
-      showToast('⚙ Głowica resetowana do pozycji domyślnej')
+      addLog('→ V (setup)')
+      showToast(t('toast.setup_reset'))
     }
 
     // Auto-idle: 60s bez aktywności w kalibracji → H (głowica wisi swobodnie)
@@ -2131,7 +2212,7 @@ createApp({
     watch(connected, (val, old) => {
       if (val && !old && !isCalibrated.value) {
         page.value = 'calibration'
-        showToast('⚠ Urządzenie nie skalibrowane — skalibruj przed użyciem')
+        showToast(t('toast.not_calibrated'))
       }
     })
     watch(lastAddr, addr => {
@@ -2162,28 +2243,28 @@ createApp({
 
     function copyDiagReport() {
       const lines = [
-        '=== Raport diagnostyczny RoboPong ===',
-        `Data: ${new Date().toISOString()}`,
+        `=== ${t('report.header')} ===`,
+        `${t('report.date')}: ${new Date().toISOString()}`,
         '',
-        `Urządzenie: ${robotName.value || 'Robopong'}`,
-        `Adres: ${lastAddr.value || '–'}`,
-        `Transport: ${transport.value}`,
-        `Firmware: ${firmware.value || 'nieznany'}`,
-        `Presety kalibracji: ${presets.value.length}`,
+        `${t('report.device')}: ${robotName.value || 'Robopong'}`,
+        `${t('report.address')}: ${lastAddr.value || '–'}`,
+        `${t('report.transport')}: ${transport.value}`,
+        `${t('report.firmware')}: ${firmware.value || t('report.fw_unknown')}`,
+        `${t('report.presets_cal')}: ${presets.value.length}`,
         '',
-        '--- Kalibracja (aktualna) ---',
+        `--- ${t('report.cal_current')} ---`,
         `top=${cal.top_speed} bot=${cal.bot_speed} osc=${cal.oscillation} h=${cal.height} rot=${cal.rotation} wait=${cal.wait_ms}ms`,
         '',
-        '--- Log robota (ostatnie 30) ---',
+        `--- ${t('report.robot_log')} ---`,
         ...robotLog.value.slice(-30),
         '',
-        '--- Logi serwera (ostatnie 50) ---',
+        `--- ${t('report.server_log')} ---`,
         ...serverLogs.value.slice(-50).map(l => `[${l.ts}] ${l.level} ${l.name}: ${l.message}`),
       ]
       const text = lines.join('\n')
       if (navigator.clipboard && navigator.clipboard.writeText) {
         navigator.clipboard.writeText(text)
-          .then(() => showToast('📋 Skopiowano raport do schowka'))
+          .then(() => showToast(t('toast.report_copied')))
           .catch(() => showDiagModal(text))
       } else {
         showDiagModal(text)
@@ -2198,7 +2279,7 @@ createApp({
     }
     function diagModalCopy() {
       const ta = document.getElementById('diag-textarea')
-      if (ta) { ta.select(); document.execCommand('copy'); showToast('📋 Skopiowano') }
+      if (ta) { ta.select(); document.execCommand('copy'); showToast(t('toast.copied')) }
       diagModalOpen.value = false
     }
 
@@ -2216,10 +2297,12 @@ createApp({
 
     onMounted(() => {
       wsConnect(); loadScenarios(); loadCal(); loadDrillTree(); loadTrainings(); loadExercises()
+      document.documentElement.lang = lang.value === 'zh' ? 'zh-CN' : lang.value
       fetch('/api/deploy-time').then(r=>r.json()).then(d => { deployTime.value = d.deploy_time }).catch(()=>{})
     })
 
     return {
+      lang, t, setLang,
       page, connected, firmware, device, scanning, devices, scenarios,
       drillTree, openFolders, moveModalDrill,
       loadDrillTree, toggleFolder, addFolder, renameFolder, deleteFolderConfirm,
@@ -2245,7 +2328,7 @@ createApp({
       clamp, clampCal,
       calStep, calSend, calThrow, calStop, calSetup, calReset, loadCal,
       presets, savePreset, updatePreset, loadPreset, setDefaultPreset, deletePreset,
-      calDone, importCalRef, exportCalibration, importCalibration,
+      calDone, importCalRef, exportCalibration, importCalibration, showToast,
       roleLabel, rolePillClass,
       requestTakeover, cancelTakeover, respondTakeover, releaseControl,
       ballWord,
@@ -2257,7 +2340,7 @@ createApp({
       loadTrainings, openTrainingEditor, addTrainingStep, moveStep,
       pauseTraining, resumeTraining, skipTraining, runExerciseSolo,
       onDrillSelect, saveTraining, deleteTraining, runTraining, stopTraining, totalTrainingTime,
-      exerciseCategories, openExCats, selectedExercise, toggleExCat, loadExercises, onStepTypeSelect,
+      exerciseCategories, openExCats, selectedExercise, toggleExCat, loadExercises, onStepTypeSelect, getExFrameSrc,
     }
   }
 }).mount('#app')

@@ -1,0 +1,70 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 252 110">
+  <!-- Frame 1: Sprint start — forward lean, explosive push -->
+  <g transform="translate(0,0)">
+    <rect width="80" height="110" fill="#fff5f5"/>
+    <ellipse cx="44" cy="107" rx="14" ry="3" fill="rgba(0,0,0,.1)"/>
+    <!-- head leaning forward -->
+    <ellipse cx="44" cy="14" rx="9" ry="10" fill="#f0c090"/>
+    <path d="M35,9 Q44,3 53,9 L53,15 Q44,10 35,15Z" fill="#5c3a1e"/>
+    <rect x="41" y="23" width="7" height="5" rx="2" fill="#f0c090"/>
+    <!-- torso forward lean -->
+    <path d="M30,26 Q44,20 58,24 L57,59 Q43,65 28,61Z" fill="#ef4444"/>
+    <!-- L arm punching forward-up -->
+    <path d="M30,28 Q32,15 34,5" stroke="#f0c090" stroke-width="7" stroke-linecap="round" fill="none"/>
+    <circle cx="34" cy="4" r="4" fill="#f0c090"/>
+    <!-- R arm driving back -->
+    <path d="M57,27 Q61,40 63,53" stroke="#f0c090" stroke-width="7" stroke-linecap="round" fill="none"/>
+    <circle cx="63" cy="54" r="4" fill="#f0c090"/>
+    <!-- L leg: drive forward, bent at knee -->
+    <path d="M36,61 Q28,74 22,88" stroke="#1e3a5f" stroke-width="9" stroke-linecap="round" fill="none"/>
+    <ellipse cx="20" cy="89" rx="7" ry="4" fill="#111" transform="rotate(-12 20 89)"/>
+    <!-- R leg: powerful push-off behind -->
+    <path d="M44,61 Q52,70 58,78" stroke="#1e3a5f" stroke-width="9" stroke-linecap="round" fill="none"/>
+    <path d="M58,78 Q60,88 58,97" stroke="#1e3a5f" stroke-width="9" stroke-linecap="round" fill="none"/>
+    <ellipse cx="57" cy="98" rx="7" ry="4" fill="#111" transform="rotate(6 57 98)"/>
+  </g>
+  <!-- Frame 2: Full sprint stride — high knee, airborne -->
+  <g transform="translate(86,0)">
+    <rect width="80" height="110" fill="#fff5f5"/>
+    <ellipse cx="42" cy="107" rx="14" ry="3" fill="rgba(0,0,0,.1)"/>
+    <ellipse cx="42" cy="12" rx="9" ry="10" fill="#f0c090"/>
+    <path d="M33,7 Q42,1 51,7 L51,13 Q42,8 33,13Z" fill="#5c3a1e"/>
+    <rect x="39" y="21" width="7" height="5" rx="2" fill="#f0c090"/>
+    <path d="M28,24 Q42,20 56,24 L55,59 Q41,65 27,60Z" fill="#ef4444"/>
+    <!-- L arm high forward -->
+    <path d="M28,27 Q29,14 31,4" stroke="#f0c090" stroke-width="7" stroke-linecap="round" fill="none"/>
+    <circle cx="31" cy="3" r="4" fill="#f0c090"/>
+    <!-- R arm back -->
+    <path d="M55,27 Q59,40 61,53" stroke="#f0c090" stroke-width="7" stroke-linecap="round" fill="none"/>
+    <circle cx="61" cy="54" r="4" fill="#f0c090"/>
+    <!-- R knee high up -->
+    <path d="M43,59 Q37,61 32,60" stroke="#1e3a5f" stroke-width="9" stroke-linecap="round" fill="none"/>
+    <path d="M32,60 Q30,70 30,79" stroke="#1e3a5f" stroke-width="9" stroke-linecap="round" fill="none"/>
+    <ellipse cx="31" cy="80" rx="6" ry="3.5" fill="#111" transform="rotate(-3 31 80)"/>
+    <!-- L leg extending back-down -->
+    <path d="M36,59 Q44,72 50,86" stroke="#1e3a5f" stroke-width="9" stroke-linecap="round" fill="none"/>
+    <ellipse cx="52" cy="87" rx="7" ry="4" fill="#111" transform="rotate(10 52 87)"/>
+  </g>
+  <!-- Frame 3: Extension — full stride, arms counter-swing -->
+  <g transform="translate(172,0)">
+    <rect width="80" height="110" fill="#fff5f5"/>
+    <ellipse cx="40" cy="107" rx="14" ry="3" fill="rgba(0,0,0,.1)"/>
+    <ellipse cx="40" cy="12" rx="9" ry="10" fill="#f0c090"/>
+    <path d="M31,7 Q40,1 49,7 L49,13 Q40,8 31,13Z" fill="#5c3a1e"/>
+    <rect x="37" y="21" width="7" height="5" rx="2" fill="#f0c090"/>
+    <path d="M26,24 Q40,20 54,24 L53,59 Q39,65 25,60Z" fill="#ef4444"/>
+    <!-- R arm high forward -->
+    <path d="M53,27 Q54,14 56,4" stroke="#f0c090" stroke-width="7" stroke-linecap="round" fill="none"/>
+    <circle cx="56" cy="3" r="4" fill="#f0c090"/>
+    <!-- L arm back -->
+    <path d="M26,27 Q22,40 20,53" stroke="#f0c090" stroke-width="7" stroke-linecap="round" fill="none"/>
+    <circle cx="20" cy="54" r="4" fill="#f0c090"/>
+    <!-- L knee high -->
+    <path d="M36,59 Q42,61 48,60" stroke="#1e3a5f" stroke-width="9" stroke-linecap="round" fill="none"/>
+    <path d="M48,60 Q50,70 50,79" stroke="#1e3a5f" stroke-width="9" stroke-linecap="round" fill="none"/>
+    <ellipse cx="51" cy="80" rx="6" ry="3.5" fill="#111" transform="rotate(5 51 80)"/>
+    <!-- R leg extending behind -->
+    <path d="M44,59 Q36,72 30,86" stroke="#1e3a5f" stroke-width="9" stroke-linecap="round" fill="none"/>
+    <ellipse cx="28" cy="87" rx="7" ry="4" fill="#111" transform="rotate(-10 28 87)"/>
+  </g>
+</svg>

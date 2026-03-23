@@ -1,0 +1,61 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 252 110">
+  <!-- Frame 1: Standing, arms at sides -->
+  <g transform="translate(0,0)">
+    <rect width="80" height="110" fill="#f0fdfa"/>
+    <ellipse cx="40" cy="107" rx="14" ry="3" fill="rgba(0,0,0,.1)"/>
+    <ellipse cx="40" cy="12" rx="9" ry="10" fill="#f0c090"/>
+    <path d="M31,7 Q40,1 49,7 L49,13 Q40,8 31,13Z" fill="#5c3a1e"/>
+    <rect x="37" y="21" width="7" height="5" rx="2" fill="#f0c090"/>
+    <path d="M25,26 Q40,22 55,26 L57,62 Q40,67 23,62Z" fill="#0ea5e9"/>
+    <path d="M25,29 Q20,42 18,55" stroke="#f0c090" stroke-width="7" stroke-linecap="round" fill="none"/>
+    <circle cx="18" cy="56" r="4" fill="#f0c090"/>
+    <path d="M55,29 Q60,42 62,55" stroke="#f0c090" stroke-width="7" stroke-linecap="round" fill="none"/>
+    <circle cx="62" cy="56" r="4" fill="#f0c090"/>
+    <path d="M36,62 Q34,80 33,97" stroke="#1e3a5f" stroke-width="9" stroke-linecap="round" fill="none"/>
+    <ellipse cx="30" cy="98" rx="7" ry="4" fill="#111"/>
+    <path d="M44,62 Q46,80 47,97" stroke="#1e3a5f" stroke-width="9" stroke-linecap="round" fill="none"/>
+    <ellipse cx="50" cy="98" rx="7" ry="4" fill="#111"/>
+  </g>
+  <!-- Frame 2: Forward bend — torso horizontal, hands reaching shins -->
+  <g transform="translate(86,0)">
+    <rect width="80" height="110" fill="#f0fdfa"/>
+    <ellipse cx="40" cy="107" rx="14" ry="3" fill="rgba(0,0,0,.1)"/>
+    <!-- head hanging down, at mid level -->
+    <ellipse cx="40" cy="52" rx="9" ry="10" fill="#f0c090"/>
+    <path d="M31,47 Q40,41 49,47 L49,53 Q40,48 31,53Z" fill="#5c3a1e"/>
+    <rect x="37" y="60" width="7" height="5" rx="2" fill="#f0c090"/>
+    <!-- torso bent forward, horizontal -->
+    <path d="M30,64 Q40,60 62,58 L63,67 Q40,72 29,72Z" fill="#0ea5e9"/>
+    <!-- arms hanging down reaching forward -->
+    <path d="M30,67 Q30,76 30,84" stroke="#f0c090" stroke-width="7" stroke-linecap="round" fill="none"/>
+    <circle cx="30" cy="85" r="4" fill="#f0c090"/>
+    <path d="M40,68 Q40,77 40,85" stroke="#f0c090" stroke-width="7" stroke-linecap="round" fill="none"/>
+    <circle cx="40" cy="86" r="4" fill="#f0c090"/>
+    <!-- legs straight, standing -->
+    <path d="M38,72 Q37,84 36,97" stroke="#1e3a5f" stroke-width="9" stroke-linecap="round" fill="none"/>
+    <ellipse cx="33" cy="98" rx="7" ry="4" fill="#111"/>
+    <path d="M50,72 Q51,84 52,97" stroke="#1e3a5f" stroke-width="9" stroke-linecap="round" fill="none"/>
+    <ellipse cx="55" cy="98" rx="7" ry="4" fill="#111"/>
+  </g>
+  <!-- Frame 3: Deep bend — hands near floor/ankles -->
+  <g transform="translate(172,0)">
+    <rect width="80" height="110" fill="#f0fdfa"/>
+    <ellipse cx="40" cy="107" rx="14" ry="3" fill="rgba(0,0,0,.1)"/>
+    <!-- head near knee level -->
+    <ellipse cx="40" cy="66" rx="9" ry="10" fill="#f0c090"/>
+    <path d="M31,61 Q40,55 49,61 L49,67 Q40,62 31,67Z" fill="#5c3a1e"/>
+    <rect x="37" y="74" width="7" height="5" rx="2" fill="#f0c090"/>
+    <!-- torso very much bent, nearly vertical down -->
+    <path d="M35,78 Q40,75 56,70 L57,78 Q40,83 34,86Z" fill="#0ea5e9"/>
+    <!-- arms reaching all the way down to ankles -->
+    <path d="M35,82 Q34,90 33,98" stroke="#f0c090" stroke-width="7" stroke-linecap="round" fill="none"/>
+    <circle cx="33" cy="99" r="4" fill="#f0c090"/>
+    <path d="M44,83 Q44,91 44,99" stroke="#f0c090" stroke-width="7" stroke-linecap="round" fill="none"/>
+    <circle cx="44" cy="100" r="4" fill="#f0c090"/>
+    <!-- legs straight -->
+    <path d="M39,86 Q38,93 37,100" stroke="#1e3a5f" stroke-width="9" stroke-linecap="round" fill="none"/>
+    <ellipse cx="34" cy="101" rx="7" ry="4" fill="#111"/>
+    <path d="M52,80 Q52,89 52,100" stroke="#1e3a5f" stroke-width="9" stroke-linecap="round" fill="none"/>
+    <ellipse cx="55" cy="101" rx="7" ry="4" fill="#111"/>
+  </g>
+</svg>
