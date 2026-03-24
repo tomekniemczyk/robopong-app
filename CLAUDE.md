@@ -27,6 +27,20 @@ venv/bin/pytest tests/test_api.py::nazwa_testu
 ./deploy.sh
 ```
 
+### Testy backend (143 testów)
+- `test_api.py` — integracja: scenariusze, kalibracja, presety
+- `test_api_drills.py` — integracja: CRUD foldery, drille, override, reorder
+- `test_api_training.py` — integracja: CRUD treningi
+- `test_api_exercises.py` — integracja: exercises, duration override
+- `test_db.py` — unit: SQLite scenariusze
+- `test_presets.py` — unit: SQLite presety
+- `test_drills.py` — unit: file-based drills storage
+- `test_exercises.py` — unit: file-based exercises storage
+- `test_training_storage.py` — unit: file-based training storage
+- `test_transport.py` — unit: SimulationTransport, ABC, USBTransport
+- `test_models.py` — unit: Pydantic validation
+- `conftest.py` — shared fixtures (client, tmp files)
+
 ## Architektura
 
 - **Backend:** FastAPI + Bleak (BLE) + pyserial (USB FTDI), plik `backend/main.py` + `backend/robot.py`
@@ -42,8 +56,19 @@ venv/bin/pytest tests/test_api.py::nazwa_testu
 - `main.py` — FastAPI app, REST endpoints + WebSocket (`/ws`), broadcast logów do przeglądarki
 - `db.py` — SQLite (`robopong.db`): tabele `scenarios`, `drills`, `drill_folders`
 - `presets.py` + `presets.db` — osobna baza presetów konfiguracji robota
-- `drills.py`, `exercises.py`, `training.py` — CRUD dla odpowiednich encji
+- `drills.py`, `exercises.py`, `training.py` — CRUD dla odpowiednich encji (file-based JSON)
+- `models.py` — Pydantic models (Ball, ScenarioIn, DrillIn, TrainingStep, etc.)
 - `audio.py` — dźwięki (pliki w `backend/sounds/`)
+
+### i18n
+- 5 języków: PL, EN, DE, FR, ZH — klucze w `frontend/i18n.js`
+- Funkcja `t()` zarejestrowana jako `app.config.globalProperties.t` (NIE w setup return!)
+- **UWAGA:** Vue 3 prod compiler minifikuje zmienne v-for — NIE zwracaj `t` z setup(), bo zostanie przesłonięte
+
+### Deploy troubleshooting
+- CI musi przejść — `deploy.sh` odpytuje `gh run list`
+- Wymaga `python-multipart` w requirements.txt (FastAPI form data)
+- Static files: `Cache-Control: no-cache` middleware w main.py
 
 ## Protokół robota (ZBADANY — patrz `re/`)
 
