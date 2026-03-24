@@ -206,6 +206,7 @@ window.I18N = {
 
   // ── Camera ─────────────────────────────────────────────────────────
   'camera.unavailable': { pl:'Kamera niedostępna (motion :8081)',  en:'Camera unavailable (motion :8081)',  de:'Kamera nicht verfügbar (motion :8081)',  fr:'Caméra indisponible (motion :8081)',  zh:'摄像头不可用（motion :8081）' },
+  'camera.stream_info': { pl:'Stream motion — port 8081',  en:'Motion stream — port 8081',  de:'Motion-Stream — Port 8081',  fr:'Flux motion — port 8081',  zh:'Motion 视频流 — 端口 8081' },
 
   // ── Drills ─────────────────────────────────────────────────────────
   'drills.title':        { pl:'Drille',       en:'Drills',        de:'Drills',         fr:'Lancers',         zh:'训练方案' },
@@ -390,6 +391,9 @@ window.I18N = {
                        fr:'Importer {n} préréglage(s) de "{name}" ?\nTous les préréglages existants seront écrasés.',
                        zh:'从"{name}"导入{n}个预设？\n将覆盖所有现有预设。' },
   'import.imported': { pl:'Zaimportowano {n} preset(ów)',  en:'Imported {n} preset(s)',  de:'{n} Preset(s) importiert',  fr:'{n} préréglage(s) importé(s)',  zh:'已导入{n}个预设' },
+  'import.firmware_mismatch': { pl:'❌ Niezgodna wersja firmware (plik: {file}, urządzenie: {device})', en:'❌ Firmware version mismatch (file: {file}, device: {device})', de:'❌ Firmware-Version stimmt nicht überein (Datei: {file}, Gerät: {device})', fr:'❌ Version du firmware incompatible (fichier : {file}, appareil : {device})', zh:'❌ 固件版本不匹配（文件：{file}，设备：{device}）' },
+  'import.device_mismatch':   { pl:'❌ Niezgodny model urządzenia (plik: {device})', en:'❌ Device model mismatch (file: {device})', de:'❌ Gerätemodell stimmt nicht überein (Datei: {device})', fr:'❌ Modèle d\'appareil incompatible (fichier : {device})', zh:'❌ 设备型号不匹配（文件：{device}）' },
+  'import.mac_mismatch':      { pl:'❌ Konfiguracja z innego urządzenia (MAC: {mac})', en:'❌ Config from different device (MAC: {mac})', de:'❌ Konfiguration von anderem Gerät (MAC: {mac})', fr:'❌ Configuration d\'un autre appareil (MAC : {mac})', zh:'❌ 配置来自其他设备（MAC：{mac}）' },
   'toast.parse_error':{ pl:'❌ Błąd parsowania pliku',  en:'❌ File parse error',  de:'❌ Fehler beim Parsen der Datei',  fr:'❌ Erreur d\'analyse du fichier',  zh:'❌ 文件解析错误' },
   'toast.bad_format': { pl:'❌ Nieprawidłowy format pliku',  en:'❌ Invalid file format',  de:'❌ Ungültiges Dateiformat',  fr:'❌ Format de fichier invalide',  zh:'❌ 无效的文件格式' },
   'toast.not_calibrated':{ pl:'⚠ Urządzenie nie skalibrowane — skalibruj przed użyciem',
@@ -400,6 +404,10 @@ window.I18N = {
   'drills.resume_btn':{ pl:'▶ Wznów',  en:'▶ Resume',  de:'▶ Fortsetzen',  fr:'▶ Reprendre',  zh:'▶ 继续' },
 
 
+  'cal.export':      { pl:'Pobierz konfigurację', en:'Download config',    de:'Konfiguration herunterladen', fr:'Télécharger la configuration', zh:'下载配置' },
+  'cal.export_btn':  { pl:'Eksport',            en:'Export',             de:'Export',              fr:'Export',             zh:'导出' },
+  'cal.import':      { pl:'Importuj konfigurację', en:'Import config',  de:'Konfiguration importieren', fr:'Importer la configuration', zh:'导入配置' },
+  'cal.import_btn':  { pl:'Import',             en:'Import',             de:'Import',              fr:'Import',             zh:'导入' },
   'cal.export_title':{ pl:'Pobierz konfigurację kalibracji', en:'Download calibration config', de:'Kalibrierungskonfiguration herunterladen', fr:'Télécharger la configuration de calibrage', zh:'下载校准配置' },
 
 

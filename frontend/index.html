@@ -559,13 +559,13 @@
         <div class="row" style="margin-bottom:8px">
           <span style="font-size:12px;font-weight:600;color:var(--muted)">{{ t('presets.title') }}</span>
           <div class="spacer"></div>
-          <button class="btn btn-ghost" style="font-size:11px;padding:5px 10px;display:flex;align-items:center;gap:4px" @click="exportCalibration" title="Pobierz konfigurację">
+          <button class="btn btn-ghost" style="font-size:11px;padding:5px 10px;display:flex;align-items:center;gap:4px" @click="exportCalibration" :title="t('cal.export')">
             <svg width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M6.5 1v8M3 6l3.5 3.5L10 6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M1 11h11" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
-            Eksport
+            {{ t('cal.export_btn') }}
           </button>
-          <label class="btn btn-ghost" style="font-size:11px;padding:5px 10px;cursor:pointer;display:flex;align-items:center;gap:4px" title="Importuj konfigurację">
+          <label class="btn btn-ghost" style="font-size:11px;padding:5px 10px;cursor:pointer;display:flex;align-items:center;gap:4px" :title="t('cal.import')">
             <svg width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M6.5 9V1M3 4l3.5-3.5L10 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M1 11h11" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
-            Import<input ref="importCalRef" type="file" accept=".json" style="display:none" @change="importCalibration">
+            {{ t('cal.import_btn') }}<input ref="importCalRef" type="file" accept=".json" style="display:none" @change="importCalibration">
           </label>
           <button class="btn btn-primary" style="font-size:12px;padding:6px 12px" @click="savePreset">{{ t('presets.save_as') }}</button>
         </div>
@@ -575,8 +575,8 @@
               <span style="font-weight:600;font-size:13px">{{ p.name }}</span>
               <span v-if="p.is_default" style="margin-left:6px;font-size:10px;color:var(--accent);text-transform:uppercase">{{ t('presets.default') }}</span>
             </div>
-            <button class="btn btn-ghost btn-icon" style="font-size:10px;padding:4px 7px" @click="loadPreset(p)" title="Wczytaj">Wczytaj</button>
-            <button class="btn btn-ghost btn-icon" style="font-size:10px;padding:4px 7px;color:var(--accent)" @click="updatePreset(p)" title="Nadpisz aktualnymi">Nadpisz</button>
+            <button class="btn btn-ghost btn-icon" style="font-size:10px;padding:4px 7px" @click="loadPreset(p)" :title="t('presets.load')">{{ t('presets.load') }}</button>
+            <button class="btn btn-ghost btn-icon" style="font-size:10px;padding:4px 7px;color:var(--accent)" @click="updatePreset(p)" :title="t('presets.overwrite')">{{ t('presets.overwrite') }}</button>
             <button class="btn btn-ghost btn-icon" style="font-size:11px;padding:4px 8px" @click="setDefaultPreset(p.id)" :title="t('presets.set_default')" v-if="!p.is_default">★</button>
             <button class="btn btn-ghost btn-icon" style="font-size:11px;padding:4px 8px;color:var(--danger)" @click="deletePreset(p.id)" :title="t('presets.delete')">✕</button>
           </li>
@@ -624,13 +624,13 @@
   <div class="page" v-show="page === 'camera'">
     <div class="card">
       <div class="cam-wrap">
-        <img id="cam-img" :src="camSrc" alt="kamera" @error="camErr=true" v-if="!camErr">
+        <img id="cam-img" :src="camSrc" :alt="t('camera.unavailable')" @error="camErr=true" v-if="!camErr">
         <div class="cam-off" v-else>
           <div style="font-size:36px;margin-bottom:6px">📷</div>
           <p>{{ t('camera.unavailable') }}</p>
         </div>
       </div>
-      <p style="font-size:11px;color:var(--muted)">Stream motion — port 8081</p>
+      <p style="font-size:11px;color:var(--muted)">{{ t('camera.stream_info') }}</p>
     </div>
   </div>
 
@@ -991,7 +991,7 @@
             <div style="font-weight:600">{{ tr.name }}</div>
             <div style="font-size:11px;color:var(--muted)">{{ tr.steps?.length || 0 }} drilli · {{ totalTrainingTime(tr) }}</div>
           </div>
-          <button class="btn btn-ghost btn-icon" @click="openTrainingModal(tr)" title="Edytuj">✏</button>
+          <button class="btn btn-ghost btn-icon" @click="openTrainingModal(tr)" :title="t('btn.edit')">✏</button>
           <button class="btn btn-success btn-icon" @click="runTraining(tr.id)" :disabled="!connected || myRole!=='controller'" title="Start">▶</button>
           <button class="btn btn-ghost btn-icon" style="color:var(--danger)" @click="deleteTraining(tr.id)" :title="t('btn.delete')">✕</button>
         </li>
@@ -1184,7 +1184,7 @@
 
   <!-- ── Bottom nav ───────────────────────────────────────────────────────── -->
   <nav class="nav">
-    <button :class="{ active: page === 'drills' }" :style="connected && !isCalibrated ? 'opacity:0.4' : ''" @click="connected && !isCalibrated ? (showToast(t('toast.cal_required')), page='calibration') : page='drills'" ::title="connected && !isCalibrated ? t('toast.cal_required') : ''">
+    <button :class="{ active: page === 'drills' }" :style="connected && !isCalibrated ? 'opacity:0.4' : ''" @click="connected && !isCalibrated ? (showToast(t('toast.cal_required')), page='calibration') : page='drills'" :title="connected && !isCalibrated ? t('toast.cal_required') : ''">
       <span class="nav-icon">
         <svg width="22" height="18" viewBox="0 0 22 18" fill="none" xmlns="http://www.w3.org/2000/svg">
           <!-- stół — niebieski -->
@@ -1207,7 +1207,7 @@
         </svg>
       </span>{{ t('nav.drills') }}
     </button>
-    <button :class="{ active: page === 'training' }" :style="connected && !isCalibrated ? 'opacity:0.4' : ''" @click="connected && !isCalibrated ? (showToast(t('toast.cal_required')), page='calibration') : page='training'" ::title="connected && !isCalibrated ? t('toast.cal_required') : ''">
+    <button :class="{ active: page === 'training' }" :style="connected && !isCalibrated ? 'opacity:0.4' : ''" @click="connected && !isCalibrated ? (showToast(t('toast.cal_required')), page='calibration') : page='training'" :title="connected && !isCalibrated ? t('toast.cal_required') : ''">
       <span class="nav-icon">
         <svg width="22" height="20" viewBox="0 0 22 20" fill="none" xmlns="http://www.w3.org/2000/svg">
           <!-- stół pingpongowy -->
@@ -1905,18 +1905,18 @@ createApp({
       const r = await fetch('/api/trainings')
       trainings.value = await r.json()
     }
-    function openTrainingModal(t) {
-      if (t) {
-        tEditId.value = t.id; tEditName.value = t.name; tEditDesc.value = t.description || ''
-        tEditCountdown.value = t.countdown_sec || 20
-        tEditSteps.value = (t.steps || []).map(s => ({...s}))
+    function openTrainingModal(training) {
+      if (training) {
+        tEditId.value = training.id; tEditName.value = training.name; tEditDesc.value = training.description || ''
+        tEditCountdown.value = training.countdown_sec || 20
+        tEditSteps.value = (training.steps || []).map(s => ({...s}))
       } else {
         tEditId.value = null; tEditName.value = ''; tEditDesc.value = ''
         tEditCountdown.value = 20; tEditSteps.value = []
       }
       showTrainingModal.value = true
     }
-    function openTrainingEditor(t) { openTrainingModal(t) }
+    function openTrainingEditor(training) { openTrainingModal(training) }
     function addTrainingStep() {
       tEditSteps.value.push({ drill_id: null, drill_name: '', count: 60, percent: 100, pause_after_sec: 30, exercise_id: null, exercise_name: '', duration_sec: 60 })
     }
@@ -1951,12 +1951,12 @@ createApp({
       })
     }
     function runTraining(id) {
-      const t = trainings.value.find(t => t.id === id)
+      const tr = trainings.value.find(x => x.id === id)
       trainingRunning.value = true
       trainingIsPaused.value = false
       trainingPhase.value = 'countdown'
-      trainingScenarioName.value = t?.name || ''
-      trainingStepsList.value = (t?.steps || []).map(s => ({...s}))
+      trainingScenarioName.value = tr?.name || ''
+      trainingStepsList.value = (tr?.steps || []).map(s => ({...s}))
       trainingStep.value = 0
       send({ action: 'run_training', id })
     }
@@ -1992,9 +1992,9 @@ createApp({
     function skipTraining() {
       send({ action: 'skip_training' })
     }
-    function totalTrainingTime(t) {
-      if (!t.steps?.length) return '0s'
-      const totalSec = (t.countdown_sec || 20) + t.steps.reduce((sum, s) => {
+    function totalTrainingTime(training) {
+      if (!training.steps?.length) return '0s'
+      const totalSec = (training.countdown_sec || 20) + training.steps.reduce((sum, s) => {
         const drillTime = (s.count || 60) * (s.wait_ms || 1500) / 1000
         return sum + drillTime + (s.pause_after_sec || 0)
       }, 0)
@@ -2105,16 +2105,16 @@ createApp({
         try { data = JSON.parse(e.target.result) } catch { showToast(t('toast.parse_error')); return }
         if (!data.presets || !Array.isArray(data.presets)) { showToast(t('toast.bad_format')); return }
         if (data.firmware !== firmware.value) {
-          showToast(`❌ Niezgodna wersja firmware (plik: ${data.firmware}, urządzenie: ${firmware.value})`); return
+          showToast(t('import.firmware_mismatch', {file: data.firmware, device: firmware.value})); return
         }
         if (data.device !== device.value) {
-          showToast(`❌ Niezgodny model urządzenia (plik: ${data.device})`); return
+          showToast(t('import.device_mismatch', {device: data.device})); return
         }
         if (data.mac !== lastAddr.value) {
-          showToast(`❌ Konfiguracja pochodzi z innego urządzenia (MAC: ${data.mac}) — import odrzucony`); return
+          showToast(t('import.mac_mismatch', {mac: data.mac})); return
         }
         showConfirm(
-          `Zaimportować ${data.presets.length} preset(ów) z "${data.robotName || data.device}"?\nNadpisze wszystkie istniejące presety.`,
+          t('import.confirm', {n: data.presets.length, name: data.robotName || data.device}),
           async () => {
             for (const p of presets.value) await fetch(`/api/presets/${p.id}`, { method: 'DELETE' })
             for (const p of data.presets) {

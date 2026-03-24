@@ -304,7 +304,6 @@ async def _handle(msg: dict, ws: WebSocket):
             _save_last_addr(addr)
             _last_activity = time.monotonic()
             cal = _load_cal(addr)
-            cal = _load_cal(addr)
             _log("Calibration loaded for %s: %s", addr, cal)
             broadcast("calibration_loaded", {"cal": cal})
         else:
