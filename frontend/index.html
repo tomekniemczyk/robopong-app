@@ -430,7 +430,7 @@
         <h3 style="margin-bottom:8px">{{ t('cal.head_pos') }} <small style="color:var(--muted);font-weight:400">{{ t('cal.motors_off') }}</small></h3>
         <div style="font-size:11px;color:var(--accent);background:rgba(91,124,247,.1);border-radius:6px;padding:6px 10px;margin-bottom:10px;display:flex;align-items:center;gap:6px">
           <span style="font-size:14px;flex-shrink:0">ℹ️</span>
-          <span>{{ t('cal.head_info') }}</span>
+          <span v-html="t('cal.head_info')"></span>
         </div>
         <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px">
           <!-- Wysokość -->
