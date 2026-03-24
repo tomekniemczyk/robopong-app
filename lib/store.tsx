@@ -106,9 +106,9 @@ const initialState: AppState = {
   language: "en",
   calibration: defaultCalibration,
   presets: [
-    { id: 1, name: "Default", is_default: true, ...defaultCalibration },
-    { id: 2, name: "Topspin Fast", is_default: false, oscillation: 160, height: 180, rotation: 150, topSpeed: 200, bottomSpeed: -50, waitMs: 1500 },
-    { id: 3, name: "Backspin Slow", is_default: false, oscillation: 140, height: 120, rotation: 150, topSpeed: -30, bottomSpeed: 100, waitMs: 2500 },
+    { id: 1, name: "Default", is_default: true, oscillation: defaultCalibration.oscillation, height: defaultCalibration.height, rotation: defaultCalibration.rotation, top_speed: defaultCalibration.topSpeed, bot_speed: defaultCalibration.bottomSpeed, wait_ms: defaultCalibration.waitMs },
+    { id: 2, name: "Topspin Fast", is_default: false, oscillation: 160, height: 180, rotation: 150, top_speed: 200, bot_speed: -50, wait_ms: 1500 },
+    { id: 3, name: "Backspin Slow", is_default: false, oscillation: 140, height: 120, rotation: 150, top_speed: -30, bot_speed: 100, wait_ms: 2500 },
   ],
   selectedPreset: 1,
   hasUnsavedChanges: false,
