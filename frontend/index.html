@@ -1261,22 +1261,23 @@
 <script>
 const { createApp, ref, reactive, computed, watch, onMounted, nextTick } = Vue
 
-createApp({
+// ── i18n (outside setup — registered as globalProperty to avoid Vue prod compiler variable shadowing) ──
+const lang = ref(localStorage.getItem('lang') || 'pl')
+function t(key, params) {
+  const entry = window.I18N[key]
+  if (!entry) return key
+  let s = entry[lang.value] || entry.en || key
+  if (params) Object.entries(params).forEach(([k, v]) => { s = s.replaceAll('{' + k + '}', v) })
+  return s
+}
+function setLang(l) {
+  lang.value = l
+  localStorage.setItem('lang', l)
+  document.documentElement.lang = l === 'zh' ? 'zh-CN' : l
+}
+
+const _app = createApp({
   setup() {
-    // ── i18n ──
-    const lang = ref(localStorage.getItem('lang') || 'pl')
-    function t(key, params) {
-      const entry = window.I18N[key]
-      if (!entry) return key
-      let s = entry[lang.value] || entry.en || key
-      if (params) Object.entries(params).forEach(([k, v]) => { s = s.replaceAll('{' + k + '}', v) })
-      return s
-    }
-    function setLang(l) {
-      lang.value = l
-      localStorage.setItem('lang', l)
-      document.documentElement.lang = l === 'zh' ? 'zh-CN' : l
-    }
 
     const page      = ref('scenarios')
     const connected = ref(false)
@@ -2302,7 +2303,7 @@ createApp({
     })
 
     return {
-      lang, t, setLang,
+      lang, setLang,
       page, connected, firmware, device, scanning, devices, scenarios,
       drillTree, openFolders, moveModalDrill,
       loadDrillTree, toggleFolder, addFolder, renameFolder, deleteFolderConfirm,
@@ -2343,7 +2344,9 @@ createApp({
       exerciseCategories, openExCats, selectedExercise, toggleExCat, loadExercises, onStepTypeSelect, getExFrameSrc,
     }
   }
-}).mount('#app')
+})
+_app.config.globalProperties.t = t
+_app.mount('#app')
 </script>
 </body>
 </html>
