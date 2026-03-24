@@ -1801,12 +1801,6 @@ const _app = createApp({
       drillRunning.value = false
       drillPaused.value = false
     }
-    function endDrill() {
-      send({ action: 'stop_drill' })
-      send({ action: 'stop' })
-      drillRunning.value = false
-      drillPaused.value = false
-    }
     async function deleteScenario(id) {
       if (!confirm(t('confirm.delete_scenario'))) return
       await fetch(`/api/scenarios/${id}`, { method: 'DELETE' })
@@ -1925,13 +1919,6 @@ const _app = createApp({
       const j = i + dir
       if (j < 0 || j >= arr.length) return
       ;[arr[i], arr[j]] = [arr[j], arr[i]]
-    }
-    function onDrillSelect(step) {
-      for (const f of (drillTree.folders || [])) {
-        for (const d of f.drills) {
-          if (d.id === step.drill_id) { step.drill_name = d.name; return }
-        }
-      }
     }
     async function saveTraining() {
       const body = { name: tEditName.value, description: tEditDesc.value, countdown_sec: tEditCountdown.value, steps: tEditSteps.value }
@@ -2317,7 +2304,7 @@ const _app = createApp({
       myRole, mySessionId, sessionsList, showSessions, showDeviceInfo, copyDiagReport, diagModalText, diagModalOpen, diagModalCopy, sessionAge, parseUA,
       takeoverReq, takeoverCountdown, takeoverCooldown,
       scan, connect, disconnect, saveName, usbScan, usbConnect, reconnectLast,
-      runScenario, pauseDrill, resumeDrill, stopDrill, endDrill, drillPaused,
+      runScenario, pauseDrill, resumeDrill, stopDrill, drillPaused,
       deleteScenario, openEditor, addBall, removeBall, saveScenario,
       clamp, clampCal,
       calStep, calSend, calThrow, calStop, calSetup, calReset, loadCal,
@@ -2332,7 +2319,7 @@ const _app = createApp({
       tEditId, tEditName, tEditDesc, tEditCountdown, tEditSteps,
       loadTrainings, addTrainingStep, moveStep,
       pauseTraining, resumeTraining, skipTraining, runExerciseSolo,
-      onDrillSelect, saveTraining, deleteTraining, runTraining, stopTraining, totalTrainingTime,
+      saveTraining, deleteTraining, runTraining, stopTraining, totalTrainingTime,
       exerciseCategories, openExCats, selectedExercise, toggleExCat, loadExercises, onStepTypeSelect, getExFrameSrc,
     }
   }

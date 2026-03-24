@@ -650,6 +650,11 @@ def reset_drill_endpoint(drill_id: int):
     return {"ok": True}
 
 
+@app.get("/api/drills/export")
+def export_drills():
+    return drills.get_tree()
+
+
 @app.post("/api/drills/reset-all")
 def reset_all_drills():
     drills.reset_all()
