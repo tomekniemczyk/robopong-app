@@ -711,6 +711,14 @@ def delete_training_endpoint(tid: int):
 
 # ── Frontend ───────────────────────────────────────────────────────────────────
 
+@app.middleware("http")
+async def no_cache_dynamic_assets(request, call_next):
+    response = await call_next(request)
+    path = request.url.path
+    if path.endswith((".js", ".css")) and "/static/" in path:
+        response.headers["Cache-Control"] = "no-cache, must-revalidate"
+    return response
+
 _exercises_dir = FRONTEND / "static" / "exercises"
 if _exercises_dir.exists():
     app.mount("/static/exercises", StaticFiles(directory=str(_exercises_dir)), name="exercises")
