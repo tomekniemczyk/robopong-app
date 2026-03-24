@@ -1917,7 +1917,6 @@ const _app = createApp({
       }
       showTrainingModal.value = true
     }
-    function openTrainingEditor(training) { openTrainingModal(training) }
     function addTrainingStep() {
       tEditSteps.value.push({ drill_id: null, drill_name: '', count: 60, percent: 100, pause_after_sec: 30, exercise_id: null, exercise_name: '', duration_sec: 60 })
     }
@@ -2290,12 +2289,6 @@ const _app = createApp({
       clearTimeout(toastTimer)
       toastTimer = setTimeout(() => { toast.value = '' }, 2500)
     }
-    function ballWord(n) {
-      if (n === 1) return 'piłka'
-      if (n >= 2 && n <= 4) return 'piłki'
-      return 'piłek'
-    }
-
     onMounted(() => {
       wsConnect(); loadScenarios(); loadCal(); loadDrillTree(); loadTrainings(); loadExercises()
       document.documentElement.lang = lang.value === 'zh' ? 'zh-CN' : lang.value
@@ -2332,13 +2325,12 @@ const _app = createApp({
       calDone, importCalRef, exportCalibration, importCalibration, showToast,
       roleLabel, rolePillClass,
       requestTakeover, cancelTakeover, respondTakeover, releaseControl,
-      ballWord,
       trainings, trainingRunning, trainingScenarioName, trainingPhase,
       trainingStep, trainingTotalSteps, trainingDrillName, trainingNextDrill,
       trainingTimer, trainingBall, trainingBallTotal,
       trainingBalls, trainingStepsList, trainingEstRemaining, trainingIsPaused, trainingExerciseId,
       tEditId, tEditName, tEditDesc, tEditCountdown, tEditSteps,
-      loadTrainings, openTrainingEditor, addTrainingStep, moveStep,
+      loadTrainings, addTrainingStep, moveStep,
       pauseTraining, resumeTraining, skipTraining, runExerciseSolo,
       onDrillSelect, saveTraining, deleteTraining, runTraining, stopTraining, totalTrainingTime,
       exerciseCategories, openExCats, selectedExercise, toggleExCat, loadExercises, onStepTypeSelect, getExFrameSrc,
