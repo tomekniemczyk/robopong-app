@@ -211,6 +211,20 @@ body {
   margin-right: 4px;
 }
 
+.time-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  background: rgba(91,124,247,.08);
+  color: var(--muted);
+  font-size: 10px;
+  font-weight: 500;
+  padding: 2px 7px;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  white-space: nowrap;
+}
+
 /* ── buttons ────────────────────────────────────────────────────────────────── */
 
 .btn {

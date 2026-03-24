@@ -769,7 +769,8 @@
           :style="{color: si+1 === trainingStep ? '#fff' : 'var(--muted)'}">
           {{ step.drill_name || step.exercise_name || t('tr.step_prefix') + ' ' + (si+1) }}
         </span>
-        <span style="font-size:9px;color:var(--muted)">{{ step.exercise_id ? (step.duration_sec+'s') : (step.count+'p') }}</span>
+        <span class="time-badge" v-if="step.exercise_id">🕐 {{ fmtDur(step.duration_sec) }}</span>
+        <span style="font-size:9px;color:var(--muted)" v-else>{{ step.count }}p</span>
       </div>
       <div v-if="trainingEstRemaining" style="font-size:10px;color:var(--muted);margin-top:6px;text-align:center">
         ~{{ Math.ceil(trainingEstRemaining/60) }} {{ t('tr.min_left') }}
@@ -1028,7 +1029,7 @@
       <div v-if="openExCats.has(cat.id)" class="drill-list">
         <div v-for="ex in cat.exercises" :key="ex.id" class="drill-row" @click="selectedExercise = selectedExercise?.id === ex.id ? null : ex" style="cursor:pointer">
           <span class="drill-name">{{ ex.name }}</span>
-          <span style="font-size:10px;color:var(--muted)">{{ ex.duration_sec }}s</span>
+          <span class="time-badge">🕐 {{ fmtDur(ex.duration_sec) }}</span>
         </div>
         <!-- Wybrany exercise detail -->
         <div v-if="selectedExercise && cat.exercises.some(e => e.id === selectedExercise.id)"
@@ -1962,6 +1963,11 @@ const _app = createApp({
       return `/static/exercises/frames/${EX_FRAME_MAP[ex.id] || 'warmup'}.svg`
     }
 
+    function fmtDur(sec) {
+      if (sec < 60) return sec + 's'
+      const m = Math.floor(sec / 60), s = sec % 60
+      return s > 0 ? m + 'm ' + s + 's' : m + 'm'
+    }
     function runExerciseSolo(ex) {
       send({ action: 'run_exercise_solo', exercise_id: ex.id, duration_sec: ex.duration_sec })
     }
@@ -2318,7 +2324,7 @@ const _app = createApp({
       trainingBalls, trainingStepsList, trainingEstRemaining, trainingIsPaused, trainingExerciseId,
       tEditId, tEditName, tEditDesc, tEditCountdown, tEditSteps,
       loadTrainings, addTrainingStep, moveStep,
-      pauseTraining, resumeTraining, skipTraining, runExerciseSolo,
+      pauseTraining, resumeTraining, skipTraining, runExerciseSolo, fmtDur,
       saveTraining, deleteTraining, runTraining, stopTraining, totalTrainingTime,
       exerciseCategories, openExCats, selectedExercise, toggleExCat, loadExercises, onStepTypeSelect, getExFrameSrc,
     }
