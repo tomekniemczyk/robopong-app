@@ -1,0 +1,888 @@
+{
+  "folders": [
+    {
+      "name": "30-Day Challenge",
+      "description": "30-dniowy program treningowy oparty na chińskiej metodyce",
+      "icon": "🏆",
+      "trainings": [
+        {
+          "name": "Dzień 01: Fundament BH Blocku",
+          "description": "Wprowadzenie do BH blocku w wolnym tempie, podstawy footworku FH-BH.",
+          "countdown_sec": 20,
+          "steps": [
+            {"exercise_id": 101, "exercise_name": "Jogging", "duration_sec": 60, "pause_after_sec": 10},
+            {"exercise_id": 102, "exercise_name": "Arm Circles", "duration_sec": 30, "pause_after_sec": 10},
+            {"exercise_id": 104, "exercise_name": "Trunk Rotations", "duration_sec": 45, "pause_after_sec": 15},
+
+            {"drill_id": 1001, "drill_name": "FH Warmup", "count": 40, "percent": 90, "pause_after_sec": 30},
+            {"drill_id": 1002, "drill_name": "BH Warmup", "count": 40, "percent": 90, "pause_after_sec": 45},
+
+            {"drill_id": 6021, "drill_name": "FH Topspin vs No-Spin", "count": 45, "percent": 85, "pause_after_sec": 45},
+            {"drill_id": 6022, "drill_name": "BH Topspin vs No-Spin", "count": 45, "percent": 85, "pause_after_sec": 50},
+
+            {"drill_id": 2003, "drill_name": "FH BH Footwork", "count": 50, "percent": 85, "pause_after_sec": 50},
+
+            {"drill_id": 6001, "drill_name": "BH Block Slow", "count": 50, "percent": 90, "pause_after_sec": 50},
+            {"drill_id": 6004, "drill_name": "FH-BH Block", "count": 50, "percent": 85, "pause_after_sec": 50},
+            {"drill_id": 6001, "drill_name": "BH Block Slow", "count": 60, "percent": 90, "pause_after_sec": 45},
+
+            {"drill_id": 4017, "drill_name": "Block Training", "count": 50, "percent": 85, "pause_after_sec": 45},
+
+            {"exercise_id": 601, "exercise_name": "Quad Stretch Walk", "duration_sec": 60, "pause_after_sec": 10},
+            {"exercise_id": 603, "exercise_name": "Shoulder Stretch", "duration_sec": 30, "pause_after_sec": 10},
+            {"exercise_id": 605, "exercise_name": "Deep Breathing", "duration_sec": 60, "pause_after_sec": 0}
+          ]
+        },
+        {
+          "name": "Dzień 02: Timing na Backspin",
+          "description": "Topspin vs backspin — budowanie wyczucia na podkręconą piłkę, push drill.",
+          "countdown_sec": 20,
+          "steps": [
+            {"exercise_id": 101, "exercise_name": "Jogging", "duration_sec": 60, "pause_after_sec": 10},
+            {"exercise_id": 103, "exercise_name": "Wrist Rotations", "duration_sec": 30, "pause_after_sec": 10},
+            {"exercise_id": 104, "exercise_name": "Trunk Rotations", "duration_sec": 45, "pause_after_sec": 15},
+
+            {"drill_id": 1001, "drill_name": "FH Warmup", "count": 40, "percent": 90, "pause_after_sec": 30},
+            {"drill_id": 1002, "drill_name": "BH Warmup", "count": 40, "percent": 90, "pause_after_sec": 45},
+
+            {"drill_id": 6023, "drill_name": "FH Topspin vs Backspin", "count": 45, "percent": 85, "pause_after_sec": 50},
+            {"drill_id": 6024, "drill_name": "BH Topspin vs Backspin", "count": 45, "percent": 85, "pause_after_sec": 50},
+
+            {"drill_id": 1003, "drill_name": "FH 2-Step Footwork", "count": 50, "percent": 85, "pause_after_sec": 50},
+
+            {"drill_id": 6023, "drill_name": "FH Topspin vs Backspin", "count": 50, "percent": 90, "pause_after_sec": 50},
+            {"drill_id": 6024, "drill_name": "BH Topspin vs Backspin", "count": 50, "percent": 90, "pause_after_sec": 45},
+            {"drill_id": 1005, "drill_name": "FH Push", "count": 40, "percent": 85, "pause_after_sec": 45},
+            {"drill_id": 1006, "drill_name": "BH Push", "count": 40, "percent": 85, "pause_after_sec": 45},
+
+            {"drill_id": 6013, "drill_name": "Backspin Open Attack", "count": 45, "percent": 85, "pause_after_sec": 45},
+
+            {"exercise_id": 601, "exercise_name": "Quad Stretch Walk", "duration_sec": 60, "pause_after_sec": 10},
+            {"exercise_id": 604, "exercise_name": "Wrist Flexor Stretch", "duration_sec": 30, "pause_after_sec": 10},
+            {"exercise_id": 605, "exercise_name": "Deep Breathing", "duration_sec": 60, "pause_after_sec": 0}
+          ]
+        },
+        {
+          "name": "Dzień 03: Podstawowy Footwork",
+          "description": "Wzorce ruchu nóg — side shuffle, FH-BH footwork, pivot drill.",
+          "countdown_sec": 20,
+          "steps": [
+            {"exercise_id": 101, "exercise_name": "Jogging", "duration_sec": 60, "pause_after_sec": 10},
+            {"exercise_id": 201, "exercise_name": "Side Shuffle", "duration_sec": 60, "pause_after_sec": 10},
+            {"exercise_id": 104, "exercise_name": "Trunk Rotations", "duration_sec": 45, "pause_after_sec": 15},
+
+            {"drill_id": 1001, "drill_name": "FH Warmup", "count": 40, "percent": 90, "pause_after_sec": 30},
+            {"drill_id": 1002, "drill_name": "BH Warmup", "count": 40, "percent": 90, "pause_after_sec": 45},
+
+            {"drill_id": 6021, "drill_name": "FH Topspin vs No-Spin", "count": 50, "percent": 90, "pause_after_sec": 45},
+            {"drill_id": 6027, "drill_name": "FH-BH Topspin Alternating", "count": 45, "percent": 85, "pause_after_sec": 50},
+
+            {"drill_id": 3009, "drill_name": "Wide Falkenberg", "count": 50, "percent": 85, "pause_after_sec": 55},
+
+            {"drill_id": 2003, "drill_name": "FH BH Footwork", "count": 55, "percent": 85, "pause_after_sec": 50},
+            {"exercise_id": 207, "exercise_name": "Pivot Drill", "duration_sec": 60, "pause_after_sec": 30},
+            {"drill_id": 1003, "drill_name": "FH 2-Step Footwork", "count": 55, "percent": 90, "pause_after_sec": 50},
+            {"drill_id": 1004, "drill_name": "BH 2-Step Footwork", "count": 55, "percent": 90, "pause_after_sec": 45},
+
+            {"drill_id": 3003, "drill_name": "Two BH Two FH", "count": 50, "percent": 85, "pause_after_sec": 45},
+
+            {"exercise_id": 601, "exercise_name": "Quad Stretch Walk", "duration_sec": 60, "pause_after_sec": 10},
+            {"exercise_id": 603, "exercise_name": "Shoulder Stretch", "duration_sec": 30, "pause_after_sec": 10},
+            {"exercise_id": 605, "exercise_name": "Deep Breathing", "duration_sec": 60, "pause_after_sec": 0}
+          ]
+        },
+        {
+          "name": "Dzień 04: Short Serve Receive",
+          "description": "Odbiór krótkich serwów — backspin, no-spin, push i flip.",
+          "countdown_sec": 20,
+          "steps": [
+            {"exercise_id": 101, "exercise_name": "Jogging", "duration_sec": 60, "pause_after_sec": 10},
+            {"exercise_id": 102, "exercise_name": "Arm Circles", "duration_sec": 30, "pause_after_sec": 10},
+            {"exercise_id": 103, "exercise_name": "Wrist Rotations", "duration_sec": 30, "pause_after_sec": 15},
+
+            {"drill_id": 1001, "drill_name": "FH Warmup", "count": 40, "percent": 90, "pause_after_sec": 30},
+            {"drill_id": 1002, "drill_name": "BH Warmup", "count": 40, "percent": 90, "pause_after_sec": 45},
+
+            {"drill_id": 6022, "drill_name": "BH Topspin vs No-Spin", "count": 45, "percent": 90, "pause_after_sec": 45},
+            {"drill_id": 6023, "drill_name": "FH Topspin vs Backspin", "count": 45, "percent": 90, "pause_after_sec": 50},
+
+            {"drill_id": 1004, "drill_name": "BH 2-Step Footwork", "count": 50, "percent": 85, "pause_after_sec": 50},
+
+            {"drill_id": 6005, "drill_name": "Short Backspin FH Flick", "count": 40, "percent": 85, "pause_after_sec": 50},
+            {"drill_id": 6006, "drill_name": "Short Backspin BH Flick", "count": 40, "percent": 85, "pause_after_sec": 45},
+            {"drill_id": 6007, "drill_name": "Short No-Spin FH", "count": 40, "percent": 85, "pause_after_sec": 45},
+            {"drill_id": 6008, "drill_name": "Short No-Spin BH", "count": 40, "percent": 85, "pause_after_sec": 45},
+            {"drill_id": 1005, "drill_name": "FH Push", "count": 40, "percent": 90, "pause_after_sec": 45},
+            {"drill_id": 1006, "drill_name": "BH Push", "count": 40, "percent": 90, "pause_after_sec": 45},
+
+            {"drill_id": 4029, "drill_name": "Short Ball Training", "count": 40, "percent": 85, "pause_after_sec": 45},
+
+            {"exercise_id": 601, "exercise_name": "Quad Stretch Walk", "duration_sec": 60, "pause_after_sec": 10},
+            {"exercise_id": 604, "exercise_name": "Wrist Flexor Stretch", "duration_sec": 30, "pause_after_sec": 10},
+            {"exercise_id": 605, "exercise_name": "Deep Breathing", "duration_sec": 60, "pause_after_sec": 0}
+          ]
+        },
+        {
+          "name": "Dzień 05: Progresja BH Blocku",
+          "description": "BH block w średnim tempie, FH-BH block alternujący.",
+          "countdown_sec": 20,
+          "steps": [
+            {"exercise_id": 101, "exercise_name": "Jogging", "duration_sec": 60, "pause_after_sec": 10},
+            {"exercise_id": 104, "exercise_name": "Trunk Rotations", "duration_sec": 45, "pause_after_sec": 10},
+            {"exercise_id": 108, "exercise_name": "Shadow Play", "duration_sec": 90, "pause_after_sec": 15},
+
+            {"drill_id": 1001, "drill_name": "FH Warmup", "count": 40, "percent": 90, "pause_after_sec": 30},
+            {"drill_id": 1002, "drill_name": "BH Warmup", "count": 40, "percent": 90, "pause_after_sec": 45},
+
+            {"drill_id": 6025, "drill_name": "FH Counter-Topspin", "count": 45, "percent": 85, "pause_after_sec": 50},
+            {"drill_id": 6026, "drill_name": "BH Counter-Topspin", "count": 45, "percent": 85, "pause_after_sec": 50},
+
+            {"drill_id": 2003, "drill_name": "FH BH Footwork", "count": 50, "percent": 90, "pause_after_sec": 50},
+
+            {"drill_id": 6002, "drill_name": "BH Block Medium", "count": 55, "percent": 90, "pause_after_sec": 50},
+            {"drill_id": 6004, "drill_name": "FH-BH Block", "count": 55, "percent": 90, "pause_after_sec": 50},
+            {"drill_id": 6002, "drill_name": "BH Block Medium", "count": 60, "percent": 95, "pause_after_sec": 45},
+
+            {"drill_id": 4017, "drill_name": "Block Training", "count": 50, "percent": 90, "pause_after_sec": 45},
+
+            {"exercise_id": 601, "exercise_name": "Quad Stretch Walk", "duration_sec": 60, "pause_after_sec": 10},
+            {"exercise_id": 603, "exercise_name": "Shoulder Stretch", "duration_sec": 30, "pause_after_sec": 10},
+            {"exercise_id": 605, "exercise_name": "Deep Breathing", "duration_sec": 60, "pause_after_sec": 0}
+          ]
+        },
+        {
+          "name": "Dzień 06: Mixed Backspin + Serve Receive",
+          "description": "Łączenie timingu na backspin z odbiorem krótkich serwów mieszanych.",
+          "countdown_sec": 20,
+          "steps": [
+            {"exercise_id": 101, "exercise_name": "Jogging", "duration_sec": 60, "pause_after_sec": 10},
+            {"exercise_id": 102, "exercise_name": "Arm Circles", "duration_sec": 30, "pause_after_sec": 10},
+            {"exercise_id": 104, "exercise_name": "Trunk Rotations", "duration_sec": 45, "pause_after_sec": 15},
+
+            {"drill_id": 1001, "drill_name": "FH Warmup", "count": 40, "percent": 90, "pause_after_sec": 30},
+            {"drill_id": 1002, "drill_name": "BH Warmup", "count": 40, "percent": 90, "pause_after_sec": 45},
+
+            {"drill_id": 6024, "drill_name": "BH Topspin vs Backspin", "count": 50, "percent": 90, "pause_after_sec": 45},
+            {"drill_id": 6021, "drill_name": "FH Topspin vs No-Spin", "count": 50, "percent": 90, "pause_after_sec": 50},
+
+            {"drill_id": 3003, "drill_name": "Two BH Two FH", "count": 50, "percent": 90, "pause_after_sec": 50},
+
+            {"drill_id": 6013, "drill_name": "Backspin Open Attack", "count": 45, "percent": 90, "pause_after_sec": 50},
+            {"drill_id": 6011, "drill_name": "Mixed Short Serves", "count": 45, "percent": 85, "pause_after_sec": 45},
+            {"drill_id": 6005, "drill_name": "Short Backspin FH Flick", "count": 40, "percent": 90, "pause_after_sec": 45},
+            {"drill_id": 6006, "drill_name": "Short Backspin BH Flick", "count": 40, "percent": 90, "pause_after_sec": 45},
+
+            {"drill_id": 4028, "drill_name": "Short and Long", "count": 45, "percent": 85, "pause_after_sec": 45},
+
+            {"exercise_id": 601, "exercise_name": "Quad Stretch Walk", "duration_sec": 60, "pause_after_sec": 10},
+            {"exercise_id": 604, "exercise_name": "Wrist Flexor Stretch", "duration_sec": 30, "pause_after_sec": 10},
+            {"exercise_id": 605, "exercise_name": "Deep Breathing", "duration_sec": 60, "pause_after_sec": 0}
+          ]
+        },
+        {
+          "name": "Dzień 07: Podsumowanie Tygodnia 1",
+          "description": "Test: BH block + footwork + serve receive — sprawdzian postępów z Fazy 1.",
+          "countdown_sec": 20,
+          "steps": [
+            {"exercise_id": 101, "exercise_name": "Jogging", "duration_sec": 60, "pause_after_sec": 10},
+            {"exercise_id": 103, "exercise_name": "Wrist Rotations", "duration_sec": 30, "pause_after_sec": 10},
+            {"exercise_id": 108, "exercise_name": "Shadow Play", "duration_sec": 90, "pause_after_sec": 15},
+
+            {"drill_id": 1001, "drill_name": "FH Warmup", "count": 40, "percent": 90, "pause_after_sec": 30},
+            {"drill_id": 1002, "drill_name": "BH Warmup", "count": 40, "percent": 90, "pause_after_sec": 45},
+
+            {"drill_id": 6027, "drill_name": "FH-BH Topspin Alternating", "count": 50, "percent": 90, "pause_after_sec": 45},
+            {"drill_id": 6023, "drill_name": "FH Topspin vs Backspin", "count": 50, "percent": 90, "pause_after_sec": 50},
+
+            {"drill_id": 3009, "drill_name": "Wide Falkenberg", "count": 55, "percent": 90, "pause_after_sec": 55},
+
+            {"drill_id": 6002, "drill_name": "BH Block Medium", "count": 55, "percent": 95, "pause_after_sec": 45},
+            {"drill_id": 6004, "drill_name": "FH-BH Block", "count": 50, "percent": 90, "pause_after_sec": 45},
+            {"drill_id": 6011, "drill_name": "Mixed Short Serves", "count": 45, "percent": 90, "pause_after_sec": 45},
+            {"drill_id": 6007, "drill_name": "Short No-Spin FH", "count": 40, "percent": 90, "pause_after_sec": 45},
+
+            {"drill_id": 3013, "drill_name": "Short FH Deep BH", "count": 50, "percent": 90, "pause_after_sec": 45},
+
+            {"exercise_id": 601, "exercise_name": "Quad Stretch Walk", "duration_sec": 60, "pause_after_sec": 10},
+            {"exercise_id": 603, "exercise_name": "Shoulder Stretch", "duration_sec": 30, "pause_after_sec": 10},
+            {"exercise_id": 605, "exercise_name": "Deep Breathing", "duration_sec": 60, "pause_after_sec": 0}
+          ]
+        },
+        {
+          "name": "Dzień 08: Banana Flick — Wprowadzenie",
+          "description": "Technika banana flick z BH na krótkie backspin serwisy.",
+          "countdown_sec": 20,
+          "steps": [
+            {"exercise_id": 101, "exercise_name": "Jogging", "duration_sec": 60, "pause_after_sec": 10},
+            {"exercise_id": 103, "exercise_name": "Wrist Rotations", "duration_sec": 30, "pause_after_sec": 10},
+            {"exercise_id": 104, "exercise_name": "Trunk Rotations", "duration_sec": 45, "pause_after_sec": 15},
+
+            {"drill_id": 1001, "drill_name": "FH Warmup", "count": 45, "percent": 95, "pause_after_sec": 30},
+            {"drill_id": 1002, "drill_name": "BH Warmup", "count": 45, "percent": 95, "pause_after_sec": 40},
+
+            {"drill_id": 6022, "drill_name": "BH Topspin vs No-Spin", "count": 50, "percent": 90, "pause_after_sec": 45},
+            {"drill_id": 6024, "drill_name": "BH Topspin vs Backspin", "count": 50, "percent": 90, "pause_after_sec": 50},
+
+            {"drill_id": 1003, "drill_name": "FH 2-Step Footwork", "count": 55, "percent": 90, "pause_after_sec": 50},
+
+            {"drill_id": 6006, "drill_name": "Short Backspin BH Flick", "count": 50, "percent": 90, "pause_after_sec": 50},
+            {"drill_id": 6006, "drill_name": "Short Backspin BH Flick", "count": 55, "percent": 95, "pause_after_sec": 45},
+            {"drill_id": 6008, "drill_name": "Short No-Spin BH", "count": 45, "percent": 90, "pause_after_sec": 45},
+            {"drill_id": 6009, "drill_name": "Short Sidespin L BH", "count": 40, "percent": 90, "pause_after_sec": 40},
+
+            {"drill_id": 6031, "drill_name": "3rd Ball FH", "count": 45, "percent": 90, "pause_after_sec": 40},
+
+            {"exercise_id": 601, "exercise_name": "Quad Stretch Walk", "duration_sec": 60, "pause_after_sec": 10},
+            {"exercise_id": 604, "exercise_name": "Wrist Flexor Stretch", "duration_sec": 30, "pause_after_sec": 10},
+            {"exercise_id": 605, "exercise_name": "Deep Breathing", "duration_sec": 60, "pause_after_sec": 0}
+          ]
+        },
+        {
+          "name": "Dzień 09: Strawberry Flick — Wprowadzenie",
+          "description": "Technika strawberry flick z FH na krótkie backspin serwisy.",
+          "countdown_sec": 20,
+          "steps": [
+            {"exercise_id": 101, "exercise_name": "Jogging", "duration_sec": 60, "pause_after_sec": 10},
+            {"exercise_id": 102, "exercise_name": "Arm Circles", "duration_sec": 30, "pause_after_sec": 10},
+            {"exercise_id": 103, "exercise_name": "Wrist Rotations", "duration_sec": 30, "pause_after_sec": 15},
+
+            {"drill_id": 1001, "drill_name": "FH Warmup", "count": 45, "percent": 95, "pause_after_sec": 30},
+            {"drill_id": 1002, "drill_name": "BH Warmup", "count": 45, "percent": 95, "pause_after_sec": 40},
+
+            {"drill_id": 6025, "drill_name": "FH Counter-Topspin", "count": 50, "percent": 90, "pause_after_sec": 45},
+            {"drill_id": 6021, "drill_name": "FH Topspin vs No-Spin", "count": 50, "percent": 95, "pause_after_sec": 50},
+
+            {"drill_id": 1004, "drill_name": "BH 2-Step Footwork", "count": 55, "percent": 90, "pause_after_sec": 50},
+
+            {"drill_id": 6005, "drill_name": "Short Backspin FH Flick", "count": 50, "percent": 90, "pause_after_sec": 50},
+            {"drill_id": 6005, "drill_name": "Short Backspin FH Flick", "count": 55, "percent": 95, "pause_after_sec": 45},
+            {"drill_id": 6007, "drill_name": "Short No-Spin FH", "count": 45, "percent": 90, "pause_after_sec": 45},
+            {"drill_id": 6010, "drill_name": "Short Sidespin R FH", "count": 40, "percent": 90, "pause_after_sec": 40},
+
+            {"drill_id": 6032, "drill_name": "3rd Ball BH", "count": 45, "percent": 90, "pause_after_sec": 40},
+
+            {"exercise_id": 601, "exercise_name": "Quad Stretch Walk", "duration_sec": 60, "pause_after_sec": 10},
+            {"exercise_id": 604, "exercise_name": "Wrist Flexor Stretch", "duration_sec": 30, "pause_after_sec": 10},
+            {"exercise_id": 605, "exercise_name": "Deep Breathing", "duration_sec": 60, "pause_after_sec": 0}
+          ]
+        },
+        {
+          "name": "Dzień 10: Footwork + Szybki BH Block",
+          "description": "Zaawansowany footwork z szybkim BH blockiem — budowanie reakcji.",
+          "countdown_sec": 20,
+          "steps": [
+            {"exercise_id": 101, "exercise_name": "Jogging", "duration_sec": 60, "pause_after_sec": 10},
+            {"exercise_id": 201, "exercise_name": "Side Shuffle", "duration_sec": 60, "pause_after_sec": 10},
+            {"exercise_id": 202, "exercise_name": "Crossover Step", "duration_sec": 60, "pause_after_sec": 15},
+
+            {"drill_id": 1001, "drill_name": "FH Warmup", "count": 45, "percent": 95, "pause_after_sec": 30},
+            {"drill_id": 1002, "drill_name": "BH Warmup", "count": 45, "percent": 95, "pause_after_sec": 40},
+
+            {"drill_id": 6027, "drill_name": "FH-BH Topspin Alternating", "count": 55, "percent": 95, "pause_after_sec": 45},
+            {"drill_id": 6026, "drill_name": "BH Counter-Topspin", "count": 50, "percent": 90, "pause_after_sec": 50},
+
+            {"drill_id": 3009, "drill_name": "Wide Falkenberg", "count": 55, "percent": 90, "pause_after_sec": 55},
+
+            {"drill_id": 6003, "drill_name": "BH Block Fast", "count": 50, "percent": 90, "pause_after_sec": 50},
+            {"drill_id": 6004, "drill_name": "FH-BH Block", "count": 55, "percent": 95, "pause_after_sec": 45},
+            {"drill_id": 6003, "drill_name": "BH Block Fast", "count": 55, "percent": 95, "pause_after_sec": 45},
+
+            {"drill_id": 4017, "drill_name": "Block Training", "count": 55, "percent": 95, "pause_after_sec": 40},
+
+            {"exercise_id": 601, "exercise_name": "Quad Stretch Walk", "duration_sec": 60, "pause_after_sec": 10},
+            {"exercise_id": 603, "exercise_name": "Shoulder Stretch", "duration_sec": 30, "pause_after_sec": 10},
+            {"exercise_id": 605, "exercise_name": "Deep Breathing", "duration_sec": 60, "pause_after_sec": 0}
+          ]
+        },
+        {
+          "name": "Dzień 11: Flick + Rally BH",
+          "description": "Banana flick przechodzący w rally — budowanie sekwencji gry po flicku.",
+          "countdown_sec": 20,
+          "steps": [
+            {"exercise_id": 101, "exercise_name": "Jogging", "duration_sec": 60, "pause_after_sec": 10},
+            {"exercise_id": 103, "exercise_name": "Wrist Rotations", "duration_sec": 30, "pause_after_sec": 10},
+            {"exercise_id": 108, "exercise_name": "Shadow Play", "duration_sec": 90, "pause_after_sec": 15},
+
+            {"drill_id": 1001, "drill_name": "FH Warmup", "count": 45, "percent": 95, "pause_after_sec": 30},
+            {"drill_id": 1002, "drill_name": "BH Warmup", "count": 45, "percent": 95, "pause_after_sec": 40},
+
+            {"drill_id": 6023, "drill_name": "FH Topspin vs Backspin", "count": 50, "percent": 95, "pause_after_sec": 45},
+            {"drill_id": 6026, "drill_name": "BH Counter-Topspin", "count": 50, "percent": 95, "pause_after_sec": 50},
+
+            {"drill_id": 2003, "drill_name": "FH BH Footwork", "count": 55, "percent": 95, "pause_after_sec": 50},
+
+            {"drill_id": 6006, "drill_name": "Short Backspin BH Flick", "count": 50, "percent": 95, "pause_after_sec": 40},
+            {"drill_id": 6014, "drill_name": "BH Flick Then Rally", "count": 55, "percent": 95, "pause_after_sec": 45},
+            {"drill_id": 6014, "drill_name": "BH Flick Then Rally", "count": 60, "percent": 100, "pause_after_sec": 45},
+            {"drill_id": 6012, "drill_name": "BH Topspin Consistency", "count": 55, "percent": 95, "pause_after_sec": 40},
+
+            {"drill_id": 6031, "drill_name": "3rd Ball FH", "count": 50, "percent": 95, "pause_after_sec": 40},
+
+            {"exercise_id": 601, "exercise_name": "Quad Stretch Walk", "duration_sec": 60, "pause_after_sec": 10},
+            {"exercise_id": 604, "exercise_name": "Wrist Flexor Stretch", "duration_sec": 30, "pause_after_sec": 10},
+            {"exercise_id": 605, "exercise_name": "Deep Breathing", "duration_sec": 60, "pause_after_sec": 0}
+          ]
+        },
+        {
+          "name": "Dzień 12: Flick + Rally FH",
+          "description": "Strawberry flick przechodzący w rally — FH sekwencje po odbiorze serwisu.",
+          "countdown_sec": 20,
+          "steps": [
+            {"exercise_id": 101, "exercise_name": "Jogging", "duration_sec": 60, "pause_after_sec": 10},
+            {"exercise_id": 102, "exercise_name": "Arm Circles", "duration_sec": 30, "pause_after_sec": 10},
+            {"exercise_id": 104, "exercise_name": "Trunk Rotations", "duration_sec": 45, "pause_after_sec": 15},
+
+            {"drill_id": 1001, "drill_name": "FH Warmup", "count": 45, "percent": 95, "pause_after_sec": 30},
+            {"drill_id": 1002, "drill_name": "BH Warmup", "count": 45, "percent": 95, "pause_after_sec": 40},
+
+            {"drill_id": 6025, "drill_name": "FH Counter-Topspin", "count": 55, "percent": 95, "pause_after_sec": 45},
+            {"drill_id": 6024, "drill_name": "BH Topspin vs Backspin", "count": 50, "percent": 95, "pause_after_sec": 50},
+
+            {"drill_id": 3003, "drill_name": "Two BH Two FH", "count": 55, "percent": 95, "pause_after_sec": 50},
+
+            {"drill_id": 6005, "drill_name": "Short Backspin FH Flick", "count": 50, "percent": 95, "pause_after_sec": 40},
+            {"drill_id": 6015, "drill_name": "FH Flick Then Rally", "count": 55, "percent": 95, "pause_after_sec": 45},
+            {"drill_id": 6015, "drill_name": "FH Flick Then Rally", "count": 60, "percent": 100, "pause_after_sec": 45},
+            {"drill_id": 6012, "drill_name": "BH Topspin Consistency", "count": 50, "percent": 95, "pause_after_sec": 40},
+
+            {"drill_id": 6032, "drill_name": "3rd Ball BH", "count": 50, "percent": 95, "pause_after_sec": 40},
+
+            {"exercise_id": 601, "exercise_name": "Quad Stretch Walk", "duration_sec": 60, "pause_after_sec": 10},
+            {"exercise_id": 603, "exercise_name": "Shoulder Stretch", "duration_sec": 30, "pause_after_sec": 10},
+            {"exercise_id": 605, "exercise_name": "Deep Breathing", "duration_sec": 60, "pause_after_sec": 0}
+          ]
+        },
+        {
+          "name": "Dzień 13: Czas Reakcji",
+          "description": "Szybkie reakcje — quick reaction random, fast block, krótkie pauzy.",
+          "countdown_sec": 20,
+          "steps": [
+            {"exercise_id": 101, "exercise_name": "Jogging", "duration_sec": 60, "pause_after_sec": 10},
+            {"exercise_id": 301, "exercise_name": "Reaction Ball", "duration_sec": 60, "pause_after_sec": 10},
+            {"exercise_id": 104, "exercise_name": "Trunk Rotations", "duration_sec": 45, "pause_after_sec": 15},
+
+            {"drill_id": 1001, "drill_name": "FH Warmup", "count": 45, "percent": 95, "pause_after_sec": 30},
+            {"drill_id": 1002, "drill_name": "BH Warmup", "count": 45, "percent": 95, "pause_after_sec": 40},
+
+            {"drill_id": 6021, "drill_name": "FH Topspin vs No-Spin", "count": 55, "percent": 95, "pause_after_sec": 40},
+            {"drill_id": 6022, "drill_name": "BH Topspin vs No-Spin", "count": 55, "percent": 95, "pause_after_sec": 45},
+
+            {"drill_id": 1003, "drill_name": "FH 2-Step Footwork", "count": 55, "percent": 95, "pause_after_sec": 45},
+
+            {"drill_id": 6016, "drill_name": "Quick Reaction Random", "count": 50, "percent": 95, "pause_after_sec": 50},
+            {"drill_id": 6003, "drill_name": "BH Block Fast", "count": 55, "percent": 95, "pause_after_sec": 45},
+            {"drill_id": 6016, "drill_name": "Quick Reaction Random", "count": 55, "percent": 100, "pause_after_sec": 40},
+            {"drill_id": 6004, "drill_name": "FH-BH Block", "count": 55, "percent": 100, "pause_after_sec": 40},
+
+            {"drill_id": 6031, "drill_name": "3rd Ball FH", "count": 50, "percent": 95, "pause_after_sec": 35},
+
+            {"exercise_id": 601, "exercise_name": "Quad Stretch Walk", "duration_sec": 60, "pause_after_sec": 10},
+            {"exercise_id": 603, "exercise_name": "Shoulder Stretch", "duration_sec": 30, "pause_after_sec": 10},
+            {"exercise_id": 605, "exercise_name": "Deep Breathing", "duration_sec": 60, "pause_after_sec": 0}
+          ]
+        },
+        {
+          "name": "Dzień 14: Sidespin Serve Receive",
+          "description": "Odbiór serwów z side spinem — lewy i prawy sidespin, mieszane rotacje.",
+          "countdown_sec": 20,
+          "steps": [
+            {"exercise_id": 101, "exercise_name": "Jogging", "duration_sec": 60, "pause_after_sec": 10},
+            {"exercise_id": 102, "exercise_name": "Arm Circles", "duration_sec": 30, "pause_after_sec": 10},
+            {"exercise_id": 103, "exercise_name": "Wrist Rotations", "duration_sec": 30, "pause_after_sec": 15},
+
+            {"drill_id": 1001, "drill_name": "FH Warmup", "count": 45, "percent": 95, "pause_after_sec": 30},
+            {"drill_id": 1002, "drill_name": "BH Warmup", "count": 45, "percent": 95, "pause_after_sec": 40},
+
+            {"drill_id": 6028, "drill_name": "Mixed Spin FH Open", "count": 50, "percent": 95, "pause_after_sec": 45},
+            {"drill_id": 6027, "drill_name": "FH-BH Topspin Alternating", "count": 50, "percent": 95, "pause_after_sec": 50},
+
+            {"drill_id": 2003, "drill_name": "FH BH Footwork", "count": 55, "percent": 95, "pause_after_sec": 50},
+
+            {"drill_id": 2024, "drill_name": "Left Sidespin Serve Return", "count": 45, "percent": 90, "pause_after_sec": 45},
+            {"drill_id": 2025, "drill_name": "Right Sidespin Serve Return", "count": 45, "percent": 90, "pause_after_sec": 45},
+            {"drill_id": 6009, "drill_name": "Short Sidespin L BH", "count": 45, "percent": 95, "pause_after_sec": 40},
+            {"drill_id": 6010, "drill_name": "Short Sidespin R FH", "count": 45, "percent": 95, "pause_after_sec": 40},
+            {"drill_id": 2026, "drill_name": "No-Spin Serve Return", "count": 40, "percent": 90, "pause_after_sec": 40},
+
+            {"drill_id": 6032, "drill_name": "3rd Ball BH", "count": 50, "percent": 95, "pause_after_sec": 35},
+
+            {"exercise_id": 601, "exercise_name": "Quad Stretch Walk", "duration_sec": 60, "pause_after_sec": 10},
+            {"exercise_id": 604, "exercise_name": "Wrist Flexor Stretch", "duration_sec": 30, "pause_after_sec": 10},
+            {"exercise_id": 605, "exercise_name": "Deep Breathing", "duration_sec": 60, "pause_after_sec": 0}
+          ]
+        },
+        {
+          "name": "Dzień 15: Podsumowanie Tygodnia 2",
+          "description": "Test: flick + footwork + reakcja — sprawdzian postępów z Fazy 2.",
+          "countdown_sec": 20,
+          "steps": [
+            {"exercise_id": 101, "exercise_name": "Jogging", "duration_sec": 60, "pause_after_sec": 10},
+            {"exercise_id": 104, "exercise_name": "Trunk Rotations", "duration_sec": 45, "pause_after_sec": 10},
+            {"exercise_id": 108, "exercise_name": "Shadow Play", "duration_sec": 90, "pause_after_sec": 15},
+
+            {"drill_id": 1001, "drill_name": "FH Warmup", "count": 45, "percent": 95, "pause_after_sec": 30},
+            {"drill_id": 1002, "drill_name": "BH Warmup", "count": 45, "percent": 95, "pause_after_sec": 40},
+
+            {"drill_id": 6025, "drill_name": "FH Counter-Topspin", "count": 55, "percent": 100, "pause_after_sec": 45},
+            {"drill_id": 6024, "drill_name": "BH Topspin vs Backspin", "count": 55, "percent": 100, "pause_after_sec": 45},
+
+            {"drill_id": 3009, "drill_name": "Wide Falkenberg", "count": 60, "percent": 95, "pause_after_sec": 50},
+
+            {"drill_id": 6014, "drill_name": "BH Flick Then Rally", "count": 55, "percent": 100, "pause_after_sec": 40},
+            {"drill_id": 6015, "drill_name": "FH Flick Then Rally", "count": 55, "percent": 100, "pause_after_sec": 40},
+            {"drill_id": 6016, "drill_name": "Quick Reaction Random", "count": 50, "percent": 100, "pause_after_sec": 40},
+            {"drill_id": 6003, "drill_name": "BH Block Fast", "count": 55, "percent": 100, "pause_after_sec": 35},
+
+            {"drill_id": 6031, "drill_name": "3rd Ball FH", "count": 55, "percent": 100, "pause_after_sec": 35},
+
+            {"exercise_id": 601, "exercise_name": "Quad Stretch Walk", "duration_sec": 60, "pause_after_sec": 10},
+            {"exercise_id": 603, "exercise_name": "Shoulder Stretch", "duration_sec": 30, "pause_after_sec": 10},
+            {"exercise_id": 605, "exercise_name": "Deep Breathing", "duration_sec": 60, "pause_after_sec": 0}
+          ]
+        },
+        {
+          "name": "Dzień 16: Sidespin Flick",
+          "description": "Odbiór serwów z side spinem flickiem — banana/strawberry na sidespin.",
+          "countdown_sec": 20,
+          "steps": [
+            {"exercise_id": 101, "exercise_name": "Jogging", "duration_sec": 60, "pause_after_sec": 10},
+            {"exercise_id": 103, "exercise_name": "Wrist Rotations", "duration_sec": 30, "pause_after_sec": 10},
+            {"exercise_id": 104, "exercise_name": "Trunk Rotations", "duration_sec": 45, "pause_after_sec": 15},
+
+            {"drill_id": 1001, "drill_name": "FH Warmup", "count": 50, "percent": 100, "pause_after_sec": 25},
+            {"drill_id": 1002, "drill_name": "BH Warmup", "count": 50, "percent": 100, "pause_after_sec": 35},
+
+            {"drill_id": 6023, "drill_name": "FH Topspin vs Backspin", "count": 55, "percent": 100, "pause_after_sec": 40},
+            {"drill_id": 6026, "drill_name": "BH Counter-Topspin", "count": 55, "percent": 100, "pause_after_sec": 40},
+
+            {"drill_id": 1003, "drill_name": "FH 2-Step Footwork", "count": 60, "percent": 100, "pause_after_sec": 45},
+
+            {"drill_id": 6009, "drill_name": "Short Sidespin L BH", "count": 50, "percent": 95, "pause_after_sec": 40},
+            {"drill_id": 6010, "drill_name": "Short Sidespin R FH", "count": 50, "percent": 95, "pause_after_sec": 40},
+            {"drill_id": 6020, "drill_name": "Sidespin Mixed LR", "count": 55, "percent": 100, "pause_after_sec": 40},
+            {"drill_id": 6014, "drill_name": "BH Flick Then Rally", "count": 55, "percent": 100, "pause_after_sec": 35},
+            {"drill_id": 6015, "drill_name": "FH Flick Then Rally", "count": 55, "percent": 100, "pause_after_sec": 35},
+
+            {"drill_id": 6031, "drill_name": "3rd Ball FH", "count": 55, "percent": 100, "pause_after_sec": 30},
+
+            {"exercise_id": 601, "exercise_name": "Quad Stretch Walk", "duration_sec": 60, "pause_after_sec": 10},
+            {"exercise_id": 604, "exercise_name": "Wrist Flexor Stretch", "duration_sec": 30, "pause_after_sec": 10},
+            {"exercise_id": 605, "exercise_name": "Deep Breathing", "duration_sec": 60, "pause_after_sec": 0}
+          ]
+        },
+        {
+          "name": "Dzień 17: Serwis → Atak",
+          "description": "Chiński pattern 3rd ball attack — serwis, odbiór, atak.",
+          "countdown_sec": 20,
+          "steps": [
+            {"exercise_id": 101, "exercise_name": "Jogging", "duration_sec": 60, "pause_after_sec": 10},
+            {"exercise_id": 201, "exercise_name": "Side Shuffle", "duration_sec": 60, "pause_after_sec": 10},
+            {"exercise_id": 108, "exercise_name": "Shadow Play", "duration_sec": 90, "pause_after_sec": 15},
+
+            {"drill_id": 1001, "drill_name": "FH Warmup", "count": 50, "percent": 100, "pause_after_sec": 25},
+            {"drill_id": 1002, "drill_name": "BH Warmup", "count": 50, "percent": 100, "pause_after_sec": 35},
+
+            {"drill_id": 6021, "drill_name": "FH Topspin vs No-Spin", "count": 55, "percent": 100, "pause_after_sec": 35},
+            {"drill_id": 6025, "drill_name": "FH Counter-Topspin", "count": 55, "percent": 100, "pause_after_sec": 40},
+
+            {"drill_id": 1004, "drill_name": "BH 2-Step Footwork", "count": 60, "percent": 95, "pause_after_sec": 45},
+
+            {"drill_id": 6031, "drill_name": "3rd Ball FH", "count": 60, "percent": 100, "pause_after_sec": 40},
+            {"drill_id": 6032, "drill_name": "3rd Ball BH", "count": 60, "percent": 100, "pause_after_sec": 40},
+            {"drill_id": 6017, "drill_name": "Sidespin Serve Rally", "count": 55, "percent": 95, "pause_after_sec": 35},
+            {"drill_id": 6013, "drill_name": "Backspin Open Attack", "count": 55, "percent": 100, "pause_after_sec": 35},
+
+            {"drill_id": 6033, "drill_name": "4th Ball Counter FH", "count": 50, "percent": 95, "pause_after_sec": 30},
+
+            {"exercise_id": 601, "exercise_name": "Quad Stretch Walk", "duration_sec": 60, "pause_after_sec": 10},
+            {"exercise_id": 603, "exercise_name": "Shoulder Stretch", "duration_sec": 30, "pause_after_sec": 10},
+            {"exercise_id": 605, "exercise_name": "Deep Breathing", "duration_sec": 60, "pause_after_sec": 0}
+          ]
+        },
+        {
+          "name": "Dzień 18: Multi-Ball Patterns",
+          "description": "Wzorce in-out, FH topspin po całym stole, zaawansowany footwork.",
+          "countdown_sec": 20,
+          "steps": [
+            {"exercise_id": 101, "exercise_name": "Jogging", "duration_sec": 60, "pause_after_sec": 10},
+            {"exercise_id": 202, "exercise_name": "Crossover Step", "duration_sec": 60, "pause_after_sec": 10},
+            {"exercise_id": 204, "exercise_name": "In-Out Movement", "duration_sec": 60, "pause_after_sec": 15},
+
+            {"drill_id": 1001, "drill_name": "FH Warmup", "count": 50, "percent": 100, "pause_after_sec": 25},
+            {"drill_id": 1002, "drill_name": "BH Warmup", "count": 50, "percent": 100, "pause_after_sec": 35},
+
+            {"drill_id": 6027, "drill_name": "FH-BH Topspin Alternating", "count": 60, "percent": 100, "pause_after_sec": 40},
+            {"drill_id": 6028, "drill_name": "Mixed Spin FH Open", "count": 55, "percent": 100, "pause_after_sec": 40},
+
+            {"drill_id": 3009, "drill_name": "Wide Falkenberg", "count": 60, "percent": 100, "pause_after_sec": 45},
+
+            {"drill_id": 6029, "drill_name": "In-Out FH Attack", "count": 60, "percent": 100, "pause_after_sec": 40},
+            {"drill_id": 6030, "drill_name": "In-Out BH Attack", "count": 60, "percent": 100, "pause_after_sec": 40},
+            {"drill_id": 6035, "drill_name": "FH Topspin Everywhere", "count": 60, "percent": 100, "pause_after_sec": 35},
+            {"drill_id": 6004, "drill_name": "FH-BH Block", "count": 60, "percent": 100, "pause_after_sec": 35},
+
+            {"drill_id": 6033, "drill_name": "4th Ball Counter FH", "count": 55, "percent": 100, "pause_after_sec": 30},
+
+            {"exercise_id": 601, "exercise_name": "Quad Stretch Walk", "duration_sec": 60, "pause_after_sec": 10},
+            {"exercise_id": 604, "exercise_name": "Wrist Flexor Stretch", "duration_sec": 30, "pause_after_sec": 10},
+            {"exercise_id": 605, "exercise_name": "Deep Breathing", "duration_sec": 60, "pause_after_sec": 0}
+          ]
+        },
+        {
+          "name": "Dzień 19: Mixed Serve Read",
+          "description": "Czytanie rotacji serwów mieszanych z flickiem — selekcja techniki.",
+          "countdown_sec": 20,
+          "steps": [
+            {"exercise_id": 101, "exercise_name": "Jogging", "duration_sec": 60, "pause_after_sec": 10},
+            {"exercise_id": 103, "exercise_name": "Wrist Rotations", "duration_sec": 30, "pause_after_sec": 10},
+            {"exercise_id": 104, "exercise_name": "Trunk Rotations", "duration_sec": 45, "pause_after_sec": 15},
+
+            {"drill_id": 1001, "drill_name": "FH Warmup", "count": 50, "percent": 100, "pause_after_sec": 25},
+            {"drill_id": 1002, "drill_name": "BH Warmup", "count": 50, "percent": 100, "pause_after_sec": 35},
+
+            {"drill_id": 6022, "drill_name": "BH Topspin vs No-Spin", "count": 55, "percent": 100, "pause_after_sec": 35},
+            {"drill_id": 6023, "drill_name": "FH Topspin vs Backspin", "count": 55, "percent": 105, "pause_after_sec": 40},
+
+            {"drill_id": 2003, "drill_name": "FH BH Footwork", "count": 60, "percent": 100, "pause_after_sec": 45},
+
+            {"drill_id": 6018, "drill_name": "Mixed Spin Serves", "count": 60, "percent": 100, "pause_after_sec": 40},
+            {"drill_id": 6011, "drill_name": "Mixed Short Serves", "count": 55, "percent": 100, "pause_after_sec": 35},
+            {"drill_id": 6020, "drill_name": "Sidespin Mixed LR", "count": 55, "percent": 100, "pause_after_sec": 35},
+            {"drill_id": 6005, "drill_name": "Short Backspin FH Flick", "count": 50, "percent": 105, "pause_after_sec": 35},
+            {"drill_id": 6006, "drill_name": "Short Backspin BH Flick", "count": 50, "percent": 105, "pause_after_sec": 35},
+
+            {"drill_id": 6032, "drill_name": "3rd Ball BH", "count": 55, "percent": 100, "pause_after_sec": 30},
+
+            {"exercise_id": 601, "exercise_name": "Quad Stretch Walk", "duration_sec": 60, "pause_after_sec": 10},
+            {"exercise_id": 603, "exercise_name": "Shoulder Stretch", "duration_sec": 30, "pause_after_sec": 10},
+            {"exercise_id": 605, "exercise_name": "Deep Breathing", "duration_sec": 60, "pause_after_sec": 0}
+          ]
+        },
+        {
+          "name": "Dzień 20: Game Pattern",
+          "description": "Pełna sekwencja: serwis → flick → rally — symulacja meczu.",
+          "countdown_sec": 20,
+          "steps": [
+            {"exercise_id": 101, "exercise_name": "Jogging", "duration_sec": 60, "pause_after_sec": 10},
+            {"exercise_id": 201, "exercise_name": "Side Shuffle", "duration_sec": 60, "pause_after_sec": 10},
+            {"exercise_id": 108, "exercise_name": "Shadow Play", "duration_sec": 90, "pause_after_sec": 15},
+
+            {"drill_id": 1001, "drill_name": "FH Warmup", "count": 50, "percent": 100, "pause_after_sec": 25},
+            {"drill_id": 1002, "drill_name": "BH Warmup", "count": 50, "percent": 100, "pause_after_sec": 35},
+
+            {"drill_id": 6024, "drill_name": "BH Topspin vs Backspin", "count": 55, "percent": 105, "pause_after_sec": 35},
+            {"drill_id": 6025, "drill_name": "FH Counter-Topspin", "count": 55, "percent": 105, "pause_after_sec": 40},
+
+            {"drill_id": 3003, "drill_name": "Two BH Two FH", "count": 60, "percent": 100, "pause_after_sec": 45},
+
+            {"drill_id": 6019, "drill_name": "Game Pattern Serve-Flick-Rally", "count": 60, "percent": 100, "pause_after_sec": 40},
+            {"drill_id": 6017, "drill_name": "Sidespin Serve Rally", "count": 55, "percent": 105, "pause_after_sec": 35},
+            {"drill_id": 6036, "drill_name": "Serve-Flick-Counter", "count": 55, "percent": 100, "pause_after_sec": 35},
+            {"drill_id": 6019, "drill_name": "Game Pattern Serve-Flick-Rally", "count": 65, "percent": 105, "pause_after_sec": 35},
+
+            {"drill_id": 6033, "drill_name": "4th Ball Counter FH", "count": 55, "percent": 100, "pause_after_sec": 30},
+
+            {"exercise_id": 601, "exercise_name": "Quad Stretch Walk", "duration_sec": 60, "pause_after_sec": 10},
+            {"exercise_id": 604, "exercise_name": "Wrist Flexor Stretch", "duration_sec": 30, "pause_after_sec": 10},
+            {"exercise_id": 605, "exercise_name": "Deep Breathing", "duration_sec": 60, "pause_after_sec": 0}
+          ]
+        },
+        {
+          "name": "Dzień 21: Speed + Reaction",
+          "description": "Szybsze piłki, krótsze pauzy, counter-topspin pod presją czasu.",
+          "countdown_sec": 20,
+          "steps": [
+            {"exercise_id": 101, "exercise_name": "Jogging", "duration_sec": 60, "pause_after_sec": 10},
+            {"exercise_id": 301, "exercise_name": "Reaction Ball", "duration_sec": 60, "pause_after_sec": 10},
+            {"exercise_id": 104, "exercise_name": "Trunk Rotations", "duration_sec": 45, "pause_after_sec": 15},
+
+            {"drill_id": 1001, "drill_name": "FH Warmup", "count": 50, "percent": 100, "pause_after_sec": 25},
+            {"drill_id": 1002, "drill_name": "BH Warmup", "count": 50, "percent": 100, "pause_after_sec": 30},
+
+            {"drill_id": 6025, "drill_name": "FH Counter-Topspin", "count": 60, "percent": 105, "pause_after_sec": 35},
+            {"drill_id": 6026, "drill_name": "BH Counter-Topspin", "count": 60, "percent": 105, "pause_after_sec": 35},
+
+            {"drill_id": 1003, "drill_name": "FH 2-Step Footwork", "count": 60, "percent": 105, "pause_after_sec": 40},
+
+            {"drill_id": 6016, "drill_name": "Quick Reaction Random", "count": 60, "percent": 105, "pause_after_sec": 35},
+            {"drill_id": 6003, "drill_name": "BH Block Fast", "count": 60, "percent": 105, "pause_after_sec": 35},
+            {"drill_id": 6035, "drill_name": "FH Topspin Everywhere", "count": 60, "percent": 100, "pause_after_sec": 35},
+            {"drill_id": 6016, "drill_name": "Quick Reaction Random", "count": 65, "percent": 110, "pause_after_sec": 30},
+
+            {"drill_id": 6033, "drill_name": "4th Ball Counter FH", "count": 55, "percent": 105, "pause_after_sec": 30},
+
+            {"exercise_id": 601, "exercise_name": "Quad Stretch Walk", "duration_sec": 60, "pause_after_sec": 10},
+            {"exercise_id": 603, "exercise_name": "Shoulder Stretch", "duration_sec": 30, "pause_after_sec": 10},
+            {"exercise_id": 605, "exercise_name": "Deep Breathing", "duration_sec": 60, "pause_after_sec": 0}
+          ]
+        },
+        {
+          "name": "Dzień 22: Pokrycie Całego Stołu",
+          "description": "Szeroki footwork, FH topspin na całym stole, wide Falkenberg.",
+          "countdown_sec": 20,
+          "steps": [
+            {"exercise_id": 101, "exercise_name": "Jogging", "duration_sec": 60, "pause_after_sec": 10},
+            {"exercise_id": 202, "exercise_name": "Crossover Step", "duration_sec": 60, "pause_after_sec": 10},
+            {"exercise_id": 207, "exercise_name": "Pivot Drill", "duration_sec": 60, "pause_after_sec": 15},
+
+            {"drill_id": 1001, "drill_name": "FH Warmup", "count": 50, "percent": 100, "pause_after_sec": 25},
+            {"drill_id": 1002, "drill_name": "BH Warmup", "count": 50, "percent": 100, "pause_after_sec": 30},
+
+            {"drill_id": 6028, "drill_name": "Mixed Spin FH Open", "count": 60, "percent": 105, "pause_after_sec": 35},
+            {"drill_id": 6027, "drill_name": "FH-BH Topspin Alternating", "count": 60, "percent": 105, "pause_after_sec": 35},
+
+            {"drill_id": 3009, "drill_name": "Wide Falkenberg", "count": 65, "percent": 105, "pause_after_sec": 45},
+
+            {"drill_id": 6035, "drill_name": "FH Topspin Everywhere", "count": 65, "percent": 105, "pause_after_sec": 40},
+            {"drill_id": 6029, "drill_name": "In-Out FH Attack", "count": 60, "percent": 105, "pause_after_sec": 35},
+            {"drill_id": 6030, "drill_name": "In-Out BH Attack", "count": 60, "percent": 105, "pause_after_sec": 35},
+            {"drill_id": 2003, "drill_name": "FH BH Footwork", "count": 60, "percent": 105, "pause_after_sec": 35},
+
+            {"drill_id": 6034, "drill_name": "4th Ball Counter BH", "count": 55, "percent": 100, "pause_after_sec": 30},
+
+            {"exercise_id": 601, "exercise_name": "Quad Stretch Walk", "duration_sec": 60, "pause_after_sec": 10},
+            {"exercise_id": 604, "exercise_name": "Wrist Flexor Stretch", "duration_sec": 30, "pause_after_sec": 10},
+            {"exercise_id": 605, "exercise_name": "Deep Breathing", "duration_sec": 60, "pause_after_sec": 0}
+          ]
+        },
+        {
+          "name": "Dzień 23: Podsumowanie Tygodnia 3",
+          "description": "Test integracyjny: sidespin flick + multi-ball + game pattern.",
+          "countdown_sec": 20,
+          "steps": [
+            {"exercise_id": 101, "exercise_name": "Jogging", "duration_sec": 60, "pause_after_sec": 10},
+            {"exercise_id": 104, "exercise_name": "Trunk Rotations", "duration_sec": 45, "pause_after_sec": 10},
+            {"exercise_id": 108, "exercise_name": "Shadow Play", "duration_sec": 90, "pause_after_sec": 15},
+
+            {"drill_id": 1001, "drill_name": "FH Warmup", "count": 50, "percent": 100, "pause_after_sec": 25},
+            {"drill_id": 1002, "drill_name": "BH Warmup", "count": 50, "percent": 100, "pause_after_sec": 30},
+
+            {"drill_id": 6021, "drill_name": "FH Topspin vs No-Spin", "count": 60, "percent": 110, "pause_after_sec": 35},
+            {"drill_id": 6024, "drill_name": "BH Topspin vs Backspin", "count": 60, "percent": 110, "pause_after_sec": 35},
+
+            {"drill_id": 3003, "drill_name": "Two BH Two FH", "count": 65, "percent": 105, "pause_after_sec": 40},
+
+            {"drill_id": 6020, "drill_name": "Sidespin Mixed LR", "count": 55, "percent": 105, "pause_after_sec": 35},
+            {"drill_id": 6019, "drill_name": "Game Pattern Serve-Flick-Rally", "count": 60, "percent": 105, "pause_after_sec": 35},
+            {"drill_id": 6035, "drill_name": "FH Topspin Everywhere", "count": 60, "percent": 105, "pause_after_sec": 35},
+            {"drill_id": 6036, "drill_name": "Serve-Flick-Counter", "count": 55, "percent": 105, "pause_after_sec": 30},
+
+            {"drill_id": 6033, "drill_name": "4th Ball Counter FH", "count": 60, "percent": 105, "pause_after_sec": 30},
+
+            {"exercise_id": 601, "exercise_name": "Quad Stretch Walk", "duration_sec": 60, "pause_after_sec": 10},
+            {"exercise_id": 603, "exercise_name": "Shoulder Stretch", "duration_sec": 30, "pause_after_sec": 10},
+            {"exercise_id": 605, "exercise_name": "Deep Breathing", "duration_sec": 60, "pause_after_sec": 0}
+          ]
+        },
+        {
+          "name": "Dzień 24: Pełna Symulacja Gry",
+          "description": "Sekwencje meczowe: serwis → flick → rally → counter — pełny cykl.",
+          "countdown_sec": 20,
+          "steps": [
+            {"exercise_id": 101, "exercise_name": "Jogging", "duration_sec": 60, "pause_after_sec": 10},
+            {"exercise_id": 201, "exercise_name": "Side Shuffle", "duration_sec": 60, "pause_after_sec": 10},
+            {"exercise_id": 108, "exercise_name": "Shadow Play", "duration_sec": 90, "pause_after_sec": 15},
+
+            {"drill_id": 1001, "drill_name": "FH Warmup", "count": 50, "percent": 105, "pause_after_sec": 20},
+            {"drill_id": 1002, "drill_name": "BH Warmup", "count": 50, "percent": 105, "pause_after_sec": 30},
+
+            {"drill_id": 6023, "drill_name": "FH Topspin vs Backspin", "count": 60, "percent": 110, "pause_after_sec": 30},
+            {"drill_id": 6026, "drill_name": "BH Counter-Topspin", "count": 60, "percent": 110, "pause_after_sec": 30},
+
+            {"drill_id": 2003, "drill_name": "FH BH Footwork", "count": 65, "percent": 110, "pause_after_sec": 35},
+
+            {"drill_id": 6019, "drill_name": "Game Pattern Serve-Flick-Rally", "count": 65, "percent": 105, "pause_after_sec": 35},
+            {"drill_id": 6036, "drill_name": "Serve-Flick-Counter", "count": 65, "percent": 105, "pause_after_sec": 35},
+            {"drill_id": 6017, "drill_name": "Sidespin Serve Rally", "count": 60, "percent": 110, "pause_after_sec": 30},
+            {"drill_id": 6018, "drill_name": "Mixed Spin Serves", "count": 60, "percent": 105, "pause_after_sec": 30},
+
+            {"drill_id": 6033, "drill_name": "4th Ball Counter FH", "count": 60, "percent": 105, "pause_after_sec": 25},
+            {"drill_id": 6034, "drill_name": "4th Ball Counter BH", "count": 60, "percent": 105, "pause_after_sec": 25},
+
+            {"exercise_id": 601, "exercise_name": "Quad Stretch Walk", "duration_sec": 60, "pause_after_sec": 10},
+            {"exercise_id": 604, "exercise_name": "Wrist Flexor Stretch", "duration_sec": 30, "pause_after_sec": 10},
+            {"exercise_id": 605, "exercise_name": "Deep Breathing", "duration_sec": 60, "pause_after_sec": 0}
+          ]
+        },
+        {
+          "name": "Dzień 25: Speed Training",
+          "description": "Szybkie bloki, quick reaction, counter-topspin — maksymalna prędkość.",
+          "countdown_sec": 20,
+          "steps": [
+            {"exercise_id": 101, "exercise_name": "Jogging", "duration_sec": 60, "pause_after_sec": 10},
+            {"exercise_id": 301, "exercise_name": "Reaction Ball", "duration_sec": 60, "pause_after_sec": 10},
+            {"exercise_id": 104, "exercise_name": "Trunk Rotations", "duration_sec": 45, "pause_after_sec": 15},
+
+            {"drill_id": 1001, "drill_name": "FH Warmup", "count": 50, "percent": 105, "pause_after_sec": 20},
+            {"drill_id": 1002, "drill_name": "BH Warmup", "count": 50, "percent": 105, "pause_after_sec": 30},
+
+            {"drill_id": 6025, "drill_name": "FH Counter-Topspin", "count": 65, "percent": 110, "pause_after_sec": 30},
+            {"drill_id": 6026, "drill_name": "BH Counter-Topspin", "count": 65, "percent": 110, "pause_after_sec": 30},
+
+            {"drill_id": 1004, "drill_name": "BH 2-Step Footwork", "count": 65, "percent": 110, "pause_after_sec": 35},
+
+            {"drill_id": 6003, "drill_name": "BH Block Fast", "count": 65, "percent": 110, "pause_after_sec": 30},
+            {"drill_id": 6016, "drill_name": "Quick Reaction Random", "count": 65, "percent": 115, "pause_after_sec": 30},
+            {"drill_id": 6004, "drill_name": "FH-BH Block", "count": 65, "percent": 110, "pause_after_sec": 30},
+            {"drill_id": 6035, "drill_name": "FH Topspin Everywhere", "count": 65, "percent": 110, "pause_after_sec": 25},
+
+            {"drill_id": 6033, "drill_name": "4th Ball Counter FH", "count": 60, "percent": 110, "pause_after_sec": 25},
+
+            {"exercise_id": 601, "exercise_name": "Quad Stretch Walk", "duration_sec": 60, "pause_after_sec": 10},
+            {"exercise_id": 603, "exercise_name": "Shoulder Stretch", "duration_sec": 30, "pause_after_sec": 10},
+            {"exercise_id": 605, "exercise_name": "Deep Breathing", "duration_sec": 60, "pause_after_sec": 0}
+          ]
+        },
+        {
+          "name": "Dzień 26: Serve Receive All Types",
+          "description": "Wszystkie typy rotacji serwów — losowe plasowanie, pełna paleta odbiorów.",
+          "countdown_sec": 20,
+          "steps": [
+            {"exercise_id": 101, "exercise_name": "Jogging", "duration_sec": 60, "pause_after_sec": 10},
+            {"exercise_id": 103, "exercise_name": "Wrist Rotations", "duration_sec": 30, "pause_after_sec": 10},
+            {"exercise_id": 202, "exercise_name": "Crossover Step", "duration_sec": 60, "pause_after_sec": 15},
+
+            {"drill_id": 1001, "drill_name": "FH Warmup", "count": 50, "percent": 105, "pause_after_sec": 20},
+            {"drill_id": 1002, "drill_name": "BH Warmup", "count": 50, "percent": 105, "pause_after_sec": 30},
+
+            {"drill_id": 6027, "drill_name": "FH-BH Topspin Alternating", "count": 65, "percent": 110, "pause_after_sec": 30},
+            {"drill_id": 6022, "drill_name": "BH Topspin vs No-Spin", "count": 60, "percent": 110, "pause_after_sec": 30},
+
+            {"drill_id": 3009, "drill_name": "Wide Falkenberg", "count": 65, "percent": 110, "pause_after_sec": 35},
+
+            {"drill_id": 6018, "drill_name": "Mixed Spin Serves", "count": 65, "percent": 110, "pause_after_sec": 30},
+            {"drill_id": 2024, "drill_name": "Left Sidespin Serve Return", "count": 55, "percent": 110, "pause_after_sec": 30},
+            {"drill_id": 2025, "drill_name": "Right Sidespin Serve Return", "count": 55, "percent": 110, "pause_after_sec": 30},
+            {"drill_id": 2026, "drill_name": "No-Spin Serve Return", "count": 50, "percent": 105, "pause_after_sec": 25},
+            {"drill_id": 6011, "drill_name": "Mixed Short Serves", "count": 55, "percent": 110, "pause_after_sec": 25},
+
+            {"drill_id": 6034, "drill_name": "4th Ball Counter BH", "count": 60, "percent": 105, "pause_after_sec": 25},
+
+            {"exercise_id": 601, "exercise_name": "Quad Stretch Walk", "duration_sec": 60, "pause_after_sec": 10},
+            {"exercise_id": 604, "exercise_name": "Wrist Flexor Stretch", "duration_sec": 30, "pause_after_sec": 10},
+            {"exercise_id": 605, "exercise_name": "Deep Breathing", "duration_sec": 60, "pause_after_sec": 0}
+          ]
+        },
+        {
+          "name": "Dzień 27: 4th Ball Counter",
+          "description": "Chiński pattern 4th ball counter-attack — kontra po flicku przeciwnika.",
+          "countdown_sec": 20,
+          "steps": [
+            {"exercise_id": 101, "exercise_name": "Jogging", "duration_sec": 60, "pause_after_sec": 10},
+            {"exercise_id": 201, "exercise_name": "Side Shuffle", "duration_sec": 60, "pause_after_sec": 10},
+            {"exercise_id": 108, "exercise_name": "Shadow Play", "duration_sec": 90, "pause_after_sec": 15},
+
+            {"drill_id": 1001, "drill_name": "FH Warmup", "count": 50, "percent": 110, "pause_after_sec": 20},
+            {"drill_id": 1002, "drill_name": "BH Warmup", "count": 50, "percent": 110, "pause_after_sec": 25},
+
+            {"drill_id": 6021, "drill_name": "FH Topspin vs No-Spin", "count": 60, "percent": 115, "pause_after_sec": 25},
+            {"drill_id": 6024, "drill_name": "BH Topspin vs Backspin", "count": 60, "percent": 115, "pause_after_sec": 30},
+
+            {"drill_id": 1003, "drill_name": "FH 2-Step Footwork", "count": 65, "percent": 110, "pause_after_sec": 35},
+
+            {"drill_id": 6033, "drill_name": "4th Ball Counter FH", "count": 70, "percent": 110, "pause_after_sec": 30},
+            {"drill_id": 6034, "drill_name": "4th Ball Counter BH", "count": 70, "percent": 110, "pause_after_sec": 30},
+            {"drill_id": 6036, "drill_name": "Serve-Flick-Counter", "count": 65, "percent": 110, "pause_after_sec": 30},
+            {"drill_id": 6019, "drill_name": "Game Pattern Serve-Flick-Rally", "count": 65, "percent": 110, "pause_after_sec": 25},
+
+            {"drill_id": 6033, "drill_name": "4th Ball Counter FH", "count": 65, "percent": 115, "pause_after_sec": 25},
+
+            {"exercise_id": 601, "exercise_name": "Quad Stretch Walk", "duration_sec": 60, "pause_after_sec": 10},
+            {"exercise_id": 603, "exercise_name": "Shoulder Stretch", "duration_sec": 30, "pause_after_sec": 10},
+            {"exercise_id": 605, "exercise_name": "Deep Breathing", "duration_sec": 60, "pause_after_sec": 0}
+          ]
+        },
+        {
+          "name": "Dzień 28: Wytrzymałość + Regularność",
+          "description": "Dłuższe serie, mniej odpoczynku — budowanie kondycji i stabilności.",
+          "countdown_sec": 20,
+          "steps": [
+            {"exercise_id": 101, "exercise_name": "Jogging", "duration_sec": 60, "pause_after_sec": 10},
+            {"exercise_id": 204, "exercise_name": "In-Out Movement", "duration_sec": 60, "pause_after_sec": 10},
+            {"exercise_id": 104, "exercise_name": "Trunk Rotations", "duration_sec": 45, "pause_after_sec": 15},
+
+            {"drill_id": 1001, "drill_name": "FH Warmup", "count": 55, "percent": 110, "pause_after_sec": 20},
+            {"drill_id": 1002, "drill_name": "BH Warmup", "count": 55, "percent": 110, "pause_after_sec": 25},
+
+            {"drill_id": 6028, "drill_name": "Mixed Spin FH Open", "count": 65, "percent": 110, "pause_after_sec": 25},
+            {"drill_id": 6023, "drill_name": "FH Topspin vs Backspin", "count": 65, "percent": 115, "pause_after_sec": 25},
+
+            {"drill_id": 2003, "drill_name": "FH BH Footwork", "count": 70, "percent": 110, "pause_after_sec": 30},
+
+            {"drill_id": 6012, "drill_name": "BH Topspin Consistency", "count": 75, "percent": 110, "pause_after_sec": 25},
+            {"drill_id": 6035, "drill_name": "FH Topspin Everywhere", "count": 75, "percent": 110, "pause_after_sec": 25},
+            {"drill_id": 6004, "drill_name": "FH-BH Block", "count": 70, "percent": 115, "pause_after_sec": 25},
+            {"drill_id": 6027, "drill_name": "FH-BH Topspin Alternating", "count": 70, "percent": 110, "pause_after_sec": 25},
+
+            {"drill_id": 6019, "drill_name": "Game Pattern Serve-Flick-Rally", "count": 65, "percent": 110, "pause_after_sec": 20},
+
+            {"exercise_id": 601, "exercise_name": "Quad Stretch Walk", "duration_sec": 60, "pause_after_sec": 10},
+            {"exercise_id": 604, "exercise_name": "Wrist Flexor Stretch", "duration_sec": 30, "pause_after_sec": 10},
+            {"exercise_id": 605, "exercise_name": "Deep Breathing", "duration_sec": 60, "pause_after_sec": 0}
+          ]
+        },
+        {
+          "name": "Dzień 29: Pełny Random Challenge",
+          "description": "Maksymalna prędkość, losowe rotacje — sprawdzian pod presją.",
+          "countdown_sec": 20,
+          "steps": [
+            {"exercise_id": 101, "exercise_name": "Jogging", "duration_sec": 60, "pause_after_sec": 10},
+            {"exercise_id": 301, "exercise_name": "Reaction Ball", "duration_sec": 60, "pause_after_sec": 10},
+            {"exercise_id": 108, "exercise_name": "Shadow Play", "duration_sec": 90, "pause_after_sec": 15},
+
+            {"drill_id": 1001, "drill_name": "FH Warmup", "count": 55, "percent": 115, "pause_after_sec": 20},
+            {"drill_id": 1002, "drill_name": "BH Warmup", "count": 55, "percent": 115, "pause_after_sec": 20},
+
+            {"drill_id": 6025, "drill_name": "FH Counter-Topspin", "count": 70, "percent": 115, "pause_after_sec": 25},
+            {"drill_id": 6026, "drill_name": "BH Counter-Topspin", "count": 70, "percent": 115, "pause_after_sec": 25},
+
+            {"drill_id": 3009, "drill_name": "Wide Falkenberg", "count": 70, "percent": 115, "pause_after_sec": 30},
+
+            {"drill_id": 6016, "drill_name": "Quick Reaction Random", "count": 75, "percent": 120, "pause_after_sec": 25},
+            {"drill_id": 6035, "drill_name": "FH Topspin Everywhere", "count": 70, "percent": 115, "pause_after_sec": 25},
+            {"drill_id": 6018, "drill_name": "Mixed Spin Serves", "count": 65, "percent": 115, "pause_after_sec": 25},
+            {"drill_id": 6003, "drill_name": "BH Block Fast", "count": 70, "percent": 120, "pause_after_sec": 25},
+
+            {"drill_id": 6033, "drill_name": "4th Ball Counter FH", "count": 65, "percent": 115, "pause_after_sec": 20},
+            {"drill_id": 6034, "drill_name": "4th Ball Counter BH", "count": 65, "percent": 115, "pause_after_sec": 20},
+
+            {"exercise_id": 601, "exercise_name": "Quad Stretch Walk", "duration_sec": 60, "pause_after_sec": 10},
+            {"exercise_id": 603, "exercise_name": "Shoulder Stretch", "duration_sec": 30, "pause_after_sec": 10},
+            {"exercise_id": 605, "exercise_name": "Deep Breathing", "duration_sec": 60, "pause_after_sec": 0}
+          ]
+        },
+        {
+          "name": "Dzień 30: Egzamin Końcowy",
+          "description": "Kompleksowy test wszystkich umiejętności — drille mieszane na pełnej prędkości.",
+          "countdown_sec": 20,
+          "steps": [
+            {"exercise_id": 101, "exercise_name": "Jogging", "duration_sec": 60, "pause_after_sec": 10},
+            {"exercise_id": 201, "exercise_name": "Side Shuffle", "duration_sec": 60, "pause_after_sec": 10},
+            {"exercise_id": 108, "exercise_name": "Shadow Play", "duration_sec": 90, "pause_after_sec": 15},
+
+            {"drill_id": 1001, "drill_name": "FH Warmup", "count": 55, "percent": 115, "pause_after_sec": 20},
+            {"drill_id": 1002, "drill_name": "BH Warmup", "count": 55, "percent": 115, "pause_after_sec": 20},
+
+            {"drill_id": 6027, "drill_name": "FH-BH Topspin Alternating", "count": 70, "percent": 120, "pause_after_sec": 25},
+            {"drill_id": 6025, "drill_name": "FH Counter-Topspin", "count": 70, "percent": 120, "pause_after_sec": 25},
+
+            {"drill_id": 3009, "drill_name": "Wide Falkenberg", "count": 70, "percent": 115, "pause_after_sec": 30},
+
+            {"drill_id": 6019, "drill_name": "Game Pattern Serve-Flick-Rally", "count": 70, "percent": 115, "pause_after_sec": 25},
+            {"drill_id": 6016, "drill_name": "Quick Reaction Random", "count": 70, "percent": 120, "pause_after_sec": 25},
+            {"drill_id": 6035, "drill_name": "FH Topspin Everywhere", "count": 70, "percent": 115, "pause_after_sec": 25},
+            {"drill_id": 6036, "drill_name": "Serve-Flick-Counter", "count": 70, "percent": 115, "pause_after_sec": 25},
+            {"drill_id": 6018, "drill_name": "Mixed Spin Serves", "count": 65, "percent": 120, "pause_after_sec": 25},
+
+            {"drill_id": 6033, "drill_name": "4th Ball Counter FH", "count": 70, "percent": 120, "pause_after_sec": 20},
+            {"drill_id": 6034, "drill_name": "4th Ball Counter BH", "count": 70, "percent": 120, "pause_after_sec": 20},
+
+            {"exercise_id": 601, "exercise_name": "Quad Stretch Walk", "duration_sec": 60, "pause_after_sec": 10},
+            {"exercise_id": 604, "exercise_name": "Wrist Flexor Stretch", "duration_sec": 30, "pause_after_sec": 10},
+            {"exercise_id": 605, "exercise_name": "Deep Breathing", "duration_sec": 60, "pause_after_sec": 0}
+          ]
+        }
+      ]
+    }
+  ]
+}

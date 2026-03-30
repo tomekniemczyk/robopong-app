@@ -985,21 +985,94 @@
         <h2 style="flex:1">{{ t('tr.title') }}</h2>
         <button class="btn btn-primary" @click="openTrainingModal(null)">{{ t('tr.new') }}</button>
       </div>
+
+      <!-- Grouped by folder -->
+      <template v-for="group in trainingGroups" :key="group.folder || '__user__'">
+        <!-- Folder header (only for folder groups) -->
+        <div v-if="group.folder" class="drill-folder-header" @click="toggleTrainingFolder(group.folder)" style="margin-bottom:6px">
+          <span class="drill-folder-arrow">{{ openTrainingFolders.has(group.folder) ? '▼' : '▶' }}</span>
+          <span class="drill-folder-name">{{ group.icon }} {{ group.folder }}</span>
+          <span class="chip">{{ trainingFolderProgress(group) }}</span>
+        </div>
+        <!-- Progress bar for folders -->
+        <div v-if="group.folder && openTrainingFolders.has(group.folder)" style="margin:0 0 8px 20px;height:4px;background:var(--border);border-radius:2px;overflow:hidden">
+          <div :style="{width: trainingFolderPct(group)+'%', height:'100%', background:'var(--success)', transition:'width 0.3s'}"></div>
+        </div>
+
+        <!-- Trainings in folder -->
+        <ul class="device-list" v-if="!group.folder || openTrainingFolders.has(group.folder)">
+          <li v-for="tr in group.trainings" :key="tr.id" style="flex-wrap:wrap">
+            <div style="flex:1;min-width:0">
+              <div style="display:flex;align-items:center;gap:6px">
+                <span style="font-size:12px">{{ trainingStatusIcon(tr.id) }}</span>
+                <span style="font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ tr.name }}</span>
+                <span v-if="tr.readonly" class="chip" style="font-size:9px;padding:1px 5px">{{ t('training.readonly') }}</span>
+              </div>
+              <div style="font-size:11px;color:var(--muted)">
+                {{ tr.steps?.length || 0 }} {{ t('tr.steps_label') }} · {{ totalTrainingTime(tr) }}
+                <span v-if="lastRunDate(tr.id)"> · {{ t('training.last_run') }}: {{ lastRunDate(tr.id) }}</span>
+              </div>
+            </div>
+            <button v-if="!tr.readonly" class="btn btn-ghost btn-icon" @click="openTrainingModal(tr)" :title="t('btn.edit')">✏</button>
+            <button v-if="tr.readonly" class="btn btn-ghost btn-icon" @click="duplicateTraining(tr.id)" :title="t('training.duplicate')">📋</button>
+            <button class="btn btn-ghost btn-icon" @click="showTrainingHistory(tr)" :title="t('training.history')">📊</button>
+            <button class="btn btn-success btn-icon" @click="openTrainingStartModal(tr)" :disabled="!connected || myRole!=='controller'" title="Start">▶</button>
+            <button v-if="!tr.readonly" class="btn btn-ghost btn-icon" style="color:var(--danger)" @click="deleteTraining(tr.id)" :title="t('btn.delete')">✕</button>
+          </li>
+        </ul>
+      </template>
+
       <div v-if="!trainings.length" style="color:var(--muted);font-size:13px">{{ t('tr.empty') }}</div>
-      <ul class="device-list" v-else>
-        <li v-for="tr in trainings" :key="tr.id">
-          <div style="flex:1">
-            <div style="font-weight:600">{{ tr.name }}</div>
-            <div style="font-size:11px;color:var(--muted)">{{ tr.steps?.length || 0 }} drilli · {{ totalTrainingTime(tr) }}</div>
-          </div>
-          <button class="btn btn-ghost btn-icon" @click="openTrainingModal(tr)" :title="t('btn.edit')">✏</button>
-          <button class="btn btn-success btn-icon" @click="runTraining(tr.id)" :disabled="!connected || myRole!=='controller'" title="Start">▶</button>
-          <button class="btn btn-ghost btn-icon" style="color:var(--danger)" @click="deleteTraining(tr.id)" :title="t('btn.delete')">✕</button>
-        </li>
-      </ul>
     </div>
   </div>
 
+
+  <!-- Training start modal — player selection + record toggle -->
+  <div v-if="trainingStartModal" class="modal-overlay" @click.self="trainingStartModal=null" style="z-index:200">
+    <div class="modal-sheet" style="max-width:360px">
+      <h3 style="margin-bottom:14px">▶ {{ trainingStartModal.name }}</h3>
+      <div style="margin-bottom:12px">
+        <label style="font-size:12px;color:var(--muted);display:block;margin-bottom:4px">{{ t('players.select') }}</label>
+        <select v-model="selectedPlayerId" style="width:100%">
+          <option :value="null">{{ t('players.no_selection') }}</option>
+          <option v-for="p in playersList" :key="p.id" :value="p.id">{{ p.name }}</option>
+        </select>
+      </div>
+      <div style="margin-bottom:16px">
+        <label style="font-size:12px;display:flex;align-items:center;gap:6px;cursor:pointer">
+          <input type="checkbox" v-model="recordTraining">
+          🎥 {{ t('recordings.record') }}
+        </label>
+      </div>
+      <div style="display:flex;gap:10px">
+        <button class="btn btn-ghost" style="flex:1" @click="trainingStartModal=null">{{ t('btn.cancel') }}</button>
+        <button class="btn btn-success" style="flex:1" @click="startTrainingConfirmed()">▶ Start</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Training history modal -->
+  <div v-if="historyModal" class="modal-overlay" @click.self="historyModal=null" style="z-index:200">
+    <div class="modal-sheet" style="max-width:440px;max-height:80vh;overflow-y:auto">
+      <div style="display:flex;align-items:center;margin-bottom:14px">
+        <h3 style="flex:1">📊 {{ historyModal.name }}</h3>
+        <button class="btn btn-ghost btn-icon" @click="historyModal=null">✕</button>
+      </div>
+      <div v-if="!historyEntries.length" style="color:var(--muted);font-size:13px">{{ t('training.not_started') }}</div>
+      <div v-for="h in historyEntries" :key="h.started_at" style="border-bottom:1px solid var(--border);padding:8px 0;font-size:13px">
+        <div style="display:flex;align-items:center;gap:8px">
+          <span>{{ h.status === 'completed' ? '✅' : h.status === 'stopped' ? '⏹' : '❌' }}</span>
+          <span style="flex:1">{{ new Date(h.started_at).toLocaleDateString() }} {{ new Date(h.started_at).toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'}) }}</span>
+          <span class="chip">{{ fmtDur(h.elapsed_sec) }}</span>
+        </div>
+        <div style="font-size:11px;color:var(--muted);margin-top:2px">
+          {{ t('training.steps_done', {done: h.steps_completed, total: h.steps_total}) }}
+          <span v-if="h.steps_skipped?.length"> · {{ h.steps_skipped.length }} {{ t('training.skipped') || 'skipped' }}</span>
+          <span v-if="h.player_id && getPlayerName(h.player_id)"> · 👤 {{ getPlayerName(h.player_id) }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
 
   <!-- ── Move drill modal ─────────────────────────────────────────────────── -->
   <div class="move-overlay" v-if="moveModalDrill" @click.self="moveModalDrill=null">
@@ -1057,6 +1130,73 @@
               @click="runExerciseSolo(selectedExercise)">▶ Start</button>
           </div>
         </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Gracze ──────────────────────────────────────────────────────────── -->
+  <div class="page" v-show="page === 'players'">
+    <div class="card">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:14px">
+        <h2 style="flex:1">{{ t('players.title') }}</h2>
+        <button class="btn btn-primary" @click="addPlayer()">{{ t('players.add') }}</button>
+      </div>
+      <div v-if="!playersList.length" style="color:var(--muted);font-size:13px">{{ t('players.empty') }}</div>
+      <ul class="device-list" v-else>
+        <li v-for="p in playersList" :key="p.id" @click="openPlayerDetail(p)" style="cursor:pointer">
+          <div style="width:36px;height:36px;border-radius:50%;background:var(--primary);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px">
+            {{ p.name.charAt(0).toUpperCase() }}
+          </div>
+          <div style="flex:1;margin-left:10px">
+            <div style="font-weight:600">{{ p.name }}</div>
+            <div style="font-size:11px;color:var(--muted)">
+              {{ t('players.trainings_done') }}: {{ playerRunCount(p.id) }}
+              <span v-if="playerProgram30(p.id)"> · 30D: {{ playerProgram30(p.id) }}/30</span>
+            </div>
+          </div>
+          <button class="btn btn-ghost btn-icon" @click.stop="renamePlayer(p)" :title="t('btn.edit')">✏</button>
+          <button class="btn btn-ghost btn-icon" style="color:var(--danger)" @click.stop="deletePlayer(p.id)" :title="t('btn.delete')">✕</button>
+        </li>
+      </ul>
+    </div>
+
+    <!-- Player detail (history + recordings) -->
+    <div v-if="playerDetail" class="card" style="margin-top:12px">
+      <h3 style="margin-bottom:10px">👤 {{ playerDetail.name }}</h3>
+
+      <!-- 30-Day Progress -->
+      <div v-if="playerProgram30(playerDetail.id)" style="margin-bottom:12px">
+        <div style="font-size:12px;color:var(--muted);margin-bottom:4px">30-Day Challenge: {{ playerProgram30(playerDetail.id) }}/30</div>
+        <div style="height:6px;background:var(--border);border-radius:3px;overflow:hidden">
+          <div :style="{width: (playerProgram30(playerDetail.id)/30*100)+'%', height:'100%', background:'var(--success)', transition:'width 0.3s'}"></div>
+        </div>
+      </div>
+
+      <!-- History -->
+      <div style="font-size:13px;font-weight:600;margin-bottom:6px">{{ t('training.history') }}</div>
+      <div v-if="!playerHistory.length" style="color:var(--muted);font-size:12px;margin-bottom:10px">{{ t('training.not_started') }}</div>
+      <div v-for="h in playerHistory.slice(0,10)" :key="h.started_at" style="border-bottom:1px solid var(--border);padding:6px 0;font-size:12px">
+        <div style="display:flex;align-items:center;gap:6px">
+          <span>{{ h.status === 'completed' ? '✅' : '⏹' }}</span>
+          <span style="flex:1">{{ getTrainingName(h.training_id) }}</span>
+          <span class="chip" style="font-size:10px">{{ fmtDur(h.elapsed_sec) }}</span>
+          <span style="color:var(--muted);font-size:10px">{{ new Date(h.started_at).toLocaleDateString() }}</span>
+        </div>
+      </div>
+
+      <!-- Recordings -->
+      <div style="font-size:13px;font-weight:600;margin:12px 0 6px">{{ t('recordings.title') }}</div>
+      <div v-if="!playerRecordings.length" style="color:var(--muted);font-size:12px">{{ t('recordings.empty') }}</div>
+      <div v-for="r in playerRecordings.slice(0,10)" :key="r.filename" style="border-bottom:1px solid var(--border);padding:6px 0;font-size:12px">
+        <div style="display:flex;align-items:center;gap:6px">
+          <span>🎥</span>
+          <span style="flex:1">{{ r.step_name }} <span style="color:var(--muted)">({{ r.training_name }})</span></span>
+          <span class="chip" style="font-size:10px">{{ fmtDur(r.duration_sec || 0) }}</span>
+          <a :href="'/api/recordings/' + r.filename" target="_blank" class="btn btn-ghost btn-icon" style="font-size:11px" :title="t('recordings.download')">⬇</a>
+          <button class="btn btn-ghost btn-icon" style="color:var(--danger);font-size:11px" @click="deleteRecording(r.filename)" :title="t('recordings.delete')">✕</button>
+        </div>
+        <!-- Inline video player on click -->
+        <video v-if="playingRecording === r.filename" :src="'/api/recordings/' + r.filename" controls autoplay style="width:100%;margin-top:6px;border-radius:6px" @click.stop></video>
       </div>
     </div>
   </div>
@@ -1246,6 +1386,9 @@
     </button>
     <button :class="{ active: page === 'camera' }" @click="page='camera'">
       <span class="nav-icon">📷</span>{{ t('nav.camera') }}
+    </button>
+    <button :class="{ active: page === 'players' }" @click="page='players'">
+      <span class="nav-icon">👤</span>{{ t('nav.players') }}
     </button>
     <button :class="{ active: page === 'logs' }" @click="page='logs'">
       <span class="nav-icon">🖥</span>{{ t('nav.logs') }}
@@ -1499,6 +1642,7 @@ const _app = createApp({
         trainingRunning.value = false
         trainingIsPaused.value = false
         showToast(t('toast.training_ended'))
+        loadTrainingHistory()
       } else if (m.type === 'reconnecting') {
         showToast(t('toast.reconnecting'))
       } else if (m.type === 'robot_response') {
@@ -1897,6 +2041,22 @@ const _app = createApp({
     const tEditCountdown = ref(20)
     const tEditSteps = ref([])
 
+    // ── Training folders & history ────────────────────────────
+    const openTrainingFolders = reactive(new Set())
+    const trainingHistory = ref([])
+    const trainingStartModal = ref(null)
+    const selectedPlayerId = ref(null)
+    const recordTraining = ref(false)
+    const historyModal = ref(null)
+    const historyEntries = ref([])
+
+    // ── Players ───────────────────────────────────────────────
+    const playersList = ref([])
+    const playerDetail = ref(null)
+    const playerHistory = ref([])
+    const playerRecordings = ref([])
+    const playingRecording = ref(null)
+
     async function loadTrainings() {
       const r = await fetch('/api/trainings')
       trainings.value = await r.json()
@@ -1993,6 +2153,153 @@ const _app = createApp({
       }, 0)
       const min = Math.floor(totalSec / 60)
       return min > 0 ? `~${min} min` : `~${Math.round(totalSec)}s`
+    }
+
+    // ── Training groups (folder-based) ────────────────────────
+    const trainingGroups = computed(() => {
+      const folders = {}
+      const user = []
+      for (const tr of trainings.value) {
+        if (tr.folder) {
+          if (!folders[tr.folder]) folders[tr.folder] = { folder: tr.folder, icon: tr.folder_icon || '', trainings: [] }
+          folders[tr.folder].trainings.push(tr)
+        } else {
+          user.push(tr)
+        }
+      }
+      const groups = Object.values(folders)
+      if (user.length) groups.push({ folder: null, icon: '', trainings: user })
+      return groups
+    })
+
+    function toggleTrainingFolder(name) {
+      openTrainingFolders.has(name) ? openTrainingFolders.delete(name) : openTrainingFolders.add(name)
+    }
+
+    function trainingFolderProgress(group) {
+      const completed = group.trainings.filter(tr => trainingHistory.value.some(h => h.training_id === tr.id && h.status === 'completed')).length
+      return `${completed}/${group.trainings.length}`
+    }
+
+    function trainingFolderPct(group) {
+      const completed = group.trainings.filter(tr => trainingHistory.value.some(h => h.training_id === tr.id && h.status === 'completed')).length
+      return group.trainings.length ? Math.round(completed / group.trainings.length * 100) : 0
+    }
+
+    function trainingStatusIcon(trainingId) {
+      const runs = trainingHistory.value.filter(h => h.training_id === trainingId)
+      if (!runs.length) return '⬜'
+      if (runs.some(h => h.status === 'completed')) return '✅'
+      return '▶️'
+    }
+
+    function lastRunDate(trainingId) {
+      const runs = trainingHistory.value.filter(h => h.training_id === trainingId)
+      if (!runs.length) return null
+      const last = runs[0]
+      return new Date(last.started_at).toLocaleDateString()
+    }
+
+    async function loadTrainingHistory() {
+      const r = await fetch('/api/training-history')
+      trainingHistory.value = await r.json()
+    }
+
+    function openTrainingStartModal(tr) {
+      trainingStartModal.value = tr
+    }
+
+    function startTrainingConfirmed() {
+      const tr = trainingStartModal.value
+      if (!tr) return
+      trainingRunning.value = true
+      trainingIsPaused.value = false
+      trainingPhase.value = 'countdown'
+      trainingScenarioName.value = tr.name || ''
+      trainingStepsList.value = (tr.steps || []).map(s => ({...s}))
+      trainingStep.value = 0
+      send({ action: 'run_training', id: tr.id, player_id: selectedPlayerId.value, record: recordTraining.value })
+      trainingStartModal.value = null
+    }
+
+    async function duplicateTraining(id) {
+      await fetch(`/api/trainings/${id}/duplicate`, { method: 'POST' })
+      await loadTrainings()
+      showToast('📋 ' + t('training.duplicate'))
+    }
+
+    async function showTrainingHistory(tr) {
+      historyModal.value = tr
+      const r = await fetch(`/api/training-history?training_id=${tr.id}`)
+      historyEntries.value = await r.json()
+    }
+
+    function getPlayerName(playerId) {
+      const p = playersList.value.find(x => x.id === playerId)
+      return p ? p.name : null
+    }
+
+    function getTrainingName(trainingId) {
+      const tr = trainings.value.find(x => x.id === trainingId)
+      return tr ? tr.name : `#${trainingId}`
+    }
+
+    // ── Players functions ─────────────────────────────────────
+    async function loadPlayers() {
+      const r = await fetch('/api/players')
+      playersList.value = await r.json()
+    }
+
+    async function addPlayer() {
+      const name = prompt(t('players.name'))
+      if (!name?.trim()) return
+      await fetch('/api/players', { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({name: name.trim()}) })
+      await loadPlayers()
+    }
+
+    async function renamePlayer(p) {
+      const name = prompt(t('players.name'), p.name)
+      if (!name?.trim() || name.trim() === p.name) return
+      await fetch(`/api/players/${p.id}`, { method: 'PUT', headers: {'Content-Type':'application/json'}, body: JSON.stringify({name: name.trim()}) })
+      await loadPlayers()
+    }
+
+    async function deletePlayer(id) {
+      showConfirm(t('confirm.delete_player') || 'Delete player?', async () => {
+        await fetch(`/api/players/${id}`, { method: 'DELETE' })
+        if (playerDetail.value?.id === id) playerDetail.value = null
+        await loadPlayers()
+      })
+    }
+
+    async function openPlayerDetail(p) {
+      playerDetail.value = p
+      const [hRes, rRes] = await Promise.all([
+        fetch(`/api/players/${p.id}/history`),
+        fetch(`/api/players/${p.id}/recordings`)
+      ])
+      playerHistory.value = await hRes.json()
+      playerRecordings.value = await rRes.json()
+    }
+
+    function playerRunCount(playerId) {
+      return trainingHistory.value.filter(h => h.player_id === playerId).length
+    }
+
+    function playerProgram30(playerId) {
+      const completed = new Set(
+        trainingHistory.value
+          .filter(h => h.player_id === playerId && h.status === 'completed' && h.training_id >= 101 && h.training_id <= 130)
+          .map(h => h.training_id)
+      )
+      return completed.size || 0
+    }
+
+    async function deleteRecording(filename) {
+      showConfirm(t('recordings.delete') + '?', async () => {
+        await fetch(`/api/recordings/${filename}`, { method: 'DELETE' })
+        if (playerDetail.value) await openPlayerDetail(playerDetail.value)
+      })
     }
 
     // ── Calibration ────────────────────────────────────────────
@@ -2283,7 +2590,7 @@ const _app = createApp({
       toastTimer = setTimeout(() => { toast.value = '' }, 2500)
     }
     onMounted(() => {
-      wsConnect(); loadScenarios(); loadCal(); loadDrillTree(); loadTrainings(); loadExercises()
+      wsConnect(); loadScenarios(); loadCal(); loadDrillTree(); loadTrainings(); loadExercises(); loadPlayers(); loadTrainingHistory()
       document.documentElement.lang = lang.value === 'zh' ? 'zh-CN' : lang.value
       fetch('/api/deploy-time').then(r=>r.json()).then(d => { deployTime.value = d.deploy_time }).catch(()=>{})
     })
@@ -2325,7 +2632,14 @@ const _app = createApp({
       tEditId, tEditName, tEditDesc, tEditCountdown, tEditSteps,
       loadTrainings, addTrainingStep, moveStep,
       pauseTraining, resumeTraining, skipTraining, runExerciseSolo, fmtDur,
-      saveTraining, deleteTraining, runTraining, stopTraining, totalTrainingTime,
+      saveTraining, deleteTraining, stopTraining, totalTrainingTime,
+      trainingGroups, openTrainingFolders, toggleTrainingFolder, trainingFolderProgress, trainingFolderPct,
+      trainingStatusIcon, lastRunDate, trainingStartModal, selectedPlayerId, recordTraining,
+      openTrainingStartModal, startTrainingConfirmed, duplicateTraining,
+      historyModal, historyEntries, showTrainingHistory, getPlayerName, getTrainingName,
+      playersList, playerDetail, playerHistory, playerRecordings, playingRecording,
+      addPlayer, renamePlayer, deletePlayer, openPlayerDetail, playerRunCount, playerProgram30,
+      deleteRecording, loadPlayers, loadTrainingHistory, trainingHistory,
       exerciseCategories, openExCats, selectedExercise, toggleExCat, loadExercises, onStepTypeSelect, getExFrameSrc,
     }
   }

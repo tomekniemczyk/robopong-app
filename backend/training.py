@@ -1,37 +1,64 @@
-"""Training scenario runner + file-based storage."""
+"""Training scenario runner + file-based storage with defaults and history."""
 
 import asyncio
 import json
 import logging
 import time
+from datetime import datetime
 from pathlib import Path
 from typing import Callable, Optional
 
 import audio
 import drills
 import exercises
+import recordings
 
 logger = logging.getLogger(__name__)
+
 TRAININGS_FILE = Path(__file__).parent / ".trainings.json"
+DEFAULTS_FILE = Path(__file__).parent / "trainings_default.json"
+HISTORY_FILE = Path(__file__).parent / ".training_history.json"
 
-# ── Storage ──────────────────────────────────────────────────────────────────
+# ── Default trainings ────────────────────────────────────────────────────────
 
-def _load() -> list:
+def _load_defaults() -> list:
+    """Load predefined trainings from trainings_default.json."""
+    try:
+        data = json.loads(DEFAULTS_FILE.read_text())
+    except Exception:
+        return []
+    result = []
+    for fi, folder in enumerate(data.get("folders", [])):
+        folder_id = (fi + 1) * 100
+        for ti, training in enumerate(folder.get("trainings", [])):
+            training["id"] = folder_id + ti + 1
+            training["folder"] = folder["name"]
+            training["folder_icon"] = folder.get("icon", "")
+            training["readonly"] = True
+            result.append(training)
+    return result
+
+
+# ── User trainings storage ───────────────────────────────────────────────────
+
+def _load_user() -> list:
     try:
         return json.loads(TRAININGS_FILE.read_text())
     except Exception:
         return []
 
 
-def _save(data: list):
+def _save_user(data: list):
     TRAININGS_FILE.write_text(json.dumps(data, indent=2))
 
 
 def get_trainings() -> list:
-    trainings = _load()
-    for i, t in enumerate(trainings):
+    defaults = _load_defaults()
+    user = _load_user()
+    for i, t in enumerate(user):
         t.setdefault("id", i + 1)
-    return trainings
+        t.setdefault("readonly", False)
+    return defaults + user
 
 
 def get_training(training_id: int) -> dict | None:
@@ -42,19 +69,80 @@ def get_training(training_id: int) -> dict | None:
 
 
 def save_training(data: dict) -> int:
-    trainings = _load()
-    if "id" in data and any(t.get("id") == data["id"] for t in trainings):
-        trainings = [data if t.get("id") == data["id"] else t for t in trainings]
+    # Block saving over readonly
+    existing = get_training(data.get("id", -1))
+    if existing and existing.get("readonly"):
+        raise ValueError("Cannot modify readonly training")
+
+    user = _load_user()
+    if "id" in data and any(t.get("id") == data["id"] for t in user):
+        user = [data if t.get("id") == data["id"] else t for t in user]
     else:
-        data["id"] = max((t.get("id", 0) for t in trainings), default=0) + 1
-        trainings.append(data)
-    _save(trainings)
+        data["id"] = max((t.get("id", 0) for t in user), default=0) + 1
+        user.append(data)
+    _save_user(user)
     return data["id"]
 
 
+def duplicate_training(training_id: int) -> dict | None:
+    """Duplicate a training (typically readonly) as editable user copy."""
+    src = get_training(training_id)
+    if not src:
+        return None
+    copy = {k: v for k, v in src.items() if k not in ("id", "readonly", "folder", "folder_icon")}
+    copy["name"] = f"{src['name']} (kopia)"
+    user = _load_user()
+    copy["id"] = max((t.get("id", 0) for t in user), default=0) + 1
+    user.append(copy)
+    _save_user(user)
+    return copy
+
+
 def delete_training(training_id: int):
-    trainings = _load()
-    _save([t for t in trainings if t.get("id") != training_id])
+    existing = get_training(training_id)
+    if existing and existing.get("readonly"):
+        raise ValueError("Cannot delete readonly training")
+    user = _load_user()
+    _save_user([t for t in user if t.get("id") != training_id])
+
+
+# ── History ──────────────────────────────────────────────────────────────────
+
+def _load_history() -> list:
+    try:
+        return json.loads(HISTORY_FILE.read_text())
+    except Exception:
+        return []
+
+
+def _save_history(data: list):
+    HISTORY_FILE.write_text(json.dumps(data, indent=2))
+
+
+def record_run(training_id: int, player_id: int | None, elapsed_sec: int,
+               status: str, steps_completed: int, steps_total: int,
+               steps_skipped: list[int] | None = None):
+    history = _load_history()
+    history.append({
+        "training_id": training_id,
+        "player_id": player_id,
+        "started_at": datetime.now().isoformat(),
+        "elapsed_sec": elapsed_sec,
+        "status": status,
+        "steps_completed": steps_completed,
+        "steps_total": steps_total,
+        "steps_skipped": steps_skipped or [],
+    })
+    _save_history(history)
+
+
+def get_history(training_id: int | None = None, player_id: int | None = None) -> list:
+    history = _load_history()
+    if training_id is not None:
+        history = [h for h in history if h.get("training_id") == training_id]
+    if player_id is not None:
+        history = [h for h in history if h.get("player_id") == player_id]
+    return sorted(history, key=lambda h: h.get("started_at", ""), reverse=True)
 
 
 # ── Runner ───────────────────────────────────────────────────────────────────
@@ -66,12 +154,14 @@ class TrainingRunner:
         self._paused = False
         self._skip = False
         self._robot = None
+        self._recorder = recordings.Recorder()
 
     @property
     def running(self) -> bool:
         return self._task is not None and not self._task.done()
 
-    def start(self, scenario: dict, robot, broadcast: Callable):
+    def start(self, scenario: dict, robot, broadcast: Callable,
+              player_id: int | None = None, record: bool = False):
         if self.running:
             self.stop()
         self._stopped = False
@@ -79,12 +169,18 @@ class TrainingRunner:
         self._skip = False
         self._robot = robot
         self._broadcast = broadcast
+        self._player_id = player_id
+        self._record = record and player_id is not None
+        self._steps_completed = 0
+        self._steps_skipped = []
         self._task = asyncio.create_task(self._run(scenario, robot, broadcast))
 
     def stop(self):
         self._stopped = True
         self._paused = False
         self._skip = False
+        if self._recorder.recording:
+            self._recorder.stop()
         if self._task and not self._task.done():
             self._task.cancel()
         if self._robot:
@@ -101,11 +197,9 @@ class TrainingRunner:
         self._paused = False
 
     def skip(self):
-        """Skip current step (drill/exercise/pause) immediately."""
         self._skip = True
 
     def _consume_skip(self) -> bool:
-        """Returns True and resets flag if skip was requested."""
         if self._skip:
             self._skip = False
             return True
@@ -114,6 +208,20 @@ class TrainingRunner:
     async def _wait_unpaused(self):
         while self._paused and not self._stopped:
             await asyncio.sleep(0.5)
+
+    def _start_recording(self, scenario: dict, step_idx: int, step_name: str):
+        if self._record and self._player_id:
+            self._recorder.start(
+                self._player_id,
+                scenario.get("id", 0),
+                scenario.get("name", ""),
+                step_idx,
+                step_name,
+            )
+
+    def _stop_recording(self):
+        if self._recorder.recording:
+            self._recorder.stop()
 
     async def _run(self, scenario: dict, robot, broadcast: Callable):
         steps = scenario.get("steps", [])
@@ -126,7 +234,7 @@ class TrainingRunner:
             first_drill = self._resolve_drill(steps[0]) if steps else None
 
             audio.play("training_starting")
-            await asyncio.sleep(2)  # daj czas na "Training starting"
+            await asyncio.sleep(2)
 
             broadcast("training_info", {
                 "name": scenario.get("name", ""),
@@ -138,7 +246,6 @@ class TrainingRunner:
                 if self._stopped: return
                 await self._wait_unpaused()
                 broadcast("training_countdown", {"sec": sec, "total": countdown_sec})
-                # rozgrzewka 5s przed startem
                 if sec == 5 and first_drill:
                     b = first_drill["balls"][0]
                     await robot.set_ball(b["top_speed"], b["bot_speed"],
@@ -153,10 +260,10 @@ class TrainingRunner:
                 if self._stopped: return
                 await self._wait_unpaused()
 
-                # Rozgałęzienie: drill vs exercise
                 is_exercise = bool(step.get("exercise_id"))
                 if is_exercise:
-                    await self._run_exercise_step(step_idx, step, steps, total_steps, broadcast)
+                    await self._run_exercise_step(step_idx, step, steps, total_steps, broadcast, scenario)
+                    self._steps_completed = step_idx + 1
                     continue
 
                 drill = self._resolve_drill(step)
@@ -169,12 +276,13 @@ class TrainingRunner:
                 percent = step.get("percent", 100)
                 pause_sec = step.get("pause_after_sec", 30)
 
-                # Oblicz szacowany czas do końca
-                remaining_balls = sum(s.get("count", 60) for s in steps[step_idx:])
-                avg_wait = 1.5  # ~1.5s per ball
+                remaining_balls = sum(s.get("count", 60) for s in steps[step_idx:] if not s.get("exercise_id"))
+                avg_wait = 1.5
                 est_remaining = int(remaining_balls * avg_wait + sum(s.get("pause_after_sec", 30) for s in steps[step_idx+1:]))
 
-                # START DRILL
+                # START RECORDING
+                self._start_recording(scenario, step_idx, drill_name)
+
                 broadcast("training_step", {
                     "step": step_idx + 1, "total": total_steps,
                     "drill_name": drill_name, "phase": "drill",
@@ -188,7 +296,6 @@ class TrainingRunner:
 
                 if self._stopped: return
 
-                # RUN DRILL — intercept events
                 drill_done = asyncio.Event()
                 original_emit = robot._emit
 
@@ -218,25 +325,29 @@ class TrainingRunner:
                 if self._consume_skip():
                     robot.stop_drill()
                     await robot.stop()
+                    self._steps_skipped.append(step_idx)
 
                 robot._emit = original_emit
 
+                # STOP RECORDING
+                self._stop_recording()
+
                 if self._stopped: return
 
-                # END DRILL
                 audio.play("drill_finished")
                 await robot.stop()
                 broadcast("training_step_done", {
                     "step": step_idx + 1, "total": total_steps,
                     "drill_name": drill_name,
                 })
+                self._steps_completed = step_idx + 1
                 await asyncio.sleep(1)
 
                 # PAUSE
                 if step_idx < total_steps - 1 and pause_sec > 0:
                     next_step = steps[step_idx + 1]
                     next_drill = self._resolve_drill(next_step)
-                    next_name = next_step.get("drill_name") or (next_drill.get("name", "?") if next_drill else "?")
+                    next_name = next_step.get("drill_name") or next_step.get("exercise_name") or (next_drill.get("name", "?") if next_drill else "?")
 
                     for sec in range(pause_sec, 0, -1):
                         if self._stopped: return
@@ -257,22 +368,41 @@ class TrainingRunner:
                         await asyncio.sleep(1)
 
             # ── Done ─────────────────────────────────────────────
-            elapsed = int(time.monotonic() - start_time)
+            elapsed_sec = int(time.monotonic() - start_time)
             audio.play("training_complete")
-            broadcast("training_ended", {"elapsed_sec": elapsed})
+            broadcast("training_ended", {"elapsed_sec": elapsed_sec})
+
+            # Record history
+            record_run(
+                scenario.get("id", 0), self._player_id, elapsed_sec,
+                "completed", self._steps_completed, total_steps,
+                self._steps_skipped,
+            )
 
         except asyncio.CancelledError:
-            pass
+            elapsed_sec = int(time.monotonic() - start_time)
+            record_run(
+                scenario.get("id", 0), self._player_id, elapsed_sec,
+                "stopped", self._steps_completed, total_steps,
+                self._steps_skipped,
+            )
         except Exception as e:
             logger.error("Training runner error: %s", e)
+            elapsed_sec = int(time.monotonic() - start_time)
             broadcast("training_ended", {"error": str(e)})
+            record_run(
+                scenario.get("id", 0), self._player_id, elapsed_sec,
+                "error", self._steps_completed, total_steps,
+                self._steps_skipped,
+            )
         finally:
+            self._stop_recording()
             try:
                 await robot.stop()
             except Exception:
                 pass
 
-    async def _run_exercise_step(self, step_idx, step, steps, total_steps, broadcast):
+    async def _run_exercise_step(self, step_idx, step, steps, total_steps, broadcast, scenario):
         ex = exercises.get_exercise(step["exercise_id"])
         if not ex:
             logger.warning("Exercise %s not found, skipping", step.get("exercise_id"))
@@ -280,6 +410,9 @@ class TrainingRunner:
         name = step.get("exercise_name") or ex.get("name", "?")
         duration = step.get("duration_sec") or ex.get("duration_sec", 60)
         pause_sec = step.get("pause_after_sec", 30)
+
+        # START RECORDING
+        self._start_recording(scenario, step_idx, name)
 
         broadcast("training_step", {
             "step": step_idx + 1, "total": total_steps,
@@ -289,10 +422,11 @@ class TrainingRunner:
         })
         audio.play("beep")
 
-        # Countdown ćwiczenia
         for sec in range(duration, 0, -1):
             if self._stopped: return
-            if self._consume_skip(): break
+            if self._consume_skip():
+                self._steps_skipped.append(step_idx)
+                break
             await self._wait_unpaused()
             broadcast("training_exercise_progress", {
                 "step": step_idx + 1, "total_steps": total_steps,
@@ -304,13 +438,15 @@ class TrainingRunner:
                 audio.play("beep_high")
             await asyncio.sleep(1)
 
+        # STOP RECORDING
+        self._stop_recording()
+
         audio.play("drill_finished")
         broadcast("training_step_done", {
             "step": step_idx + 1, "total": total_steps,
             "drill_name": f"🏋 {name}",
         })
 
-        # Pauza
         if step_idx < total_steps - 1 and pause_sec > 0:
             for sec in range(pause_sec, 0, -1):
                 if self._stopped: return

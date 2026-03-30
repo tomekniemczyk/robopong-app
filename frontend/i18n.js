@@ -419,4 +419,39 @@ window.I18N = {
   'toast.cal_required':{ pl:'⚠ Wymagana kalibracja', en:'⚠ Calibration required', de:'⚠ Kalibrierung erforderlich', fr:'⚠ Calibrage requis', zh:'⚠ 需要校准' },
   'cal.preset_name':   { pl:'Kalibracja {name}', en:'Calibration {name}', de:'Kalibrierung {name}', fr:'Calibrage {name}', zh:'校准 {name}' },
 
+  // ── Training folders + history ─────────────────────────────────────
+  'training.folder':       { pl:'Folder',          en:'Folder',           de:'Ordner',           fr:'Dossier',          zh:'文件夹' },
+  'training.readonly':     { pl:'Predefiniowany',  en:'Predefined',       de:'Vordefiniert',     fr:'Prédéfini',        zh:'预定义' },
+  'training.duplicate':    { pl:'Kopiuj',          en:'Duplicate',        de:'Duplizieren',      fr:'Dupliquer',        zh:'复制' },
+  'training.history':      { pl:'Historia',        en:'History',          de:'Verlauf',          fr:'Historique',       zh:'历史' },
+  'training.not_started':  { pl:'Nie rozpoczęty',  en:'Not started',      de:'Nicht gestartet',  fr:'Non commencé',     zh:'未开始' },
+  'training.in_progress':  { pl:'W trakcie',       en:'In progress',      de:'In Bearbeitung',   fr:'En cours',         zh:'进行中' },
+  'training.completed':    { pl:'Ukończony',       en:'Completed',        de:'Abgeschlossen',    fr:'Terminé',          zh:'已完成' },
+  'training.stopped':      { pl:'Przerwany',       en:'Stopped',          de:'Abgebrochen',      fr:'Arrêté',           zh:'已停止' },
+  'training.progress':     { pl:'{done}/{total} ukończonych', en:'{done}/{total} completed', de:'{done}/{total} abgeschlossen', fr:'{done}/{total} terminés', zh:'{done}/{total} 已完成' },
+  'training.last_run':     { pl:'Ostatnio',        en:'Last run',         de:'Letzter Lauf',     fr:'Dernier',          zh:'上次运行' },
+  'training.steps_done':   { pl:'{done}/{total} kroków', en:'{done}/{total} steps', de:'{done}/{total} Schritte', fr:'{done}/{total} étapes', zh:'{done}/{total} 步' },
+  'training.duration':     { pl:'Czas',            en:'Duration',         de:'Dauer',            fr:'Durée',            zh:'时长' },
+  'training.skipped':      { pl:'pominiętych',     en:'skipped',          de:'übersprungen',     fr:'ignorés',          zh:'已跳过' },
+  'tr.steps_label':        { pl:'drilli',          en:'drills',           de:'Drills',           fr:'lancers',          zh:'训练' },
+  'confirm.delete_player': { pl:'Usunąć gracza?',  en:'Delete player?',   de:'Spieler löschen?', fr:'Supprimer le joueur ?', zh:'删除球员？' },
+
+  // ── Players ────────────────────────────────────────────────────────
+  'nav.players':           { pl:'Gracze',          en:'Players',          de:'Spieler',          fr:'Joueurs',          zh:'球员' },
+  'players.title':         { pl:'Gracze',          en:'Players',          de:'Spieler',          fr:'Joueurs',          zh:'球员' },
+  'players.add':           { pl:'+ Dodaj gracza',  en:'+ Add player',     de:'+ Spieler hinzufügen', fr:'+ Ajouter joueur', zh:'+ 添加球员' },
+  'players.empty':         { pl:'Brak graczy. Dodaj pierwszego.', en:'No players. Add first one.', de:'Keine Spieler. Ersten hinzufügen.', fr:'Aucun joueur. Ajoutez le premier.', zh:'无球员。添加第一个。' },
+  'players.name':          { pl:'Imię',            en:'Name',             de:'Name',             fr:'Nom',              zh:'姓名' },
+  'players.select':        { pl:'Wybierz gracza',  en:'Select player',    de:'Spieler wählen',   fr:'Choisir joueur',   zh:'选择球员' },
+  'players.no_selection':  { pl:'Bez gracza',      en:'No player',        de:'Kein Spieler',     fr:'Sans joueur',      zh:'无球员' },
+  'players.trainings_done':{ pl:'Treningi',        en:'Trainings',        de:'Trainings',        fr:'Entraînements',    zh:'训练次数' },
+
+  // ── Recordings ─────────────────────────────────────────────────────
+  'recordings.title':      { pl:'Nagrania',        en:'Recordings',       de:'Aufnahmen',        fr:'Enregistrements',  zh:'录像' },
+  'recordings.empty':      { pl:'Brak nagrań',     en:'No recordings',    de:'Keine Aufnahmen',  fr:'Aucun enregistrement', zh:'无录像' },
+  'recordings.download':   { pl:'Pobierz',         en:'Download',         de:'Herunterladen',    fr:'Télécharger',      zh:'下载' },
+  'recordings.delete':     { pl:'Usuń',            en:'Delete',           de:'Löschen',          fr:'Supprimer',        zh:'删除' },
+  'recordings.record':     { pl:'Nagrywaj',        en:'Record',           de:'Aufnehmen',        fr:'Enregistrer',      zh:'录制' },
+  'recordings.step':       { pl:'Krok {idx}',      en:'Step {idx}',       de:'Schritt {idx}',    fr:'Étape {idx}',      zh:'步骤 {idx}' },
+
 }

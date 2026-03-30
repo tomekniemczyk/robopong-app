@@ -16,6 +16,8 @@ import db
 import drills
 import exercises
 import training
+import players
+import recordings
 import presets
 from models import ScenarioIn
 from robot import Robot
@@ -389,8 +391,11 @@ async def _handle(msg: dict, ws: WebSocket):
         if not t:
             await _send(ws, "error", {"message": "Nie znaleziono treningu"})
             return
-        _log("Training start: \"%s\" — %d steps", t.get("name", "?"), len(t.get("steps", [])))
-        _training_runner.start(t, robot, broadcast)
+        player_id = msg.get("player_id")
+        record = msg.get("record", False)
+        _log("Training start: \"%s\" — %d steps, player=%s, record=%s",
+             t.get("name", "?"), len(t.get("steps", [])), player_id, record)
+        _training_runner.start(t, robot, broadcast, player_id=player_id, record=record)
 
     elif action == "run_exercise_solo":
         ex = exercises.get_exercise(msg["exercise_id"])
@@ -705,13 +710,105 @@ def create_training(body: dict):
 @app.put("/api/trainings/{tid}")
 def update_training(tid: int, body: dict):
     body["id"] = tid
-    training.save_training(body)
+    try:
+        training.save_training(body)
+    except ValueError:
+        raise HTTPException(403, "Cannot modify readonly training")
     return training.get_training(tid)
 
 
 @app.delete("/api/trainings/{tid}", status_code=204)
 def delete_training_endpoint(tid: int):
-    training.delete_training(tid)
+    try:
+        training.delete_training(tid)
+    except ValueError:
+        raise HTTPException(403, "Cannot delete readonly training")
+
+
+@app.post("/api/trainings/{tid}/duplicate", status_code=201)
+def duplicate_training_endpoint(tid: int):
+    copy = training.duplicate_training(tid)
+    if not copy:
+        raise HTTPException(404)
+    return copy
+
+
+# ── Training History ─────────────────────────────────────────────────────────
+
+@app.get("/api/training-history")
+def list_training_history(training_id: int | None = None, player_id: int | None = None):
+    return training.get_history(training_id=training_id, player_id=player_id)
+
+
+# ── Players ──────────────────────────────────────────────────────────────────
+
+@app.get("/api/players")
+def list_players():
+    return players.get_players()
+
+
+@app.get("/api/players/{pid}")
+def get_player(pid: int):
+    p = players.get_player(pid)
+    if not p:
+        raise HTTPException(404)
+    return p
+
+
+@app.post("/api/players", status_code=201)
+def create_player(body: dict):
+    name = body.get("name", "").strip()
+    if not name:
+        raise HTTPException(400, "Name required")
+    return players.create_player(name)
+
+
+@app.put("/api/players/{pid}")
+def update_player(pid: int, body: dict):
+    name = body.get("name", "").strip()
+    if not name:
+        raise HTTPException(400, "Name required")
+    p = players.update_player(pid, name)
+    if not p:
+        raise HTTPException(404)
+    return p
+
+
+@app.delete("/api/players/{pid}", status_code=204)
+def delete_player_endpoint(pid: int):
+    if not players.delete_player(pid):
+        raise HTTPException(404)
+
+
+@app.get("/api/players/{pid}/history")
+def get_player_history(pid: int):
+    return training.get_history(player_id=pid)
+
+
+@app.get("/api/players/{pid}/recordings")
+def get_player_recordings(pid: int):
+    return recordings.get_recordings(player_id=pid)
+
+
+# ── Recordings ───────────────────────────────────────────────────────────────
+
+@app.get("/api/recordings")
+def list_recordings(player_id: int | None = None):
+    return recordings.get_recordings(player_id=player_id)
+
+
+@app.get("/api/recordings/{player_id}/{filename}")
+def get_recording(player_id: int, filename: str):
+    path = recordings.get_recording_path(f"{player_id}/{filename}")
+    if not path:
+        raise HTTPException(404)
+    return FileResponse(path, media_type="video/mp4", filename=filename)
+
+
+@app.delete("/api/recordings/{player_id}/{filename}", status_code=204)
+def delete_recording(player_id: int, filename: str):
+    if not recordings.delete_recording(f"{player_id}/{filename}"):
+        raise HTTPException(404)
 
 
 # ── Frontend ───────────────────────────────────────────────────────────────────

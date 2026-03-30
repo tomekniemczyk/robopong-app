@@ -3489,6 +3489,403 @@
           "readonly": true
         }
       ]
+    },
+    {
+      "name": "30-Day Program",
+      "description": "Drills for the 30-Day Challenge training program",
+      "sort_order": 5,
+      "readonly": true,
+      "drills": [
+        {
+          "name": "BH Block Slow",
+          "description": "Slow topspin to backhand for block technique work",
+          "youtube_id": "",
+          "delay_s": 0.0,
+          "balls": [
+            {"top_speed": 140, "bot_speed": 0, "oscillation": 136, "height": 180, "rotation": 150, "wait_ms": 1500}
+          ],
+          "repeat": 0, "sort_order": 0, "readonly": true
+        },
+        {
+          "name": "BH Block Medium",
+          "description": "Medium speed topspin to backhand for block progression",
+          "youtube_id": "",
+          "delay_s": 0.0,
+          "balls": [
+            {"top_speed": 170, "bot_speed": 0, "oscillation": 136, "height": 180, "rotation": 150, "wait_ms": 1100}
+          ],
+          "repeat": 0, "sort_order": 1, "readonly": true
+        },
+        {
+          "name": "BH Block Fast",
+          "description": "Fast topspin to backhand for reaction block training",
+          "youtube_id": "",
+          "delay_s": 0.0,
+          "balls": [
+            {"top_speed": 200, "bot_speed": 0, "oscillation": 136, "height": 175, "rotation": 150, "wait_ms": 850}
+          ],
+          "repeat": 0, "sort_order": 2, "readonly": true
+        },
+        {
+          "name": "FH-BH Block",
+          "description": "Alternating topspin to forehand and backhand for block footwork",
+          "youtube_id": "",
+          "delay_s": 0.0,
+          "balls": [
+            {"top_speed": 170, "bot_speed": 0, "oscillation": 160, "height": 180, "rotation": 150, "wait_ms": 1200},
+            {"top_speed": 170, "bot_speed": 0, "oscillation": 138, "height": 180, "rotation": 150, "wait_ms": 1200}
+          ],
+          "repeat": 0, "sort_order": 3, "readonly": true
+        },
+        {
+          "name": "Short Backspin FH Flick",
+          "description": "Short backspin to forehand for strawberry flick practice",
+          "youtube_id": "",
+          "delay_s": 0.0,
+          "balls": [
+            {"top_speed": -15, "bot_speed": 80, "oscillation": 160, "height": 113, "rotation": 150, "wait_ms": 2500}
+          ],
+          "repeat": 0, "sort_order": 4, "readonly": true
+        },
+        {
+          "name": "Short Backspin BH Flick",
+          "description": "Short backspin to backhand for banana flick practice",
+          "youtube_id": "",
+          "delay_s": 0.0,
+          "balls": [
+            {"top_speed": -15, "bot_speed": 80, "oscillation": 138, "height": 113, "rotation": 150, "wait_ms": 2500}
+          ],
+          "repeat": 0, "sort_order": 5, "readonly": true
+        },
+        {
+          "name": "Short No-Spin FH",
+          "description": "Short no-spin ball to forehand for flick practice",
+          "youtube_id": "",
+          "delay_s": 0.0,
+          "balls": [
+            {"top_speed": 45, "bot_speed": 45, "oscillation": 160, "height": 116, "rotation": 150, "wait_ms": 2500}
+          ],
+          "repeat": 0, "sort_order": 6, "readonly": true
+        },
+        {
+          "name": "Short No-Spin BH",
+          "description": "Short no-spin ball to backhand for flick practice",
+          "youtube_id": "",
+          "delay_s": 0.0,
+          "balls": [
+            {"top_speed": 45, "bot_speed": 45, "oscillation": 138, "height": 116, "rotation": 150, "wait_ms": 2500}
+          ],
+          "repeat": 0, "sort_order": 7, "readonly": true
+        },
+        {
+          "name": "Short Sidespin L BH",
+          "description": "Short left sidespin to backhand for banana flick with spin read",
+          "youtube_id": "",
+          "delay_s": 0.0,
+          "balls": [
+            {"top_speed": -10, "bot_speed": 80, "oscillation": 140, "height": 116, "rotation": 195, "wait_ms": 2500}
+          ],
+          "repeat": 0, "sort_order": 8, "readonly": true
+        },
+        {
+          "name": "Short Sidespin R FH",
+          "description": "Short right sidespin to forehand for strawberry flick with spin read",
+          "youtube_id": "",
+          "delay_s": 0.0,
+          "balls": [
+            {"top_speed": -10, "bot_speed": 80, "oscillation": 158, "height": 116, "rotation": 105, "wait_ms": 2500}
+          ],
+          "repeat": 0, "sort_order": 9, "readonly": true
+        },
+        {
+          "name": "Mixed Short Serves",
+          "description": "Alternating backspin and no-spin short serves for read and react",
+          "youtube_id": "",
+          "delay_s": 0.0,
+          "balls": [
+            {"top_speed": -15, "bot_speed": 80, "oscillation": 150, "height": 113, "rotation": 150, "wait_ms": 2200},
+            {"top_speed": 45, "bot_speed": 45, "oscillation": 150, "height": 116, "rotation": 150, "wait_ms": 2200}
+          ],
+          "repeat": 0, "sort_order": 10, "readonly": true
+        },
+        {
+          "name": "BH Topspin Consistency",
+          "description": "Steady medium topspin to backhand for rally consistency",
+          "youtube_id": "",
+          "delay_s": 0.0,
+          "balls": [
+            {"top_speed": 130, "bot_speed": -10, "oscillation": 136, "height": 180, "rotation": 150, "wait_ms": 1400}
+          ],
+          "repeat": 0, "sort_order": 11, "readonly": true
+        },
+        {
+          "name": "Backspin Open Attack",
+          "description": "Heavy backspin to center for opening topspin attack practice",
+          "youtube_id": "",
+          "delay_s": 0.0,
+          "balls": [
+            {"top_speed": -50, "bot_speed": 110, "oscillation": 150, "height": 175, "rotation": 150, "wait_ms": 2000}
+          ],
+          "repeat": 0, "sort_order": 12, "readonly": true
+        },
+        {
+          "name": "BH Flick Then Rally",
+          "description": "Short backspin then topspin rally to backhand — flick into rally",
+          "youtube_id": "",
+          "delay_s": 0.0,
+          "balls": [
+            {"top_speed": -15, "bot_speed": 80, "oscillation": 140, "height": 113, "rotation": 150, "wait_ms": 2000},
+            {"top_speed": 165, "bot_speed": 0, "oscillation": 140, "height": 180, "rotation": 150, "wait_ms": 1200}
+          ],
+          "repeat": 0, "sort_order": 13, "readonly": true
+        },
+        {
+          "name": "FH Flick Then Rally",
+          "description": "Short backspin then topspin rally to forehand — flick into rally",
+          "youtube_id": "",
+          "delay_s": 0.0,
+          "balls": [
+            {"top_speed": -15, "bot_speed": 80, "oscillation": 160, "height": 113, "rotation": 150, "wait_ms": 2000},
+            {"top_speed": 165, "bot_speed": 0, "oscillation": 160, "height": 180, "rotation": 150, "wait_ms": 1200}
+          ],
+          "repeat": 0, "sort_order": 14, "readonly": true
+        },
+        {
+          "name": "Quick Reaction Random",
+          "description": "Fast topspin balls with random placement for reaction training",
+          "youtube_id": "",
+          "delay_s": 0.0,
+          "balls": [
+            {"top_speed": 190, "bot_speed": 0, "oscillation": 150, "height": 175, "rotation": 150, "wait_ms": 750}
+          ],
+          "repeat": 0, "sort_order": 15, "readonly": true
+        },
+        {
+          "name": "Sidespin Serve Rally",
+          "description": "Sidespin serve followed by topspin rally — serve receive into attack",
+          "youtube_id": "",
+          "delay_s": 0.0,
+          "balls": [
+            {"top_speed": -20, "bot_speed": 100, "oscillation": 150, "height": 118, "rotation": 195, "wait_ms": 1600},
+            {"top_speed": 170, "bot_speed": 0, "oscillation": 150, "height": 180, "rotation": 150, "wait_ms": 1100},
+            {"top_speed": 175, "bot_speed": 0, "oscillation": 150, "height": 178, "rotation": 150, "wait_ms": 1000}
+          ],
+          "repeat": 0, "sort_order": 16, "readonly": true
+        },
+        {
+          "name": "Mixed Spin Serves",
+          "description": "Backspin, no-spin, topspin serves in rotation for spin read training",
+          "youtube_id": "",
+          "delay_s": 0.0,
+          "balls": [
+            {"top_speed": -20, "bot_speed": 90, "oscillation": 150, "height": 113, "rotation": 150, "wait_ms": 2000},
+            {"top_speed": 45, "bot_speed": 45, "oscillation": 150, "height": 116, "rotation": 150, "wait_ms": 2000},
+            {"top_speed": 100, "bot_speed": -100, "oscillation": 150, "height": 118, "rotation": 150, "wait_ms": 1800}
+          ],
+          "repeat": 0, "sort_order": 17, "readonly": true
+        },
+        {
+          "name": "Game Pattern Serve-Flick-Rally",
+          "description": "Short serve → flick → 3 topspins — full game sequence simulation",
+          "youtube_id": "",
+          "delay_s": 0.0,
+          "balls": [
+            {"top_speed": -15, "bot_speed": 80, "oscillation": 150, "height": 113, "rotation": 150, "wait_ms": 1800},
+            {"top_speed": 160, "bot_speed": 0, "oscillation": 155, "height": 178, "rotation": 150, "wait_ms": 1300},
+            {"top_speed": 170, "bot_speed": 0, "oscillation": 145, "height": 178, "rotation": 150, "wait_ms": 1100},
+            {"top_speed": 180, "bot_speed": 0, "oscillation": 150, "height": 175, "rotation": 150, "wait_ms": 1000}
+          ],
+          "repeat": 0, "sort_order": 18, "readonly": true
+        },
+        {
+          "name": "Sidespin Mixed LR",
+          "description": "Alternating left and right sidespin serves for spin read practice",
+          "youtube_id": "",
+          "delay_s": 0.0,
+          "balls": [
+            {"top_speed": -10, "bot_speed": 80, "oscillation": 150, "height": 116, "rotation": 195, "wait_ms": 2200},
+            {"top_speed": -10, "bot_speed": 80, "oscillation": 150, "height": 116, "rotation": 105, "wait_ms": 2200}
+          ],
+          "repeat": 0, "sort_order": 19, "readonly": true
+        },
+        {
+          "name": "FH Topspin vs No-Spin",
+          "description": "No-spin ball to forehand — practice opening topspin on flat ball",
+          "youtube_id": "",
+          "delay_s": 0.0,
+          "balls": [
+            {"top_speed": 50, "bot_speed": 50, "oscillation": 160, "height": 183, "rotation": 150, "wait_ms": 1800}
+          ],
+          "repeat": 0, "sort_order": 20, "readonly": true
+        },
+        {
+          "name": "BH Topspin vs No-Spin",
+          "description": "No-spin ball to backhand — practice opening topspin on flat ball",
+          "youtube_id": "",
+          "delay_s": 0.0,
+          "balls": [
+            {"top_speed": 50, "bot_speed": 50, "oscillation": 138, "height": 183, "rotation": 150, "wait_ms": 1800}
+          ],
+          "repeat": 0, "sort_order": 21, "readonly": true
+        },
+        {
+          "name": "FH Topspin vs Backspin",
+          "description": "Backspin ball to forehand — practice opening topspin on backspin",
+          "youtube_id": "",
+          "delay_s": 0.0,
+          "balls": [
+            {"top_speed": -30, "bot_speed": 100, "oscillation": 160, "height": 175, "rotation": 150, "wait_ms": 2000}
+          ],
+          "repeat": 0, "sort_order": 22, "readonly": true
+        },
+        {
+          "name": "BH Topspin vs Backspin",
+          "description": "Backspin ball to backhand — practice opening topspin on backspin",
+          "youtube_id": "",
+          "delay_s": 0.0,
+          "balls": [
+            {"top_speed": -30, "bot_speed": 100, "oscillation": 138, "height": 175, "rotation": 150, "wait_ms": 2000}
+          ],
+          "repeat": 0, "sort_order": 23, "readonly": true
+        },
+        {
+          "name": "FH Counter-Topspin",
+          "description": "Topspin ball to forehand — practice counter-topspin over the table",
+          "youtube_id": "",
+          "delay_s": 0.0,
+          "balls": [
+            {"top_speed": 160, "bot_speed": -15, "oscillation": 160, "height": 185, "rotation": 150, "wait_ms": 1400}
+          ],
+          "repeat": 0, "sort_order": 24, "readonly": true
+        },
+        {
+          "name": "BH Counter-Topspin",
+          "description": "Topspin ball to backhand — practice counter-topspin over the table",
+          "youtube_id": "",
+          "delay_s": 0.0,
+          "balls": [
+            {"top_speed": 160, "bot_speed": -15, "oscillation": 138, "height": 185, "rotation": 150, "wait_ms": 1400}
+          ],
+          "repeat": 0, "sort_order": 25, "readonly": true
+        },
+        {
+          "name": "FH-BH Topspin Alternating",
+          "description": "Alternating topspin to forehand and backhand for transition practice",
+          "youtube_id": "",
+          "delay_s": 0.0,
+          "balls": [
+            {"top_speed": 155, "bot_speed": -10, "oscillation": 160, "height": 183, "rotation": 150, "wait_ms": 1500},
+            {"top_speed": 155, "bot_speed": -10, "oscillation": 138, "height": 183, "rotation": 150, "wait_ms": 1500}
+          ],
+          "repeat": 0, "sort_order": 26, "readonly": true
+        },
+        {
+          "name": "Mixed Spin FH Open",
+          "description": "No-spin → backspin → topspin to forehand — read spin and react",
+          "youtube_id": "",
+          "delay_s": 0.0,
+          "balls": [
+            {"top_speed": 50, "bot_speed": 50, "oscillation": 160, "height": 183, "rotation": 150, "wait_ms": 2000},
+            {"top_speed": -30, "bot_speed": 100, "oscillation": 160, "height": 175, "rotation": 150, "wait_ms": 2000},
+            {"top_speed": 160, "bot_speed": -15, "oscillation": 160, "height": 185, "rotation": 150, "wait_ms": 1400}
+          ],
+          "repeat": 0, "sort_order": 27, "readonly": true
+        },
+        {
+          "name": "In-Out FH Attack",
+          "description": "Chinese pattern: short backspin → deep topspin to FH — in-and-out footwork",
+          "youtube_id": "",
+          "delay_s": 0.0,
+          "balls": [
+            {"top_speed": -12, "bot_speed": 80, "oscillation": 160, "height": 113, "rotation": 150, "wait_ms": 1800},
+            {"top_speed": 170, "bot_speed": 0, "oscillation": 160, "height": 180, "rotation": 150, "wait_ms": 1200}
+          ],
+          "repeat": 0, "sort_order": 28, "readonly": true
+        },
+        {
+          "name": "In-Out BH Attack",
+          "description": "Chinese pattern: short backspin → deep topspin to BH — in-and-out footwork",
+          "youtube_id": "",
+          "delay_s": 0.0,
+          "balls": [
+            {"top_speed": -12, "bot_speed": 80, "oscillation": 138, "height": 113, "rotation": 150, "wait_ms": 1800},
+            {"top_speed": 170, "bot_speed": 0, "oscillation": 138, "height": 180, "rotation": 150, "wait_ms": 1200}
+          ],
+          "repeat": 0, "sort_order": 29, "readonly": true
+        },
+        {
+          "name": "3rd Ball FH",
+          "description": "Chinese 3rd ball: serve → push to FH → FH topspin attack",
+          "youtube_id": "",
+          "delay_s": 0.0,
+          "balls": [
+            {"top_speed": -20, "bot_speed": 90, "oscillation": 150, "height": 113, "rotation": 150, "wait_ms": 1800},
+            {"top_speed": -15, "bot_speed": 85, "oscillation": 160, "height": 170, "rotation": 150, "wait_ms": 1500},
+            {"top_speed": 180, "bot_speed": 0, "oscillation": 160, "height": 178, "rotation": 150, "wait_ms": 1200}
+          ],
+          "repeat": 0, "sort_order": 30, "readonly": true
+        },
+        {
+          "name": "3rd Ball BH",
+          "description": "Chinese 3rd ball: serve → push to BH → BH topspin attack",
+          "youtube_id": "",
+          "delay_s": 0.0,
+          "balls": [
+            {"top_speed": -20, "bot_speed": 90, "oscillation": 150, "height": 113, "rotation": 150, "wait_ms": 1800},
+            {"top_speed": -15, "bot_speed": 85, "oscillation": 138, "height": 170, "rotation": 150, "wait_ms": 1500},
+            {"top_speed": 180, "bot_speed": 0, "oscillation": 138, "height": 178, "rotation": 150, "wait_ms": 1200}
+          ],
+          "repeat": 0, "sort_order": 31, "readonly": true
+        },
+        {
+          "name": "4th Ball Counter FH",
+          "description": "Chinese 4th ball: short → topspin → block FH → FH counter-topspin",
+          "youtube_id": "",
+          "delay_s": 0.0,
+          "balls": [
+            {"top_speed": -12, "bot_speed": 80, "oscillation": 150, "height": 113, "rotation": 150, "wait_ms": 1500},
+            {"top_speed": 160, "bot_speed": 0, "oscillation": 150, "height": 178, "rotation": 150, "wait_ms": 1300},
+            {"top_speed": 170, "bot_speed": -10, "oscillation": 160, "height": 180, "rotation": 150, "wait_ms": 1100},
+            {"top_speed": 185, "bot_speed": 0, "oscillation": 160, "height": 178, "rotation": 150, "wait_ms": 1000}
+          ],
+          "repeat": 0, "sort_order": 32, "readonly": true
+        },
+        {
+          "name": "4th Ball Counter BH",
+          "description": "Chinese 4th ball: short → topspin → block BH → BH counter-topspin",
+          "youtube_id": "",
+          "delay_s": 0.0,
+          "balls": [
+            {"top_speed": -12, "bot_speed": 80, "oscillation": 150, "height": 113, "rotation": 150, "wait_ms": 1500},
+            {"top_speed": 160, "bot_speed": 0, "oscillation": 150, "height": 178, "rotation": 150, "wait_ms": 1300},
+            {"top_speed": 170, "bot_speed": -10, "oscillation": 138, "height": 180, "rotation": 150, "wait_ms": 1100},
+            {"top_speed": 185, "bot_speed": 0, "oscillation": 138, "height": 178, "rotation": 150, "wait_ms": 1000}
+          ],
+          "repeat": 0, "sort_order": 33, "readonly": true
+        },
+        {
+          "name": "FH Topspin Everywhere",
+          "description": "Chinese pattern: FH topspin across full table with wide random placement",
+          "youtube_id": "",
+          "delay_s": 0.0,
+          "balls": [
+            {"top_speed": 170, "bot_speed": -10, "oscillation": 150, "height": 180, "rotation": 150, "wait_ms": 1100}
+          ],
+          "repeat": 0, "sort_order": 34, "readonly": true
+        },
+        {
+          "name": "Serve-Flick-Counter",
+          "description": "Chinese pattern: short serve → flick → fast counter — 3 ball game sequence",
+          "youtube_id": "",
+          "delay_s": 0.0,
+          "balls": [
+            {"top_speed": -15, "bot_speed": 80, "oscillation": 150, "height": 113, "rotation": 150, "wait_ms": 1800},
+            {"top_speed": 155, "bot_speed": 0, "oscillation": 150, "height": 178, "rotation": 150, "wait_ms": 1300},
+            {"top_speed": 185, "bot_speed": 0, "oscillation": 150, "height": 175, "rotation": 150, "wait_ms": 1000}
+          ],
+          "repeat": 0, "sort_order": 35, "readonly": true
+        }
+      ]
     }
   ]
 }
