@@ -143,15 +143,18 @@ class TrainingRunner:
         if self._robot:
             self._robot.stop_drill()
             asyncio.ensure_future(self._robot.stop())
+        audio.play("training_stopped")
 
     def pause(self):
         self._paused = True
         if self._robot:
             self._robot.stop_drill()
             asyncio.ensure_future(self._robot.stop())
+        audio.play("training_paused")
 
     def resume(self):
         self._paused = False
+        audio.play("training_resumed")
 
     def skip(self):
         self._skip = True
