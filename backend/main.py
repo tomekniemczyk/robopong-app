@@ -276,7 +276,7 @@ async def ws_endpoint(ws: WebSocket):
         _broadcast_sessions()
 
 
-ROBOT_ACTIONS  = {"set_ball", "throw", "run_scenario", "run_drill", "run_training", "begin_calibration", "run_drill_solo", "run_exercise_solo"}
+ROBOT_ACTIONS  = {"set_ball", "throw", "run_scenario", "run_drill", "run_training", "begin_calibration", "run_drill_solo", "run_exercise_solo", "run_step_solo"}
 STANDBY_SECS   = 5 * 60
 _last_activity: float = 0.0
 _training_runner = training.TrainingRunner()
@@ -439,6 +439,20 @@ async def _handle(msg: dict, ws: WebSocket):
         }
         _training_runner.start(mini, robot, broadcast, player_id=player_id,
                                record=record, solo_exercise_id=ex["id"])
+
+    elif action == "run_step_solo":
+        step = msg.get("step", {})
+        record = msg.get("record", False)
+        player_id = msg.get("player_id")
+        training_name = msg.get("training_name", "Solo")
+        step_name = step.get("drill_name") or step.get("exercise_name") or "Step"
+        _log("Step solo: \"%s\", record=%s, player=%s", step_name, record, player_id)
+        mini = {
+            "name": training_name,
+            "countdown_sec": 5,
+            "steps": [{**step, "pause_after_sec": 0}],
+        }
+        _training_runner.start(mini, robot, broadcast, player_id=player_id, record=record)
 
     elif action == "stop_training":
         _log("Training stop")

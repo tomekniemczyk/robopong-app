@@ -2597,6 +2597,26 @@ const _app = createApp({
         return r.step_idx === stepIdx && rStart >= hStart && rStart <= hEnd
       })
     }
+    function rerunStep(h, step) {
+      const stepName = step.drill_name || step.exercise_name || 'Step'
+      const trainingName = getTrainingName(h.training_id) || 'Solo'
+      const doRecord = confirm(`Powtórz: ${stepName}\n\nNagrywać?`)
+      send({
+        action: 'run_step_solo',
+        step: {...step},
+        record: doRecord,
+        player_id: selectedPlayerId.value,
+        training_name: trainingName,
+      })
+      trainingRunning.value = true
+      trainingIsPaused.value = false
+      trainingPhase.value = 'countdown'
+      trainingScenarioName.value = stepName
+      trainingStepsList.value = [step]
+      trainingStep.value = 0
+      sessionNotes.value = []
+    }
+
     function recDownloadName(h, rec) {
       const d = new Date(h.started_at)
       const date = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`
@@ -3198,7 +3218,7 @@ const _app = createApp({
       saveTraining, deleteTraining, stopTraining, totalTrainingTime,
       trainingGroups, openTrainingFolders, toggleTrainingFolder, trainingFolderProgress, trainingFolderPct,
       trainingStatusIcon, lastRunDate, trainingStartModal, selectedPlayerId, recordTraining, recordType, showPlayerSelectModal,
-      currentPlayerName, selectPlayer, createAndSelectPlayer, deleteHistoryEntry, historyEndTime, recDownloadName,
+      currentPlayerName, selectPlayer, createAndSelectPlayer, deleteHistoryEntry, historyEndTime, recDownloadName, rerunStep,
       openTrainingStartModal, startTrainingConfirmed, duplicateTraining,
       resumeFromStep, getResumeStep, expandedTraining,
       ballSpinLabel, ballPlaceLabel, nextStepInfo,

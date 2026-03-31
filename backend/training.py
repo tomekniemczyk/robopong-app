@@ -184,10 +184,8 @@ class TrainingRunner:
         while self._paused and not self._stopped:
             await asyncio.sleep(0.5)
 
-    def _start_recording(self, scenario: dict, step_idx: int, step_name: str, is_exercise: bool = False):
+    def _start_recording(self, scenario: dict, step_idx: int, step_name: str):
         if self._record and self._player_id:
-            if is_exercise and self._record_type == "drills":
-                return
             self._recorder.start(
                 self._player_id,
                 scenario.get("id", 0),
@@ -302,7 +300,8 @@ class TrainingRunner:
                     if elapsed > timeout:
                         logger.warning("Drill timeout")
                         break
-                if self._consume_skip():
+                skipped = self._consume_skip()
+                if skipped:
                     robot.stop_drill()
                     await robot.stop()
                     self._steps_skipped.append(step_idx)
@@ -321,7 +320,7 @@ class TrainingRunner:
                 self._steps_completed = step_idx + 1
                 await asyncio.sleep(1)
 
-                if step_idx < total_steps - 1 and pause_sec > 0:
+                if step_idx < total_steps - 1 and pause_sec > 0 and not skipped:
                     next_step = steps[step_idx + 1]
                     next_drill = self._resolve_drill(next_step)
                     next_name = next_step.get("drill_name") or next_step.get("exercise_name") or (next_drill.get("name", "?") if next_drill else "?")
@@ -390,7 +389,7 @@ class TrainingRunner:
         duration = step.get("duration_sec") or ex.get("duration_sec", 60)
         pause_sec = step.get("pause_after_sec", 30)
 
-        self._start_recording(scenario, step_idx, name, is_exercise=True)
+        self._start_recording(scenario, step_idx, name)
 
         broadcast("training_step", {
             "step": step_idx + 1, "total": total_steps,
@@ -400,10 +399,12 @@ class TrainingRunner:
         })
         audio.play("beep")
 
+        skipped = False
         for sec in range(duration, 0, -1):
             if self._stopped: return
             if self._consume_skip():
                 self._steps_skipped.append(step_idx)
+                skipped = True
                 break
             await self._wait_unpaused()
             broadcast("training_exercise_progress", {
@@ -424,7 +425,7 @@ class TrainingRunner:
             "drill_name": f"🏋 {name}",
         })
 
-        if step_idx < total_steps - 1 and pause_sec > 0:
+        if step_idx < total_steps - 1 and pause_sec > 0 and not skipped:
             for sec in range(pause_sec, 0, -1):
                 if self._stopped: return
                 if self._consume_skip(): break
