@@ -793,12 +793,13 @@
   </div>
 
   <!-- ── Training runner overlay ─────────────────────────────────────────── -->
-  <div class="runner-overlay" v-if="trainingRunning" style="display:flex;flex-direction:column;padding:12px 16px;height:100vh;box-sizing:border-box;overflow:hidden">
+  <div class="runner-overlay" v-if="trainingRunning" style="display:flex;flex-direction:column;padding:12px 16px;height:100dvh;box-sizing:border-box;overflow:hidden">
 
     <!-- Góra: pasek postępu + przyciski (zawsze widoczne) -->
     <div style="flex-shrink:0">
-      <!-- Postęp: krok X/Y + nazwa + czas -->
+      <!-- Postęp: krok X/Y + REC + czas -->
       <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
+        <span v-if="recordTraining" style="display:inline-flex;align-items:center;gap:4px;font-size:11px;color:#ff3b30;font-weight:700;white-space:nowrap"><span style="width:8px;height:8px;border-radius:50%;background:#ff3b30;animation:recBlink 1s infinite"></span>REC</span>
         <span style="font-size:12px;color:var(--muted);white-space:nowrap">{{ trainingStep }}/{{ trainingStepsList.length }}</span>
         <div style="flex:1;height:4px;background:var(--border);border-radius:2px;overflow:hidden">
           <div style="height:100%;background:linear-gradient(90deg,var(--accent),var(--accent2));border-radius:2px;transition:width .4s" :style="{width: trainingStepsList.length ? (trainingStep/trainingStepsList.length*100)+'%' : '0'}"></div>
