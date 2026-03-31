@@ -594,8 +594,22 @@
     </div>
   </div>
 
-  <!-- ── Logi serwera ──────────────────────────────────────────────────── -->
+  <!-- ── Logi serwera & ustawienia ──────────────────────────────────────── -->
   <div class="page" v-show="page === 'logs'">
+
+    <!-- Głośność serwera -->
+    <div class="card" style="margin-bottom:12px">
+      <span class="section-title" style="margin-bottom:8px">{{ t('volume.title') }}</span>
+      <div style="display:flex;align-items:center;gap:10px">
+        <span style="font-size:18px;opacity:0.6">🔈</span>
+        <input type="range" min="0" max="100" step="5" v-model.number="serverVolume"
+               @change="setServerVolume(serverVolume)"
+               style="flex:1;accent-color:var(--accent)">
+        <span style="font-size:13px;min-width:36px;text-align:right;color:var(--text)">{{ serverVolume }}%</span>
+        <button class="btn btn-ghost" style="font-size:11px;padding:4px 10px" @click="testVolume">{{ t('volume.test') }}</button>
+      </div>
+    </div>
+
     <div class="row" style="margin-bottom:10px">
       <span class="section-title" style="margin-bottom:0">{{ t('logs.title') }}</span>
       <div class="spacer"></div>
@@ -1713,6 +1727,7 @@ const _app = createApp({
     const lastAddr      = ref(localStorage.getItem('lastAddr') || '')
     const robotName     = ref(localStorage.getItem('robotName') || '')
     const editingName   = ref(false)
+    const serverVolume  = ref(50)
     const robotNameEdit = ref('')
     const camErr        = ref(false)
     const camSrc        = `http://${window.location.hostname}:8081`
@@ -2767,6 +2782,22 @@ const _app = createApp({
         Object.assign(cal, CAL_DEFAULTS)
       }
     }
+    async function loadVolume() {
+      try {
+        const r = await fetch('/api/volume')
+        const d = await r.json()
+        serverVolume.value = d.volume
+      } catch {}
+    }
+    async function setServerVolume(vol) {
+      const r = await fetch('/api/volume', { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ volume: vol }) })
+      const d = await r.json()
+      serverVolume.value = d.volume
+    }
+    async function testVolume() {
+      await fetch('/api/volume/test', { method: 'POST' })
+    }
+
     async function loadPresets() {
       const r = await fetch('/api/presets')
       presets.value = await r.json()
@@ -3075,7 +3106,7 @@ const _app = createApp({
       toastTimer = setTimeout(() => { toast.value = '' }, 2500)
     }
     onMounted(async () => {
-      wsConnect(); loadScenarios(); loadCal(); loadDrillTree(); loadTrainings(); loadExercises(); loadTrainingHistory()
+      wsConnect(); loadScenarios(); loadCal(); loadDrillTree(); loadTrainings(); loadExercises(); loadTrainingHistory(); loadVolume()
       await loadPlayers()
       // Restore saved player silently (no modal yet — wait for connection)
       const savedPid = parseInt(localStorage.getItem('robopong_player_id'))
@@ -3096,7 +3127,7 @@ const _app = createApp({
       loadDrillTree, toggleFolder, addFolder, renameFolder, deleteFolderConfirm,
       moveFolderUp, moveFolderDown, moveDrillUp, moveDrillDown,
       showMoveModal, moveDrillToFolder, deleteDrillConfirm, runDrill, exportDrills,
-      toast, robotLog, logBox, serverLogs, serverLogBox, logLevel, filteredServerLogs,
+      toast, robotLog, logBox, serverLogs, serverLogBox, logLevel, filteredServerLogs, serverVolume, setServerVolume, testVolume,
       drillRunning, drillScenario, drillBall, drillTotal, drillRun, drillMaxRepeat,
       activeDrill, drillRunCount, drillRunPercent, liveBall,
       openDrillPanel, prevDrill, nextDrill, startDrill,

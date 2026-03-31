@@ -12,6 +12,7 @@ from fastapi import FastAPI, HTTPException, WebSocket, WebSocketDisconnect
 from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 
+import audio
 import db
 import drills
 import exercises
@@ -869,6 +870,25 @@ def get_recording(player_id: int, filename: str):
 def delete_recording(player_id: int, filename: str):
     if not recordings.delete_recording(f"{player_id}/{filename}"):
         raise HTTPException(404)
+
+
+# ── Volume ─────────────────────────────────────────────────────────────────────
+
+@app.get("/api/volume")
+def get_volume():
+    return {"volume": audio.get_volume()}
+
+
+@app.put("/api/volume")
+def set_volume(body: dict):
+    vol = audio.set_volume(int(body.get("volume", 50)))
+    return {"volume": vol}
+
+
+@app.post("/api/volume/test")
+def test_volume():
+    audio.play("beep_high")
+    return {"ok": True}
 
 
 # ── Frontend ───────────────────────────────────────────────────────────────────

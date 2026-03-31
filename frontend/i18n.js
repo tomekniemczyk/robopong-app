@@ -198,6 +198,10 @@ window.I18N = {
   'presets.delete':     { pl:'Usuń',            en:'Delete',           de:'Löschen',             fr:'Supprimer',          zh:'删除' },
   'presets.none':       { pl:'Brak zapisanych presetów.', en:'No saved presets.', de:'Keine gespeicherten Presets.', fr:'Aucun préréglage enregistré.', zh:'无已保存的预设。' },
 
+  // ── Volume ─────────────────────────────────────────────────────────
+  'volume.title': { pl:'Głośność serwera', en:'Server volume', de:'Server-Lautstärke', fr:'Volume serveur', zh:'服务器音量' },
+  'volume.test':  { pl:'Test',             en:'Test',          de:'Test',              fr:'Test',           zh:'测试' },
+
   // ── Server logs ────────────────────────────────────────────────────
   'logs.title':  { pl:'Logi serwera',  en:'Server logs',     de:'Server-Protokolle', fr:'Journaux serveur', zh:'服务器日志' },
   'logs.clear':  { pl:'Wyczyść',       en:'Clear',           de:'Leeren',            fr:'Effacer',          zh:'清除' },
