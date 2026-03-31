@@ -2361,39 +2361,39 @@ const _app = createApp({
     }
     const EXERCISE_ANIM = {
       101:['jog_1','jog_2','jog_3','jog_4'],
-      102:['arms_1','arms_2','arms_3','arms_4'],
-      103:['arms_1','arms_2','arms_3','arms_4'],
-      104:['arms_1','arms_2','arms_3','arms_4'],
-      105:['arms_1','arms_2','arms_3','arms_4'],
-      106:['jog_1','jog_2','jog_3','jog_4'],
+      102:['arm_circle_1','arm_circle_2','arm_circle_3','arm_circle_4'],
+      103:['wrist_rot_1','wrist_rot_2','wrist_rot_3','wrist_rot_4'],
+      104:['trunk_rot_1','trunk_rot_2','trunk_rot_3','trunk_rot_4'],
+      105:['hip_circle_1','hip_circle_2','hip_circle_3','hip_circle_4'],
+      106:['highknees_1','highknees_2','highknees_3','highknees_4'],
       107:['lunge_1','lunge_2','lunge_3','lunge_4'],
-      108:['pp_1','pp_2','pp_3','pp_4'],
-      201:['step_1','step_2','step_3','step_4'],
-      202:['step_1','step_2','step_3','step_4'],
-      203:['step_1','step_2','step_3','step_4'],
-      204:['step_1','step_2','step_3','step_4'],
-      205:['step_1','step_2','step_3','step_4'],
-      206:['step_1','step_2','step_3','step_4'],
-      207:['step_1','step_2','step_3','step_4'],
-      301:['pp_1','pp_2','pp_3','pp_4'],
-      302:['pp_1','pp_2','pp_3','pp_4'],
-      303:['pp_1','pp_2','pp_3','pp_4'],
-      304:['pp_1','pp_2','pp_3','pp_4'],
-      401:['step_1','step_2','step_3','step_4'],
-      402:['step_1','step_2','step_3','step_4'],
-      403:['step_1','step_2','step_3','step_4'],
-      404:['step_1','step_2','step_3','step_4'],
-      501:['str_1','str_2','str_3','str_4'],
-      502:['lunge_1','lunge_2','lunge_3','lunge_4'],
+      108:['shadow_1','shadow_2','shadow_3','shadow_4'],
+      201:['footwork_1','footwork_2','footwork_3','footwork_4'],
+      202:['footwork_1','footwork_2','footwork_3','footwork_4'],
+      203:['footwork_1','footwork_2','footwork_3','footwork_4'],
+      204:['footwork_1','footwork_2','footwork_3','footwork_4'],
+      205:['footwork_1','footwork_2','footwork_3','footwork_4'],
+      206:['footwork_1','footwork_2','footwork_3','footwork_4'],
+      207:['footwork_1','footwork_2','footwork_3','footwork_4'],
+      301:['speed_1','speed_2','speed_3','speed_4'],
+      302:['speed_1','speed_2','speed_3','speed_4'],
+      303:['speed_1','speed_2','speed_3','speed_4'],
+      304:['speed_1','speed_2','speed_3','speed_4'],
+      401:['agility_1','agility_2','agility_3','agility_4'],
+      402:['agility_1','agility_2','agility_3','agility_4'],
+      403:['agility_1','agility_2','agility_3','agility_4'],
+      404:['agility_1','agility_2','agility_3','agility_4'],
+      501:['boxjump_1','boxjump_2','boxjump_3','boxjump_4'],
+      502:['squat_1','squat_2','squat_3','squat_4'],
       503:['plank_1','plank_2','plank_3','plank_4'],
-      504:['plank_1','plank_2','plank_3','plank_4'],
-      505:['str_1','str_2','str_3','str_4'],
-      506:['str_1','str_2','str_3','str_4'],
-      601:['stretch_1','stretch_2','stretch_3','stretch_4'],
-      602:['stretch_1','stretch_2','stretch_3','stretch_4'],
-      603:['stretch_1','stretch_2','stretch_3','stretch_4'],
-      604:['stretch_1','stretch_2','stretch_3','stretch_4'],
-      605:['stretch_1','stretch_2','stretch_3','stretch_4'],
+      504:['sideplank_1','sideplank_2','sideplank_3','sideplank_4'],
+      505:['band_1','band_2','band_3','band_4'],
+      506:['calf_1','calf_2','calf_3','calf_4'],
+      601:['quad_stretch_1','quad_stretch_2','quad_stretch_3','quad_stretch_4'],
+      602:['hamstring_stretch_1','hamstring_stretch_2','hamstring_stretch_3','hamstring_stretch_4'],
+      603:['shoulder_stretch_1','shoulder_stretch_2','shoulder_stretch_3','shoulder_stretch_4'],
+      604:['wrist_stretch_1','wrist_stretch_2','wrist_stretch_3','wrist_stretch_4'],
+      605:['breathing_1','breathing_2','breathing_3','breathing_4'],
     }
     const exAnimFrame = ref(0)
     let exAnimTimer = null
@@ -2413,8 +2413,8 @@ const _app = createApp({
     function getExFrameSrc(ex) {
       const id = typeof ex === 'number' ? ex : ex?.id
       const frames = EXERCISE_ANIM[id]
-      if (!frames?.length) return '/static/exercises/frames/jog_1.svg'
-      return `/static/exercises/frames/${frames[exAnimFrame.value % frames.length]}.svg`
+      if (!frames?.length) return '/static/exercises/frames/jog_1.jpg'
+      return `/static/exercises/frames/${frames[exAnimFrame.value % frames.length]}.jpg`
     }
 
     function fmtDur(sec) {
