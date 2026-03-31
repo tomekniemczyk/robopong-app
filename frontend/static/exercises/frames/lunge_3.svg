@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 110">
+  <!-- deep right lunge – right knee bent 90°, left knee near ground -->
+  <ellipse cx="44" cy="108" rx="24" ry="3" fill="rgba(0,0,0,.15)"/>
+  <!-- left leg (back knee near floor) -->
+  <path d="M33,64 Q26,72 22,80" stroke="#1e3a5f" stroke-width="11" stroke-linecap="round" fill="none"/>
+  <circle cx="22" cy="79" r="5" fill="#243352"/>
+  <path d="M22,79 Q20,89 20,98" stroke="#243352" stroke-width="10" stroke-linecap="round" fill="none"/>
+  <path d="M13,98 Q20,102 28,102 Q30,101 30,98 Q29,95 25,94 L19,94Z" fill="#e8e8e8"/>
+  <!-- right leg (front, deep bend – knee over foot) -->
+  <path d="M47,64 Q54,72 58,80" stroke="#162d4a" stroke-width="11" stroke-linecap="round" fill="none"/>
+  <circle cx="58" cy="79" r="5" fill="#162d4a"/>
+  <path d="M58,79 Q60,92 60,104" stroke="#1a2d42" stroke-width="10" stroke-linecap="round" fill="none"/>
+  <path d="M53,104 Q60,108 68,108 Q70,107 70,104 Q69,101 65,100 L59,100Z" fill="#ddd"/>
+  <!-- shorts (wide squat/lunge stance) -->
+  <path d="M22,62 Q40,70 58,62 L55,76 Q40,80 25,76Z" fill="#1e3a5f"/>
+  <!-- shirt (torso upright) -->
+  <path d="M21,29 Q40,25 59,29 L57,63 Q40,69 23,63Z" fill="#3b82f6"/>
+  <path d="M21,29 Q40,26 59,29 L57,43 Q40,45 23,43Z" fill="rgba(255,255,255,.08)"/>
+  <!-- arms out for balance -->
+  <path d="M57,33 Q65,40 70,46" stroke="#e0b070" stroke-width="8" stroke-linecap="round" fill="none"/>
+  <circle cx="69" cy="47" r="4" fill="#d8a868"/>
+  <path d="M69,47 Q72,53 73,59" stroke="#e0b070" stroke-width="7" stroke-linecap="round" fill="none"/>
+  <!-- neck -->
+  <rect x="36" y="25" width="8" height="6" rx="2" fill="#f5c49a"/>
+  <!-- head -->
+  <circle cx="40" cy="14" r="11" fill="#f5c49a"/>
+  <path d="M29,11 Q40,3 51,11 Q50,6 40,4 Q30,6 29,11Z" fill="#2c1b10"/>
+  <ellipse cx="36" cy="13" rx="1.8" ry="2.2" fill="#1a0a00"/>
+  <ellipse cx="44" cy="13" rx="1.8" ry="2.2" fill="#1a0a00"/>
+  <ellipse cx="36.8" cy="12" rx=".6" ry=".8" fill="rgba(255,255,255,.65)"/>
+  <ellipse cx="44.8" cy="12" rx=".6" ry=".8" fill="rgba(255,255,255,.65)"/>
+  <path d="M37.5,18 Q40,20 42.5,18" stroke="#c07050" stroke-width="1.2" fill="none" stroke-linecap="round"/>
+  <!-- left arm out for balance -->
+  <path d="M23,33 Q15,40 10,46" stroke="#f5c49a" stroke-width="8" stroke-linecap="round" fill="none"/>
+  <circle cx="11" cy="47" r="4" fill="#f0b888"/>
+  <path d="M11,47 Q8,53 7,59" stroke="#f5c49a" stroke-width="7" stroke-linecap="round" fill="none"/>
+</svg>

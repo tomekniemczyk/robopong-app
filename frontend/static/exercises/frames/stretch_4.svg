@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 110">
+  <!-- deep breathing / arms wide open – inhale pose -->
+  <ellipse cx="40" cy="108" rx="17" ry="3" fill="rgba(0,0,0,.15)"/>
+  <!-- right leg (back) -->
+  <path d="M46,65 Q48,77 49,88" stroke="#162d4a" stroke-width="11" stroke-linecap="round" fill="none"/>
+  <circle cx="49" cy="87" r="5" fill="#162d4a"/>
+  <path d="M49,87 Q50,97 51,105" stroke="#1a2d42" stroke-width="10" stroke-linecap="round" fill="none"/>
+  <path d="M44,105 Q51,109 59,109 Q61,108 61,105 Q60,102 56,101 L50,101Z" fill="#ddd"/>
+  <!-- shorts -->
+  <path d="M27,64 Q40,70 53,64 L51,80 Q40,83 29,80Z" fill="#1e3a5f"/>
+  <path d="M27,64 L29,82 L38,82 L39,64Z" fill="#1a3158"/>
+  <path d="M41,64 L42,82 L51,82 L53,64Z" fill="#1a3158"/>
+  <!-- shirt -->
+  <path d="M22,30 Q40,26 58,30 L56,65 Q40,70 24,65Z" fill="#14b8a6"/>
+  <path d="M22,30 Q40,27 58,30 L56,44 Q40,46 24,44Z" fill="rgba(255,255,255,.08)"/>
+  <!-- left leg (front) -->
+  <path d="M34,65 Q32,77 31,88" stroke="#1e3a5f" stroke-width="11" stroke-linecap="round" fill="none"/>
+  <circle cx="31" cy="87" r="5" fill="#243352"/>
+  <path d="M31,87 Q29,97 29,105" stroke="#243352" stroke-width="10" stroke-linecap="round" fill="none"/>
+  <path d="M21,105 Q29,109 37,109 Q39,108 39,105 Q38,102 34,101 L28,101Z" fill="#e8e8e8"/>
+  <!-- neck -->
+  <rect x="36" y="25" width="8" height="7" rx="2" fill="#f5c49a"/>
+  <!-- head (tilted up slightly, mouth slightly open – breathing) -->
+  <circle cx="40" cy="13" r="11" fill="#f5c49a"/>
+  <path d="M29,10 Q40,2 51,10 Q50,5 40,3 Q30,5 29,10Z" fill="#2c1b10"/>
+  <ellipse cx="36" cy="12" rx="1.8" ry="2.2" fill="#1a0a00"/>
+  <ellipse cx="44" cy="12" rx="1.8" ry="2.2" fill="#1a0a00"/>
+  <ellipse cx="36.8" cy="11" rx=".6" ry=".8" fill="rgba(255,255,255,.65)"/>
+  <ellipse cx="44.8" cy="11" rx=".6" ry=".8" fill="rgba(255,255,255,.65)"/>
+  <!-- mouth open (breathing in) -->
+  <path d="M37,17.5 Q40,21 43,17.5" stroke="#c07050" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+  <ellipse cx="40" cy="19" rx="2.5" ry="1.5" fill="rgba(180,80,40,.2)"/>
+  <!-- right arm wide open (inhale) -->
+  <path d="M57,34 Q66,28 73,24" stroke="#e0b070" stroke-width="8" stroke-linecap="round" fill="none"/>
+  <circle cx="72" cy="25" r="4" fill="#d8a868"/>
+  <path d="M72,25 Q77,20 79,16" stroke="#e0b070" stroke-width="7" stroke-linecap="round" fill="none"/>
+  <!-- left arm wide open (inhale) -->
+  <path d="M23,34 Q14,28 7,24" stroke="#f5c49a" stroke-width="8" stroke-linecap="round" fill="none"/>
+  <circle cx="8" cy="25" r="4" fill="#f0b888"/>
+  <path d="M8,25 Q3,20 1,16" stroke="#f5c49a" stroke-width="7" stroke-linecap="round" fill="none"/>
+</svg>

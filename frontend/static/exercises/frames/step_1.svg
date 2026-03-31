@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 110">
+  <!-- athletic ready stance – wide, low, arms bent (center position) -->
+  <ellipse cx="40" cy="108" rx="22" ry="3" fill="rgba(0,0,0,.15)"/>
+  <!-- right leg (back, wide stance) -->
+  <path d="M50,68 Q57,78 61,90" stroke="#162d4a" stroke-width="11" stroke-linecap="round" fill="none"/>
+  <circle cx="61" cy="89" r="5" fill="#162d4a"/>
+  <path d="M61,89 Q62,97 62,105" stroke="#1a2d42" stroke-width="10" stroke-linecap="round" fill="none"/>
+  <path d="M55,105 Q62,109 70,109 Q72,108 72,105 Q71,102 67,101 L61,101Z" fill="#ddd"/>
+  <!-- shorts -->
+  <path d="M23,66 Q40,73 57,66 L54,81 Q40,84 26,81Z" fill="#1e3a5f"/>
+  <path d="M23,66 L25,83 L34,83 L36,66Z" fill="#1a3158"/>
+  <path d="M44,66 L46,81 L55,81 L57,66Z" fill="#1a3158"/>
+  <!-- shirt -->
+  <path d="M21,31 Q40,27 59,31 L56,67 Q40,72 24,67Z" fill="#6366f1"/>
+  <path d="M21,31 Q40,28 59,31 L56,45 Q40,47 24,45Z" fill="rgba(255,255,255,.08)"/>
+  <!-- right arm (bent, guard position) -->
+  <path d="M58,35 Q64,46 66,57" stroke="#e0b070" stroke-width="8" stroke-linecap="round" fill="none"/>
+  <circle cx="66" cy="56" r="4" fill="#d8a868"/>
+  <path d="M66,56 Q67,63 66,70" stroke="#e0b070" stroke-width="7" stroke-linecap="round" fill="none"/>
+  <circle cx="66" cy="71" r="3.5" fill="#e0b070"/>
+  <!-- left leg (wide stance) -->
+  <path d="M30,68 Q23,78 19,90" stroke="#1e3a5f" stroke-width="11" stroke-linecap="round" fill="none"/>
+  <circle cx="19" cy="89" r="5" fill="#243352"/>
+  <path d="M19,89 Q18,97 18,105" stroke="#243352" stroke-width="10" stroke-linecap="round" fill="none"/>
+  <path d="M10,105 Q18,109 26,109 Q28,108 28,105 Q27,102 23,101 L17,101Z" fill="#e8e8e8"/>
+  <!-- neck -->
+  <rect x="36" y="27" width="8" height="6" rx="2" fill="#f5c49a"/>
+  <!-- head -->
+  <circle cx="40" cy="16" r="11" fill="#f5c49a"/>
+  <path d="M29,13 Q40,5 51,13 Q50,8 40,6 Q30,8 29,13Z" fill="#2c1b10"/>
+  <ellipse cx="36" cy="15" rx="1.8" ry="2.2" fill="#1a0a00"/>
+  <ellipse cx="44" cy="15" rx="1.8" ry="2.2" fill="#1a0a00"/>
+  <ellipse cx="36.8" cy="14" rx=".6" ry=".8" fill="rgba(255,255,255,.65)"/>
+  <ellipse cx="44.8" cy="14" rx=".6" ry=".8" fill="rgba(255,255,255,.65)"/>
+  <path d="M37.5,20 Q40,22 42.5,20" stroke="#c07050" stroke-width="1.2" fill="none" stroke-linecap="round"/>
+  <!-- left arm (bent, guard position) -->
+  <path d="M22,35 Q16,46 14,57" stroke="#f5c49a" stroke-width="8" stroke-linecap="round" fill="none"/>
+  <circle cx="14" cy="56" r="4" fill="#f0b888"/>
+  <path d="M14,56 Q13,63 14,70" stroke="#f5c49a" stroke-width="7" stroke-linecap="round" fill="none"/>
+  <circle cx="14" cy="71" r="3.5" fill="#f5c49a"/>
+</svg>

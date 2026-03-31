@@ -872,7 +872,7 @@
         <div class="ball-counter" style="color:#a855f7">{{ trainingTimer }}</div>
         <div class="ball-sub">{{ tc('exercises', trainingDrillName) }}</div>
         <img v-if="trainingExerciseId"
-          :src="`/static/exercises/${trainingExerciseId}.gif`"
+          :src="getExFrameSrc(trainingExerciseId)"
           :alt="tc('exercises', trainingDrillName)"
           @error="$event.target.style.display='none'"
           style="display:block;width:140px;height:140px;object-fit:contain;margin:10px auto;border-radius:10px;background:rgba(168,85,247,.08)">
@@ -2359,19 +2359,62 @@ const _app = createApp({
       trainingStep.value = 0
       send({ action: 'run_training', id })
     }
-    const EX_FRAME_MAP = {
-      101:'warmup', 102:'warmup', 103:'warmup', 104:'warmup',
-      105:'warmup', 106:'warmup', 107:'warmup', 108:'strength',
-      201:'footwork', 202:'footwork', 203:'footwork', 204:'speed',
-      205:'footwork', 206:'speed', 207:'speed',
-      301:'speed', 302:'speed', 303:'warmup', 304:'footwork',
-      401:'speed', 402:'footwork', 403:'agility', 404:'agility',
-      501:'strength', 502:'lunge', 503:'strength', 504:'pushup',
-      505:'pushup', 506:'strength',
-      601:'cooldown', 602:'cooldown', 603:'hamstring', 604:'lunge', 605:'cooldown',
+    const EXERCISE_ANIM = {
+      101:['jog_1','jog_2','jog_3','jog_4'],
+      102:['arms_1','arms_2','arms_3','arms_4'],
+      103:['arms_1','arms_2','arms_3','arms_4'],
+      104:['arms_1','arms_2','arms_3','arms_4'],
+      105:['arms_1','arms_2','arms_3','arms_4'],
+      106:['jog_1','jog_2','jog_3','jog_4'],
+      107:['lunge_1','lunge_2','lunge_3','lunge_4'],
+      108:['pp_1','pp_2','pp_3','pp_4'],
+      201:['step_1','step_2','step_3','step_4'],
+      202:['step_1','step_2','step_3','step_4'],
+      203:['step_1','step_2','step_3','step_4'],
+      204:['step_1','step_2','step_3','step_4'],
+      205:['step_1','step_2','step_3','step_4'],
+      206:['step_1','step_2','step_3','step_4'],
+      207:['step_1','step_2','step_3','step_4'],
+      301:['pp_1','pp_2','pp_3','pp_4'],
+      302:['pp_1','pp_2','pp_3','pp_4'],
+      303:['pp_1','pp_2','pp_3','pp_4'],
+      304:['pp_1','pp_2','pp_3','pp_4'],
+      401:['step_1','step_2','step_3','step_4'],
+      402:['step_1','step_2','step_3','step_4'],
+      403:['step_1','step_2','step_3','step_4'],
+      404:['step_1','step_2','step_3','step_4'],
+      501:['str_1','str_2','str_3','str_4'],
+      502:['lunge_1','lunge_2','lunge_3','lunge_4'],
+      503:['plank_1','plank_2','plank_3','plank_4'],
+      504:['plank_1','plank_2','plank_3','plank_4'],
+      505:['str_1','str_2','str_3','str_4'],
+      506:['str_1','str_2','str_3','str_4'],
+      601:['stretch_1','stretch_2','stretch_3','stretch_4'],
+      602:['stretch_1','stretch_2','stretch_3','stretch_4'],
+      603:['stretch_1','stretch_2','stretch_3','stretch_4'],
+      604:['stretch_1','stretch_2','stretch_3','stretch_4'],
+      605:['stretch_1','stretch_2','stretch_3','stretch_4'],
+    }
+    const exAnimFrame = ref(0)
+    let exAnimTimer = null
+    function startExAnim(id) {
+      const frames = EXERCISE_ANIM[id]
+      if (!frames?.length) return
+      exAnimFrame.value = 0
+      clearInterval(exAnimTimer)
+      exAnimTimer = setInterval(() => {
+        exAnimFrame.value = (exAnimFrame.value + 1) % frames.length
+      }, 500)
+    }
+    function stopExAnim() {
+      clearInterval(exAnimTimer)
+      exAnimTimer = null
     }
     function getExFrameSrc(ex) {
-      return `/static/exercises/frames/${EX_FRAME_MAP[ex.id] || 'warmup'}.svg`
+      const id = typeof ex === 'number' ? ex : ex?.id
+      const frames = EXERCISE_ANIM[id]
+      if (!frames?.length) return '/static/exercises/frames/jog_1.svg'
+      return `/static/exercises/frames/${frames[exAnimFrame.value % frames.length]}.svg`
     }
 
     function fmtDur(sec) {
@@ -2935,6 +2978,17 @@ const _app = createApp({
     watch(lastAddr, addr => {
       isCalibrated.value = !!addr && localStorage.getItem(`cal_done:${addr}`) === '1'
     })
+    watch(selectedExercise, (ex) => {
+      if (ex?.id) startExAnim(ex.id)
+      else stopExAnim()
+    })
+    watch(trainingPhase, (phase) => {
+      if (phase === 'exercise' && trainingExerciseId.value) startExAnim(trainingExerciseId.value)
+      else if (phase !== 'exercise') stopExAnim()
+    })
+    watch(trainingExerciseId, (id) => {
+      if (id && trainingPhase.value === 'exercise') startExAnim(id)
+    })
 
     // ── helpers ────────────────────────────────────────────────
     function addLog(line) {
@@ -3076,7 +3130,7 @@ const _app = createApp({
       resumeFromHistory,
       addPlayer, renamePlayer, deletePlayer, openPlayerDetail, playerRunCount, playerProgram30,
       deleteRecording, loadPlayers, loadTrainingHistory, trainingHistory,
-      exerciseCategories, openExCats, selectedExercise, toggleExCat, loadExercises, onStepTypeSelect, getExFrameSrc,
+      exerciseCategories, openExCats, selectedExercise, toggleExCat, loadExercises, onStepTypeSelect, getExFrameSrc, exAnimFrame,
     }
   }
 })

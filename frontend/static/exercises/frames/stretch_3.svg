@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 110">
+  <!-- forward fold – hamstring stretch, hands reaching toward floor -->
+  <ellipse cx="40" cy="108" rx="17" ry="3" fill="rgba(0,0,0,.15)"/>
+  <!-- both legs (straight, parallel – seen from side hint) -->
+  <!-- right leg -->
+  <path d="M45,62 Q46,76 47,90" stroke="#162d4a" stroke-width="11" stroke-linecap="round" fill="none"/>
+  <circle cx="47" cy="89" r="5" fill="#162d4a"/>
+  <path d="M47,89 Q47,97 47,105" stroke="#1a2d42" stroke-width="10" stroke-linecap="round" fill="none"/>
+  <path d="M40,105 Q47,109 55,109 Q57,108 57,105 Q56,102 52,101 L46,101Z" fill="#ddd"/>
+  <!-- left leg -->
+  <path d="M35,62 Q34,76 33,90" stroke="#1e3a5f" stroke-width="11" stroke-linecap="round" fill="none"/>
+  <circle cx="33" cy="89" r="5" fill="#243352"/>
+  <path d="M33,89 Q33,97 33,105" stroke="#243352" stroke-width="10" stroke-linecap="round" fill="none"/>
+  <path d="M25,105 Q33,109 41,109 Q43,108 43,105 Q42,102 38,101 L32,101Z" fill="#e8e8e8"/>
+  <!-- shorts (bent forward, waistband visible) -->
+  <path d="M24,60 Q40,56 56,60 L54,66 Q40,63 26,66Z" fill="#1e3a5f"/>
+  <!-- torso bent forward 90°+ (inverted U shape) -->
+  <path d="M24,58 Q40,50 56,58 L56,62 L40,55 L24,62Z" fill="#14b8a6"/>
+  <!-- shirt visible on bent-over body -->
+  <path d="M24,58 Q32,40 40,30" stroke="#14b8a6" stroke-width="14" stroke-linecap="round" fill="none"/>
+  <path d="M56,58 Q48,40 40,30" stroke="#14b8a6" stroke-width="14" stroke-linecap="round" fill="none"/>
+  <!-- right arm hanging down toward floor -->
+  <path d="M56,55 Q54,68 51,80" stroke="#e0b070" stroke-width="8" stroke-linecap="round" fill="none"/>
+  <circle cx="51" cy="79" r="4" fill="#d8a868"/>
+  <path d="M51,79 Q49,90 48,97" stroke="#e0b070" stroke-width="7" stroke-linecap="round" fill="none"/>
+  <circle cx="48" cy="98" r="3.5" fill="#e0b070"/>
+  <!-- left arm hanging down toward floor -->
+  <path d="M24,55 Q26,68 29,80" stroke="#f5c49a" stroke-width="8" stroke-linecap="round" fill="none"/>
+  <circle cx="29" cy="79" r="4" fill="#f0b888"/>
+  <path d="M29,79 Q31,90 32,97" stroke="#f5c49a" stroke-width="7" stroke-linecap="round" fill="none"/>
+  <circle cx="32" cy="98" r="3.5" fill="#f5c49a"/>
+  <!-- neck bent forward -->
+  <rect x="37" y="23" width="7" height="9" rx="2" fill="#f5c49a" transform="rotate(15 40 27)"/>
+  <!-- head hanging forward/down -->
+  <circle cx="40" cy="19" r="11" fill="#f5c49a"/>
+  <path d="M29,16 Q40,8 51,16 Q50,11 40,9 Q30,11 29,16Z" fill="#2c1b10"/>
+  <ellipse cx="36" cy="18" rx="1.8" ry="2.2" fill="#1a0a00"/>
+  <ellipse cx="44" cy="18" rx="1.8" ry="2.2" fill="#1a0a00"/>
+  <path d="M37.5,23 Q40,25 42.5,23" stroke="#c07050" stroke-width="1.2" fill="none" stroke-linecap="round"/>
+</svg>

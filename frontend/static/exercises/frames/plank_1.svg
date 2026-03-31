@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 110">
+  <!-- forearm plank – side view, body horizontal -->
+  <!-- floor -->
+  <line x1="2" y1="90" x2="78" y2="90" stroke="rgba(255,255,255,.12)" stroke-width="1.5" stroke-dasharray="4,3"/>
+  <ellipse cx="40" cy="108" rx="30" ry="2.5" fill="rgba(0,0,0,.12)"/>
+  <!-- back foot (right) -->
+  <circle cx="70" cy="88" r="4.5" fill="#ddd"/>
+  <path d="M70,86 Q74,87 76,90" stroke="#888" stroke-width="2" fill="none" stroke-linecap="round"/>
+  <!-- right leg (calf then thigh, horizontal) -->
+  <path d="M70,87 Q65,85 58,83" stroke="#1e3a5f" stroke-width="10" stroke-linecap="round" fill="none"/>
+  <!-- front foot (left) -->
+  <circle cx="58" cy="88" r="4.5" fill="#e8e8e8"/>
+  <!-- left leg (horizontal) -->
+  <path d="M58,87 Q52,84 44,82" stroke="#1e3a5f" stroke-width="10" stroke-linecap="round" fill="none"/>
+  <!-- hips/shorts -->
+  <path d="M38,78 Q44,80 50,82 L50,88 Q44,86 38,84Z" fill="#1e3a5f"/>
+  <!-- torso/shirt (horizontal, facing left) -->
+  <path d="M16,72 Q26,70 38,73 L39,82 Q27,84 16,82Z" fill="#8b5cf6"/>
+  <path d="M16,72 Q26,70 38,73 L38,77 Q26,75 16,77Z" fill="rgba(255,255,255,.08)"/>
+  <!-- right forearm (on floor) -->
+  <path d="M17,81 Q18,86 20,90" stroke="#f5c49a" stroke-width="7" stroke-linecap="round" fill="none"/>
+  <!-- right elbow (on floor) -->
+  <circle cx="20" cy="89" r="4" fill="#f0b888"/>
+  <!-- right upper arm (going back toward shoulder) -->
+  <path d="M20,89 Q24,83 28,78" stroke="#f5c49a" stroke-width="8" stroke-linecap="round" fill="none"/>
+  <!-- left forearm (on floor, slightly forward) -->
+  <path d="M10,82 Q11,87 13,90" stroke="#e0b070" stroke-width="7" stroke-linecap="round" fill="none"/>
+  <circle cx="13" cy="89" r="4" fill="#d8a868"/>
+  <path d="M13,89 Q17,83 21,78" stroke="#e0b070" stroke-width="8" stroke-linecap="round" fill="none"/>
+  <!-- neck (horizontal) -->
+  <rect x="11" y="70" width="7" height="5" rx="2" fill="#f5c49a" transform="rotate(-5 14 72)"/>
+  <!-- head (side view, looking left/down) -->
+  <circle cx="10" cy="66" r="10" fill="#f5c49a"/>
+  <!-- hair -->
+  <path d="M2,63 Q10,56 18,63 Q17,58 10,57 Q3,58 2,63Z" fill="#2c1b10"/>
+  <!-- eye (side profile) -->
+  <ellipse cx="6" cy="66" rx="1.5" ry="1.8" fill="#1a0a00"/>
+  <ellipse cx="6.7" cy="65.5" rx=".5" ry=".6" fill="rgba(255,255,255,.65)"/>
+  <!-- mouth (side) -->
+  <path d="M5,70 Q7,72 9,71" stroke="#c07050" stroke-width="1.2" fill="none" stroke-linecap="round"/>
+  <!-- ear -->
+  <ellipse cx="17" cy="66" rx="2" ry="3" fill="#e8b078"/>
+</svg>

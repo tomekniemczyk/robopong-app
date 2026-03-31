@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 110">
+  <!-- high plank (hands plank) – side view, arms straight -->
+  <line x1="2" y1="92" x2="78" y2="92" stroke="rgba(255,255,255,.12)" stroke-width="1.5" stroke-dasharray="4,3"/>
+  <ellipse cx="40" cy="108" rx="30" ry="2.5" fill="rgba(0,0,0,.12)"/>
+  <!-- back foot -->
+  <circle cx="70" cy="90" r="4.5" fill="#ddd"/>
+  <path d="M70,88 Q74,89 76,92" stroke="#888" stroke-width="2" fill="none" stroke-linecap="round"/>
+  <!-- legs (horizontal, slightly elevated from floor) -->
+  <path d="M70,88 Q64,84 56,82" stroke="#1e3a5f" stroke-width="10" stroke-linecap="round" fill="none"/>
+  <circle cx="56" cy="90" r="4.5" fill="#e8e8e8"/>
+  <path d="M56,88 Q50,83 42,80" stroke="#1e3a5f" stroke-width="10" stroke-linecap="round" fill="none"/>
+  <!-- hips -->
+  <path d="M36,76 Q42,78 48,80 L48,86 Q42,84 36,82Z" fill="#1e3a5f"/>
+  <!-- torso -->
+  <path d="M14,66 Q25,63 37,67 L38,76 Q26,78 14,75Z" fill="#8b5cf6"/>
+  <path d="M14,66 Q25,63 37,67 L37,71 Q25,68 14,71Z" fill="rgba(255,255,255,.08)"/>
+  <!-- right arm straight down (high plank) -->
+  <path d="M23,75 Q24,82 25,90" stroke="#f5c49a" stroke-width="7" stroke-linecap="round" fill="none"/>
+  <circle cx="25" cy="89" r="4" fill="#f0b888"/>
+  <!-- right upper arm from shoulder down -->
+  <path d="M22,67 Q23,72 23,75" stroke="#f5c49a" stroke-width="8" stroke-linecap="round" fill="none"/>
+  <!-- right hand flat on floor -->
+  <ellipse cx="26" cy="91" rx="5" ry="3" fill="#f5c49a" transform="rotate(10 26 91)"/>
+  <!-- left arm (slightly behind) -->
+  <path d="M15,75 Q15,82 16,90" stroke="#e0b070" stroke-width="7" stroke-linecap="round" fill="none"/>
+  <circle cx="16" cy="89" r="4" fill="#d8a868"/>
+  <path d="M14,67 Q14,72 15,75" stroke="#e0b070" stroke-width="8" stroke-linecap="round" fill="none"/>
+  <ellipse cx="17" cy="91" rx="5" ry="3" fill="#e0b070" transform="rotate(10 17 91)"/>
+  <!-- neck -->
+  <rect x="9" y="63" width="7" height="5" rx="2" fill="#f5c49a" transform="rotate(-8 12 65)"/>
+  <!-- head -->
+  <circle cx="8" cy="58" r="10" fill="#f5c49a"/>
+  <path d="M0,55 Q8,48 16,55 Q15,50 8,49 Q1,50 0,55Z" fill="#2c1b10"/>
+  <ellipse cx="4" cy="58" rx="1.5" ry="1.8" fill="#1a0a00"/>
+  <ellipse cx="4.7" cy="57.5" rx=".5" ry=".6" fill="rgba(255,255,255,.65)"/>
+  <path d="M3,62 Q5,64 7,63" stroke="#c07050" stroke-width="1.2" fill="none" stroke-linecap="round"/>
+  <ellipse cx="15" cy="58" rx="2" ry="3" fill="#e8b078"/>
+</svg>

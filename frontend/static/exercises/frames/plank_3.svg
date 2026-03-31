@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 110">
+  <!-- side plank – on left arm, body sideways facing viewer, arm up -->
+  <line x1="2" y1="94" x2="78" y2="94" stroke="rgba(255,255,255,.12)" stroke-width="1.5" stroke-dasharray="4,3"/>
+  <ellipse cx="40" cy="108" rx="26" ry="2.5" fill="rgba(0,0,0,.12)"/>
+  <!-- feet (stacked, right side) -->
+  <path d="M62,91 Q68,93 72,94" stroke="#e8e8e8" stroke-width="8" stroke-linecap="round" fill="none"/>
+  <!-- legs (horizontal, stacked) -->
+  <path d="M44,84 Q53,86 62,90" stroke="#1e3a5f" stroke-width="10" stroke-linecap="round" fill="none"/>
+  <!-- hips -->
+  <path d="M35,77 Q40,80 44,83 L44,90 Q39,87 35,84Z" fill="#1e3a5f"/>
+  <!-- torso (side-facing body) -->
+  <path d="M16,64 Q26,62 36,66 L36,83 Q26,85 16,82Z" fill="#8b5cf6"/>
+  <path d="M16,64 Q26,62 36,66 L36,70 Q26,68 16,68Z" fill="rgba(255,255,255,.08)"/>
+  <!-- supporting arm (left, going to floor) -->
+  <path d="M18,80 Q18,87 18,93" stroke="#f5c49a" stroke-width="7" stroke-linecap="round" fill="none"/>
+  <circle cx="18" cy="92" r="4" fill="#f0b888"/>
+  <path d="M17,70 Q17,75 18,80" stroke="#f5c49a" stroke-width="8" stroke-linecap="round" fill="none"/>
+  <!-- elbow flat on floor -->
+  <ellipse cx="18" cy="93" rx="5" ry="2.5" fill="#f5c49a" transform="rotate(5 18 93)"/>
+  <!-- free arm raised up (right arm) -->
+  <path d="M30,66 Q34,55 36,44" stroke="#e0b070" stroke-width="8" stroke-linecap="round" fill="none"/>
+  <circle cx="36" cy="45" r="4" fill="#d8a868"/>
+  <path d="M36,45 Q38,35 40,27" stroke="#e0b070" stroke-width="7" stroke-linecap="round" fill="none"/>
+  <circle cx="40" cy="26" r="3.5" fill="#e0b070"/>
+  <!-- neck -->
+  <rect x="10" y="62" width="7" height="4" rx="2" fill="#f5c49a" transform="rotate(-5 13 64)"/>
+  <!-- head -->
+  <circle cx="10" cy="54" r="10" fill="#f5c49a"/>
+  <path d="M2,51 Q10,44 18,51 Q17,46 10,45 Q3,46 2,51Z" fill="#2c1b10"/>
+  <ellipse cx="6" cy="54" rx="1.8" ry="2.2" fill="#1a0a00"/>
+  <ellipse cx="14" cy="54" rx="1.8" ry="2.2" fill="#1a0a00"/>
+  <ellipse cx="6.8" cy="53" rx=".6" ry=".8" fill="rgba(255,255,255,.65)"/>
+  <ellipse cx="14.8" cy="53" rx=".6" ry=".8" fill="rgba(255,255,255,.65)"/>
+  <path d="M7.5,59 Q10,61 12.5,59" stroke="#c07050" stroke-width="1.2" fill="none" stroke-linecap="round"/>
+</svg>

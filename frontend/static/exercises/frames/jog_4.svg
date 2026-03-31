@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 110">
+  <!-- shadow (both feet, mid-stride) -->
+  <ellipse cx="40" cy="108" rx="16" ry="3" fill="rgba(0,0,0,.15)"/>
+  <!-- right leg (back) – stride position -->
+  <path d="M47,64 Q54,76 56,88" stroke="#162d4a" stroke-width="11" stroke-linecap="round" fill="none"/>
+  <circle cx="56" cy="87" r="5" fill="#162d4a"/>
+  <path d="M56,87 Q58,96 59,104" stroke="#1a2d42" stroke-width="10" stroke-linecap="round" fill="none"/>
+  <path d="M52,104 Q59,108 67,108 Q69,107 69,104 Q68,101 64,100 L58,100Z" fill="#ddd"/>
+  <line x1="52" y1="105" x2="67" y2="109" stroke="#888" stroke-width="1" stroke-linecap="round"/>
+  <!-- shorts -->
+  <path d="M26,63 Q40,69 54,63 L52,79 Q40,82 28,79Z" fill="#1e3a5f"/>
+  <path d="M26,63 L28,81 L37,81 L38,63Z" fill="#1a3158"/>
+  <path d="M42,63 L44,79 L53,79 L54,63Z" fill="#1a3158"/>
+  <!-- shirt -->
+  <path d="M22,30 Q40,26 58,30 L56,64 Q40,70 24,64Z" fill="#f97316"/>
+  <path d="M22,30 Q40,27 58,30 L56,44 Q40,46 24,44Z" fill="rgba(255,255,255,.08)"/>
+  <!-- right arm (back swing – arm down-behind) -->
+  <path d="M57,34 Q64,48 66,60" stroke="#e0b070" stroke-width="8" stroke-linecap="round" fill="none"/>
+  <circle cx="66" cy="59" r="4" fill="#d8a868"/>
+  <path d="M66,59 Q68,68 68,76" stroke="#e0b070" stroke-width="7" stroke-linecap="round" fill="none"/>
+  <circle cx="68" cy="77" r="3.5" fill="#e0b070"/>
+  <!-- left leg (front stride, foot forward) -->
+  <path d="M33,64 Q26,76 24,88" stroke="#1e3a5f" stroke-width="11" stroke-linecap="round" fill="none"/>
+  <circle cx="24" cy="87" r="5" fill="#243352"/>
+  <path d="M24,87 Q22,96 21,104" stroke="#243352" stroke-width="10" stroke-linecap="round" fill="none"/>
+  <path d="M13,104 Q21,108 29,108 Q31,107 31,104 Q30,101 26,100 L20,100Z" fill="#e8e8e8"/>
+  <line x1="13" y1="105" x2="29" y2="109" stroke="#888" stroke-width="1" stroke-linecap="round"/>
+  <!-- neck -->
+  <rect x="36" y="25" width="8" height="7" rx="2" fill="#f5c49a"/>
+  <!-- head -->
+  <circle cx="40" cy="14" r="11" fill="#f5c49a"/>
+  <path d="M29,11 Q40,3 51,11 Q50,6 40,4 Q30,6 29,11Z" fill="#2c1b10"/>
+  <ellipse cx="36" cy="13" rx="1.8" ry="2.2" fill="#1a0a00"/>
+  <ellipse cx="44" cy="13" rx="1.8" ry="2.2" fill="#1a0a00"/>
+  <ellipse cx="36.8" cy="12" rx=".6" ry=".8" fill="rgba(255,255,255,.65)"/>
+  <ellipse cx="44.8" cy="12" rx=".6" ry=".8" fill="rgba(255,255,255,.65)"/>
+  <path d="M37.5,18 Q40,20 42.5,18" stroke="#c07050" stroke-width="1.2" fill="none" stroke-linecap="round"/>
+  <!-- left arm (forward swing – elbow bent up-forward) -->
+  <path d="M23,34 Q19,21 17,12" stroke="#f5c49a" stroke-width="8" stroke-linecap="round" fill="none"/>
+  <circle cx="17" cy="13" r="4" fill="#f0b888"/>
+  <path d="M17,13 Q19,6 22,2" stroke="#f5c49a" stroke-width="7" stroke-linecap="round" fill="none"/>
+</svg>

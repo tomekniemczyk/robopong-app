@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 110">
+  <!-- arms bent in front – completing circle -->
+  <ellipse cx="40" cy="108" rx="18" ry="3" fill="rgba(0,0,0,.15)"/>
+  <!-- right leg (back) -->
+  <path d="M47,65 Q50,77 51,88" stroke="#162d4a" stroke-width="11" stroke-linecap="round" fill="none"/>
+  <circle cx="51" cy="87" r="5" fill="#162d4a"/>
+  <path d="M51,87 Q52,97 53,105" stroke="#1a2d42" stroke-width="10" stroke-linecap="round" fill="none"/>
+  <path d="M46,105 Q53,109 61,109 Q63,108 63,105 Q62,102 58,101 L52,101Z" fill="#ddd"/>
+  <!-- shorts -->
+  <path d="M26,64 Q40,70 54,64 L52,80 Q40,83 28,80Z" fill="#1e3a5f"/>
+  <path d="M26,64 L28,82 L37,82 L38,64Z" fill="#1a3158"/>
+  <path d="M42,64 L43,82 L52,82 L54,64Z" fill="#1a3158"/>
+  <!-- shirt -->
+  <path d="M22,30 Q40,26 58,30 L56,65 Q40,70 24,65Z" fill="#f59e0b"/>
+  <path d="M22,30 Q40,27 58,30 L56,44 Q40,46 24,44Z" fill="rgba(255,255,255,.08)"/>
+  <!-- right arm bent in front (elbow pointing right, hand toward center) -->
+  <path d="M57,34 Q65,36 70,38" stroke="#e0b070" stroke-width="8" stroke-linecap="round" fill="none"/>
+  <circle cx="69" cy="38" r="4" fill="#d8a868"/>
+  <path d="M69,38 Q62,46 52,50" stroke="#e0b070" stroke-width="7" stroke-linecap="round" fill="none"/>
+  <circle cx="51" cy="51" r="3.5" fill="#e0b070"/>
+  <!-- left leg (front) -->
+  <path d="M33,65 Q30,77 29,88" stroke="#1e3a5f" stroke-width="11" stroke-linecap="round" fill="none"/>
+  <circle cx="29" cy="87" r="5" fill="#243352"/>
+  <path d="M29,87 Q27,97 26,105" stroke="#243352" stroke-width="10" stroke-linecap="round" fill="none"/>
+  <path d="M18,105 Q26,109 34,109 Q36,108 36,105 Q35,102 31,101 L25,101Z" fill="#e8e8e8"/>
+  <!-- neck -->
+  <rect x="36" y="25" width="8" height="7" rx="2" fill="#f5c49a"/>
+  <!-- head -->
+  <circle cx="40" cy="14" r="11" fill="#f5c49a"/>
+  <path d="M29,11 Q40,3 51,11 Q50,6 40,4 Q30,6 29,11Z" fill="#2c1b10"/>
+  <ellipse cx="36" cy="13" rx="1.8" ry="2.2" fill="#1a0a00"/>
+  <ellipse cx="44" cy="13" rx="1.8" ry="2.2" fill="#1a0a00"/>
+  <ellipse cx="36.8" cy="12" rx=".6" ry=".8" fill="rgba(255,255,255,.65)"/>
+  <ellipse cx="44.8" cy="12" rx=".6" ry=".8" fill="rgba(255,255,255,.65)"/>
+  <path d="M37.5,18 Q40,20 42.5,18" stroke="#c07050" stroke-width="1.2" fill="none" stroke-linecap="round"/>
+  <!-- left arm bent in front (elbow pointing left, hand toward center) -->
+  <path d="M23,34 Q15,36 10,38" stroke="#f5c49a" stroke-width="8" stroke-linecap="round" fill="none"/>
+  <circle cx="11" cy="38" r="4" fill="#f0b888"/>
+  <path d="M11,38 Q18,46 28,50" stroke="#f5c49a" stroke-width="7" stroke-linecap="round" fill="none"/>
+  <circle cx="29" cy="51" r="3.5" fill="#f5c49a"/>
+</svg>
