@@ -2032,7 +2032,7 @@ const _app = createApp({
     // Height 75-210 → Y: 75=blisko siatki=30, 210=blisko gracza=210
     function ballTableX(b) {
       const osc = Math.max(127, Math.min(173, b.oscillation))
-      return 20 + (173 - osc) / (173 - 127) * 260
+      return 20 + (osc - 127) / (173 - 127) * 260
     }
     function ballTableY(b) {
       const h = Math.max(75, Math.min(210, b.height))
