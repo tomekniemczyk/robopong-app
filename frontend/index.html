@@ -1366,50 +1366,42 @@
         <!-- Expanded details -->
         <div v-if="expandedHistoryId === h.id" style="margin-top:6px;padding:8px;background:rgba(255,255,255,.03);border-radius:6px;margin-left:22px">
           <!-- Step list from the training definition -->
-          <div v-if="getTrainingSteps(h.training_id)" v-for="(step, si) in getTrainingSteps(h.training_id)" :key="si"
-            style="display:flex;align-items:flex-start;gap:6px;padding:3px 0;font-size:11px;border-bottom:1px solid rgba(255,255,255,.03)">
-            <span style="width:16px;text-align:center;flex-shrink:0" :style="{color: si < h.steps_completed ? '#34c759' : si === h.steps_completed && h.status === 'stopped' ? '#ff9f0a' : 'var(--muted)'}">
-              {{ si < h.steps_completed ? '✓' : si === h.steps_completed && h.status === 'stopped' ? '▶' : '○' }}
-            </span>
-            <span style="flex:1">
-              {{ step.exercise_id ? '🏋 ' + (step.exercise_name || '') : (step.drill_name || 'Drill') }}
-              <span v-if="!step.exercise_id" style="color:var(--muted)">({{ step.count }}p · {{ step.percent }}%)</span>
-              <span v-if="step.exercise_id" style="color:var(--muted)">({{ fmtDur(step.duration_sec) }})</span>
-            </span>
-            <!-- Notes for this step -->
-            <span v-for="n in (h.step_notes || []).filter(n => n.step === si+1)" :key="n.note" style="font-size:10px;color:var(--text2)">
-              💬 {{ n.note }}
-            </span>
-            <!-- Play recording for this step -->
-            <button v-if="getStepRecording(h, si)" class="btn btn-ghost" style="font-size:10px;padding:1px 6px"
-              @click.stop="playingRecording = playingRecording === getStepRecording(h, si).filename ? null : getStepRecording(h, si).filename">
-              {{ playingRecording === getStepRecording(h, si)?.filename ? '⏹' : '▶' }}
-            </button>
-          </div>
-          <!-- Inline video player for step recording -->
-          <video v-if="getStepRecording(h, si) && playingRecording === getStepRecording(h, si).filename"
-            :src="'/api/recordings/' + getStepRecording(h, si).filename" controls autoplay
-            style="width:100%;margin:4px 0 6px 22px;border-radius:6px;max-height:250px"></video>
+          <template v-if="getTrainingSteps(h.training_id)">
+            <div v-for="(step, si) in getTrainingSteps(h.training_id)" :key="si">
+              <div style="display:flex;align-items:center;gap:6px;padding:3px 0;font-size:11px;border-bottom:1px solid rgba(255,255,255,.03)">
+                <span style="width:16px;text-align:center;flex-shrink:0" :style="{color: si < h.steps_completed ? '#34c759' : si === h.steps_completed && h.status === 'stopped' ? '#ff9f0a' : 'var(--muted)'}">
+                  {{ si < h.steps_completed ? '✓' : si === h.steps_completed && h.status === 'stopped' ? '▶' : '○' }}
+                </span>
+                <span style="flex:1">
+                  {{ step.exercise_id ? '🏋 ' + (step.exercise_name || '') : (step.drill_name || 'Drill') }}
+                  <span v-if="!step.exercise_id" style="color:var(--muted)">({{ step.count }}p · {{ step.percent }}%)</span>
+                  <span v-if="step.exercise_id" style="color:var(--muted)">({{ fmtDur(step.duration_sec) }})</span>
+                </span>
+                <!-- Notes for this step -->
+                <span v-for="n in (h.step_notes || []).filter(n => n.step === si+1)" :key="n.note" style="font-size:10px;color:var(--text2)">
+                  💬 {{ n.note }}
+                </span>
+                <!-- Recording controls for this step -->
+                <template v-if="getStepRecording(h, si)">
+                  <button class="btn btn-ghost" style="font-size:10px;padding:1px 6px;color:#ff3b30"
+                    @click.stop="playingRecording = playingRecording === getStepRecording(h, si).filename ? null : getStepRecording(h, si).filename">
+                    {{ playingRecording === getStepRecording(h, si)?.filename ? '⏹' : '🎥 ▶' }}
+                  </button>
+                  <a :href="'/api/recordings/' + getStepRecording(h, si).filename" download class="btn btn-ghost" style="font-size:10px;padding:1px 6px" @click.stop>⬇</a>
+                  <button class="btn btn-ghost" style="font-size:10px;padding:1px 6px;color:var(--danger)" @click.stop="deleteRecording(getStepRecording(h, si).filename)">✕</button>
+                </template>
+              </div>
+              <!-- Inline video player -->
+              <video v-if="getStepRecording(h, si) && playingRecording === getStepRecording(h, si).filename"
+                :src="'/api/recordings/' + getStepRecording(h, si).filename" controls autoplay
+                style="width:100%;margin:4px 0 6px;border-radius:6px;max-height:250px"></video>
+            </div>
+          </template>
           <!-- No training found -->
           <div v-if="!getTrainingSteps(h.training_id)" style="color:var(--muted);font-size:11px">
             {{ t('training.steps_done', {done: h.steps_completed, total: h.steps_total}) }}
           </div>
         </div>
-      </div>
-
-      <!-- Recordings -->
-      <div style="font-size:13px;font-weight:600;margin:12px 0 6px">{{ t('recordings.title') }}</div>
-      <div v-if="!playerRecordings.length" style="color:var(--muted);font-size:12px">{{ t('recordings.empty') }}</div>
-      <div v-for="r in playerRecordings.slice(0,10)" :key="r.filename" style="border-bottom:1px solid var(--border);padding:6px 0;font-size:12px">
-        <div style="display:flex;align-items:center;gap:6px">
-          <span style="cursor:pointer" @click="playingRecording = playingRecording === r.filename ? null : r.filename">🎥</span>
-          <span style="flex:1;cursor:pointer" @click="playingRecording = playingRecording === r.filename ? null : r.filename">{{ r.step_name }} <span style="color:var(--muted)">({{ r.training_name }})</span></span>
-          <span class="chip" style="font-size:10px">{{ fmtDur(r.duration_sec || 0) }}</span>
-          <button class="btn btn-ghost btn-icon" style="font-size:11px" @click="playingRecording = playingRecording === r.filename ? null : r.filename" :title="playingRecording === r.filename ? 'Stop' : 'Play'">{{ playingRecording === r.filename ? '⏹' : '▶' }}</button>
-          <a :href="'/api/recordings/' + r.filename" download class="btn btn-ghost btn-icon" style="font-size:11px" :title="t('recordings.download')">⬇</a>
-          <button class="btn btn-ghost btn-icon" style="color:var(--danger);font-size:11px" @click.stop="deleteRecording(r.filename)" :title="t('recordings.delete')">✕</button>
-        </div>
-        <video v-if="playingRecording === r.filename" :src="'/api/recordings/' + r.filename" controls autoplay style="width:100%;margin-top:6px;border-radius:6px;max-height:300px"></video>
       </div>
     </div>
   </div>
