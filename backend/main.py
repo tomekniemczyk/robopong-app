@@ -751,8 +751,21 @@ def duplicate_training_endpoint(tid: int):
 # ── Training History ─────────────────────────────────────────────────────────
 
 @app.get("/api/training-history")
-def list_training_history(training_id: int | None = None, player_id: int | None = None):
-    return training.get_history(training_id=training_id, player_id=player_id)
+def list_training_history(training_id: int | None = None, player_id: int | None = None,
+                          limit: int | None = None, offset: int = 0):
+    return training.get_history(training_id=training_id, player_id=player_id,
+                                limit=limit, offset=offset)
+
+
+@app.get("/api/training-history/{hid}")
+def get_history_entry(hid: int):
+    entry = db.get_history_entry(hid)
+    if not entry:
+        raise HTTPException(404)
+    # Attach recordings for this session
+    recs = recordings.get_recordings(player_id=entry.get("player_id"))
+    entry["recordings"] = [r for r in recs if r.get("training_id") == entry.get("training_id")]
+    return entry
 
 
 @app.put("/api/training-history/{hid}/comment")
@@ -810,6 +823,25 @@ def get_player_history(pid: int):
 @app.get("/api/players/{pid}/recordings")
 def get_player_recordings(pid: int):
     return recordings.get_recordings(player_id=pid)
+
+
+@app.get("/api/players/{pid}/favorites")
+def get_player_favorites(pid: int):
+    return db.get_favorites(pid)
+
+
+@app.post("/api/players/{pid}/favorites", status_code=201)
+def add_player_favorite(pid: int, body: dict):
+    item_type = body.get("item_type", "")
+    item_id = body.get("item_id")
+    if item_type not in ("training", "drill", "exercise") or item_id is None:
+        raise HTTPException(400, "item_type and item_id required")
+    return db.add_favorite(pid, item_type, item_id)
+
+
+@app.delete("/api/players/{pid}/favorites", status_code=204)
+def remove_player_favorite(pid: int, item_type: str = "", item_id: int = 0):
+    db.remove_favorite(pid, item_type, item_id)
 
 
 # ── Recordings ───────────────────────────────────────────────────────────────

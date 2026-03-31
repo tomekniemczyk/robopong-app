@@ -460,4 +460,9 @@ window.I18N = {
   'recordings.record':     { pl:'Nagrywaj',        en:'Record',           de:'Aufnehmen',        fr:'Enregistrer',      zh:'录制' },
   'recordings.step':       { pl:'Krok {idx}',      en:'Step {idx}',       de:'Schritt {idx}',    fr:'Étape {idx}',      zh:'步骤 {idx}' },
 
+  // ── Favorites ──────────────────────────────────────────────────────
+  'favorites.title':       { pl:'Ulubione',        en:'Favorites',        de:'Favoriten',        fr:'Favoris',          zh:'收藏' },
+  'favorites.add':         { pl:'Dodaj do ulubionych', en:'Add to favorites', de:'Zu Favoriten',  fr:'Ajouter aux favoris', zh:'添加收藏' },
+  'training.show_more':    { pl:'Pokaż więcej',    en:'Show more',        de:'Mehr anzeigen',    fr:'Afficher plus',    zh:'显示更多' },
+
 }

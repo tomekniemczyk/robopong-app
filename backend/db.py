@@ -90,6 +90,16 @@ def init():
         count = c.execute("SELECT COUNT(*) FROM drill_folders").fetchone()[0]
         if count == 0 and DRILLS_DEFAULT.exists():
             _seed_drills(c)
+        c.execute("""
+            CREATE TABLE IF NOT EXISTS favorites (
+                id          INTEGER PRIMARY KEY AUTOINCREMENT,
+                player_id   INTEGER NOT NULL,
+                item_type   TEXT NOT NULL,
+                item_id     INTEGER NOT NULL,
+                created_at  TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                UNIQUE(player_id, item_type, item_id)
+            )
+        """)
         # ── Migrations ──────────────────────────────────────────
         _migrate(c)
 
@@ -375,7 +385,7 @@ def record_training_run(training_id, player_id, elapsed_sec, status,
         )
 
 
-def get_training_history(training_id=None, player_id=None):
+def get_training_history(training_id=None, player_id=None, limit=None, offset=0):
     with sqlite3.connect(DB) as c:
         q = "SELECT id, training_id, player_id, started_at, elapsed_sec, status, steps_completed, steps_total, steps_skipped, step_notes, session_comment FROM training_history WHERE 1=1"
         params = []
@@ -384,17 +394,74 @@ def get_training_history(training_id=None, player_id=None):
         if player_id is not None:
             q += " AND player_id=?"; params.append(player_id)
         q += " ORDER BY started_at DESC"
+        if limit is not None:
+            q += " LIMIT ? OFFSET ?"; params.extend([limit, offset])
         rows = c.execute(q, params).fetchall()
-        return [{"id": r[0], "training_id": r[1], "player_id": r[2], "started_at": r[3],
-                 "elapsed_sec": r[4], "status": r[5], "steps_completed": r[6],
-                 "steps_total": r[7], "steps_skipped": json.loads(r[8] or "[]"),
-                 "step_notes": json.loads(r[9] or "[]"),
-                 "session_comment": r[10] or ""} for r in rows]
+        return [_history_row(r) for r in rows]
+
+
+def get_training_history_count(training_id=None, player_id=None):
+    with sqlite3.connect(DB) as c:
+        q = "SELECT COUNT(*) FROM training_history WHERE 1=1"
+        params = []
+        if training_id is not None:
+            q += " AND training_id=?"; params.append(training_id)
+        if player_id is not None:
+            q += " AND player_id=?"; params.append(player_id)
+        return c.execute(q, params).fetchone()[0]
+
+
+def get_history_entry(hid: int):
+    with sqlite3.connect(DB) as c:
+        r = c.execute(
+            "SELECT id, training_id, player_id, started_at, elapsed_sec, status, "
+            "steps_completed, steps_total, steps_skipped, step_notes, session_comment "
+            "FROM training_history WHERE id=?", (hid,)
+        ).fetchone()
+        return _history_row(r) if r else None
+
+
+def _history_row(r):
+    return {"id": r[0], "training_id": r[1], "player_id": r[2], "started_at": r[3],
+            "elapsed_sec": r[4], "status": r[5], "steps_completed": r[6],
+            "steps_total": r[7], "steps_skipped": json.loads(r[8] or "[]"),
+            "step_notes": json.loads(r[9] or "[]"),
+            "session_comment": r[10] or ""}
 
 
 def update_session_comment(history_id: int, comment: str):
     with sqlite3.connect(DB) as c:
         c.execute("UPDATE training_history SET session_comment=? WHERE id=?", (comment, history_id))
+
+
+# ── Favorites ─────────────────────────────────────────────────────────────
+
+def get_favorites(player_id: int):
+    with sqlite3.connect(DB) as c:
+        rows = c.execute(
+            "SELECT id, player_id, item_type, item_id, created_at FROM favorites WHERE player_id=? ORDER BY created_at DESC",
+            (player_id,)
+        ).fetchall()
+        return [{"id": r[0], "player_id": r[1], "item_type": r[2], "item_id": r[3], "created_at": r[4]} for r in rows]
+
+
+def add_favorite(player_id: int, item_type: str, item_id: int) -> dict:
+    with sqlite3.connect(DB) as c:
+        c.execute(
+            "INSERT OR IGNORE INTO favorites (player_id, item_type, item_id) VALUES (?,?,?)",
+            (player_id, item_type, item_id)
+        )
+        r = c.execute(
+            "SELECT id, player_id, item_type, item_id, created_at FROM favorites WHERE player_id=? AND item_type=? AND item_id=?",
+            (player_id, item_type, item_id)
+        ).fetchone()
+        return {"id": r[0], "player_id": r[1], "item_type": r[2], "item_id": r[3], "created_at": r[4]}
+
+
+def remove_favorite(player_id: int, item_type: str, item_id: int):
+    with sqlite3.connect(DB) as c:
+        c.execute("DELETE FROM favorites WHERE player_id=? AND item_type=? AND item_id=?",
+                  (player_id, item_type, item_id))
 
 
 # ── Recordings Meta ───────────────────────────────────────────────────────

@@ -241,3 +241,75 @@ def test_player_recordings_empty(client):
     r2 = client.get(f"/api/players/{pid}/recordings")
     assert r2.status_code == 200
     assert r2.json() == []
+
+
+# ── Favorites API ────────────────────────────────────────────────────────────
+
+def test_favorites_empty(client):
+    r = client.post("/api/players", json={"name": "Tomek"})
+    pid = r.json()["id"]
+    r2 = client.get(f"/api/players/{pid}/favorites")
+    assert r2.status_code == 200
+    assert r2.json() == []
+
+
+def test_add_favorite(client):
+    r = client.post("/api/players", json={"name": "Tomek"})
+    pid = r.json()["id"]
+    r2 = client.post(f"/api/players/{pid}/favorites", json={"item_type": "training", "item_id": 101})
+    assert r2.status_code == 201
+    assert r2.json()["item_type"] == "training"
+    assert r2.json()["item_id"] == 101
+
+
+def test_add_favorite_duplicate(client):
+    r = client.post("/api/players", json={"name": "Tomek"})
+    pid = r.json()["id"]
+    client.post(f"/api/players/{pid}/favorites", json={"item_type": "drill", "item_id": 1001})
+    client.post(f"/api/players/{pid}/favorites", json={"item_type": "drill", "item_id": 1001})
+    favs = client.get(f"/api/players/{pid}/favorites").json()
+    assert len(favs) == 1
+
+
+def test_remove_favorite(client):
+    r = client.post("/api/players", json={"name": "Tomek"})
+    pid = r.json()["id"]
+    client.post(f"/api/players/{pid}/favorites", json={"item_type": "exercise", "item_id": 101})
+    r2 = client.delete(f"/api/players/{pid}/favorites?item_type=exercise&item_id=101")
+    assert r2.status_code == 204
+    assert client.get(f"/api/players/{pid}/favorites").json() == []
+
+
+def test_favorites_per_player(client):
+    r1 = client.post("/api/players", json={"name": "Tomek"})
+    r2 = client.post("/api/players", json={"name": "Ania"})
+    p1, p2 = r1.json()["id"], r2.json()["id"]
+    client.post(f"/api/players/{p1}/favorites", json={"item_type": "training", "item_id": 101})
+    client.post(f"/api/players/{p2}/favorites", json={"item_type": "training", "item_id": 102})
+    assert len(client.get(f"/api/players/{p1}/favorites").json()) == 1
+    assert client.get(f"/api/players/{p1}/favorites").json()[0]["item_id"] == 101
+
+
+def test_add_favorite_invalid_type(client):
+    r = client.post("/api/players", json={"name": "Tomek"})
+    pid = r.json()["id"]
+    r2 = client.post(f"/api/players/{pid}/favorites", json={"item_type": "invalid", "item_id": 1})
+    assert r2.status_code == 400
+
+
+# ── History detail endpoint ──────────────────────────────────────────────────
+
+def test_get_history_entry(client):
+    import training
+    training.record_run(1, None, 120, "completed", 5, 5)
+    history = client.get("/api/training-history").json()
+    hid = history[0]["id"]
+    r = client.get(f"/api/training-history/{hid}")
+    assert r.status_code == 200
+    assert r.json()["status"] == "completed"
+    assert "recordings" in r.json()
+
+
+def test_get_history_entry_not_found(client):
+    r = client.get("/api/training-history/99999")
+    assert r.status_code == 404

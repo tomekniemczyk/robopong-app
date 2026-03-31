@@ -87,8 +87,10 @@ def record_run(training_id: int, player_id: int | None, elapsed_sec: int,
                            steps_completed, steps_total, steps_skipped, step_notes)
 
 
-def get_history(training_id: int | None = None, player_id: int | None = None) -> list:
-    return db.get_training_history(training_id=training_id, player_id=player_id)
+def get_history(training_id: int | None = None, player_id: int | None = None,
+                limit: int | None = None, offset: int = 0) -> list:
+    return db.get_training_history(training_id=training_id, player_id=player_id,
+                                   limit=limit, offset=offset)
 
 
 def update_session_comment(history_id: int, comment: str):

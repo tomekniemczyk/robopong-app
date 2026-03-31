@@ -928,6 +928,7 @@
         <div v-if="folder.drills.length === 0" style="padding:8px 6px;font-size:12px;color:var(--muted)">{{ t('drills.no_drills') }}</div>
         <div v-for="(drill, idx) in folder.drills" :key="drill.id">
           <div class="drill-row" @click="openDrillPanel(drill, folder)" style="cursor:pointer">
+            <span v-if="selectedPlayerId" style="cursor:pointer;margin-right:4px" @click.stop="toggleFavorite('drill', drill.id)">{{ isFavorite('drill', drill.id) ? '★' : '☆' }}</span>
             <span class="drill-name" :title="drill.readonly ? tc('drill_desc', drill.description) : (drill.description || drill.name)">{{ drill.readonly ? tc('drills', drill.name) : drill.name }}</span>
             <div class="drill-actions" @click.stop>
               <button class="btn-xs" @click="moveDrillUp(folder, idx)" :disabled="idx===0">↑</button>
@@ -1022,6 +1023,10 @@
     <div class="card">
       <div style="display:flex;align-items:center;gap:8px;margin-bottom:14px">
         <h2 style="flex:1">{{ t('tr.title') }}</h2>
+        <select v-if="playersList.length" v-model="selectedPlayerId" @change="loadTrainingHistory()" style="font-size:12px;padding:4px 8px">
+          <option :value="null">{{ t('players.no_selection') }}</option>
+          <option v-for="p in playersList" :key="p.id" :value="p.id">👤 {{ p.name }}</option>
+        </select>
         <button class="btn btn-primary" @click="openTrainingModal(null)">{{ t('tr.new') }}</button>
       </div>
 
@@ -1043,6 +1048,7 @@
           <li v-for="tr in group.trainings" :key="tr.id" style="flex-wrap:wrap">
             <div style="flex:1;min-width:0">
               <div style="display:flex;align-items:center;gap:6px;cursor:pointer" @click="expandedTraining = expandedTraining === tr.id ? null : tr.id">
+                <span v-if="selectedPlayerId" style="cursor:pointer;font-size:12px" @click.stop="toggleFavorite('training', tr.id)">{{ isFavorite('training', tr.id) ? '★' : '☆' }}</span>
                 <span style="font-size:12px">{{ trainingStatusIcon(tr.id) }}</span>
                 <span style="font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ tr.readonly ? tc('trainings', tr.name) : tr.name }}</span>
                 <span v-if="tr.readonly" class="chip" style="font-size:9px;padding:1px 5px">{{ t('training.readonly') }}</span>
@@ -1178,6 +1184,7 @@
       </div>
       <div v-if="openExCats.has(cat.id)" class="drill-list">
         <div v-for="ex in cat.exercises" :key="ex.id" class="drill-row" @click="selectedExercise = selectedExercise?.id === ex.id ? null : ex" style="cursor:pointer">
+          <span v-if="selectedPlayerId" style="cursor:pointer;margin-right:4px" @click.stop="toggleFavorite('exercise', ex.id)">{{ isFavorite('exercise', ex.id) ? '★' : '☆' }}</span>
           <span class="drill-name">{{ tc('exercises', ex.name) }}</span>
           <span class="time-badge">🕐 {{ fmtDur(ex.duration_sec) }}</span>
         </div>
@@ -1249,15 +1256,86 @@
         </div>
       </div>
 
+      <!-- Favorites -->
+      <div v-if="playerFavorites.length" style="margin-bottom:14px">
+        <div style="font-size:13px;font-weight:600;margin-bottom:6px">⭐ {{ t('favorites.title') }}</div>
+        <!-- Favorite trainings -->
+        <div v-if="favTrainings.length" style="margin-bottom:6px">
+          <div style="font-size:10px;color:var(--muted);margin-bottom:3px">{{ t('nav.training') }}</div>
+          <div v-for="f in favTrainings" :key="f.id" style="display:flex;align-items:center;gap:6px;padding:3px 0;font-size:12px">
+            <span style="cursor:pointer" @click="toggleFavorite('training', f.item_id)">★</span>
+            <span style="flex:1">{{ getTrainingName(f.item_id) }}</span>
+            <button class="btn btn-success btn-icon" style="font-size:10px;padding:2px 6px" @click="openTrainingStartModal(trainings.find(t=>t.id===f.item_id))" :disabled="!connected || myRole!=='controller'">▶</button>
+          </div>
+        </div>
+        <!-- Favorite drills -->
+        <div v-if="favDrills.length" style="margin-bottom:6px">
+          <div style="font-size:10px;color:var(--muted);margin-bottom:3px">{{ t('nav.drills') }}</div>
+          <div v-for="f in favDrills" :key="f.id" style="display:flex;align-items:center;gap:6px;padding:3px 0;font-size:12px">
+            <span style="cursor:pointer" @click="toggleFavorite('drill', f.item_id)">★</span>
+            <span style="flex:1">{{ getDrillName(f.item_id) }}</span>
+          </div>
+        </div>
+        <!-- Favorite exercises -->
+        <div v-if="favExercises.length">
+          <div style="font-size:10px;color:var(--muted);margin-bottom:3px">{{ t('nav.exercises') }}</div>
+          <div v-for="f in favExercises" :key="f.id" style="display:flex;align-items:center;gap:6px;padding:3px 0;font-size:12px">
+            <span style="cursor:pointer" @click="toggleFavorite('exercise', f.item_id)">★</span>
+            <span style="flex:1">{{ getExerciseName(f.item_id) }}</span>
+          </div>
+        </div>
+      </div>
+
       <!-- History -->
-      <div style="font-size:13px;font-weight:600;margin-bottom:6px">{{ t('training.history') }}</div>
+      <div style="font-size:13px;font-weight:600;margin-bottom:6px">{{ t('training.history') }} <span style="font-weight:400;color:var(--muted)">({{ playerHistoryTotal }})</span></div>
       <div v-if="!playerHistory.length" style="color:var(--muted);font-size:12px;margin-bottom:10px">{{ t('training.not_started') }}</div>
-      <div v-for="h in playerHistory.slice(0,10)" :key="h.started_at" style="border-bottom:1px solid var(--border);padding:6px 0;font-size:12px">
-        <div style="display:flex;align-items:center;gap:6px">
-          <span>{{ h.status === 'completed' ? '✅' : '⏹' }}</span>
-          <span style="flex:1">{{ getTrainingName(h.training_id) }}</span>
+      <div v-for="h in playerHistory" :key="h.id" style="border-bottom:1px solid var(--border);padding:8px 0;font-size:12px">
+        <div style="display:flex;align-items:center;gap:6px;cursor:pointer" @click="expandedHistoryId = expandedHistoryId === h.id ? null : h.id">
+          <span>{{ h.status === 'completed' ? '✅' : h.status === 'stopped' ? '⏹' : '❌' }}</span>
+          <span style="flex:1;font-weight:500">{{ getTrainingName(h.training_id) }}</span>
           <span class="chip" style="font-size:10px">{{ fmtDur(h.elapsed_sec) }}</span>
           <span style="color:var(--muted);font-size:10px">{{ new Date(h.started_at).toLocaleDateString() }}</span>
+          <span style="font-size:10px;color:var(--muted)">{{ expandedHistoryId === h.id ? '▼' : '▶' }}</span>
+        </div>
+        <!-- Summary line -->
+        <div style="font-size:11px;color:var(--muted);margin-top:2px;padding-left:22px">
+          {{ t('training.steps_done', {done: h.steps_completed, total: h.steps_total}) }}
+          <span v-if="h.steps_skipped?.length"> · {{ h.steps_skipped.length }} skipped</span>
+          <span v-if="h.step_notes?.length"> · 💬 {{ h.step_notes.length }}</span>
+          <span v-if="h.session_comment"> · 📝</span>
+        </div>
+        <!-- Session comment -->
+        <div v-if="h.session_comment" style="font-size:11px;color:var(--text2);margin-top:3px;padding-left:22px;font-style:italic">
+          📝 {{ h.session_comment }}
+        </div>
+        <!-- Resume button for stopped -->
+        <div v-if="h.status === 'stopped'" style="padding-left:22px;margin-top:4px">
+          <button class="btn btn-ghost" style="font-size:10px;padding:2px 8px;background:rgba(255,159,10,.1)" @click.stop="resumeFromHistory(h)">
+            ⏩ {{ t('training.resume') }} ({{ t('training.steps_done', {done: h.steps_completed, total: h.steps_total}) }})
+          </button>
+        </div>
+        <!-- Expanded details -->
+        <div v-if="expandedHistoryId === h.id" style="margin-top:6px;padding:8px;background:rgba(255,255,255,.03);border-radius:6px;margin-left:22px">
+          <!-- Step list from the training definition -->
+          <div v-if="getTrainingSteps(h.training_id)" v-for="(step, si) in getTrainingSteps(h.training_id)" :key="si"
+            style="display:flex;align-items:flex-start;gap:6px;padding:3px 0;font-size:11px;border-bottom:1px solid rgba(255,255,255,.03)">
+            <span style="width:16px;text-align:center;flex-shrink:0" :style="{color: si < h.steps_completed ? '#34c759' : si === h.steps_completed && h.status === 'stopped' ? '#ff9f0a' : 'var(--muted)'}">
+              {{ si < h.steps_completed ? '✓' : si === h.steps_completed && h.status === 'stopped' ? '▶' : '○' }}
+            </span>
+            <span style="flex:1">
+              {{ step.exercise_id ? '🏋 ' + (step.exercise_name || '') : (step.drill_name || 'Drill') }}
+              <span v-if="!step.exercise_id" style="color:var(--muted)">({{ step.count }}p · {{ step.percent }}%)</span>
+              <span v-if="step.exercise_id" style="color:var(--muted)">({{ fmtDur(step.duration_sec) }})</span>
+            </span>
+            <!-- Notes for this step -->
+            <span v-for="n in (h.step_notes || []).filter(n => n.step === si+1)" :key="n.note" style="font-size:10px;color:var(--text2)">
+              💬 {{ n.note }}
+            </span>
+          </div>
+          <!-- No training found -->
+          <div v-if="!getTrainingSteps(h.training_id)" style="color:var(--muted);font-size:11px">
+            {{ t('training.steps_done', {done: h.steps_completed, total: h.steps_total}) }}
+          </div>
         </div>
       </div>
 
@@ -2162,6 +2240,12 @@ const _app = createApp({
     const playerHistory = ref([])
     const playerRecordings = ref([])
     const playingRecording = ref(null)
+    const expandedHistoryId = ref(null)
+    const playerHistoryTotal = ref(0)
+    const playerFavorites = ref([])
+    const favTrainings = computed(() => playerFavorites.value.filter(f => f.item_type === 'training'))
+    const favDrills = computed(() => playerFavorites.value.filter(f => f.item_type === 'drill'))
+    const favExercises = computed(() => playerFavorites.value.filter(f => f.item_type === 'exercise'))
 
     async function loadTrainings() {
       const r = await fetch('/api/trainings')
@@ -2307,7 +2391,9 @@ const _app = createApp({
     }
 
     async function loadTrainingHistory() {
-      const r = await fetch('/api/training-history')
+      let url = '/api/training-history'
+      if (selectedPlayerId.value) url += `?player_id=${selectedPlayerId.value}`
+      const r = await fetch(url)
       trainingHistory.value = await r.json()
     }
 
@@ -2362,6 +2448,56 @@ const _app = createApp({
     function getTrainingName(trainingId) {
       const tr = trainings.value.find(x => x.id === trainingId)
       return tr ? tr.name : `#${trainingId}`
+    }
+
+    function getTrainingSteps(trainingId) {
+      const tr = trainings.value.find(t => t.id === trainingId)
+      return tr?.steps || null
+    }
+
+    function getDrillName(drillId) {
+      for (const folder of (drillTree.folders || [])) {
+        for (const d of (folder.drills || [])) {
+          if (d.id === drillId) return d.readonly ? tc('drills', d.name) : d.name
+        }
+      }
+      return `Drill #${drillId}`
+    }
+
+    function getExerciseName(exId) {
+      for (const cat of (exerciseCategories.value || [])) {
+        for (const ex of (cat.exercises || [])) {
+          if (ex.id === exId) return tc('exercises', ex.name)
+        }
+      }
+      return `Exercise #${exId}`
+    }
+
+    async function loadPlayerFavorites(pid) {
+      const r = await fetch(`/api/players/${pid}/favorites`)
+      playerFavorites.value = await r.json()
+    }
+
+    function isFavorite(itemType, itemId) {
+      return playerFavorites.value.some(f => f.item_type === itemType && f.item_id === itemId)
+    }
+
+    async function toggleFavorite(itemType, itemId) {
+      if (!selectedPlayerId.value) return
+      if (isFavorite(itemType, itemId)) {
+        await fetch(`/api/players/${selectedPlayerId.value}/favorites?item_type=${itemType}&item_id=${itemId}`, { method: 'DELETE' })
+      } else {
+        await fetch(`/api/players/${selectedPlayerId.value}/favorites`, {
+          method: 'POST', headers: {'Content-Type':'application/json'},
+          body: JSON.stringify({item_type: itemType, item_id: itemId})
+        })
+      }
+      await loadPlayerFavorites(selectedPlayerId.value)
+    }
+
+    function resumeFromHistory(h) {
+      const tr = trainings.value.find(t => t.id === h.training_id)
+      if (tr) openTrainingStartModal(tr, h.steps_completed)
     }
 
     function getResumeStep(trainingId) {
@@ -2444,12 +2580,16 @@ const _app = createApp({
 
     async function openPlayerDetail(p) {
       playerDetail.value = p
-      const [hRes, rRes] = await Promise.all([
+      expandedHistoryId.value = null
+      const [hRes, rRes, fRes] = await Promise.all([
         fetch(`/api/players/${p.id}/history`),
-        fetch(`/api/players/${p.id}/recordings`)
+        fetch(`/api/players/${p.id}/recordings`),
+        fetch(`/api/players/${p.id}/favorites`)
       ])
       playerHistory.value = await hRes.json()
       playerRecordings.value = await rRes.json()
+      playerFavorites.value = await fRes.json()
+      playerHistoryTotal.value = playerHistory.value.length
     }
 
     function playerRunCount(playerId) {
@@ -2813,6 +2953,11 @@ const _app = createApp({
       historyModal, historyEntries, showTrainingHistory, getPlayerName, getTrainingName, saveSessionComment,
       editingCommentId, editingCommentText, sessionNotes,
       playersList, playerDetail, playerHistory, playerRecordings, playingRecording,
+      expandedHistoryId, playerHistoryTotal, playerFavorites,
+      favTrainings, favDrills, favExercises,
+      getTrainingSteps, getDrillName, getExerciseName,
+      loadPlayerFavorites, isFavorite, toggleFavorite,
+      resumeFromHistory,
       addPlayer, renamePlayer, deletePlayer, openPlayerDetail, playerRunCount, playerProgram30,
       deleteRecording, loadPlayers, loadTrainingHistory, trainingHistory,
       exerciseCategories, openExCats, selectedExercise, toggleExCat, loadExercises, onStepTypeSelect, getExFrameSrc,
