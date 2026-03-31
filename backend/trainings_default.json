@@ -11,36 +11,122 @@
           "countdown_sec": 20,
           "steps": [
             {
-              "exercise_id": 101,
-              "exercise_name": "Jogging",
-              "duration_sec": 60,
-              "pause_after_sec": 10
+              "exercise_id": 103,
+              "exercise_name": "Wrist Rotations",
+              "duration_sec": 30,
+              "pause_after_sec": 5
+            },
+            {
+              "exercise_id": 109,
+              "exercise_name": "Elbow Circles",
+              "duration_sec": 20,
+              "pause_after_sec": 5
             },
             {
               "exercise_id": 102,
               "exercise_name": "Arm Circles",
-              "duration_sec": 30,
-              "pause_after_sec": 10
+              "duration_sec": 20,
+              "pause_after_sec": 5
             },
             {
               "exercise_id": 104,
               "exercise_name": "Trunk Rotations",
-              "duration_sec": 45,
+              "duration_sec": 30,
+              "pause_after_sec": 5
+            },
+            {
+              "exercise_id": 110,
+              "exercise_name": "Knee Circles",
+              "duration_sec": 15,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 111,
+              "exercise_name": "Ankle Circles",
+              "duration_sec": 15,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 112,
+              "exercise_name": "Dynamic Forward Folds",
+              "duration_sec": 35,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 502,
+              "exercise_name": "Bodyweight Squats",
+              "duration_sec": 35,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 113,
+              "exercise_name": "Side Bends",
+              "duration_sec": 15,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 114,
+              "exercise_name": "Leg Swings Front-Back",
+              "duration_sec": 15,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 115,
+              "exercise_name": "Leg Swings Lateral",
+              "duration_sec": 15,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 201,
+              "exercise_name": "Side Shuffle",
+              "duration_sec": 25,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 207,
+              "exercise_name": "Pivot Drill",
+              "duration_sec": 25,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 204,
+              "exercise_name": "In-Out Movement",
+              "duration_sec": 25,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 116,
+              "exercise_name": "Sound Reaction Footwork",
+              "duration_sec": 25,
+              "pause_after_sec": 10
+            },
+            {
+              "drill_id": 1002,
+              "drill_name": "BH Warmup",
+              "count": 28,
+              "percent": 85,
               "pause_after_sec": 15
             },
             {
               "drill_id": 1001,
               "drill_name": "FH Warmup",
-              "count": 90,
-              "percent": 90,
-              "pause_after_sec": 50
+              "count": 28,
+              "percent": 85,
+              "pause_after_sec": 15
             },
             {
-              "drill_id": 1002,
-              "drill_name": "BH Warmup",
-              "count": 90,
-              "percent": 90,
-              "pause_after_sec": 50
+              "drill_id": 6021,
+              "drill_name": "FH Topspin vs No-Spin",
+              "count": 28,
+              "percent": 85,
+              "pause_after_sec": 15
+            },
+            {
+              "drill_id": 2003,
+              "drill_name": "FH BH Footwork",
+              "count": 28,
+              "percent": 85,
+              "pause_after_sec": 25
             },
             {
               "drill_id": 6021,
@@ -166,36 +252,122 @@
           "countdown_sec": 20,
           "steps": [
             {
-              "exercise_id": 101,
-              "exercise_name": "Jogging",
-              "duration_sec": 60,
-              "pause_after_sec": 10
-            },
-            {
               "exercise_id": 103,
               "exercise_name": "Wrist Rotations",
               "duration_sec": 30,
-              "pause_after_sec": 10
+              "pause_after_sec": 5
+            },
+            {
+              "exercise_id": 109,
+              "exercise_name": "Elbow Circles",
+              "duration_sec": 20,
+              "pause_after_sec": 5
+            },
+            {
+              "exercise_id": 102,
+              "exercise_name": "Arm Circles",
+              "duration_sec": 20,
+              "pause_after_sec": 5
             },
             {
               "exercise_id": 104,
               "exercise_name": "Trunk Rotations",
-              "duration_sec": 45,
+              "duration_sec": 30,
+              "pause_after_sec": 5
+            },
+            {
+              "exercise_id": 110,
+              "exercise_name": "Knee Circles",
+              "duration_sec": 15,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 111,
+              "exercise_name": "Ankle Circles",
+              "duration_sec": 15,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 112,
+              "exercise_name": "Dynamic Forward Folds",
+              "duration_sec": 35,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 502,
+              "exercise_name": "Bodyweight Squats",
+              "duration_sec": 35,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 113,
+              "exercise_name": "Side Bends",
+              "duration_sec": 15,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 114,
+              "exercise_name": "Leg Swings Front-Back",
+              "duration_sec": 15,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 115,
+              "exercise_name": "Leg Swings Lateral",
+              "duration_sec": 15,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 201,
+              "exercise_name": "Side Shuffle",
+              "duration_sec": 25,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 207,
+              "exercise_name": "Pivot Drill",
+              "duration_sec": 25,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 204,
+              "exercise_name": "In-Out Movement",
+              "duration_sec": 25,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 116,
+              "exercise_name": "Sound Reaction Footwork",
+              "duration_sec": 25,
+              "pause_after_sec": 10
+            },
+            {
+              "drill_id": 1002,
+              "drill_name": "BH Warmup",
+              "count": 28,
+              "percent": 85,
               "pause_after_sec": 15
             },
             {
               "drill_id": 1001,
               "drill_name": "FH Warmup",
-              "count": 80,
-              "percent": 90,
-              "pause_after_sec": 50
+              "count": 28,
+              "percent": 85,
+              "pause_after_sec": 15
             },
             {
-              "drill_id": 1002,
-              "drill_name": "BH Warmup",
-              "count": 80,
-              "percent": 90,
-              "pause_after_sec": 50
+              "drill_id": 6021,
+              "drill_name": "FH Topspin vs No-Spin",
+              "count": 28,
+              "percent": 85,
+              "pause_after_sec": 15
+            },
+            {
+              "drill_id": 2003,
+              "drill_name": "FH BH Footwork",
+              "count": 28,
+              "percent": 85,
+              "pause_after_sec": 25
             },
             {
               "drill_id": 6023,
@@ -321,36 +493,122 @@
           "countdown_sec": 20,
           "steps": [
             {
-              "exercise_id": 101,
-              "exercise_name": "Jogging",
-              "duration_sec": 60,
-              "pause_after_sec": 10
+              "exercise_id": 103,
+              "exercise_name": "Wrist Rotations",
+              "duration_sec": 30,
+              "pause_after_sec": 5
             },
             {
-              "exercise_id": 201,
-              "exercise_name": "Side Shuffle",
-              "duration_sec": 60,
-              "pause_after_sec": 10
+              "exercise_id": 109,
+              "exercise_name": "Elbow Circles",
+              "duration_sec": 20,
+              "pause_after_sec": 5
+            },
+            {
+              "exercise_id": 102,
+              "exercise_name": "Arm Circles",
+              "duration_sec": 20,
+              "pause_after_sec": 5
             },
             {
               "exercise_id": 104,
               "exercise_name": "Trunk Rotations",
-              "duration_sec": 45,
+              "duration_sec": 30,
+              "pause_after_sec": 5
+            },
+            {
+              "exercise_id": 110,
+              "exercise_name": "Knee Circles",
+              "duration_sec": 15,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 111,
+              "exercise_name": "Ankle Circles",
+              "duration_sec": 15,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 112,
+              "exercise_name": "Dynamic Forward Folds",
+              "duration_sec": 35,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 502,
+              "exercise_name": "Bodyweight Squats",
+              "duration_sec": 35,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 113,
+              "exercise_name": "Side Bends",
+              "duration_sec": 15,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 114,
+              "exercise_name": "Leg Swings Front-Back",
+              "duration_sec": 15,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 115,
+              "exercise_name": "Leg Swings Lateral",
+              "duration_sec": 15,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 201,
+              "exercise_name": "Side Shuffle",
+              "duration_sec": 25,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 207,
+              "exercise_name": "Pivot Drill",
+              "duration_sec": 25,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 204,
+              "exercise_name": "In-Out Movement",
+              "duration_sec": 25,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 116,
+              "exercise_name": "Sound Reaction Footwork",
+              "duration_sec": 25,
+              "pause_after_sec": 10
+            },
+            {
+              "drill_id": 1002,
+              "drill_name": "BH Warmup",
+              "count": 28,
+              "percent": 85,
               "pause_after_sec": 15
             },
             {
               "drill_id": 1001,
               "drill_name": "FH Warmup",
-              "count": 95,
-              "percent": 90,
-              "pause_after_sec": 50
+              "count": 28,
+              "percent": 85,
+              "pause_after_sec": 15
             },
             {
-              "drill_id": 1002,
-              "drill_name": "BH Warmup",
-              "count": 95,
-              "percent": 90,
-              "pause_after_sec": 50
+              "drill_id": 6021,
+              "drill_name": "FH Topspin vs No-Spin",
+              "count": 28,
+              "percent": 85,
+              "pause_after_sec": 15
+            },
+            {
+              "drill_id": 2003,
+              "drill_name": "FH BH Footwork",
+              "count": 28,
+              "percent": 85,
+              "pause_after_sec": 25
             },
             {
               "drill_id": 6021,
@@ -468,36 +726,122 @@
           "countdown_sec": 20,
           "steps": [
             {
-              "exercise_id": 101,
-              "exercise_name": "Jogging",
-              "duration_sec": 60,
-              "pause_after_sec": 10
+              "exercise_id": 103,
+              "exercise_name": "Wrist Rotations",
+              "duration_sec": 30,
+              "pause_after_sec": 5
+            },
+            {
+              "exercise_id": 109,
+              "exercise_name": "Elbow Circles",
+              "duration_sec": 20,
+              "pause_after_sec": 5
             },
             {
               "exercise_id": 102,
               "exercise_name": "Arm Circles",
+              "duration_sec": 20,
+              "pause_after_sec": 5
+            },
+            {
+              "exercise_id": 104,
+              "exercise_name": "Trunk Rotations",
               "duration_sec": 30,
+              "pause_after_sec": 5
+            },
+            {
+              "exercise_id": 110,
+              "exercise_name": "Knee Circles",
+              "duration_sec": 15,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 111,
+              "exercise_name": "Ankle Circles",
+              "duration_sec": 15,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 112,
+              "exercise_name": "Dynamic Forward Folds",
+              "duration_sec": 35,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 502,
+              "exercise_name": "Bodyweight Squats",
+              "duration_sec": 35,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 113,
+              "exercise_name": "Side Bends",
+              "duration_sec": 15,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 114,
+              "exercise_name": "Leg Swings Front-Back",
+              "duration_sec": 15,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 115,
+              "exercise_name": "Leg Swings Lateral",
+              "duration_sec": 15,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 201,
+              "exercise_name": "Side Shuffle",
+              "duration_sec": 25,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 207,
+              "exercise_name": "Pivot Drill",
+              "duration_sec": 25,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 204,
+              "exercise_name": "In-Out Movement",
+              "duration_sec": 25,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 116,
+              "exercise_name": "Sound Reaction Footwork",
+              "duration_sec": 25,
               "pause_after_sec": 10
             },
             {
-              "exercise_id": 103,
-              "exercise_name": "Wrist Rotations",
-              "duration_sec": 30,
+              "drill_id": 1002,
+              "drill_name": "BH Warmup",
+              "count": 28,
+              "percent": 85,
               "pause_after_sec": 15
             },
             {
               "drill_id": 1001,
               "drill_name": "FH Warmup",
-              "count": 85,
-              "percent": 90,
-              "pause_after_sec": 50
+              "count": 28,
+              "percent": 85,
+              "pause_after_sec": 15
             },
             {
-              "drill_id": 1002,
-              "drill_name": "BH Warmup",
-              "count": 85,
-              "percent": 90,
-              "pause_after_sec": 50
+              "drill_id": 6021,
+              "drill_name": "FH Topspin vs No-Spin",
+              "count": 28,
+              "percent": 85,
+              "pause_after_sec": 15
+            },
+            {
+              "drill_id": 2003,
+              "drill_name": "FH BH Footwork",
+              "count": 28,
+              "percent": 85,
+              "pause_after_sec": 25
             },
             {
               "drill_id": 6022,
@@ -623,36 +967,122 @@
           "countdown_sec": 20,
           "steps": [
             {
-              "exercise_id": 101,
-              "exercise_name": "Jogging",
-              "duration_sec": 60,
-              "pause_after_sec": 10
+              "exercise_id": 103,
+              "exercise_name": "Wrist Rotations",
+              "duration_sec": 30,
+              "pause_after_sec": 5
+            },
+            {
+              "exercise_id": 109,
+              "exercise_name": "Elbow Circles",
+              "duration_sec": 20,
+              "pause_after_sec": 5
+            },
+            {
+              "exercise_id": 102,
+              "exercise_name": "Arm Circles",
+              "duration_sec": 20,
+              "pause_after_sec": 5
             },
             {
               "exercise_id": 104,
               "exercise_name": "Trunk Rotations",
-              "duration_sec": 45,
+              "duration_sec": 30,
+              "pause_after_sec": 5
+            },
+            {
+              "exercise_id": 110,
+              "exercise_name": "Knee Circles",
+              "duration_sec": 15,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 111,
+              "exercise_name": "Ankle Circles",
+              "duration_sec": 15,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 112,
+              "exercise_name": "Dynamic Forward Folds",
+              "duration_sec": 35,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 502,
+              "exercise_name": "Bodyweight Squats",
+              "duration_sec": 35,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 113,
+              "exercise_name": "Side Bends",
+              "duration_sec": 15,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 114,
+              "exercise_name": "Leg Swings Front-Back",
+              "duration_sec": 15,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 115,
+              "exercise_name": "Leg Swings Lateral",
+              "duration_sec": 15,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 201,
+              "exercise_name": "Side Shuffle",
+              "duration_sec": 25,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 207,
+              "exercise_name": "Pivot Drill",
+              "duration_sec": 25,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 204,
+              "exercise_name": "In-Out Movement",
+              "duration_sec": 25,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 116,
+              "exercise_name": "Sound Reaction Footwork",
+              "duration_sec": 25,
               "pause_after_sec": 10
             },
             {
-              "exercise_id": 108,
-              "exercise_name": "Shadow Play",
-              "duration_sec": 90,
+              "drill_id": 1002,
+              "drill_name": "BH Warmup",
+              "count": 28,
+              "percent": 85,
               "pause_after_sec": 15
             },
             {
               "drill_id": 1001,
               "drill_name": "FH Warmup",
-              "count": 95,
-              "percent": 90,
-              "pause_after_sec": 50
+              "count": 28,
+              "percent": 85,
+              "pause_after_sec": 15
             },
             {
-              "drill_id": 1002,
-              "drill_name": "BH Warmup",
-              "count": 95,
-              "percent": 90,
-              "pause_after_sec": 50
+              "drill_id": 6021,
+              "drill_name": "FH Topspin vs No-Spin",
+              "count": 28,
+              "percent": 85,
+              "pause_after_sec": 15
+            },
+            {
+              "drill_id": 2003,
+              "drill_name": "FH BH Footwork",
+              "count": 28,
+              "percent": 85,
+              "pause_after_sec": 25
             },
             {
               "drill_id": 6025,
@@ -778,36 +1208,122 @@
           "countdown_sec": 20,
           "steps": [
             {
-              "exercise_id": 101,
-              "exercise_name": "Jogging",
-              "duration_sec": 60,
-              "pause_after_sec": 10
+              "exercise_id": 103,
+              "exercise_name": "Wrist Rotations",
+              "duration_sec": 30,
+              "pause_after_sec": 5
+            },
+            {
+              "exercise_id": 109,
+              "exercise_name": "Elbow Circles",
+              "duration_sec": 20,
+              "pause_after_sec": 5
             },
             {
               "exercise_id": 102,
               "exercise_name": "Arm Circles",
-              "duration_sec": 30,
-              "pause_after_sec": 10
+              "duration_sec": 20,
+              "pause_after_sec": 5
             },
             {
               "exercise_id": 104,
               "exercise_name": "Trunk Rotations",
-              "duration_sec": 45,
+              "duration_sec": 30,
+              "pause_after_sec": 5
+            },
+            {
+              "exercise_id": 110,
+              "exercise_name": "Knee Circles",
+              "duration_sec": 15,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 111,
+              "exercise_name": "Ankle Circles",
+              "duration_sec": 15,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 112,
+              "exercise_name": "Dynamic Forward Folds",
+              "duration_sec": 35,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 502,
+              "exercise_name": "Bodyweight Squats",
+              "duration_sec": 35,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 113,
+              "exercise_name": "Side Bends",
+              "duration_sec": 15,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 114,
+              "exercise_name": "Leg Swings Front-Back",
+              "duration_sec": 15,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 115,
+              "exercise_name": "Leg Swings Lateral",
+              "duration_sec": 15,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 201,
+              "exercise_name": "Side Shuffle",
+              "duration_sec": 25,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 207,
+              "exercise_name": "Pivot Drill",
+              "duration_sec": 25,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 204,
+              "exercise_name": "In-Out Movement",
+              "duration_sec": 25,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 116,
+              "exercise_name": "Sound Reaction Footwork",
+              "duration_sec": 25,
+              "pause_after_sec": 10
+            },
+            {
+              "drill_id": 1002,
+              "drill_name": "BH Warmup",
+              "count": 28,
+              "percent": 85,
               "pause_after_sec": 15
             },
             {
               "drill_id": 1001,
               "drill_name": "FH Warmup",
-              "count": 90,
-              "percent": 90,
-              "pause_after_sec": 50
+              "count": 28,
+              "percent": 85,
+              "pause_after_sec": 15
             },
             {
-              "drill_id": 1002,
-              "drill_name": "BH Warmup",
-              "count": 90,
-              "percent": 90,
-              "pause_after_sec": 50
+              "drill_id": 6021,
+              "drill_name": "FH Topspin vs No-Spin",
+              "count": 28,
+              "percent": 85,
+              "pause_after_sec": 15
+            },
+            {
+              "drill_id": 2003,
+              "drill_name": "FH BH Footwork",
+              "count": 28,
+              "percent": 85,
+              "pause_after_sec": 25
             },
             {
               "drill_id": 6024,
@@ -933,36 +1449,122 @@
           "countdown_sec": 20,
           "steps": [
             {
-              "exercise_id": 101,
-              "exercise_name": "Jogging",
-              "duration_sec": 60,
-              "pause_after_sec": 10
+              "exercise_id": 103,
+              "exercise_name": "Wrist Rotations",
+              "duration_sec": 30,
+              "pause_after_sec": 5
+            },
+            {
+              "exercise_id": 109,
+              "exercise_name": "Elbow Circles",
+              "duration_sec": 20,
+              "pause_after_sec": 5
+            },
+            {
+              "exercise_id": 102,
+              "exercise_name": "Arm Circles",
+              "duration_sec": 20,
+              "pause_after_sec": 5
             },
             {
               "exercise_id": 104,
               "exercise_name": "Trunk Rotations",
-              "duration_sec": 45,
+              "duration_sec": 30,
+              "pause_after_sec": 5
+            },
+            {
+              "exercise_id": 110,
+              "exercise_name": "Knee Circles",
+              "duration_sec": 15,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 111,
+              "exercise_name": "Ankle Circles",
+              "duration_sec": 15,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 112,
+              "exercise_name": "Dynamic Forward Folds",
+              "duration_sec": 35,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 502,
+              "exercise_name": "Bodyweight Squats",
+              "duration_sec": 35,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 113,
+              "exercise_name": "Side Bends",
+              "duration_sec": 15,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 114,
+              "exercise_name": "Leg Swings Front-Back",
+              "duration_sec": 15,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 115,
+              "exercise_name": "Leg Swings Lateral",
+              "duration_sec": 15,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 201,
+              "exercise_name": "Side Shuffle",
+              "duration_sec": 25,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 207,
+              "exercise_name": "Pivot Drill",
+              "duration_sec": 25,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 204,
+              "exercise_name": "In-Out Movement",
+              "duration_sec": 25,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 116,
+              "exercise_name": "Sound Reaction Footwork",
+              "duration_sec": 25,
               "pause_after_sec": 10
             },
             {
-              "exercise_id": 108,
-              "exercise_name": "Shadow Play",
-              "duration_sec": 90,
+              "drill_id": 1002,
+              "drill_name": "BH Warmup",
+              "count": 28,
+              "percent": 85,
               "pause_after_sec": 15
             },
             {
               "drill_id": 1001,
               "drill_name": "FH Warmup",
-              "count": 95,
-              "percent": 90,
-              "pause_after_sec": 50
+              "count": 28,
+              "percent": 85,
+              "pause_after_sec": 15
             },
             {
-              "drill_id": 1002,
-              "drill_name": "BH Warmup",
-              "count": 95,
-              "percent": 90,
-              "pause_after_sec": 50
+              "drill_id": 6021,
+              "drill_name": "FH Topspin vs No-Spin",
+              "count": 28,
+              "percent": 85,
+              "pause_after_sec": 15
+            },
+            {
+              "drill_id": 2003,
+              "drill_name": "FH BH Footwork",
+              "count": 28,
+              "percent": 85,
+              "pause_after_sec": 25
             },
             {
               "drill_id": 6027,
@@ -1088,36 +1690,122 @@
           "countdown_sec": 20,
           "steps": [
             {
-              "exercise_id": 101,
-              "exercise_name": "Jogging",
-              "duration_sec": 60,
-              "pause_after_sec": 10
-            },
-            {
               "exercise_id": 103,
               "exercise_name": "Wrist Rotations",
               "duration_sec": 30,
-              "pause_after_sec": 10
+              "pause_after_sec": 5
+            },
+            {
+              "exercise_id": 109,
+              "exercise_name": "Elbow Circles",
+              "duration_sec": 20,
+              "pause_after_sec": 5
+            },
+            {
+              "exercise_id": 102,
+              "exercise_name": "Arm Circles",
+              "duration_sec": 20,
+              "pause_after_sec": 5
             },
             {
               "exercise_id": 104,
               "exercise_name": "Trunk Rotations",
-              "duration_sec": 45,
+              "duration_sec": 30,
+              "pause_after_sec": 5
+            },
+            {
+              "exercise_id": 110,
+              "exercise_name": "Knee Circles",
+              "duration_sec": 15,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 111,
+              "exercise_name": "Ankle Circles",
+              "duration_sec": 15,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 112,
+              "exercise_name": "Dynamic Forward Folds",
+              "duration_sec": 35,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 502,
+              "exercise_name": "Bodyweight Squats",
+              "duration_sec": 35,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 113,
+              "exercise_name": "Side Bends",
+              "duration_sec": 15,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 114,
+              "exercise_name": "Leg Swings Front-Back",
+              "duration_sec": 15,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 115,
+              "exercise_name": "Leg Swings Lateral",
+              "duration_sec": 15,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 201,
+              "exercise_name": "Side Shuffle",
+              "duration_sec": 25,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 207,
+              "exercise_name": "Pivot Drill",
+              "duration_sec": 25,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 204,
+              "exercise_name": "In-Out Movement",
+              "duration_sec": 25,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 116,
+              "exercise_name": "Sound Reaction Footwork",
+              "duration_sec": 25,
+              "pause_after_sec": 10
+            },
+            {
+              "drill_id": 1002,
+              "drill_name": "BH Warmup",
+              "count": 28,
+              "percent": 90,
               "pause_after_sec": 15
             },
             {
               "drill_id": 1001,
               "drill_name": "FH Warmup",
-              "count": 90,
-              "percent": 95,
-              "pause_after_sec": 45
+              "count": 28,
+              "percent": 90,
+              "pause_after_sec": 15
             },
             {
-              "drill_id": 1002,
-              "drill_name": "BH Warmup",
-              "count": 90,
-              "percent": 95,
-              "pause_after_sec": 50
+              "drill_id": 6021,
+              "drill_name": "FH Topspin vs No-Spin",
+              "count": 28,
+              "percent": 90,
+              "pause_after_sec": 15
+            },
+            {
+              "drill_id": 2003,
+              "drill_name": "FH BH Footwork",
+              "count": 28,
+              "percent": 90,
+              "pause_after_sec": 25
             },
             {
               "drill_id": 6022,
@@ -1243,36 +1931,122 @@
           "countdown_sec": 20,
           "steps": [
             {
-              "exercise_id": 101,
-              "exercise_name": "Jogging",
-              "duration_sec": 60,
-              "pause_after_sec": 10
+              "exercise_id": 103,
+              "exercise_name": "Wrist Rotations",
+              "duration_sec": 30,
+              "pause_after_sec": 5
+            },
+            {
+              "exercise_id": 109,
+              "exercise_name": "Elbow Circles",
+              "duration_sec": 20,
+              "pause_after_sec": 5
             },
             {
               "exercise_id": 102,
               "exercise_name": "Arm Circles",
+              "duration_sec": 20,
+              "pause_after_sec": 5
+            },
+            {
+              "exercise_id": 104,
+              "exercise_name": "Trunk Rotations",
               "duration_sec": 30,
+              "pause_after_sec": 5
+            },
+            {
+              "exercise_id": 110,
+              "exercise_name": "Knee Circles",
+              "duration_sec": 15,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 111,
+              "exercise_name": "Ankle Circles",
+              "duration_sec": 15,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 112,
+              "exercise_name": "Dynamic Forward Folds",
+              "duration_sec": 35,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 502,
+              "exercise_name": "Bodyweight Squats",
+              "duration_sec": 35,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 113,
+              "exercise_name": "Side Bends",
+              "duration_sec": 15,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 114,
+              "exercise_name": "Leg Swings Front-Back",
+              "duration_sec": 15,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 115,
+              "exercise_name": "Leg Swings Lateral",
+              "duration_sec": 15,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 201,
+              "exercise_name": "Side Shuffle",
+              "duration_sec": 25,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 207,
+              "exercise_name": "Pivot Drill",
+              "duration_sec": 25,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 204,
+              "exercise_name": "In-Out Movement",
+              "duration_sec": 25,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 116,
+              "exercise_name": "Sound Reaction Footwork",
+              "duration_sec": 25,
               "pause_after_sec": 10
             },
             {
-              "exercise_id": 103,
-              "exercise_name": "Wrist Rotations",
-              "duration_sec": 30,
+              "drill_id": 1002,
+              "drill_name": "BH Warmup",
+              "count": 28,
+              "percent": 90,
               "pause_after_sec": 15
             },
             {
               "drill_id": 1001,
               "drill_name": "FH Warmup",
-              "count": 95,
-              "percent": 95,
-              "pause_after_sec": 45
+              "count": 28,
+              "percent": 90,
+              "pause_after_sec": 15
             },
             {
-              "drill_id": 1002,
-              "drill_name": "BH Warmup",
-              "count": 95,
-              "percent": 95,
-              "pause_after_sec": 50
+              "drill_id": 6021,
+              "drill_name": "FH Topspin vs No-Spin",
+              "count": 28,
+              "percent": 90,
+              "pause_after_sec": 15
+            },
+            {
+              "drill_id": 2003,
+              "drill_name": "FH BH Footwork",
+              "count": 28,
+              "percent": 90,
+              "pause_after_sec": 25
             },
             {
               "drill_id": 6025,
@@ -1398,36 +2172,122 @@
           "countdown_sec": 20,
           "steps": [
             {
-              "exercise_id": 101,
-              "exercise_name": "Jogging",
-              "duration_sec": 60,
-              "pause_after_sec": 10
+              "exercise_id": 103,
+              "exercise_name": "Wrist Rotations",
+              "duration_sec": 30,
+              "pause_after_sec": 5
             },
             {
-              "exercise_id": 202,
-              "exercise_name": "Crossover Step",
-              "duration_sec": 60,
-              "pause_after_sec": 10
+              "exercise_id": 109,
+              "exercise_name": "Elbow Circles",
+              "duration_sec": 20,
+              "pause_after_sec": 5
+            },
+            {
+              "exercise_id": 102,
+              "exercise_name": "Arm Circles",
+              "duration_sec": 20,
+              "pause_after_sec": 5
             },
             {
               "exercise_id": 104,
               "exercise_name": "Trunk Rotations",
-              "duration_sec": 45,
+              "duration_sec": 30,
+              "pause_after_sec": 5
+            },
+            {
+              "exercise_id": 110,
+              "exercise_name": "Knee Circles",
+              "duration_sec": 15,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 111,
+              "exercise_name": "Ankle Circles",
+              "duration_sec": 15,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 112,
+              "exercise_name": "Dynamic Forward Folds",
+              "duration_sec": 35,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 502,
+              "exercise_name": "Bodyweight Squats",
+              "duration_sec": 35,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 113,
+              "exercise_name": "Side Bends",
+              "duration_sec": 15,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 114,
+              "exercise_name": "Leg Swings Front-Back",
+              "duration_sec": 15,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 115,
+              "exercise_name": "Leg Swings Lateral",
+              "duration_sec": 15,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 201,
+              "exercise_name": "Side Shuffle",
+              "duration_sec": 25,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 207,
+              "exercise_name": "Pivot Drill",
+              "duration_sec": 25,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 204,
+              "exercise_name": "In-Out Movement",
+              "duration_sec": 25,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 116,
+              "exercise_name": "Sound Reaction Footwork",
+              "duration_sec": 25,
+              "pause_after_sec": 10
+            },
+            {
+              "drill_id": 1002,
+              "drill_name": "BH Warmup",
+              "count": 28,
+              "percent": 90,
               "pause_after_sec": 15
             },
             {
               "drill_id": 1001,
               "drill_name": "FH Warmup",
-              "count": 100,
-              "percent": 95,
-              "pause_after_sec": 45
+              "count": 28,
+              "percent": 90,
+              "pause_after_sec": 15
             },
             {
-              "drill_id": 1002,
-              "drill_name": "BH Warmup",
-              "count": 100,
-              "percent": 95,
-              "pause_after_sec": 50
+              "drill_id": 6021,
+              "drill_name": "FH Topspin vs No-Spin",
+              "count": 28,
+              "percent": 90,
+              "pause_after_sec": 15
+            },
+            {
+              "drill_id": 2003,
+              "drill_name": "FH BH Footwork",
+              "count": 28,
+              "percent": 90,
+              "pause_after_sec": 25
             },
             {
               "drill_id": 6027,
@@ -1553,36 +2413,122 @@
           "countdown_sec": 20,
           "steps": [
             {
-              "exercise_id": 101,
-              "exercise_name": "Jogging",
-              "duration_sec": 60,
-              "pause_after_sec": 10
+              "exercise_id": 103,
+              "exercise_name": "Wrist Rotations",
+              "duration_sec": 30,
+              "pause_after_sec": 5
+            },
+            {
+              "exercise_id": 109,
+              "exercise_name": "Elbow Circles",
+              "duration_sec": 20,
+              "pause_after_sec": 5
+            },
+            {
+              "exercise_id": 102,
+              "exercise_name": "Arm Circles",
+              "duration_sec": 20,
+              "pause_after_sec": 5
             },
             {
               "exercise_id": 104,
               "exercise_name": "Trunk Rotations",
-              "duration_sec": 45,
+              "duration_sec": 30,
+              "pause_after_sec": 5
+            },
+            {
+              "exercise_id": 110,
+              "exercise_name": "Knee Circles",
+              "duration_sec": 15,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 111,
+              "exercise_name": "Ankle Circles",
+              "duration_sec": 15,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 112,
+              "exercise_name": "Dynamic Forward Folds",
+              "duration_sec": 35,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 502,
+              "exercise_name": "Bodyweight Squats",
+              "duration_sec": 35,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 113,
+              "exercise_name": "Side Bends",
+              "duration_sec": 15,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 114,
+              "exercise_name": "Leg Swings Front-Back",
+              "duration_sec": 15,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 115,
+              "exercise_name": "Leg Swings Lateral",
+              "duration_sec": 15,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 201,
+              "exercise_name": "Side Shuffle",
+              "duration_sec": 25,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 207,
+              "exercise_name": "Pivot Drill",
+              "duration_sec": 25,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 204,
+              "exercise_name": "In-Out Movement",
+              "duration_sec": 25,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 116,
+              "exercise_name": "Sound Reaction Footwork",
+              "duration_sec": 25,
               "pause_after_sec": 10
             },
             {
-              "exercise_id": 108,
-              "exercise_name": "Shadow Play",
-              "duration_sec": 90,
+              "drill_id": 1002,
+              "drill_name": "BH Warmup",
+              "count": 28,
+              "percent": 90,
               "pause_after_sec": 15
             },
             {
               "drill_id": 1001,
               "drill_name": "FH Warmup",
-              "count": 90,
-              "percent": 95,
-              "pause_after_sec": 45
+              "count": 28,
+              "percent": 90,
+              "pause_after_sec": 15
             },
             {
-              "drill_id": 1002,
-              "drill_name": "BH Warmup",
-              "count": 90,
-              "percent": 95,
-              "pause_after_sec": 50
+              "drill_id": 6021,
+              "drill_name": "FH Topspin vs No-Spin",
+              "count": 28,
+              "percent": 90,
+              "pause_after_sec": 15
+            },
+            {
+              "drill_id": 2003,
+              "drill_name": "FH BH Footwork",
+              "count": 28,
+              "percent": 90,
+              "pause_after_sec": 25
             },
             {
               "drill_id": 6023,
@@ -1708,36 +2654,122 @@
           "countdown_sec": 20,
           "steps": [
             {
-              "exercise_id": 101,
-              "exercise_name": "Jogging",
-              "duration_sec": 60,
-              "pause_after_sec": 10
+              "exercise_id": 103,
+              "exercise_name": "Wrist Rotations",
+              "duration_sec": 30,
+              "pause_after_sec": 5
+            },
+            {
+              "exercise_id": 109,
+              "exercise_name": "Elbow Circles",
+              "duration_sec": 20,
+              "pause_after_sec": 5
             },
             {
               "exercise_id": 102,
               "exercise_name": "Arm Circles",
-              "duration_sec": 30,
-              "pause_after_sec": 10
+              "duration_sec": 20,
+              "pause_after_sec": 5
             },
             {
               "exercise_id": 104,
               "exercise_name": "Trunk Rotations",
-              "duration_sec": 45,
+              "duration_sec": 30,
+              "pause_after_sec": 5
+            },
+            {
+              "exercise_id": 110,
+              "exercise_name": "Knee Circles",
+              "duration_sec": 15,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 111,
+              "exercise_name": "Ankle Circles",
+              "duration_sec": 15,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 112,
+              "exercise_name": "Dynamic Forward Folds",
+              "duration_sec": 35,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 502,
+              "exercise_name": "Bodyweight Squats",
+              "duration_sec": 35,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 113,
+              "exercise_name": "Side Bends",
+              "duration_sec": 15,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 114,
+              "exercise_name": "Leg Swings Front-Back",
+              "duration_sec": 15,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 115,
+              "exercise_name": "Leg Swings Lateral",
+              "duration_sec": 15,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 201,
+              "exercise_name": "Side Shuffle",
+              "duration_sec": 25,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 207,
+              "exercise_name": "Pivot Drill",
+              "duration_sec": 25,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 204,
+              "exercise_name": "In-Out Movement",
+              "duration_sec": 25,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 116,
+              "exercise_name": "Sound Reaction Footwork",
+              "duration_sec": 25,
+              "pause_after_sec": 10
+            },
+            {
+              "drill_id": 1002,
+              "drill_name": "BH Warmup",
+              "count": 28,
+              "percent": 90,
               "pause_after_sec": 15
             },
             {
               "drill_id": 1001,
               "drill_name": "FH Warmup",
-              "count": 95,
-              "percent": 95,
-              "pause_after_sec": 45
+              "count": 28,
+              "percent": 90,
+              "pause_after_sec": 15
             },
             {
-              "drill_id": 1002,
-              "drill_name": "BH Warmup",
-              "count": 95,
-              "percent": 95,
-              "pause_after_sec": 50
+              "drill_id": 6021,
+              "drill_name": "FH Topspin vs No-Spin",
+              "count": 28,
+              "percent": 90,
+              "pause_after_sec": 15
+            },
+            {
+              "drill_id": 2003,
+              "drill_name": "FH BH Footwork",
+              "count": 28,
+              "percent": 90,
+              "pause_after_sec": 25
             },
             {
               "drill_id": 6025,
@@ -1863,36 +2895,122 @@
           "countdown_sec": 20,
           "steps": [
             {
-              "exercise_id": 101,
-              "exercise_name": "Jogging",
-              "duration_sec": 60,
-              "pause_after_sec": 10
+              "exercise_id": 103,
+              "exercise_name": "Wrist Rotations",
+              "duration_sec": 30,
+              "pause_after_sec": 5
             },
             {
-              "exercise_id": 301,
-              "exercise_name": "Reaction Ball",
-              "duration_sec": 60,
-              "pause_after_sec": 10
+              "exercise_id": 109,
+              "exercise_name": "Elbow Circles",
+              "duration_sec": 20,
+              "pause_after_sec": 5
+            },
+            {
+              "exercise_id": 102,
+              "exercise_name": "Arm Circles",
+              "duration_sec": 20,
+              "pause_after_sec": 5
             },
             {
               "exercise_id": 104,
               "exercise_name": "Trunk Rotations",
-              "duration_sec": 45,
+              "duration_sec": 30,
+              "pause_after_sec": 5
+            },
+            {
+              "exercise_id": 110,
+              "exercise_name": "Knee Circles",
+              "duration_sec": 15,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 111,
+              "exercise_name": "Ankle Circles",
+              "duration_sec": 15,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 112,
+              "exercise_name": "Dynamic Forward Folds",
+              "duration_sec": 35,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 502,
+              "exercise_name": "Bodyweight Squats",
+              "duration_sec": 35,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 113,
+              "exercise_name": "Side Bends",
+              "duration_sec": 15,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 114,
+              "exercise_name": "Leg Swings Front-Back",
+              "duration_sec": 15,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 115,
+              "exercise_name": "Leg Swings Lateral",
+              "duration_sec": 15,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 201,
+              "exercise_name": "Side Shuffle",
+              "duration_sec": 25,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 207,
+              "exercise_name": "Pivot Drill",
+              "duration_sec": 25,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 204,
+              "exercise_name": "In-Out Movement",
+              "duration_sec": 25,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 116,
+              "exercise_name": "Sound Reaction Footwork",
+              "duration_sec": 25,
+              "pause_after_sec": 10
+            },
+            {
+              "drill_id": 1002,
+              "drill_name": "BH Warmup",
+              "count": 28,
+              "percent": 90,
               "pause_after_sec": 15
             },
             {
               "drill_id": 1001,
               "drill_name": "FH Warmup",
-              "count": 100,
-              "percent": 95,
-              "pause_after_sec": 45
+              "count": 28,
+              "percent": 90,
+              "pause_after_sec": 15
             },
             {
-              "drill_id": 1002,
-              "drill_name": "BH Warmup",
-              "count": 100,
-              "percent": 95,
-              "pause_after_sec": 50
+              "drill_id": 6021,
+              "drill_name": "FH Topspin vs No-Spin",
+              "count": 28,
+              "percent": 90,
+              "pause_after_sec": 15
+            },
+            {
+              "drill_id": 2003,
+              "drill_name": "FH BH Footwork",
+              "count": 28,
+              "percent": 90,
+              "pause_after_sec": 25
             },
             {
               "drill_id": 6021,
@@ -2018,36 +3136,122 @@
           "countdown_sec": 20,
           "steps": [
             {
-              "exercise_id": 101,
-              "exercise_name": "Jogging",
-              "duration_sec": 60,
-              "pause_after_sec": 10
+              "exercise_id": 103,
+              "exercise_name": "Wrist Rotations",
+              "duration_sec": 30,
+              "pause_after_sec": 5
+            },
+            {
+              "exercise_id": 109,
+              "exercise_name": "Elbow Circles",
+              "duration_sec": 20,
+              "pause_after_sec": 5
             },
             {
               "exercise_id": 102,
               "exercise_name": "Arm Circles",
+              "duration_sec": 20,
+              "pause_after_sec": 5
+            },
+            {
+              "exercise_id": 104,
+              "exercise_name": "Trunk Rotations",
               "duration_sec": 30,
+              "pause_after_sec": 5
+            },
+            {
+              "exercise_id": 110,
+              "exercise_name": "Knee Circles",
+              "duration_sec": 15,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 111,
+              "exercise_name": "Ankle Circles",
+              "duration_sec": 15,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 112,
+              "exercise_name": "Dynamic Forward Folds",
+              "duration_sec": 35,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 502,
+              "exercise_name": "Bodyweight Squats",
+              "duration_sec": 35,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 113,
+              "exercise_name": "Side Bends",
+              "duration_sec": 15,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 114,
+              "exercise_name": "Leg Swings Front-Back",
+              "duration_sec": 15,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 115,
+              "exercise_name": "Leg Swings Lateral",
+              "duration_sec": 15,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 201,
+              "exercise_name": "Side Shuffle",
+              "duration_sec": 25,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 207,
+              "exercise_name": "Pivot Drill",
+              "duration_sec": 25,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 204,
+              "exercise_name": "In-Out Movement",
+              "duration_sec": 25,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 116,
+              "exercise_name": "Sound Reaction Footwork",
+              "duration_sec": 25,
               "pause_after_sec": 10
             },
             {
-              "exercise_id": 103,
-              "exercise_name": "Wrist Rotations",
-              "duration_sec": 30,
+              "drill_id": 1002,
+              "drill_name": "BH Warmup",
+              "count": 28,
+              "percent": 90,
               "pause_after_sec": 15
             },
             {
               "drill_id": 1001,
               "drill_name": "FH Warmup",
-              "count": 100,
-              "percent": 95,
-              "pause_after_sec": 45
+              "count": 28,
+              "percent": 90,
+              "pause_after_sec": 15
             },
             {
-              "drill_id": 1002,
-              "drill_name": "BH Warmup",
-              "count": 100,
-              "percent": 95,
-              "pause_after_sec": 50
+              "drill_id": 6021,
+              "drill_name": "FH Topspin vs No-Spin",
+              "count": 28,
+              "percent": 90,
+              "pause_after_sec": 15
+            },
+            {
+              "drill_id": 2003,
+              "drill_name": "FH BH Footwork",
+              "count": 28,
+              "percent": 90,
+              "pause_after_sec": 25
             },
             {
               "drill_id": 6028,
@@ -2173,36 +3377,122 @@
           "countdown_sec": 20,
           "steps": [
             {
-              "exercise_id": 101,
-              "exercise_name": "Jogging",
-              "duration_sec": 60,
-              "pause_after_sec": 10
+              "exercise_id": 103,
+              "exercise_name": "Wrist Rotations",
+              "duration_sec": 30,
+              "pause_after_sec": 5
+            },
+            {
+              "exercise_id": 109,
+              "exercise_name": "Elbow Circles",
+              "duration_sec": 20,
+              "pause_after_sec": 5
+            },
+            {
+              "exercise_id": 102,
+              "exercise_name": "Arm Circles",
+              "duration_sec": 20,
+              "pause_after_sec": 5
             },
             {
               "exercise_id": 104,
               "exercise_name": "Trunk Rotations",
-              "duration_sec": 45,
+              "duration_sec": 30,
+              "pause_after_sec": 5
+            },
+            {
+              "exercise_id": 110,
+              "exercise_name": "Knee Circles",
+              "duration_sec": 15,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 111,
+              "exercise_name": "Ankle Circles",
+              "duration_sec": 15,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 112,
+              "exercise_name": "Dynamic Forward Folds",
+              "duration_sec": 35,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 502,
+              "exercise_name": "Bodyweight Squats",
+              "duration_sec": 35,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 113,
+              "exercise_name": "Side Bends",
+              "duration_sec": 15,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 114,
+              "exercise_name": "Leg Swings Front-Back",
+              "duration_sec": 15,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 115,
+              "exercise_name": "Leg Swings Lateral",
+              "duration_sec": 15,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 201,
+              "exercise_name": "Side Shuffle",
+              "duration_sec": 25,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 207,
+              "exercise_name": "Pivot Drill",
+              "duration_sec": 25,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 204,
+              "exercise_name": "In-Out Movement",
+              "duration_sec": 25,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 116,
+              "exercise_name": "Sound Reaction Footwork",
+              "duration_sec": 25,
               "pause_after_sec": 10
             },
             {
-              "exercise_id": 108,
-              "exercise_name": "Shadow Play",
-              "duration_sec": 90,
+              "drill_id": 1002,
+              "drill_name": "BH Warmup",
+              "count": 30,
+              "percent": 95,
               "pause_after_sec": 15
             },
             {
               "drill_id": 1001,
               "drill_name": "FH Warmup",
-              "count": 105,
+              "count": 30,
               "percent": 95,
-              "pause_after_sec": 45
+              "pause_after_sec": 15
             },
             {
-              "drill_id": 1002,
-              "drill_name": "BH Warmup",
-              "count": 105,
+              "drill_id": 6023,
+              "drill_name": "FH Topspin vs Backspin",
+              "count": 28,
+              "percent": 90,
+              "pause_after_sec": 15
+            },
+            {
+              "drill_id": 2003,
+              "drill_name": "FH BH Footwork",
+              "count": 30,
               "percent": 95,
-              "pause_after_sec": 50
+              "pause_after_sec": 25
             },
             {
               "drill_id": 6025,
@@ -2328,36 +3618,122 @@
           "countdown_sec": 20,
           "steps": [
             {
-              "exercise_id": 101,
-              "exercise_name": "Jogging",
-              "duration_sec": 60,
-              "pause_after_sec": 10
-            },
-            {
               "exercise_id": 103,
               "exercise_name": "Wrist Rotations",
               "duration_sec": 30,
-              "pause_after_sec": 10
+              "pause_after_sec": 5
+            },
+            {
+              "exercise_id": 109,
+              "exercise_name": "Elbow Circles",
+              "duration_sec": 20,
+              "pause_after_sec": 5
+            },
+            {
+              "exercise_id": 102,
+              "exercise_name": "Arm Circles",
+              "duration_sec": 20,
+              "pause_after_sec": 5
             },
             {
               "exercise_id": 104,
               "exercise_name": "Trunk Rotations",
-              "duration_sec": 45,
+              "duration_sec": 30,
+              "pause_after_sec": 5
+            },
+            {
+              "exercise_id": 110,
+              "exercise_name": "Knee Circles",
+              "duration_sec": 15,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 111,
+              "exercise_name": "Ankle Circles",
+              "duration_sec": 15,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 112,
+              "exercise_name": "Dynamic Forward Folds",
+              "duration_sec": 35,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 502,
+              "exercise_name": "Bodyweight Squats",
+              "duration_sec": 35,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 113,
+              "exercise_name": "Side Bends",
+              "duration_sec": 15,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 114,
+              "exercise_name": "Leg Swings Front-Back",
+              "duration_sec": 15,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 115,
+              "exercise_name": "Leg Swings Lateral",
+              "duration_sec": 15,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 201,
+              "exercise_name": "Side Shuffle",
+              "duration_sec": 25,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 207,
+              "exercise_name": "Pivot Drill",
+              "duration_sec": 25,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 204,
+              "exercise_name": "In-Out Movement",
+              "duration_sec": 25,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 116,
+              "exercise_name": "Sound Reaction Footwork",
+              "duration_sec": 25,
+              "pause_after_sec": 10
+            },
+            {
+              "drill_id": 1002,
+              "drill_name": "BH Warmup",
+              "count": 30,
+              "percent": 95,
               "pause_after_sec": 15
             },
             {
               "drill_id": 1001,
               "drill_name": "FH Warmup",
-              "count": 95,
-              "percent": 100,
-              "pause_after_sec": 45
+              "count": 30,
+              "percent": 95,
+              "pause_after_sec": 15
             },
             {
-              "drill_id": 1002,
-              "drill_name": "BH Warmup",
-              "count": 95,
-              "percent": 100,
-              "pause_after_sec": 45
+              "drill_id": 6023,
+              "drill_name": "FH Topspin vs Backspin",
+              "count": 28,
+              "percent": 90,
+              "pause_after_sec": 15
+            },
+            {
+              "drill_id": 2003,
+              "drill_name": "FH BH Footwork",
+              "count": 30,
+              "percent": 95,
+              "pause_after_sec": 25
             },
             {
               "drill_id": 6023,
@@ -2483,36 +3859,122 @@
           "countdown_sec": 20,
           "steps": [
             {
-              "exercise_id": 101,
-              "exercise_name": "Jogging",
-              "duration_sec": 60,
-              "pause_after_sec": 10
+              "exercise_id": 103,
+              "exercise_name": "Wrist Rotations",
+              "duration_sec": 30,
+              "pause_after_sec": 5
+            },
+            {
+              "exercise_id": 109,
+              "exercise_name": "Elbow Circles",
+              "duration_sec": 20,
+              "pause_after_sec": 5
+            },
+            {
+              "exercise_id": 102,
+              "exercise_name": "Arm Circles",
+              "duration_sec": 20,
+              "pause_after_sec": 5
+            },
+            {
+              "exercise_id": 104,
+              "exercise_name": "Trunk Rotations",
+              "duration_sec": 30,
+              "pause_after_sec": 5
+            },
+            {
+              "exercise_id": 110,
+              "exercise_name": "Knee Circles",
+              "duration_sec": 15,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 111,
+              "exercise_name": "Ankle Circles",
+              "duration_sec": 15,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 112,
+              "exercise_name": "Dynamic Forward Folds",
+              "duration_sec": 35,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 502,
+              "exercise_name": "Bodyweight Squats",
+              "duration_sec": 35,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 113,
+              "exercise_name": "Side Bends",
+              "duration_sec": 15,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 114,
+              "exercise_name": "Leg Swings Front-Back",
+              "duration_sec": 15,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 115,
+              "exercise_name": "Leg Swings Lateral",
+              "duration_sec": 15,
+              "pause_after_sec": 3
             },
             {
               "exercise_id": 201,
               "exercise_name": "Side Shuffle",
-              "duration_sec": 60,
+              "duration_sec": 25,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 207,
+              "exercise_name": "Pivot Drill",
+              "duration_sec": 25,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 204,
+              "exercise_name": "In-Out Movement",
+              "duration_sec": 25,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 116,
+              "exercise_name": "Sound Reaction Footwork",
+              "duration_sec": 25,
               "pause_after_sec": 10
             },
             {
-              "exercise_id": 108,
-              "exercise_name": "Shadow Play",
-              "duration_sec": 90,
+              "drill_id": 1002,
+              "drill_name": "BH Warmup",
+              "count": 30,
+              "percent": 95,
               "pause_after_sec": 15
             },
             {
               "drill_id": 1001,
               "drill_name": "FH Warmup",
-              "count": 95,
-              "percent": 100,
-              "pause_after_sec": 45
+              "count": 30,
+              "percent": 95,
+              "pause_after_sec": 15
             },
             {
-              "drill_id": 1002,
-              "drill_name": "BH Warmup",
-              "count": 95,
-              "percent": 100,
-              "pause_after_sec": 45
+              "drill_id": 6023,
+              "drill_name": "FH Topspin vs Backspin",
+              "count": 28,
+              "percent": 90,
+              "pause_after_sec": 15
+            },
+            {
+              "drill_id": 2003,
+              "drill_name": "FH BH Footwork",
+              "count": 30,
+              "percent": 95,
+              "pause_after_sec": 25
             },
             {
               "drill_id": 6021,
@@ -2638,36 +4100,122 @@
           "countdown_sec": 20,
           "steps": [
             {
-              "exercise_id": 101,
-              "exercise_name": "Jogging",
-              "duration_sec": 60,
-              "pause_after_sec": 10
+              "exercise_id": 103,
+              "exercise_name": "Wrist Rotations",
+              "duration_sec": 30,
+              "pause_after_sec": 5
             },
             {
-              "exercise_id": 202,
-              "exercise_name": "Crossover Step",
-              "duration_sec": 60,
-              "pause_after_sec": 10
+              "exercise_id": 109,
+              "exercise_name": "Elbow Circles",
+              "duration_sec": 20,
+              "pause_after_sec": 5
+            },
+            {
+              "exercise_id": 102,
+              "exercise_name": "Arm Circles",
+              "duration_sec": 20,
+              "pause_after_sec": 5
+            },
+            {
+              "exercise_id": 104,
+              "exercise_name": "Trunk Rotations",
+              "duration_sec": 30,
+              "pause_after_sec": 5
+            },
+            {
+              "exercise_id": 110,
+              "exercise_name": "Knee Circles",
+              "duration_sec": 15,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 111,
+              "exercise_name": "Ankle Circles",
+              "duration_sec": 15,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 112,
+              "exercise_name": "Dynamic Forward Folds",
+              "duration_sec": 35,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 502,
+              "exercise_name": "Bodyweight Squats",
+              "duration_sec": 35,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 113,
+              "exercise_name": "Side Bends",
+              "duration_sec": 15,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 114,
+              "exercise_name": "Leg Swings Front-Back",
+              "duration_sec": 15,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 115,
+              "exercise_name": "Leg Swings Lateral",
+              "duration_sec": 15,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 201,
+              "exercise_name": "Side Shuffle",
+              "duration_sec": 25,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 207,
+              "exercise_name": "Pivot Drill",
+              "duration_sec": 25,
+              "pause_after_sec": 3
             },
             {
               "exercise_id": 204,
               "exercise_name": "In-Out Movement",
-              "duration_sec": 60,
+              "duration_sec": 25,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 116,
+              "exercise_name": "Sound Reaction Footwork",
+              "duration_sec": 25,
+              "pause_after_sec": 10
+            },
+            {
+              "drill_id": 1002,
+              "drill_name": "BH Warmup",
+              "count": 30,
+              "percent": 95,
               "pause_after_sec": 15
             },
             {
               "drill_id": 1001,
               "drill_name": "FH Warmup",
-              "count": 105,
-              "percent": 100,
-              "pause_after_sec": 45
+              "count": 30,
+              "percent": 95,
+              "pause_after_sec": 15
             },
             {
-              "drill_id": 1002,
-              "drill_name": "BH Warmup",
-              "count": 105,
-              "percent": 100,
-              "pause_after_sec": 45
+              "drill_id": 6023,
+              "drill_name": "FH Topspin vs Backspin",
+              "count": 28,
+              "percent": 90,
+              "pause_after_sec": 15
+            },
+            {
+              "drill_id": 2003,
+              "drill_name": "FH BH Footwork",
+              "count": 30,
+              "percent": 95,
+              "pause_after_sec": 25
             },
             {
               "drill_id": 6027,
@@ -2793,36 +4341,122 @@
           "countdown_sec": 20,
           "steps": [
             {
-              "exercise_id": 101,
-              "exercise_name": "Jogging",
-              "duration_sec": 60,
-              "pause_after_sec": 10
-            },
-            {
               "exercise_id": 103,
               "exercise_name": "Wrist Rotations",
               "duration_sec": 30,
-              "pause_after_sec": 10
+              "pause_after_sec": 5
+            },
+            {
+              "exercise_id": 109,
+              "exercise_name": "Elbow Circles",
+              "duration_sec": 20,
+              "pause_after_sec": 5
+            },
+            {
+              "exercise_id": 102,
+              "exercise_name": "Arm Circles",
+              "duration_sec": 20,
+              "pause_after_sec": 5
             },
             {
               "exercise_id": 104,
               "exercise_name": "Trunk Rotations",
-              "duration_sec": 45,
+              "duration_sec": 30,
+              "pause_after_sec": 5
+            },
+            {
+              "exercise_id": 110,
+              "exercise_name": "Knee Circles",
+              "duration_sec": 15,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 111,
+              "exercise_name": "Ankle Circles",
+              "duration_sec": 15,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 112,
+              "exercise_name": "Dynamic Forward Folds",
+              "duration_sec": 35,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 502,
+              "exercise_name": "Bodyweight Squats",
+              "duration_sec": 35,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 113,
+              "exercise_name": "Side Bends",
+              "duration_sec": 15,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 114,
+              "exercise_name": "Leg Swings Front-Back",
+              "duration_sec": 15,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 115,
+              "exercise_name": "Leg Swings Lateral",
+              "duration_sec": 15,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 201,
+              "exercise_name": "Side Shuffle",
+              "duration_sec": 25,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 207,
+              "exercise_name": "Pivot Drill",
+              "duration_sec": 25,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 204,
+              "exercise_name": "In-Out Movement",
+              "duration_sec": 25,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 116,
+              "exercise_name": "Sound Reaction Footwork",
+              "duration_sec": 25,
+              "pause_after_sec": 10
+            },
+            {
+              "drill_id": 1002,
+              "drill_name": "BH Warmup",
+              "count": 30,
+              "percent": 95,
               "pause_after_sec": 15
             },
             {
               "drill_id": 1001,
               "drill_name": "FH Warmup",
-              "count": 95,
-              "percent": 100,
-              "pause_after_sec": 45
+              "count": 30,
+              "percent": 95,
+              "pause_after_sec": 15
             },
             {
-              "drill_id": 1002,
-              "drill_name": "BH Warmup",
-              "count": 95,
-              "percent": 100,
-              "pause_after_sec": 45
+              "drill_id": 6023,
+              "drill_name": "FH Topspin vs Backspin",
+              "count": 28,
+              "percent": 90,
+              "pause_after_sec": 15
+            },
+            {
+              "drill_id": 2003,
+              "drill_name": "FH BH Footwork",
+              "count": 30,
+              "percent": 95,
+              "pause_after_sec": 25
             },
             {
               "drill_id": 6022,
@@ -2948,36 +4582,122 @@
           "countdown_sec": 20,
           "steps": [
             {
-              "exercise_id": 101,
-              "exercise_name": "Jogging",
-              "duration_sec": 60,
-              "pause_after_sec": 10
+              "exercise_id": 103,
+              "exercise_name": "Wrist Rotations",
+              "duration_sec": 30,
+              "pause_after_sec": 5
+            },
+            {
+              "exercise_id": 109,
+              "exercise_name": "Elbow Circles",
+              "duration_sec": 20,
+              "pause_after_sec": 5
+            },
+            {
+              "exercise_id": 102,
+              "exercise_name": "Arm Circles",
+              "duration_sec": 20,
+              "pause_after_sec": 5
+            },
+            {
+              "exercise_id": 104,
+              "exercise_name": "Trunk Rotations",
+              "duration_sec": 30,
+              "pause_after_sec": 5
+            },
+            {
+              "exercise_id": 110,
+              "exercise_name": "Knee Circles",
+              "duration_sec": 15,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 111,
+              "exercise_name": "Ankle Circles",
+              "duration_sec": 15,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 112,
+              "exercise_name": "Dynamic Forward Folds",
+              "duration_sec": 35,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 502,
+              "exercise_name": "Bodyweight Squats",
+              "duration_sec": 35,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 113,
+              "exercise_name": "Side Bends",
+              "duration_sec": 15,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 114,
+              "exercise_name": "Leg Swings Front-Back",
+              "duration_sec": 15,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 115,
+              "exercise_name": "Leg Swings Lateral",
+              "duration_sec": 15,
+              "pause_after_sec": 3
             },
             {
               "exercise_id": 201,
               "exercise_name": "Side Shuffle",
-              "duration_sec": 60,
+              "duration_sec": 25,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 207,
+              "exercise_name": "Pivot Drill",
+              "duration_sec": 25,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 204,
+              "exercise_name": "In-Out Movement",
+              "duration_sec": 25,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 116,
+              "exercise_name": "Sound Reaction Footwork",
+              "duration_sec": 25,
               "pause_after_sec": 10
             },
             {
-              "exercise_id": 108,
-              "exercise_name": "Shadow Play",
-              "duration_sec": 90,
+              "drill_id": 1002,
+              "drill_name": "BH Warmup",
+              "count": 30,
+              "percent": 95,
               "pause_after_sec": 15
             },
             {
               "drill_id": 1001,
               "drill_name": "FH Warmup",
-              "count": 105,
-              "percent": 100,
-              "pause_after_sec": 45
+              "count": 30,
+              "percent": 95,
+              "pause_after_sec": 15
             },
             {
-              "drill_id": 1002,
-              "drill_name": "BH Warmup",
-              "count": 105,
-              "percent": 100,
-              "pause_after_sec": 45
+              "drill_id": 6023,
+              "drill_name": "FH Topspin vs Backspin",
+              "count": 28,
+              "percent": 90,
+              "pause_after_sec": 15
+            },
+            {
+              "drill_id": 2003,
+              "drill_name": "FH BH Footwork",
+              "count": 30,
+              "percent": 95,
+              "pause_after_sec": 25
             },
             {
               "drill_id": 6024,
@@ -3103,36 +4823,122 @@
           "countdown_sec": 20,
           "steps": [
             {
-              "exercise_id": 101,
-              "exercise_name": "Jogging",
-              "duration_sec": 60,
-              "pause_after_sec": 10
+              "exercise_id": 103,
+              "exercise_name": "Wrist Rotations",
+              "duration_sec": 30,
+              "pause_after_sec": 5
             },
             {
-              "exercise_id": 301,
-              "exercise_name": "Reaction Ball",
-              "duration_sec": 60,
-              "pause_after_sec": 10
+              "exercise_id": 109,
+              "exercise_name": "Elbow Circles",
+              "duration_sec": 20,
+              "pause_after_sec": 5
+            },
+            {
+              "exercise_id": 102,
+              "exercise_name": "Arm Circles",
+              "duration_sec": 20,
+              "pause_after_sec": 5
             },
             {
               "exercise_id": 104,
               "exercise_name": "Trunk Rotations",
-              "duration_sec": 45,
+              "duration_sec": 30,
+              "pause_after_sec": 5
+            },
+            {
+              "exercise_id": 110,
+              "exercise_name": "Knee Circles",
+              "duration_sec": 15,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 111,
+              "exercise_name": "Ankle Circles",
+              "duration_sec": 15,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 112,
+              "exercise_name": "Dynamic Forward Folds",
+              "duration_sec": 35,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 502,
+              "exercise_name": "Bodyweight Squats",
+              "duration_sec": 35,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 113,
+              "exercise_name": "Side Bends",
+              "duration_sec": 15,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 114,
+              "exercise_name": "Leg Swings Front-Back",
+              "duration_sec": 15,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 115,
+              "exercise_name": "Leg Swings Lateral",
+              "duration_sec": 15,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 201,
+              "exercise_name": "Side Shuffle",
+              "duration_sec": 25,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 207,
+              "exercise_name": "Pivot Drill",
+              "duration_sec": 25,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 204,
+              "exercise_name": "In-Out Movement",
+              "duration_sec": 25,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 116,
+              "exercise_name": "Sound Reaction Footwork",
+              "duration_sec": 25,
+              "pause_after_sec": 10
+            },
+            {
+              "drill_id": 1002,
+              "drill_name": "BH Warmup",
+              "count": 30,
+              "percent": 95,
               "pause_after_sec": 15
             },
             {
               "drill_id": 1001,
               "drill_name": "FH Warmup",
-              "count": 105,
-              "percent": 100,
-              "pause_after_sec": 45
+              "count": 30,
+              "percent": 95,
+              "pause_after_sec": 15
             },
             {
-              "drill_id": 1002,
-              "drill_name": "BH Warmup",
-              "count": 105,
-              "percent": 100,
-              "pause_after_sec": 45
+              "drill_id": 6023,
+              "drill_name": "FH Topspin vs Backspin",
+              "count": 28,
+              "percent": 90,
+              "pause_after_sec": 15
+            },
+            {
+              "drill_id": 2003,
+              "drill_name": "FH BH Footwork",
+              "count": 30,
+              "percent": 95,
+              "pause_after_sec": 25
             },
             {
               "drill_id": 6025,
@@ -3258,36 +5064,122 @@
           "countdown_sec": 20,
           "steps": [
             {
-              "exercise_id": 101,
-              "exercise_name": "Jogging",
-              "duration_sec": 60,
-              "pause_after_sec": 10
+              "exercise_id": 103,
+              "exercise_name": "Wrist Rotations",
+              "duration_sec": 30,
+              "pause_after_sec": 5
             },
             {
-              "exercise_id": 202,
-              "exercise_name": "Crossover Step",
-              "duration_sec": 60,
-              "pause_after_sec": 10
+              "exercise_id": 109,
+              "exercise_name": "Elbow Circles",
+              "duration_sec": 20,
+              "pause_after_sec": 5
+            },
+            {
+              "exercise_id": 102,
+              "exercise_name": "Arm Circles",
+              "duration_sec": 20,
+              "pause_after_sec": 5
+            },
+            {
+              "exercise_id": 104,
+              "exercise_name": "Trunk Rotations",
+              "duration_sec": 30,
+              "pause_after_sec": 5
+            },
+            {
+              "exercise_id": 110,
+              "exercise_name": "Knee Circles",
+              "duration_sec": 15,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 111,
+              "exercise_name": "Ankle Circles",
+              "duration_sec": 15,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 112,
+              "exercise_name": "Dynamic Forward Folds",
+              "duration_sec": 35,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 502,
+              "exercise_name": "Bodyweight Squats",
+              "duration_sec": 35,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 113,
+              "exercise_name": "Side Bends",
+              "duration_sec": 15,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 114,
+              "exercise_name": "Leg Swings Front-Back",
+              "duration_sec": 15,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 115,
+              "exercise_name": "Leg Swings Lateral",
+              "duration_sec": 15,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 201,
+              "exercise_name": "Side Shuffle",
+              "duration_sec": 25,
+              "pause_after_sec": 3
             },
             {
               "exercise_id": 207,
               "exercise_name": "Pivot Drill",
-              "duration_sec": 60,
+              "duration_sec": 25,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 204,
+              "exercise_name": "In-Out Movement",
+              "duration_sec": 25,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 116,
+              "exercise_name": "Sound Reaction Footwork",
+              "duration_sec": 25,
+              "pause_after_sec": 10
+            },
+            {
+              "drill_id": 6002,
+              "drill_name": "BH Block Medium",
+              "count": 30,
+              "percent": 95,
               "pause_after_sec": 15
             },
             {
-              "drill_id": 1001,
-              "drill_name": "FH Warmup",
-              "count": 105,
-              "percent": 100,
-              "pause_after_sec": 45
+              "drill_id": 6025,
+              "drill_name": "FH Counter-Topspin",
+              "count": 28,
+              "percent": 95,
+              "pause_after_sec": 15
             },
             {
-              "drill_id": 1002,
-              "drill_name": "BH Warmup",
-              "count": 105,
-              "percent": 100,
-              "pause_after_sec": 45
+              "drill_id": 6023,
+              "drill_name": "FH Topspin vs Backspin",
+              "count": 30,
+              "percent": 95,
+              "pause_after_sec": 15
+            },
+            {
+              "drill_id": 6027,
+              "drill_name": "FH-BH Topspin Alternating",
+              "count": 28,
+              "percent": 95,
+              "pause_after_sec": 25
             },
             {
               "drill_id": 6028,
@@ -3413,36 +5305,122 @@
           "countdown_sec": 20,
           "steps": [
             {
-              "exercise_id": 101,
-              "exercise_name": "Jogging",
-              "duration_sec": 60,
-              "pause_after_sec": 10
+              "exercise_id": 103,
+              "exercise_name": "Wrist Rotations",
+              "duration_sec": 30,
+              "pause_after_sec": 5
+            },
+            {
+              "exercise_id": 109,
+              "exercise_name": "Elbow Circles",
+              "duration_sec": 20,
+              "pause_after_sec": 5
+            },
+            {
+              "exercise_id": 102,
+              "exercise_name": "Arm Circles",
+              "duration_sec": 20,
+              "pause_after_sec": 5
             },
             {
               "exercise_id": 104,
               "exercise_name": "Trunk Rotations",
-              "duration_sec": 45,
+              "duration_sec": 30,
+              "pause_after_sec": 5
+            },
+            {
+              "exercise_id": 110,
+              "exercise_name": "Knee Circles",
+              "duration_sec": 15,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 111,
+              "exercise_name": "Ankle Circles",
+              "duration_sec": 15,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 112,
+              "exercise_name": "Dynamic Forward Folds",
+              "duration_sec": 35,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 502,
+              "exercise_name": "Bodyweight Squats",
+              "duration_sec": 35,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 113,
+              "exercise_name": "Side Bends",
+              "duration_sec": 15,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 114,
+              "exercise_name": "Leg Swings Front-Back",
+              "duration_sec": 15,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 115,
+              "exercise_name": "Leg Swings Lateral",
+              "duration_sec": 15,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 201,
+              "exercise_name": "Side Shuffle",
+              "duration_sec": 25,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 207,
+              "exercise_name": "Pivot Drill",
+              "duration_sec": 25,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 204,
+              "exercise_name": "In-Out Movement",
+              "duration_sec": 25,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 116,
+              "exercise_name": "Sound Reaction Footwork",
+              "duration_sec": 25,
               "pause_after_sec": 10
             },
             {
-              "exercise_id": 108,
-              "exercise_name": "Shadow Play",
-              "duration_sec": 90,
+              "drill_id": 6002,
+              "drill_name": "BH Block Medium",
+              "count": 30,
+              "percent": 95,
               "pause_after_sec": 15
             },
             {
-              "drill_id": 1001,
-              "drill_name": "FH Warmup",
-              "count": 105,
-              "percent": 100,
-              "pause_after_sec": 45
+              "drill_id": 6025,
+              "drill_name": "FH Counter-Topspin",
+              "count": 28,
+              "percent": 95,
+              "pause_after_sec": 15
             },
             {
-              "drill_id": 1002,
-              "drill_name": "BH Warmup",
-              "count": 105,
-              "percent": 100,
-              "pause_after_sec": 45
+              "drill_id": 6023,
+              "drill_name": "FH Topspin vs Backspin",
+              "count": 30,
+              "percent": 95,
+              "pause_after_sec": 15
+            },
+            {
+              "drill_id": 6027,
+              "drill_name": "FH-BH Topspin Alternating",
+              "count": 28,
+              "percent": 95,
+              "pause_after_sec": 25
             },
             {
               "drill_id": 6021,
@@ -3568,36 +5546,122 @@
           "countdown_sec": 20,
           "steps": [
             {
-              "exercise_id": 101,
-              "exercise_name": "Jogging",
-              "duration_sec": 60,
-              "pause_after_sec": 10
+              "exercise_id": 103,
+              "exercise_name": "Wrist Rotations",
+              "duration_sec": 30,
+              "pause_after_sec": 5
+            },
+            {
+              "exercise_id": 109,
+              "exercise_name": "Elbow Circles",
+              "duration_sec": 20,
+              "pause_after_sec": 5
+            },
+            {
+              "exercise_id": 102,
+              "exercise_name": "Arm Circles",
+              "duration_sec": 20,
+              "pause_after_sec": 5
+            },
+            {
+              "exercise_id": 104,
+              "exercise_name": "Trunk Rotations",
+              "duration_sec": 30,
+              "pause_after_sec": 5
+            },
+            {
+              "exercise_id": 110,
+              "exercise_name": "Knee Circles",
+              "duration_sec": 15,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 111,
+              "exercise_name": "Ankle Circles",
+              "duration_sec": 15,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 112,
+              "exercise_name": "Dynamic Forward Folds",
+              "duration_sec": 35,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 502,
+              "exercise_name": "Bodyweight Squats",
+              "duration_sec": 35,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 113,
+              "exercise_name": "Side Bends",
+              "duration_sec": 15,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 114,
+              "exercise_name": "Leg Swings Front-Back",
+              "duration_sec": 15,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 115,
+              "exercise_name": "Leg Swings Lateral",
+              "duration_sec": 15,
+              "pause_after_sec": 3
             },
             {
               "exercise_id": 201,
               "exercise_name": "Side Shuffle",
-              "duration_sec": 60,
+              "duration_sec": 25,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 207,
+              "exercise_name": "Pivot Drill",
+              "duration_sec": 25,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 204,
+              "exercise_name": "In-Out Movement",
+              "duration_sec": 25,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 116,
+              "exercise_name": "Sound Reaction Footwork",
+              "duration_sec": 25,
               "pause_after_sec": 10
             },
             {
-              "exercise_id": 108,
-              "exercise_name": "Shadow Play",
-              "duration_sec": 90,
+              "drill_id": 6002,
+              "drill_name": "BH Block Medium",
+              "count": 30,
+              "percent": 95,
               "pause_after_sec": 15
             },
             {
-              "drill_id": 1001,
-              "drill_name": "FH Warmup",
-              "count": 100,
-              "percent": 105,
-              "pause_after_sec": 45
+              "drill_id": 6025,
+              "drill_name": "FH Counter-Topspin",
+              "count": 28,
+              "percent": 95,
+              "pause_after_sec": 15
             },
             {
-              "drill_id": 1002,
-              "drill_name": "BH Warmup",
-              "count": 100,
-              "percent": 105,
-              "pause_after_sec": 45
+              "drill_id": 6023,
+              "drill_name": "FH Topspin vs Backspin",
+              "count": 30,
+              "percent": 95,
+              "pause_after_sec": 15
+            },
+            {
+              "drill_id": 6027,
+              "drill_name": "FH-BH Topspin Alternating",
+              "count": 28,
+              "percent": 95,
+              "pause_after_sec": 25
             },
             {
               "drill_id": 6023,
@@ -3723,36 +5787,122 @@
           "countdown_sec": 20,
           "steps": [
             {
-              "exercise_id": 101,
-              "exercise_name": "Jogging",
-              "duration_sec": 60,
-              "pause_after_sec": 10
+              "exercise_id": 103,
+              "exercise_name": "Wrist Rotations",
+              "duration_sec": 30,
+              "pause_after_sec": 5
             },
             {
-              "exercise_id": 301,
-              "exercise_name": "Reaction Ball",
-              "duration_sec": 60,
-              "pause_after_sec": 10
+              "exercise_id": 109,
+              "exercise_name": "Elbow Circles",
+              "duration_sec": 20,
+              "pause_after_sec": 5
+            },
+            {
+              "exercise_id": 102,
+              "exercise_name": "Arm Circles",
+              "duration_sec": 20,
+              "pause_after_sec": 5
             },
             {
               "exercise_id": 104,
               "exercise_name": "Trunk Rotations",
-              "duration_sec": 45,
+              "duration_sec": 30,
+              "pause_after_sec": 5
+            },
+            {
+              "exercise_id": 110,
+              "exercise_name": "Knee Circles",
+              "duration_sec": 15,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 111,
+              "exercise_name": "Ankle Circles",
+              "duration_sec": 15,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 112,
+              "exercise_name": "Dynamic Forward Folds",
+              "duration_sec": 35,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 502,
+              "exercise_name": "Bodyweight Squats",
+              "duration_sec": 35,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 113,
+              "exercise_name": "Side Bends",
+              "duration_sec": 15,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 114,
+              "exercise_name": "Leg Swings Front-Back",
+              "duration_sec": 15,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 115,
+              "exercise_name": "Leg Swings Lateral",
+              "duration_sec": 15,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 201,
+              "exercise_name": "Side Shuffle",
+              "duration_sec": 25,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 207,
+              "exercise_name": "Pivot Drill",
+              "duration_sec": 25,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 204,
+              "exercise_name": "In-Out Movement",
+              "duration_sec": 25,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 116,
+              "exercise_name": "Sound Reaction Footwork",
+              "duration_sec": 25,
+              "pause_after_sec": 10
+            },
+            {
+              "drill_id": 6002,
+              "drill_name": "BH Block Medium",
+              "count": 30,
+              "percent": 95,
               "pause_after_sec": 15
             },
             {
-              "drill_id": 1001,
-              "drill_name": "FH Warmup",
-              "count": 105,
-              "percent": 105,
-              "pause_after_sec": 40
+              "drill_id": 6025,
+              "drill_name": "FH Counter-Topspin",
+              "count": 28,
+              "percent": 95,
+              "pause_after_sec": 15
             },
             {
-              "drill_id": 1002,
-              "drill_name": "BH Warmup",
-              "count": 105,
-              "percent": 105,
-              "pause_after_sec": 40
+              "drill_id": 6023,
+              "drill_name": "FH Topspin vs Backspin",
+              "count": 30,
+              "percent": 95,
+              "pause_after_sec": 15
+            },
+            {
+              "drill_id": 6027,
+              "drill_name": "FH-BH Topspin Alternating",
+              "count": 28,
+              "percent": 95,
+              "pause_after_sec": 25
             },
             {
               "drill_id": 6025,
@@ -3878,36 +6028,122 @@
           "countdown_sec": 20,
           "steps": [
             {
-              "exercise_id": 101,
-              "exercise_name": "Jogging",
-              "duration_sec": 60,
-              "pause_after_sec": 10
+              "exercise_id": 103,
+              "exercise_name": "Wrist Rotations",
+              "duration_sec": 30,
+              "pause_after_sec": 5
             },
             {
-              "exercise_id": 202,
-              "exercise_name": "Crossover Step",
-              "duration_sec": 60,
-              "pause_after_sec": 10
+              "exercise_id": 109,
+              "exercise_name": "Elbow Circles",
+              "duration_sec": 20,
+              "pause_after_sec": 5
+            },
+            {
+              "exercise_id": 102,
+              "exercise_name": "Arm Circles",
+              "duration_sec": 20,
+              "pause_after_sec": 5
             },
             {
               "exercise_id": 104,
               "exercise_name": "Trunk Rotations",
-              "duration_sec": 45,
+              "duration_sec": 30,
+              "pause_after_sec": 5
+            },
+            {
+              "exercise_id": 110,
+              "exercise_name": "Knee Circles",
+              "duration_sec": 15,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 111,
+              "exercise_name": "Ankle Circles",
+              "duration_sec": 15,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 112,
+              "exercise_name": "Dynamic Forward Folds",
+              "duration_sec": 35,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 502,
+              "exercise_name": "Bodyweight Squats",
+              "duration_sec": 35,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 113,
+              "exercise_name": "Side Bends",
+              "duration_sec": 15,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 114,
+              "exercise_name": "Leg Swings Front-Back",
+              "duration_sec": 15,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 115,
+              "exercise_name": "Leg Swings Lateral",
+              "duration_sec": 15,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 201,
+              "exercise_name": "Side Shuffle",
+              "duration_sec": 25,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 207,
+              "exercise_name": "Pivot Drill",
+              "duration_sec": 25,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 204,
+              "exercise_name": "In-Out Movement",
+              "duration_sec": 25,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 116,
+              "exercise_name": "Sound Reaction Footwork",
+              "duration_sec": 25,
+              "pause_after_sec": 10
+            },
+            {
+              "drill_id": 6002,
+              "drill_name": "BH Block Medium",
+              "count": 30,
+              "percent": 95,
               "pause_after_sec": 15
             },
             {
-              "drill_id": 1001,
-              "drill_name": "FH Warmup",
-              "count": 105,
-              "percent": 105,
-              "pause_after_sec": 40
+              "drill_id": 6025,
+              "drill_name": "FH Counter-Topspin",
+              "count": 28,
+              "percent": 95,
+              "pause_after_sec": 15
             },
             {
-              "drill_id": 1002,
-              "drill_name": "BH Warmup",
-              "count": 105,
-              "percent": 105,
-              "pause_after_sec": 40
+              "drill_id": 6023,
+              "drill_name": "FH Topspin vs Backspin",
+              "count": 30,
+              "percent": 95,
+              "pause_after_sec": 15
+            },
+            {
+              "drill_id": 6027,
+              "drill_name": "FH-BH Topspin Alternating",
+              "count": 28,
+              "percent": 95,
+              "pause_after_sec": 25
             },
             {
               "drill_id": 6027,
@@ -4033,36 +6269,122 @@
           "countdown_sec": 20,
           "steps": [
             {
-              "exercise_id": 101,
-              "exercise_name": "Jogging",
-              "duration_sec": 60,
-              "pause_after_sec": 10
+              "exercise_id": 103,
+              "exercise_name": "Wrist Rotations",
+              "duration_sec": 30,
+              "pause_after_sec": 5
+            },
+            {
+              "exercise_id": 109,
+              "exercise_name": "Elbow Circles",
+              "duration_sec": 20,
+              "pause_after_sec": 5
+            },
+            {
+              "exercise_id": 102,
+              "exercise_name": "Arm Circles",
+              "duration_sec": 20,
+              "pause_after_sec": 5
+            },
+            {
+              "exercise_id": 104,
+              "exercise_name": "Trunk Rotations",
+              "duration_sec": 30,
+              "pause_after_sec": 5
+            },
+            {
+              "exercise_id": 110,
+              "exercise_name": "Knee Circles",
+              "duration_sec": 15,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 111,
+              "exercise_name": "Ankle Circles",
+              "duration_sec": 15,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 112,
+              "exercise_name": "Dynamic Forward Folds",
+              "duration_sec": 35,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 502,
+              "exercise_name": "Bodyweight Squats",
+              "duration_sec": 35,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 113,
+              "exercise_name": "Side Bends",
+              "duration_sec": 15,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 114,
+              "exercise_name": "Leg Swings Front-Back",
+              "duration_sec": 15,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 115,
+              "exercise_name": "Leg Swings Lateral",
+              "duration_sec": 15,
+              "pause_after_sec": 3
             },
             {
               "exercise_id": 201,
               "exercise_name": "Side Shuffle",
-              "duration_sec": 60,
+              "duration_sec": 25,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 207,
+              "exercise_name": "Pivot Drill",
+              "duration_sec": 25,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 204,
+              "exercise_name": "In-Out Movement",
+              "duration_sec": 25,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 116,
+              "exercise_name": "Sound Reaction Footwork",
+              "duration_sec": 25,
               "pause_after_sec": 10
             },
             {
-              "exercise_id": 108,
-              "exercise_name": "Shadow Play",
-              "duration_sec": 90,
+              "drill_id": 6002,
+              "drill_name": "BH Block Medium",
+              "count": 30,
+              "percent": 95,
               "pause_after_sec": 15
             },
             {
-              "drill_id": 1001,
-              "drill_name": "FH Warmup",
-              "count": 105,
-              "percent": 110,
-              "pause_after_sec": 40
+              "drill_id": 6025,
+              "drill_name": "FH Counter-Topspin",
+              "count": 28,
+              "percent": 95,
+              "pause_after_sec": 15
             },
             {
-              "drill_id": 1002,
-              "drill_name": "BH Warmup",
-              "count": 105,
-              "percent": 110,
-              "pause_after_sec": 40
+              "drill_id": 6023,
+              "drill_name": "FH Topspin vs Backspin",
+              "count": 30,
+              "percent": 95,
+              "pause_after_sec": 15
+            },
+            {
+              "drill_id": 6027,
+              "drill_name": "FH-BH Topspin Alternating",
+              "count": 28,
+              "percent": 95,
+              "pause_after_sec": 25
             },
             {
               "drill_id": 6021,
@@ -4188,36 +6510,122 @@
           "countdown_sec": 20,
           "steps": [
             {
-              "exercise_id": 101,
-              "exercise_name": "Jogging",
-              "duration_sec": 60,
-              "pause_after_sec": 10
+              "exercise_id": 103,
+              "exercise_name": "Wrist Rotations",
+              "duration_sec": 30,
+              "pause_after_sec": 5
             },
             {
-              "exercise_id": 202,
-              "exercise_name": "Crossover Step",
-              "duration_sec": 60,
-              "pause_after_sec": 10
+              "exercise_id": 109,
+              "exercise_name": "Elbow Circles",
+              "duration_sec": 20,
+              "pause_after_sec": 5
+            },
+            {
+              "exercise_id": 102,
+              "exercise_name": "Arm Circles",
+              "duration_sec": 20,
+              "pause_after_sec": 5
+            },
+            {
+              "exercise_id": 104,
+              "exercise_name": "Trunk Rotations",
+              "duration_sec": 30,
+              "pause_after_sec": 5
+            },
+            {
+              "exercise_id": 110,
+              "exercise_name": "Knee Circles",
+              "duration_sec": 15,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 111,
+              "exercise_name": "Ankle Circles",
+              "duration_sec": 15,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 112,
+              "exercise_name": "Dynamic Forward Folds",
+              "duration_sec": 35,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 502,
+              "exercise_name": "Bodyweight Squats",
+              "duration_sec": 35,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 113,
+              "exercise_name": "Side Bends",
+              "duration_sec": 15,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 114,
+              "exercise_name": "Leg Swings Front-Back",
+              "duration_sec": 15,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 115,
+              "exercise_name": "Leg Swings Lateral",
+              "duration_sec": 15,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 201,
+              "exercise_name": "Side Shuffle",
+              "duration_sec": 25,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 207,
+              "exercise_name": "Pivot Drill",
+              "duration_sec": 25,
+              "pause_after_sec": 3
             },
             {
               "exercise_id": 204,
               "exercise_name": "In-Out Movement",
-              "duration_sec": 60,
+              "duration_sec": 25,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 116,
+              "exercise_name": "Sound Reaction Footwork",
+              "duration_sec": 25,
+              "pause_after_sec": 10
+            },
+            {
+              "drill_id": 6002,
+              "drill_name": "BH Block Medium",
+              "count": 30,
+              "percent": 95,
               "pause_after_sec": 15
             },
             {
-              "drill_id": 1001,
-              "drill_name": "FH Warmup",
-              "count": 105,
-              "percent": 110,
-              "pause_after_sec": 40
+              "drill_id": 6025,
+              "drill_name": "FH Counter-Topspin",
+              "count": 28,
+              "percent": 95,
+              "pause_after_sec": 15
             },
             {
-              "drill_id": 1002,
-              "drill_name": "BH Warmup",
-              "count": 105,
-              "percent": 110,
-              "pause_after_sec": 40
+              "drill_id": 6023,
+              "drill_name": "FH Topspin vs Backspin",
+              "count": 30,
+              "percent": 95,
+              "pause_after_sec": 15
+            },
+            {
+              "drill_id": 6027,
+              "drill_name": "FH-BH Topspin Alternating",
+              "count": 28,
+              "percent": 95,
+              "pause_after_sec": 25
             },
             {
               "drill_id": 6028,
@@ -4343,36 +6751,122 @@
           "countdown_sec": 20,
           "steps": [
             {
-              "exercise_id": 101,
-              "exercise_name": "Jogging",
-              "duration_sec": 60,
-              "pause_after_sec": 10
+              "exercise_id": 103,
+              "exercise_name": "Wrist Rotations",
+              "duration_sec": 30,
+              "pause_after_sec": 5
             },
             {
-              "exercise_id": 301,
-              "exercise_name": "Reaction Ball",
-              "duration_sec": 60,
-              "pause_after_sec": 10
+              "exercise_id": 109,
+              "exercise_name": "Elbow Circles",
+              "duration_sec": 20,
+              "pause_after_sec": 5
+            },
+            {
+              "exercise_id": 102,
+              "exercise_name": "Arm Circles",
+              "duration_sec": 20,
+              "pause_after_sec": 5
             },
             {
               "exercise_id": 104,
               "exercise_name": "Trunk Rotations",
-              "duration_sec": 45,
+              "duration_sec": 30,
+              "pause_after_sec": 5
+            },
+            {
+              "exercise_id": 110,
+              "exercise_name": "Knee Circles",
+              "duration_sec": 15,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 111,
+              "exercise_name": "Ankle Circles",
+              "duration_sec": 15,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 112,
+              "exercise_name": "Dynamic Forward Folds",
+              "duration_sec": 35,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 502,
+              "exercise_name": "Bodyweight Squats",
+              "duration_sec": 35,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 113,
+              "exercise_name": "Side Bends",
+              "duration_sec": 15,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 114,
+              "exercise_name": "Leg Swings Front-Back",
+              "duration_sec": 15,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 115,
+              "exercise_name": "Leg Swings Lateral",
+              "duration_sec": 15,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 201,
+              "exercise_name": "Side Shuffle",
+              "duration_sec": 25,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 207,
+              "exercise_name": "Pivot Drill",
+              "duration_sec": 25,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 204,
+              "exercise_name": "In-Out Movement",
+              "duration_sec": 25,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 116,
+              "exercise_name": "Sound Reaction Footwork",
+              "duration_sec": 25,
+              "pause_after_sec": 10
+            },
+            {
+              "drill_id": 6002,
+              "drill_name": "BH Block Medium",
+              "count": 30,
+              "percent": 100,
               "pause_after_sec": 15
             },
             {
-              "drill_id": 1001,
-              "drill_name": "FH Warmup",
-              "count": 115,
-              "percent": 115,
-              "pause_after_sec": 40
+              "drill_id": 6025,
+              "drill_name": "FH Counter-Topspin",
+              "count": 30,
+              "percent": 100,
+              "pause_after_sec": 15
             },
             {
-              "drill_id": 1002,
-              "drill_name": "BH Warmup",
-              "count": 115,
-              "percent": 115,
-              "pause_after_sec": 40
+              "drill_id": 6023,
+              "drill_name": "FH Topspin vs Backspin",
+              "count": 30,
+              "percent": 100,
+              "pause_after_sec": 15
+            },
+            {
+              "drill_id": 6027,
+              "drill_name": "FH-BH Topspin Alternating",
+              "count": 30,
+              "percent": 100,
+              "pause_after_sec": 25
             },
             {
               "drill_id": 6025,
@@ -4498,36 +6992,122 @@
           "countdown_sec": 20,
           "steps": [
             {
-              "exercise_id": 101,
-              "exercise_name": "Jogging",
-              "duration_sec": 60,
-              "pause_after_sec": 10
+              "exercise_id": 103,
+              "exercise_name": "Wrist Rotations",
+              "duration_sec": 30,
+              "pause_after_sec": 5
+            },
+            {
+              "exercise_id": 109,
+              "exercise_name": "Elbow Circles",
+              "duration_sec": 20,
+              "pause_after_sec": 5
+            },
+            {
+              "exercise_id": 102,
+              "exercise_name": "Arm Circles",
+              "duration_sec": 20,
+              "pause_after_sec": 5
+            },
+            {
+              "exercise_id": 104,
+              "exercise_name": "Trunk Rotations",
+              "duration_sec": 30,
+              "pause_after_sec": 5
+            },
+            {
+              "exercise_id": 110,
+              "exercise_name": "Knee Circles",
+              "duration_sec": 15,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 111,
+              "exercise_name": "Ankle Circles",
+              "duration_sec": 15,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 112,
+              "exercise_name": "Dynamic Forward Folds",
+              "duration_sec": 35,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 502,
+              "exercise_name": "Bodyweight Squats",
+              "duration_sec": 35,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 113,
+              "exercise_name": "Side Bends",
+              "duration_sec": 15,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 114,
+              "exercise_name": "Leg Swings Front-Back",
+              "duration_sec": 15,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 115,
+              "exercise_name": "Leg Swings Lateral",
+              "duration_sec": 15,
+              "pause_after_sec": 3
             },
             {
               "exercise_id": 201,
               "exercise_name": "Side Shuffle",
-              "duration_sec": 60,
+              "duration_sec": 25,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 207,
+              "exercise_name": "Pivot Drill",
+              "duration_sec": 25,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 204,
+              "exercise_name": "In-Out Movement",
+              "duration_sec": 25,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 116,
+              "exercise_name": "Sound Reaction Footwork",
+              "duration_sec": 25,
               "pause_after_sec": 10
             },
             {
-              "exercise_id": 108,
-              "exercise_name": "Shadow Play",
-              "duration_sec": 90,
+              "drill_id": 6002,
+              "drill_name": "BH Block Medium",
+              "count": 30,
+              "percent": 100,
               "pause_after_sec": 15
             },
             {
-              "drill_id": 1001,
-              "drill_name": "FH Warmup",
-              "count": 115,
-              "percent": 115,
-              "pause_after_sec": 40
+              "drill_id": 6025,
+              "drill_name": "FH Counter-Topspin",
+              "count": 30,
+              "percent": 100,
+              "pause_after_sec": 15
             },
             {
-              "drill_id": 1002,
-              "drill_name": "BH Warmup",
-              "count": 115,
-              "percent": 115,
-              "pause_after_sec": 40
+              "drill_id": 6023,
+              "drill_name": "FH Topspin vs Backspin",
+              "count": 30,
+              "percent": 100,
+              "pause_after_sec": 15
+            },
+            {
+              "drill_id": 6027,
+              "drill_name": "FH-BH Topspin Alternating",
+              "count": 30,
+              "percent": 100,
+              "pause_after_sec": 25
             },
             {
               "drill_id": 6027,

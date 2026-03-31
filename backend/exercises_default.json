@@ -11,7 +11,15 @@
         {"name": "Hip Circles", "duration_sec": 30, "description": "Hands on hips, make large circular motions. 15s each direction. Mobilizes hip joints for low stance and weight transfer."},
         {"name": "High Knees", "duration_sec": 45, "description": "Jog in place driving knees to waist height. Pump arms in sync. Activates hip flexors and explosive leg drive."},
         {"name": "Dynamic Lunges", "duration_sec": 60, "description": "Step forward into lunge, lower back knee toward ground, push back, alternate legs. Keep torso upright. Stretches hip flexors, activates glutes."},
-        {"name": "Shadow Play", "duration_sec": 90, "description": "Without ball, perform forehand and backhand strokes with proper footwork. Focus on weight transfer and follow-through. Grooves muscle memory."}
+        {"name": "Shadow Play", "duration_sec": 90, "description": "Without ball, perform forehand and backhand strokes with proper footwork. Focus on weight transfer and follow-through. Grooves muscle memory."},
+        {"name": "Elbow Circles", "duration_sec": 20, "description": "Bend arms at 90°, rotate elbows in circles. 10s inward, 10s outward. Warms up elbow joints for stroke follow-through."},
+        {"name": "Knee Circles", "duration_sec": 20, "description": "Feet together, hands on knees, make small circles. 10s each direction. Mobilizes knee joints for low ready stance."},
+        {"name": "Ankle Circles", "duration_sec": 20, "description": "Lift one foot, rotate ankle in circles. 10s each foot. Prevents ankle strain during lateral footwork."},
+        {"name": "Dynamic Forward Folds", "duration_sec": 35, "description": "Stand upright, fold forward touching ground, slight rise, fold again, full stand. Repeat 10 cycles. Dynamic hamstring and lower back warmup — Chinese gymnastic staple."},
+        {"name": "Side Bends", "duration_sec": 20, "description": "Feet shoulder-width, reach one arm overhead bending sideways. 10 reps each side. Mobilizes obliques and lateral trunk muscles."},
+        {"name": "Leg Swings Front-Back", "duration_sec": 20, "description": "Hold table for balance, swing one leg forward and back like a pendulum. 10 swings per leg. Loosens hip flexors and hamstrings."},
+        {"name": "Leg Swings Lateral", "duration_sec": 20, "description": "Hold table, swing one leg side to side across body. 10 swings per leg. Opens hip adductors for wide lateral movement."},
+        {"name": "Sound Reaction Footwork", "duration_sec": 30, "description": "React to random audio cues: low tone — shuffle left, shadow-stroke on backhand side; high tone — shuffle right, stroke on forehand side. Stay in ready position between cues. Use phone app or training partner for signals."}
       ]
     },
     {
