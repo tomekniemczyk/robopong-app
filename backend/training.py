@@ -114,6 +114,7 @@ class TrainingRunner:
 
     def start(self, scenario: dict, robot, broadcast: Callable,
               player_id: int | None = None, record: bool = False,
+              record_type: str = "all",
               start_from_step: int = 0):
         if self.running:
             self.stop()
@@ -124,6 +125,7 @@ class TrainingRunner:
         self._broadcast = broadcast
         self._player_id = player_id
         self._record = record and player_id is not None
+        self._record_type = record_type
         self._steps_completed = start_from_step
         self._steps_skipped = []
         self._step_notes = []
@@ -175,8 +177,10 @@ class TrainingRunner:
         while self._paused and not self._stopped:
             await asyncio.sleep(0.5)
 
-    def _start_recording(self, scenario: dict, step_idx: int, step_name: str):
+    def _start_recording(self, scenario: dict, step_idx: int, step_name: str, is_exercise: bool = False):
         if self._record and self._player_id:
+            if is_exercise and self._record_type == "drills":
+                return
             self._recorder.start(
                 self._player_id,
                 scenario.get("id", 0),
@@ -376,7 +380,7 @@ class TrainingRunner:
         duration = step.get("duration_sec") or ex.get("duration_sec", 60)
         pause_sec = step.get("pause_after_sec", 30)
 
-        self._start_recording(scenario, step_idx, name)
+        self._start_recording(scenario, step_idx, name, is_exercise=True)
 
         broadcast("training_step", {
             "step": step_idx + 1, "total": total_steps,

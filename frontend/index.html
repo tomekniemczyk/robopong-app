@@ -1154,6 +1154,14 @@
           <input type="checkbox" v-model="recordTraining">
           🎥 {{ t('recordings.record') }}
         </label>
+        <div v-if="recordTraining" style="margin:6px 0 0 24px;display:flex;flex-direction:column;gap:4px">
+          <label style="font-size:11px;display:flex;align-items:center;gap:5px;cursor:pointer;color:var(--text2)">
+            <input type="radio" v-model="recordType" value="drills"> {{ t('recordings.drills_only') || 'Tylko drille' }}
+          </label>
+          <label style="font-size:11px;display:flex;align-items:center;gap:5px;cursor:pointer;color:var(--text2)">
+            <input type="radio" v-model="recordType" value="all"> {{ t('recordings.all_steps') || 'Drille + ćwiczenia' }}
+          </label>
+        </div>
       </div>
       <div style="display:flex;gap:10px">
         <button class="btn btn-ghost" style="flex:1" @click="trainingStartModal=null">{{ t('btn.cancel') }}</button>
@@ -1387,7 +1395,7 @@
                     @click.stop="playingRecording = playingRecording === getStepRecording(h, si).filename ? null : getStepRecording(h, si).filename">
                     {{ playingRecording === getStepRecording(h, si)?.filename ? '⏹' : '🎥 ▶' }}
                   </button>
-                  <a :href="'/api/recordings/' + getStepRecording(h, si).filename" download class="btn btn-ghost" style="font-size:10px;padding:1px 6px" @click.stop>⬇</a>
+                  <a :href="'/api/recordings/' + getStepRecording(h, si).filename" :download="recDownloadName(h, getStepRecording(h, si))" class="btn btn-ghost" style="font-size:10px;padding:1px 6px" @click.stop>⬇</a>
                   <button class="btn btn-ghost" style="font-size:10px;padding:1px 6px;color:var(--danger)" @click.stop="deleteRecording(getStepRecording(h, si).filename)">✕</button>
                 </template>
               </div>
@@ -1871,6 +1879,7 @@ const _app = createApp({
         trainingIsPaused.value = false
         showToast(t('toast.training_ended'))
         loadTrainingHistory()
+        if (playerDetail.value) openPlayerDetail(playerDetail.value)
       } else if (m.type === 'reconnecting') {
         showToast(t('toast.reconnecting'))
       } else if (m.type === 'robot_response') {
@@ -2281,6 +2290,7 @@ const _app = createApp({
     const selectedPlayerId = ref(null)
     const showPlayerSelectModal = ref(false)
     const recordTraining = ref(false)
+    const recordType = ref('drills')
     const historyModal = ref(null)
     const historyEntries = ref([])
     const editingCommentId = ref(null)
@@ -2508,7 +2518,7 @@ const _app = createApp({
       trainingStepsList.value = (tr.steps || []).map(s => ({...s}))
       trainingStep.value = 0
       sessionNotes.value = []
-      send({ action: 'run_training', id: tr.id, player_id: selectedPlayerId.value, record: recordTraining.value, start_from_step: resumeFromStep.value || 0 })
+      send({ action: 'run_training', id: tr.id, player_id: selectedPlayerId.value, record: recordTraining.value, record_type: recordType.value, start_from_step: resumeFromStep.value || 0 })
       trainingStartModal.value = null
     }
 
@@ -2558,6 +2568,14 @@ const _app = createApp({
         const rStart = new Date(r.started_at).getTime()
         return r.step_idx === stepIdx && rStart >= hStart && rStart <= hEnd
       })
+    }
+    function recDownloadName(h, rec) {
+      const d = new Date(h.started_at)
+      const date = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`
+      const time = `${String(d.getHours()).padStart(2,'0')}${String(d.getMinutes()).padStart(2,'0')}`
+      const training = (getTrainingName(h.training_id) || 'training').replace(/[^a-zA-Z0-9_-]/g, '_').substring(0, 40)
+      const step = (rec.step_name || '').replace(/[^a-zA-Z0-9_-]/g, '_').substring(0, 30)
+      return `${date}_${time}_${training}_s${String(rec.step_idx).padStart(2,'0')}_${step}.mp4`
     }
 
     function getDrillName(drillId) {
@@ -3151,8 +3169,8 @@ const _app = createApp({
       pauseTraining, resumeTraining, skipTraining, runExerciseSolo, fmtDur,
       saveTraining, deleteTraining, stopTraining, totalTrainingTime,
       trainingGroups, openTrainingFolders, toggleTrainingFolder, trainingFolderProgress, trainingFolderPct,
-      trainingStatusIcon, lastRunDate, trainingStartModal, selectedPlayerId, recordTraining, showPlayerSelectModal,
-      currentPlayerName, selectPlayer, createAndSelectPlayer, deleteHistoryEntry, historyEndTime,
+      trainingStatusIcon, lastRunDate, trainingStartModal, selectedPlayerId, recordTraining, recordType, showPlayerSelectModal,
+      currentPlayerName, selectPlayer, createAndSelectPlayer, deleteHistoryEntry, historyEndTime, recDownloadName,
       openTrainingStartModal, startTrainingConfirmed, duplicateTraining,
       resumeFromStep, getResumeStep, expandedTraining,
       ballSpinLabel, ballPlaceLabel, nextStepInfo,

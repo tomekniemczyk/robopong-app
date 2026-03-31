@@ -394,10 +394,11 @@ async def _handle(msg: dict, ws: WebSocket):
             return
         player_id = msg.get("player_id")
         record = msg.get("record", False)
+        record_type = msg.get("record_type", "all")
         start_from = msg.get("start_from_step", 0)
-        _log("Training start: \"%s\" — %d steps, player=%s, record=%s, from_step=%s",
-             t.get("name", "?"), len(t.get("steps", [])), player_id, record, start_from)
-        _training_runner.start(t, robot, broadcast, player_id=player_id, record=record, start_from_step=start_from)
+        _log("Training start: \"%s\" — %d steps, player=%s, record=%s (%s), from_step=%s",
+             t.get("name", "?"), len(t.get("steps", [])), player_id, record, record_type, start_from)
+        _training_runner.start(t, robot, broadcast, player_id=player_id, record=record, record_type=record_type, start_from_step=start_from)
 
     elif action == "run_exercise_solo":
         ex = exercises.get_exercise(msg["exercise_id"])
