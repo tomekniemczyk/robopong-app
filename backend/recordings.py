@@ -138,8 +138,7 @@ def get_recording_path(filename: str) -> Path | None:
 
 def delete_recording(filename: str) -> bool:
     path = RECORDINGS_DIR / filename
-    if not path.exists() or not path.is_relative_to(RECORDINGS_DIR):
-        return False
-    path.unlink()
+    if path.exists() and path.is_relative_to(RECORDINGS_DIR):
+        path.unlink()
     db.delete_recording_meta(filename)
     return True

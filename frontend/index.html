@@ -1266,14 +1266,14 @@
       <div v-if="!playerRecordings.length" style="color:var(--muted);font-size:12px">{{ t('recordings.empty') }}</div>
       <div v-for="r in playerRecordings.slice(0,10)" :key="r.filename" style="border-bottom:1px solid var(--border);padding:6px 0;font-size:12px">
         <div style="display:flex;align-items:center;gap:6px">
-          <span>🎥</span>
-          <span style="flex:1">{{ r.step_name }} <span style="color:var(--muted)">({{ r.training_name }})</span></span>
+          <span style="cursor:pointer" @click="playingRecording = playingRecording === r.filename ? null : r.filename">🎥</span>
+          <span style="flex:1;cursor:pointer" @click="playingRecording = playingRecording === r.filename ? null : r.filename">{{ r.step_name }} <span style="color:var(--muted)">({{ r.training_name }})</span></span>
           <span class="chip" style="font-size:10px">{{ fmtDur(r.duration_sec || 0) }}</span>
-          <a :href="'/api/recordings/' + r.filename" target="_blank" class="btn btn-ghost btn-icon" style="font-size:11px" :title="t('recordings.download')">⬇</a>
-          <button class="btn btn-ghost btn-icon" style="color:var(--danger);font-size:11px" @click="deleteRecording(r.filename)" :title="t('recordings.delete')">✕</button>
+          <button class="btn btn-ghost btn-icon" style="font-size:11px" @click="playingRecording = playingRecording === r.filename ? null : r.filename" :title="playingRecording === r.filename ? 'Stop' : 'Play'">{{ playingRecording === r.filename ? '⏹' : '▶' }}</button>
+          <a :href="'/api/recordings/' + r.filename" download class="btn btn-ghost btn-icon" style="font-size:11px" :title="t('recordings.download')">⬇</a>
+          <button class="btn btn-ghost btn-icon" style="color:var(--danger);font-size:11px" @click.stop="deleteRecording(r.filename)" :title="t('recordings.delete')">✕</button>
         </div>
-        <!-- Inline video player on click -->
-        <video v-if="playingRecording === r.filename" :src="'/api/recordings/' + r.filename" controls autoplay style="width:100%;margin-top:6px;border-radius:6px" @click.stop></video>
+        <video v-if="playingRecording === r.filename" :src="'/api/recordings/' + r.filename" controls autoplay style="width:100%;margin-top:6px;border-radius:6px;max-height:300px"></video>
       </div>
     </div>
   </div>
@@ -2468,6 +2468,7 @@ const _app = createApp({
     async function deleteRecording(filename) {
       showConfirm(t('recordings.delete') + '?', async () => {
         await fetch(`/api/recordings/${filename}`, { method: 'DELETE' })
+        if (playingRecording.value === filename) playingRecording.value = null
         if (playerDetail.value) await openPlayerDetail(playerDetail.value)
       })
     }
