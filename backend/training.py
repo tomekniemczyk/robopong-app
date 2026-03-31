@@ -1,28 +1,25 @@
-"""Training scenario runner + file-based storage with defaults and history."""
+"""Training scenario runner + SQLite storage with defaults and history."""
 
 import asyncio
 import json
 import logging
 import time
-from datetime import datetime
 from pathlib import Path
 from typing import Callable, Optional
 
 import audio
+import db
 import drills
 import exercises
 import recordings
 
 logger = logging.getLogger(__name__)
 
-TRAININGS_FILE = Path(__file__).parent / ".trainings.json"
 DEFAULTS_FILE = Path(__file__).parent / "trainings_default.json"
-HISTORY_FILE = Path(__file__).parent / ".training_history.json"
 
 # ── Default trainings ────────────────────────────────────────────────────────
 
 def _load_defaults() -> list:
-    """Load predefined trainings from trainings_default.json."""
     try:
         data = json.loads(DEFAULTS_FILE.read_text())
     except Exception:
@@ -39,24 +36,12 @@ def _load_defaults() -> list:
     return result
 
 
-# ── User trainings storage ───────────────────────────────────────────────────
-
-def _load_user() -> list:
-    try:
-        return json.loads(TRAININGS_FILE.read_text())
-    except Exception:
-        return []
-
-
-def _save_user(data: list):
-    TRAININGS_FILE.write_text(json.dumps(data, indent=2))
-
+# ── Training CRUD (defaults + user) ──────────────────────────────────────────
 
 def get_trainings() -> list:
     defaults = _load_defaults()
-    user = _load_user()
-    for i, t in enumerate(user):
-        t.setdefault("id", i + 1)
+    user = db.get_user_trainings()
+    for t in user:
         t.setdefault("readonly", False)
     return defaults + user
 
@@ -69,84 +54,41 @@ def get_training(training_id: int) -> dict | None:
 
 
 def save_training(data: dict) -> int:
-    # Block saving over readonly
     existing = get_training(data.get("id", -1))
     if existing and existing.get("readonly"):
         raise ValueError("Cannot modify readonly training")
-
-    user = _load_user()
-    if "id" in data and any(t.get("id") == data["id"] for t in user):
-        user = [data if t.get("id") == data["id"] else t for t in user]
-    else:
-        data["id"] = max((t.get("id", 0) for t in user), default=0) + 1
-        user.append(data)
-    _save_user(user)
-    return data["id"]
+    return db.save_user_training(data)
 
 
 def duplicate_training(training_id: int) -> dict | None:
-    """Duplicate a training (typically readonly) as editable user copy."""
     src = get_training(training_id)
     if not src:
         return None
     copy = {k: v for k, v in src.items() if k not in ("id", "readonly", "folder", "folder_icon")}
     copy["name"] = f"{src['name']} (kopia)"
-    user = _load_user()
-    copy["id"] = max((t.get("id", 0) for t in user), default=0) + 1
-    user.append(copy)
-    _save_user(user)
-    return copy
+    tid = db.save_user_training(copy)
+    return db.get_user_training(tid)
 
 
 def delete_training(training_id: int):
     existing = get_training(training_id)
     if existing and existing.get("readonly"):
         raise ValueError("Cannot delete readonly training")
-    user = _load_user()
-    _save_user([t for t in user if t.get("id") != training_id])
+    db.delete_user_training(training_id)
 
 
 # ── History ──────────────────────────────────────────────────────────────────
-
-def _load_history() -> list:
-    try:
-        return json.loads(HISTORY_FILE.read_text())
-    except Exception:
-        return []
-
-
-def _save_history(data: list):
-    HISTORY_FILE.write_text(json.dumps(data, indent=2))
-
 
 def record_run(training_id: int, player_id: int | None, elapsed_sec: int,
                status: str, steps_completed: int, steps_total: int,
                steps_skipped: list[int] | None = None,
                step_notes: list[dict] | None = None):
-    history = _load_history()
-    entry = {
-        "training_id": training_id,
-        "player_id": player_id,
-        "started_at": datetime.now().isoformat(),
-        "elapsed_sec": elapsed_sec,
-        "status": status,
-        "steps_completed": steps_completed,
-        "steps_total": steps_total,
-        "steps_skipped": steps_skipped or [],
-    }
-    if step_notes:
-        entry["step_notes"] = step_notes
-    history.append(entry)
-    _save_history(history)
+    db.record_training_run(training_id, player_id, elapsed_sec, status,
+                           steps_completed, steps_total, steps_skipped, step_notes)
 
 
 def get_history(training_id: int | None = None, player_id: int | None = None) -> list:
-    history = _load_history()
-    if training_id is not None:
-        history = [h for h in history if h.get("training_id") == training_id]
-    if player_id is not None:
-        history = [h for h in history if h.get("player_id") == player_id]
-    return sorted(history, key=lambda h: h.get("started_at", ""), reverse=True)
+    return db.get_training_history(training_id=training_id, player_id=player_id)
 
 
 # ── Runner ───────────────────────────────────────────────────────────────────
@@ -274,7 +216,7 @@ class TrainingRunner:
             # ── Steps ────────────────────────────────────────────
             for step_idx, step in enumerate(steps):
                 if step_idx < first_step_idx:
-                    continue  # skip already-completed steps on resume
+                    continue
                 if self._stopped: return
                 await self._wait_unpaused()
 
@@ -292,14 +234,13 @@ class TrainingRunner:
                 drill_name = step.get("drill_name") or drill.get("name", "?")
                 count = step.get("count", 60)
                 percent = self._percent_override or step.get("percent", 100)
-                self._percent_override = None  # consume override
+                self._percent_override = None
                 pause_sec = step.get("pause_after_sec", 30)
 
                 remaining_balls = sum(s.get("count", 60) for s in steps[step_idx:] if not s.get("exercise_id"))
                 avg_wait = 1.5
                 est_remaining = int(remaining_balls * avg_wait + sum(s.get("pause_after_sec", 30) for s in steps[step_idx+1:]))
 
-                # START RECORDING
                 self._start_recording(scenario, step_idx, drill_name)
 
                 broadcast("training_step", {
@@ -347,8 +288,6 @@ class TrainingRunner:
                     self._steps_skipped.append(step_idx)
 
                 robot._emit = original_emit
-
-                # STOP RECORDING
                 self._stop_recording()
 
                 if self._stopped: return
@@ -362,7 +301,6 @@ class TrainingRunner:
                 self._steps_completed = step_idx + 1
                 await asyncio.sleep(1)
 
-                # PAUSE
                 if step_idx < total_steps - 1 and pause_sec > 0:
                     next_step = steps[step_idx + 1]
                     next_drill = self._resolve_drill(next_step)
@@ -391,7 +329,6 @@ class TrainingRunner:
             audio.play("training_complete")
             broadcast("training_ended", {"elapsed_sec": elapsed_sec})
 
-            # Record history
             record_run(
                 scenario.get("id", 0), self._player_id, elapsed_sec,
                 "completed", self._steps_completed, total_steps,
@@ -430,7 +367,6 @@ class TrainingRunner:
         duration = step.get("duration_sec") or ex.get("duration_sec", 60)
         pause_sec = step.get("pause_after_sec", 30)
 
-        # START RECORDING
         self._start_recording(scenario, step_idx, name)
 
         broadcast("training_step", {
@@ -457,7 +393,6 @@ class TrainingRunner:
                 audio.play("beep_high")
             await asyncio.sleep(1)
 
-        # STOP RECORDING
         self._stop_recording()
 
         audio.play("drill_finished")

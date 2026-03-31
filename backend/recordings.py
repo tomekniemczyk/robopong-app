@@ -4,18 +4,17 @@ Uses ffmpeg to capture from motion MJPEG stream (port 8081) into MP4 files.
 Each drill/exercise step gets its own recording file.
 """
 
-import asyncio
-import json
 import logging
 import re
 import subprocess
 from datetime import datetime
 from pathlib import Path
 
+import db
+
 logger = logging.getLogger(__name__)
 
 RECORDINGS_DIR = Path(__file__).parent / "recordings"
-META_FILE = RECORDINGS_DIR / ".recordings_meta.json"
 MOTION_STREAM = "http://localhost:8081"
 
 
@@ -23,18 +22,6 @@ def _ensure_dir(player_id: int):
     d = RECORDINGS_DIR / str(player_id)
     d.mkdir(parents=True, exist_ok=True)
     return d
-
-
-def _load_meta() -> list:
-    try:
-        return json.loads(META_FILE.read_text())
-    except Exception:
-        return []
-
-
-def _save_meta(data: list):
-    RECORDINGS_DIR.mkdir(parents=True, exist_ok=True)
-    META_FILE.write_text(json.dumps(data, indent=2))
 
 
 def _safe_filename(name: str) -> str:
@@ -120,9 +107,11 @@ class Recorder:
             self._current_meta["size_bytes"] = self._current_file.stat().st_size
             meta = self._current_meta
 
-            records = _load_meta()
-            records.append(meta)
-            _save_meta(records)
+            db.save_recording_meta(
+                meta["player_id"], meta["training_id"], meta["training_name"],
+                meta["step_idx"], meta["step_name"], meta["filename"],
+                meta["duration_sec"], meta["size_bytes"],
+            )
             logger.info("Recording saved: %s (%.0fs)", self._current_file, duration)
         else:
             logger.warning("Recording file not found after stop")
@@ -137,10 +126,7 @@ class Recorder:
 # ── Query API ────────────────────────────────────────────────────────────────
 
 def get_recordings(player_id: int | None = None) -> list:
-    records = _load_meta()
-    if player_id is not None:
-        records = [r for r in records if r.get("player_id") == player_id]
-    return sorted(records, key=lambda r: r.get("started_at", ""), reverse=True)
+    return db.get_recordings_meta(player_id=player_id)
 
 
 def get_recording_path(filename: str) -> Path | None:
@@ -155,7 +141,5 @@ def delete_recording(filename: str) -> bool:
     if not path.exists() or not path.is_relative_to(RECORDINGS_DIR):
         return False
     path.unlink()
-    records = _load_meta()
-    records = [r for r in records if r.get("filename") != filename]
-    _save_meta(records)
+    db.delete_recording_meta(filename)
     return True

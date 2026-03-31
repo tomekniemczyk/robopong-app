@@ -41,6 +41,51 @@ def init():
                 readonly    INTEGER DEFAULT 0
             )
         """)
+        c.execute("""
+            CREATE TABLE IF NOT EXISTS players (
+                id          INTEGER PRIMARY KEY AUTOINCREMENT,
+                name        TEXT NOT NULL,
+                created_at  TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            )
+        """)
+        c.execute("""
+            CREATE TABLE IF NOT EXISTS user_trainings (
+                id          INTEGER PRIMARY KEY AUTOINCREMENT,
+                name        TEXT NOT NULL,
+                description TEXT DEFAULT '',
+                countdown_sec INTEGER DEFAULT 20,
+                steps       TEXT NOT NULL DEFAULT '[]',
+                created_at  TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            )
+        """)
+        c.execute("""
+            CREATE TABLE IF NOT EXISTS training_history (
+                id              INTEGER PRIMARY KEY AUTOINCREMENT,
+                training_id     INTEGER NOT NULL,
+                player_id       INTEGER,
+                started_at      TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                elapsed_sec     INTEGER DEFAULT 0,
+                status          TEXT DEFAULT 'completed',
+                steps_completed INTEGER DEFAULT 0,
+                steps_total     INTEGER DEFAULT 0,
+                steps_skipped   TEXT DEFAULT '[]',
+                step_notes      TEXT DEFAULT '[]'
+            )
+        """)
+        c.execute("""
+            CREATE TABLE IF NOT EXISTS recordings_meta (
+                id              INTEGER PRIMARY KEY AUTOINCREMENT,
+                player_id       INTEGER NOT NULL,
+                training_id     INTEGER,
+                training_name   TEXT DEFAULT '',
+                step_idx        INTEGER DEFAULT 0,
+                step_name       TEXT DEFAULT '',
+                filename        TEXT NOT NULL,
+                started_at      TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                duration_sec    INTEGER DEFAULT 0,
+                size_bytes      INTEGER DEFAULT 0
+            )
+        """)
         count = c.execute("SELECT COUNT(*) FROM drill_folders").fetchone()[0]
         if count == 0 and DRILLS_DEFAULT.exists():
             _seed_drills(c)
@@ -225,3 +270,143 @@ def _drill_row(r):
         "youtube_id": r[4], "delay_s": r[5], "balls": json.loads(r[6]),
         "repeat": r[7], "sort_order": r[8], "readonly": bool(r[9]),
     }
+
+
+# ── Players ───────────────────────────────────────────────────────────────
+
+def get_players():
+    with sqlite3.connect(DB) as c:
+        rows = c.execute("SELECT id, name, created_at FROM players ORDER BY name").fetchall()
+        return [{"id": r[0], "name": r[1], "created_at": r[2]} for r in rows]
+
+
+def get_player(pid: int):
+    with sqlite3.connect(DB) as c:
+        r = c.execute("SELECT id, name, created_at FROM players WHERE id=?", (pid,)).fetchone()
+        return {"id": r[0], "name": r[1], "created_at": r[2]} if r else None
+
+
+def create_player(name: str) -> dict:
+    with sqlite3.connect(DB) as c:
+        cur = c.execute("INSERT INTO players (name) VALUES (?)", (name,))
+        pid = cur.lastrowid
+        r = c.execute("SELECT id, name, created_at FROM players WHERE id=?", (pid,)).fetchone()
+        return {"id": r[0], "name": r[1], "created_at": r[2]}
+
+
+def update_player(pid: int, name: str) -> dict | None:
+    with sqlite3.connect(DB) as c:
+        c.execute("UPDATE players SET name=? WHERE id=?", (name, pid))
+        r = c.execute("SELECT id, name, created_at FROM players WHERE id=?", (pid,)).fetchone()
+        return {"id": r[0], "name": r[1], "created_at": r[2]} if r else None
+
+
+def delete_player(pid: int) -> bool:
+    with sqlite3.connect(DB) as c:
+        c.execute("DELETE FROM players WHERE id=?", (pid,))
+        return c.total_changes > 0
+
+
+# ── User Trainings ────────────────────────────────────────────────────────
+
+def get_user_trainings():
+    with sqlite3.connect(DB) as c:
+        rows = c.execute(
+            "SELECT id, name, description, countdown_sec, steps FROM user_trainings ORDER BY id"
+        ).fetchall()
+        return [{"id": r[0], "name": r[1], "description": r[2],
+                 "countdown_sec": r[3], "steps": json.loads(r[4])} for r in rows]
+
+
+def get_user_training(tid: int):
+    with sqlite3.connect(DB) as c:
+        r = c.execute(
+            "SELECT id, name, description, countdown_sec, steps FROM user_trainings WHERE id=?", (tid,)
+        ).fetchone()
+        if not r:
+            return None
+        return {"id": r[0], "name": r[1], "description": r[2],
+                "countdown_sec": r[3], "steps": json.loads(r[4])}
+
+
+def save_user_training(data: dict) -> int:
+    with sqlite3.connect(DB) as c:
+        if "id" in data and data["id"]:
+            c.execute(
+                "UPDATE user_trainings SET name=?, description=?, countdown_sec=?, steps=? WHERE id=?",
+                (data["name"], data.get("description", ""), data.get("countdown_sec", 20),
+                 json.dumps(data.get("steps", [])), data["id"])
+            )
+            return data["id"]
+        else:
+            cur = c.execute(
+                "INSERT INTO user_trainings (name, description, countdown_sec, steps) VALUES (?,?,?,?)",
+                (data["name"], data.get("description", ""), data.get("countdown_sec", 20),
+                 json.dumps(data.get("steps", [])))
+            )
+            return cur.lastrowid
+
+
+def delete_user_training(tid: int):
+    with sqlite3.connect(DB) as c:
+        c.execute("DELETE FROM user_trainings WHERE id=?", (tid,))
+
+
+# ── Training History ──────────────────────────────────────────────────────
+
+def record_training_run(training_id, player_id, elapsed_sec, status,
+                        steps_completed, steps_total, steps_skipped=None, step_notes=None):
+    with sqlite3.connect(DB) as c:
+        c.execute(
+            "INSERT INTO training_history (training_id, player_id, elapsed_sec, status, "
+            "steps_completed, steps_total, steps_skipped, step_notes) VALUES (?,?,?,?,?,?,?,?)",
+            (training_id, player_id, elapsed_sec, status, steps_completed, steps_total,
+             json.dumps(steps_skipped or []), json.dumps(step_notes or []))
+        )
+
+
+def get_training_history(training_id=None, player_id=None):
+    with sqlite3.connect(DB) as c:
+        q = "SELECT id, training_id, player_id, started_at, elapsed_sec, status, steps_completed, steps_total, steps_skipped, step_notes FROM training_history WHERE 1=1"
+        params = []
+        if training_id is not None:
+            q += " AND training_id=?"; params.append(training_id)
+        if player_id is not None:
+            q += " AND player_id=?"; params.append(player_id)
+        q += " ORDER BY started_at DESC"
+        rows = c.execute(q, params).fetchall()
+        return [{"id": r[0], "training_id": r[1], "player_id": r[2], "started_at": r[3],
+                 "elapsed_sec": r[4], "status": r[5], "steps_completed": r[6],
+                 "steps_total": r[7], "steps_skipped": json.loads(r[8] or "[]"),
+                 "step_notes": json.loads(r[9] or "[]")} for r in rows]
+
+
+# ── Recordings Meta ───────────────────────────────────────────────────────
+
+def save_recording_meta(player_id, training_id, training_name, step_idx,
+                        step_name, filename, duration_sec, size_bytes):
+    with sqlite3.connect(DB) as c:
+        c.execute(
+            "INSERT INTO recordings_meta (player_id, training_id, training_name, step_idx, "
+            "step_name, filename, duration_sec, size_bytes) VALUES (?,?,?,?,?,?,?,?)",
+            (player_id, training_id, training_name, step_idx, step_name,
+             filename, duration_sec, size_bytes)
+        )
+
+
+def get_recordings_meta(player_id=None):
+    with sqlite3.connect(DB) as c:
+        q = "SELECT id, player_id, training_id, training_name, step_idx, step_name, filename, started_at, duration_sec, size_bytes FROM recordings_meta"
+        params = []
+        if player_id is not None:
+            q += " WHERE player_id=?"; params.append(player_id)
+        q += " ORDER BY started_at DESC"
+        rows = c.execute(q, params).fetchall()
+        return [{"id": r[0], "player_id": r[1], "training_id": r[2], "training_name": r[3],
+                 "step_idx": r[4], "step_name": r[5], "filename": r[6], "started_at": r[7],
+                 "duration_sec": r[8], "size_bytes": r[9]} for r in rows]
+
+
+def delete_recording_meta(filename: str):
+    with sqlite3.connect(DB) as c:
+        c.execute("DELETE FROM recordings_meta WHERE filename=?", (filename,))

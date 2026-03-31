@@ -8,7 +8,6 @@ from unittest.mock import MagicMock, patch
 import db
 import drills
 import exercises
-import players
 import presets
 import recordings
 import training
@@ -105,36 +104,11 @@ def tmp_exercises_files(tmp_path, monkeypatch):
 
 @pytest.fixture()
 def tmp_training_files(tmp_path, monkeypatch):
-    """Patch training.py file paths to tmp_path (no defaults)."""
-    trainings_file = tmp_path / ".trainings.json"
-    defaults_file = tmp_path / "trainings_default.json"
-    history_file = tmp_path / ".training_history.json"
-    monkeypatch.setattr(training, "TRAININGS_FILE", trainings_file)
-    monkeypatch.setattr(training, "DEFAULTS_FILE", defaults_file)
-    monkeypatch.setattr(training, "HISTORY_FILE", history_file)
-    return {"file": trainings_file, "defaults": defaults_file, "history": history_file}
-
-
-# ── Players fixtures ────────────────────────────────────────────────────────
-
-@pytest.fixture()
-def tmp_players_files(tmp_path, monkeypatch):
-    """Patch players.py file path to tmp_path."""
-    players_file = tmp_path / ".players.json"
-    monkeypatch.setattr(players, "PLAYERS_FILE", players_file)
-    return {"file": players_file}
-
-
-# ── Recordings fixtures ─────────────────────────────────────────────────────
-
-@pytest.fixture()
-def tmp_recordings_files(tmp_path, monkeypatch):
-    """Patch recordings.py paths to tmp_path."""
-    rec_dir = tmp_path / "recordings"
-    meta_file = rec_dir / ".recordings_meta.json"
-    monkeypatch.setattr(recordings, "RECORDINGS_DIR", rec_dir)
-    monkeypatch.setattr(recordings, "META_FILE", meta_file)
-    return {"dir": rec_dir, "meta": meta_file}
+    """Patch training + db to tmp_path (no defaults)."""
+    monkeypatch.setattr(db, "DB", tmp_path / "test_training.db")
+    monkeypatch.setattr(training, "DEFAULTS_FILE", tmp_path / "trainings_default.json")
+    db.init()
+    return {"db": tmp_path / "test_training.db"}
 
 
 # ── Full client fixture (for API integration tests) ─────────────────────────
@@ -148,12 +122,8 @@ def client(tmp_path, monkeypatch):
     monkeypatch.setattr(drills, "USER_FILE", tmp_path / ".drills_user.json")
     monkeypatch.setattr(exercises, "DEFAULTS_FILE", tmp_path / "exercises_default.json")
     monkeypatch.setattr(exercises, "USER_FILE", tmp_path / ".exercises_user.json")
-    monkeypatch.setattr(training, "TRAININGS_FILE", tmp_path / ".trainings.json")
     monkeypatch.setattr(training, "DEFAULTS_FILE", tmp_path / "trainings_default.json")
-    monkeypatch.setattr(training, "HISTORY_FILE", tmp_path / ".training_history.json")
-    monkeypatch.setattr(players, "PLAYERS_FILE", tmp_path / ".players.json")
     monkeypatch.setattr(recordings, "RECORDINGS_DIR", tmp_path / "recordings")
-    monkeypatch.setattr(recordings, "META_FILE", tmp_path / "recordings" / ".recordings_meta.json")
 
     # Write sample defaults
     (tmp_path / "drills_default.json").write_text(json.dumps(SAMPLE_DEFAULTS))
