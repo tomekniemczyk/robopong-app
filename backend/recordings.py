@@ -57,13 +57,11 @@ class Recorder:
             self._proc = subprocess.Popen(
                 [
                     "ffmpeg", "-y",
-                    "-use_wallclock_as_timestamps", "1",
                     "-i", MOTION_STREAM,
+                    "-vf", "setpts=N/15/TB,fps=15",
                     "-c:v", "libx264",
                     "-preset", "ultrafast",
                     "-crf", "18",
-                    "-vsync", "vfr",
-                    "-r", "15",
                     "-t", "600",  # max 10 min safety
                     str(filepath),
                 ],
