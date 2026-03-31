@@ -759,6 +759,25 @@
     </div>
   </div>
 
+  <!-- ── Player select modal (required on startup) ──────────────────────── -->
+  <div v-if="showPlayerSelectModal" class="modal-overlay" style="z-index:500">
+    <div class="modal-sheet" style="max-width:340px;text-align:center">
+      <div style="font-size:36px;margin-bottom:8px">🏓</div>
+      <h3 style="margin-bottom:14px">{{ t('players.select') }}</h3>
+      <ul class="device-list" v-if="playersList.length" style="margin-bottom:12px;text-align:left">
+        <li v-for="p in playersList" :key="p.id" @click="selectPlayer(p.id)" style="cursor:pointer">
+          <div style="width:32px;height:32px;border-radius:50%;background:var(--primary);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px">
+            {{ p.name.charAt(0).toUpperCase() }}
+          </div>
+          <span style="flex:1;margin-left:8px;font-weight:600">{{ p.name }}</span>
+          <span style="color:var(--muted);font-size:11px">{{ playerRunCount(p.id) }} {{ t('players.trainings_done') }}</span>
+        </li>
+      </ul>
+      <div v-if="!playersList.length" style="color:var(--muted);font-size:13px;margin-bottom:12px">{{ t('players.empty') }}</div>
+      <button class="btn btn-primary" style="width:100%" @click="createAndSelectPlayer()">+ {{ t('players.add') }}</button>
+    </div>
+  </div>
+
   <!-- ── Training runner overlay ─────────────────────────────────────────── -->
   <div class="runner-overlay" v-if="trainingRunning" style="display:flex;gap:16px;align-items:flex-start;justify-content:center;padding:24px 16px;flex-wrap:wrap">
 
@@ -1069,10 +1088,7 @@
     <div class="card">
       <div style="display:flex;align-items:center;gap:8px;margin-bottom:14px">
         <h2 style="flex:1">{{ t('tr.title') }}</h2>
-        <select v-if="playersList.length" v-model="selectedPlayerId" @change="loadTrainingHistory()" style="font-size:12px;padding:4px 8px">
-          <option :value="null">{{ t('players.no_selection') }}</option>
-          <option v-for="p in playersList" :key="p.id" :value="p.id">👤 {{ p.name }}</option>
-        </select>
+        <span v-if="currentPlayerName" style="font-size:12px;color:var(--muted)">👤 {{ currentPlayerName }}</span>
         <button class="btn btn-primary" @click="openTrainingModal(null)">{{ t('tr.new') }}</button>
       </div>
 
@@ -1109,7 +1125,6 @@
             <button v-if="tr.readonly" class="btn btn-ghost btn-icon" @click="duplicateTraining(tr.id)" :title="t('training.duplicate')">📋</button>
             <button class="btn btn-ghost btn-icon" @click="showTrainingHistory(tr)" :title="t('training.history')">📊</button>
             <button class="btn btn-success btn-icon" @click="openTrainingStartModal(tr)" :disabled="!connected || myRole!=='controller'" title="Start">▶</button>
-            <button v-if="getResumeStep(tr.id) !== null" class="btn btn-icon" style="background:#ff9f0a;color:#fff" @click="openTrainingStartModal(tr, getResumeStep(tr.id))" :disabled="!connected || myRole!=='controller'" :title="t('training.resume')">⏩</button>
             <button v-if="!tr.readonly" class="btn btn-ghost btn-icon" style="color:var(--danger)" @click="deleteTraining(tr.id)" :title="t('btn.delete')">✕</button>
             <!-- Expanded steps -->
             <div v-if="expandedTraining === tr.id" style="width:100%;margin-top:8px;padding:8px;background:rgba(255,255,255,.03);border-radius:6px;font-size:12px">
@@ -1141,11 +1156,8 @@
         ⏩ {{ t('training.resume_from') }}: {{ t('training.steps_done', {done: resumeFromStep, total: trainingStartModal.steps?.length}) }}
       </div>
       <div style="margin-bottom:12px">
-        <label style="font-size:12px;color:var(--muted);display:block;margin-bottom:4px">{{ t('players.select') }}</label>
-        <select v-model="selectedPlayerId" style="width:100%">
-          <option :value="null">{{ t('players.no_selection') }}</option>
-          <option v-for="p in playersList" :key="p.id" :value="p.id">{{ p.name }}</option>
-        </select>
+        <label style="font-size:12px;color:var(--muted);display:block;margin-bottom:4px">👤 {{ t('players.select') }}</label>
+        <div style="font-size:13px;font-weight:600;padding:6px 0">{{ currentPlayerName }}</div>
       </div>
       <div style="margin-bottom:16px">
         <label style="font-size:12px;display:flex;align-items:center;gap:6px;cursor:pointer">
@@ -1340,25 +1352,26 @@
           <span>{{ h.status === 'completed' ? '✅' : h.status === 'stopped' ? '⏹' : '❌' }}</span>
           <span style="flex:1;font-weight:500">{{ getTrainingName(h.training_id) }}</span>
           <span class="chip" style="font-size:10px">{{ fmtDur(h.elapsed_sec) }}</span>
-          <span style="color:var(--muted);font-size:10px">{{ new Date(h.started_at).toLocaleDateString() }}</span>
           <span style="font-size:10px;color:var(--muted)">{{ expandedHistoryId === h.id ? '▼' : '▶' }}</span>
         </div>
-        <!-- Summary line -->
+        <!-- Date/time line -->
         <div style="font-size:11px;color:var(--muted);margin-top:2px;padding-left:22px">
-          {{ t('training.steps_done', {done: h.steps_completed, total: h.steps_total}) }}
+          {{ new Date(h.started_at).toLocaleDateString() }} {{ new Date(h.started_at).toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'}) }}
+          → {{ historyEndTime(h) }}
+          · {{ t('training.steps_done', {done: h.steps_completed, total: h.steps_total}) }}
           <span v-if="h.steps_skipped?.length"> · {{ h.steps_skipped.length }} skipped</span>
           <span v-if="h.step_notes?.length"> · 💬 {{ h.step_notes.length }}</span>
-          <span v-if="h.session_comment"> · 📝</span>
         </div>
         <!-- Session comment -->
         <div v-if="h.session_comment" style="font-size:11px;color:var(--text2);margin-top:3px;padding-left:22px;font-style:italic">
           📝 {{ h.session_comment }}
         </div>
-        <!-- Resume button for stopped -->
-        <div v-if="h.status === 'stopped'" style="padding-left:22px;margin-top:4px">
-          <button class="btn btn-ghost" style="font-size:10px;padding:2px 8px;background:rgba(255,159,10,.1)" @click.stop="resumeFromHistory(h)">
-            ⏩ {{ t('training.resume') }} ({{ t('training.steps_done', {done: h.steps_completed, total: h.steps_total}) }})
+        <!-- Actions: resume + delete -->
+        <div style="padding-left:22px;margin-top:4px;display:flex;gap:6px">
+          <button v-if="h.status === 'stopped'" class="btn btn-ghost" style="font-size:10px;padding:2px 8px;background:rgba(255,159,10,.1)" @click.stop="resumeFromHistory(h)">
+            ⏩ {{ t('training.resume') }} ({{ h.steps_completed }}/{{ h.steps_total }})
           </button>
+          <button class="btn btn-ghost" style="font-size:10px;padding:2px 8px;color:var(--danger)" @click.stop="deleteHistoryEntry(h.id)">🗑</button>
         </div>
         <!-- Expanded details -->
         <div v-if="expandedHistoryId === h.id" style="margin-top:6px;padding:8px;background:rgba(255,255,255,.03);border-radius:6px;margin-left:22px">
@@ -1589,8 +1602,9 @@
       <span class="nav-icon">📷</span>{{ t('nav.camera') }}
     </button>
     <button :class="{ active: page === 'players' }" @click="page='players'">
-      <span class="nav-icon">👤</span>{{ t('nav.players') }}
+      <span class="nav-icon">👤</span>{{ currentPlayerName || t('nav.players') }}
     </button>
+    <button v-if="selectedPlayerId" @click="showPlayerSelectModal=true" style="font-size:10px;padding:2px 6px;opacity:0.6" :title="t('players.select')">🔄</button>
     <button :class="{ active: page === 'logs' }" @click="page='logs'">
       <span class="nav-icon">🖥</span>{{ t('nav.logs') }}
     </button>
@@ -2273,6 +2287,7 @@ const _app = createApp({
     const resumeFromStep = ref(0)
     const expandedTraining = ref(null)
     const selectedPlayerId = ref(null)
+    const showPlayerSelectModal = ref(false)
     const recordTraining = ref(false)
     const historyModal = ref(null)
     const historyEntries = ref([])
@@ -2549,6 +2564,42 @@ const _app = createApp({
     function getResumeStep(trainingId) {
       const stopped = trainingHistory.value.find(h => h.training_id === trainingId && h.status === 'stopped')
       return stopped ? stopped.steps_completed : null
+    }
+
+    const currentPlayerName = computed(() => {
+      const p = playersList.value.find(x => x.id === selectedPlayerId.value)
+      return p ? p.name : ''
+    })
+
+    function selectPlayer(pid) {
+      selectedPlayerId.value = pid
+      showPlayerSelectModal.value = false
+      localStorage.setItem('robopong_player_id', pid)
+      loadTrainingHistory()
+      loadPlayerFavorites(pid)
+    }
+
+    async function createAndSelectPlayer() {
+      const name = prompt(t('players.name'))
+      if (!name?.trim()) return
+      const r = await fetch('/api/players', { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({name: name.trim()}) })
+      const p = await r.json()
+      await loadPlayers()
+      selectPlayer(p.id)
+    }
+
+    async function deleteHistoryEntry(hid) {
+      showConfirm(t('recordings.delete') + '?', async () => {
+        await fetch(`/api/training-history/${hid}`, { method: 'DELETE' })
+        if (playerDetail.value) await openPlayerDetail(playerDetail.value)
+        await loadTrainingHistory()
+      })
+    }
+
+    function historyEndTime(h) {
+      const start = new Date(h.started_at)
+      const end = new Date(start.getTime() + h.elapsed_sec * 1000)
+      return end.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'})
     }
 
     function ballSpinLabel(b) {
@@ -2946,8 +2997,16 @@ const _app = createApp({
       clearTimeout(toastTimer)
       toastTimer = setTimeout(() => { toast.value = '' }, 2500)
     }
-    onMounted(() => {
-      wsConnect(); loadScenarios(); loadCal(); loadDrillTree(); loadTrainings(); loadExercises(); loadPlayers(); loadTrainingHistory()
+    onMounted(async () => {
+      wsConnect(); loadScenarios(); loadCal(); loadDrillTree(); loadTrainings(); loadExercises(); loadTrainingHistory()
+      await loadPlayers()
+      // Restore saved player or show select modal
+      const savedPid = parseInt(localStorage.getItem('robopong_player_id'))
+      if (savedPid && playersList.value.some(p => p.id === savedPid)) {
+        selectPlayer(savedPid)
+      } else {
+        showPlayerSelectModal.value = true
+      }
       document.documentElement.lang = lang.value === 'zh' ? 'zh-CN' : lang.value
       fetch('/api/deploy-time').then(r=>r.json()).then(d => { deployTime.value = d.deploy_time }).catch(()=>{})
     })
@@ -2991,7 +3050,8 @@ const _app = createApp({
       pauseTraining, resumeTraining, skipTraining, runExerciseSolo, fmtDur,
       saveTraining, deleteTraining, stopTraining, totalTrainingTime,
       trainingGroups, openTrainingFolders, toggleTrainingFolder, trainingFolderProgress, trainingFolderPct,
-      trainingStatusIcon, lastRunDate, trainingStartModal, selectedPlayerId, recordTraining,
+      trainingStatusIcon, lastRunDate, trainingStartModal, selectedPlayerId, recordTraining, showPlayerSelectModal,
+      currentPlayerName, selectPlayer, createAndSelectPlayer, deleteHistoryEntry, historyEndTime,
       openTrainingStartModal, startTrainingConfirmed, duplicateTraining,
       resumeFromStep, getResumeStep, expandedTraining,
       ballSpinLabel, ballPlaceLabel, nextStepInfo,

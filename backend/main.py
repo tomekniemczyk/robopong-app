@@ -775,6 +775,12 @@ def update_history_comment(hid: int, body: dict):
     return {"ok": True}
 
 
+@app.delete("/api/training-history/{hid}", status_code=204)
+def delete_history_entry(hid: int):
+    if not db.delete_history_entry(hid):
+        raise HTTPException(404)
+
+
 # ── Players ──────────────────────────────────────────────────────────────────
 
 @app.get("/api/players")

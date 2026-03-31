@@ -434,6 +434,12 @@ def update_session_comment(history_id: int, comment: str):
         c.execute("UPDATE training_history SET session_comment=? WHERE id=?", (comment, history_id))
 
 
+def delete_history_entry(hid: int) -> bool:
+    with sqlite3.connect(DB) as c:
+        c.execute("DELETE FROM training_history WHERE id=?", (hid,))
+        return c.total_changes > 0
+
+
 # ── Favorites ─────────────────────────────────────────────────────────────
 
 def get_favorites(player_id: int):
