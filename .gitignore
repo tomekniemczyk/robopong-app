@@ -17,3 +17,4 @@ re/*.cab
 backend/.calibration.json
 backend/.last_device
 backend/uvicorn.log
+backend/recordings/

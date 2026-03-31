@@ -90,6 +90,15 @@ def init():
         count = c.execute("SELECT COUNT(*) FROM drill_folders").fetchone()[0]
         if count == 0 and DRILLS_DEFAULT.exists():
             _seed_drills(c)
+        # ── Migrations ──────────────────────────────────────────
+        _migrate(c)
+
+
+def _migrate(c):
+    """Add columns that may be missing on older databases."""
+    cols = {r[1] for r in c.execute("PRAGMA table_info(training_history)").fetchall()}
+    if "session_comment" not in cols:
+        c.execute("ALTER TABLE training_history ADD COLUMN session_comment TEXT DEFAULT ''")
 
 
 def _seed_drills(c):
