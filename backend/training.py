@@ -121,9 +121,10 @@ def _save_history(data: list):
 
 def record_run(training_id: int, player_id: int | None, elapsed_sec: int,
                status: str, steps_completed: int, steps_total: int,
-               steps_skipped: list[int] | None = None):
+               steps_skipped: list[int] | None = None,
+               step_notes: list[dict] | None = None):
     history = _load_history()
-    history.append({
+    entry = {
         "training_id": training_id,
         "player_id": player_id,
         "started_at": datetime.now().isoformat(),
@@ -132,7 +133,10 @@ def record_run(training_id: int, player_id: int | None, elapsed_sec: int,
         "steps_completed": steps_completed,
         "steps_total": steps_total,
         "steps_skipped": steps_skipped or [],
-    })
+    }
+    if step_notes:
+        entry["step_notes"] = step_notes
+    history.append(entry)
     _save_history(history)
 
 
@@ -161,7 +165,8 @@ class TrainingRunner:
         return self._task is not None and not self._task.done()
 
     def start(self, scenario: dict, robot, broadcast: Callable,
-              player_id: int | None = None, record: bool = False):
+              player_id: int | None = None, record: bool = False,
+              start_from_step: int = 0):
         if self.running:
             self.stop()
         self._stopped = False
@@ -171,8 +176,12 @@ class TrainingRunner:
         self._broadcast = broadcast
         self._player_id = player_id
         self._record = record and player_id is not None
-        self._steps_completed = 0
+        self._steps_completed = start_from_step
         self._steps_skipped = []
+        self._step_notes = []
+        self._percent_override = None
+        self._start_from_step = start_from_step
+        self._scenario = scenario
         self._task = asyncio.create_task(self._run(scenario, robot, broadcast))
 
     def stop(self):
@@ -198,6 +207,12 @@ class TrainingRunner:
 
     def skip(self):
         self._skip = True
+
+    def add_note(self, step_idx: int, note: str):
+        self._step_notes.append({"step": step_idx, "note": note})
+
+    def set_next_percent(self, percent: int):
+        self._percent_override = max(50, min(150, percent))
 
     def _consume_skip(self) -> bool:
         if self._skip:
@@ -231,7 +246,8 @@ class TrainingRunner:
 
         try:
             # ── Countdown ────────────────────────────────────────
-            first_drill = self._resolve_drill(steps[0]) if steps else None
+            first_step_idx = self._start_from_step
+            first_drill = self._resolve_drill(steps[first_step_idx]) if steps and first_step_idx < len(steps) else None
 
             audio.play("training_starting")
             await asyncio.sleep(2)
@@ -257,6 +273,8 @@ class TrainingRunner:
 
             # ── Steps ────────────────────────────────────────────
             for step_idx, step in enumerate(steps):
+                if step_idx < first_step_idx:
+                    continue  # skip already-completed steps on resume
                 if self._stopped: return
                 await self._wait_unpaused()
 
@@ -273,7 +291,8 @@ class TrainingRunner:
 
                 drill_name = step.get("drill_name") or drill.get("name", "?")
                 count = step.get("count", 60)
-                percent = step.get("percent", 100)
+                percent = self._percent_override or step.get("percent", 100)
+                self._percent_override = None  # consume override
                 pause_sec = step.get("pause_after_sec", 30)
 
                 remaining_balls = sum(s.get("count", 60) for s in steps[step_idx:] if not s.get("exercise_id"))
@@ -376,7 +395,7 @@ class TrainingRunner:
             record_run(
                 scenario.get("id", 0), self._player_id, elapsed_sec,
                 "completed", self._steps_completed, total_steps,
-                self._steps_skipped,
+                self._steps_skipped, self._step_notes,
             )
 
         except asyncio.CancelledError:
@@ -384,7 +403,7 @@ class TrainingRunner:
             record_run(
                 scenario.get("id", 0), self._player_id, elapsed_sec,
                 "stopped", self._steps_completed, total_steps,
-                self._steps_skipped,
+                self._steps_skipped, self._step_notes,
             )
         except Exception as e:
             logger.error("Training runner error: %s", e)
@@ -393,7 +412,7 @@ class TrainingRunner:
             record_run(
                 scenario.get("id", 0), self._player_id, elapsed_sec,
                 "error", self._steps_completed, total_steps,
-                self._steps_skipped,
+                self._steps_skipped, self._step_notes,
             )
         finally:
             self._stop_recording()

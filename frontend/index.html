@@ -803,8 +803,14 @@
       </div>
 
       <!-- Faza: drill -->
-      <div v-if="trainingPhase === 'drill'" style="width:80%;margin:0 auto">
+      <div v-if="trainingPhase === 'drill'" style="width:90%;margin:0 auto">
         <div class="ball-counter">{{ trainingBall }}<span style="font-size:32px;opacity:.5">/{{ trainingBallTotal }}</span></div>
+        <!-- Ball info chips -->
+        <div v-if="trainingBalls.length" style="display:flex;flex-wrap:wrap;gap:4px;justify-content:center;margin:6px 0">
+          <span v-for="(b, bi) in trainingBalls" :key="bi" style="font-size:10px;padding:2px 8px;border-radius:10px" :style="{background: b.top_speed > b.bot_speed ? 'rgba(255,107,53,.15)' : b.bot_speed > b.top_speed ? 'rgba(77,171,247,.15)' : 'rgba(255,212,59,.15)'}">
+            {{ bi+1 }}. {{ ballSpinLabel(b) }} · {{ ballPlaceLabel(b) }}
+          </span>
+        </div>
         <div class="progress-bar"><div class="fill" :style="{width: trainingBallTotal ? (trainingBall/trainingBallTotal*100)+'%' : '0'}"></div></div>
       </div>
 
@@ -817,6 +823,9 @@
           :alt="trainingDrillName"
           @error="$event.target.style.display='none'"
           style="display:block;width:140px;height:140px;object-fit:contain;margin:10px auto;border-radius:10px;background:rgba(168,85,247,.08)">
+        <div v-if="trainingExerciseDesc" style="font-size:12px;color:var(--text2);line-height:1.4;margin-top:8px;text-align:left;padding:0 10px">
+          {{ trainingExerciseDesc }}
+        </div>
         <div class="progress-bar"><div class="fill" :style="{width: trainingBallTotal ? ((trainingBallTotal-trainingTimer)/trainingBallTotal*100)+'%' : '0', background:'#a855f7'}"></div></div>
       </div>
 
@@ -824,7 +833,31 @@
       <div v-if="trainingPhase === 'pause'">
         <div class="ball-counter" style="color:#ff9f0a">{{ trainingTimer }}</div>
         <div class="ball-sub">{{ t('tr.rest') }}</div>
-        <div style="font-size:12px;color:var(--muted);margin-top:4px">{{ t('tr.next_prefix') }}: {{ trainingNextDrill }}</div>
+        <!-- Next step preview -->
+        <div style="margin-top:8px;padding:8px 12px;background:rgba(255,255,255,.05);border-radius:6px;font-size:12px;text-align:left">
+          <div style="color:var(--muted);margin-bottom:2px">{{ t('tr.next_prefix') }}:</div>
+          <div style="font-weight:600">{{ trainingNextDrill }}</div>
+          <div v-if="nextStepInfo && !nextStepInfo.exercise_id" style="color:var(--text2);font-size:11px;margin-top:2px">
+            {{ nextStepInfo.count }} {{ t('tr.balls_label') }} · {{ nextStepInfo.percent }}%
+          </div>
+          <div v-if="nextStepInfo && nextStepInfo.exercise_id" style="color:#a855f7;font-size:11px;margin-top:2px">
+            🏋 {{ fmtDur(nextStepInfo.duration_sec) }}
+          </div>
+        </div>
+        <!-- Speed adjustment -->
+        <div v-if="nextStepInfo && !nextStepInfo.exercise_id" style="margin-top:8px;display:flex;align-items:center;gap:6px;justify-content:center">
+          <span style="font-size:11px;color:var(--muted)">{{ t('training.speed') }}:</span>
+          <button class="btn btn-ghost" style="padding:4px 10px;font-size:11px" @click="adjustNextPercent(-10)">-10%</button>
+          <button class="btn btn-ghost" style="padding:4px 10px;font-size:11px" @click="adjustNextPercent(-5)">-5%</button>
+          <span style="font-size:13px;font-weight:600;min-width:40px;text-align:center">{{ nextPercentDisplay }}%</span>
+          <button class="btn btn-ghost" style="padding:4px 10px;font-size:11px" @click="adjustNextPercent(5)">+5%</button>
+          <button class="btn btn-ghost" style="padding:4px 10px;font-size:11px" @click="adjustNextPercent(10)">+10%</button>
+        </div>
+        <!-- Note input -->
+        <div style="margin-top:8px;display:flex;gap:6px">
+          <input v-model="stepNote" :placeholder="t('training.add_note')" style="flex:1;font-size:12px;padding:6px 10px" @keyup.enter="sendStepNote">
+          <button class="btn btn-ghost" style="font-size:12px;padding:6px 10px" @click="sendStepNote" :disabled="!stepNote.trim()">💬</button>
+        </div>
       </div>
 
       <!-- Paused -->
@@ -1003,10 +1036,11 @@
         <ul class="device-list" v-if="!group.folder || openTrainingFolders.has(group.folder)">
           <li v-for="tr in group.trainings" :key="tr.id" style="flex-wrap:wrap">
             <div style="flex:1;min-width:0">
-              <div style="display:flex;align-items:center;gap:6px">
+              <div style="display:flex;align-items:center;gap:6px;cursor:pointer" @click="expandedTraining = expandedTraining === tr.id ? null : tr.id">
                 <span style="font-size:12px">{{ trainingStatusIcon(tr.id) }}</span>
                 <span style="font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ tr.name }}</span>
                 <span v-if="tr.readonly" class="chip" style="font-size:9px;padding:1px 5px">{{ t('training.readonly') }}</span>
+                <span style="font-size:10px;color:var(--muted)">{{ expandedTraining === tr.id ? '▲' : '▼' }}</span>
               </div>
               <div style="font-size:11px;color:var(--muted)">
                 {{ tr.steps?.length || 0 }} {{ t('tr.steps_label') }} · {{ totalTrainingTime(tr) }}
@@ -1017,7 +1051,21 @@
             <button v-if="tr.readonly" class="btn btn-ghost btn-icon" @click="duplicateTraining(tr.id)" :title="t('training.duplicate')">📋</button>
             <button class="btn btn-ghost btn-icon" @click="showTrainingHistory(tr)" :title="t('training.history')">📊</button>
             <button class="btn btn-success btn-icon" @click="openTrainingStartModal(tr)" :disabled="!connected || myRole!=='controller'" title="Start">▶</button>
+            <button v-if="getResumeStep(tr.id) !== null" class="btn btn-icon" style="background:#ff9f0a;color:#fff" @click="openTrainingStartModal(tr, getResumeStep(tr.id))" :disabled="!connected || myRole!=='controller'" :title="t('training.resume')">⏩</button>
             <button v-if="!tr.readonly" class="btn btn-ghost btn-icon" style="color:var(--danger)" @click="deleteTraining(tr.id)" :title="t('btn.delete')">✕</button>
+            <!-- Expanded steps -->
+            <div v-if="expandedTraining === tr.id" style="width:100%;margin-top:8px;padding:8px;background:rgba(255,255,255,.03);border-radius:6px;font-size:12px">
+              <div v-for="(step, si) in tr.steps" :key="si" style="display:flex;align-items:center;gap:6px;padding:4px 0;border-bottom:1px solid rgba(255,255,255,.05)">
+                <span style="width:20px;color:var(--muted);text-align:right;flex-shrink:0">{{ si+1 }}.</span>
+                <span v-if="step.exercise_id" style="color:#a855f7">🏋 {{ step.exercise_name }}</span>
+                <span v-else style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">
+                  {{ step.drill_name || 'Drill #'+step.drill_id }}
+                </span>
+                <span v-if="!step.exercise_id" style="color:var(--muted);font-size:10px">{{ step.count }}p · {{ step.percent }}%</span>
+                <span v-if="step.exercise_id" style="color:var(--muted);font-size:10px">{{ fmtDur(step.duration_sec) }}</span>
+                <span v-if="step.pause_after_sec" style="color:var(--muted);font-size:10px">⏸{{ step.pause_after_sec }}s</span>
+              </div>
+            </div>
           </li>
         </ul>
       </template>
@@ -1031,6 +1079,9 @@
   <div v-if="trainingStartModal" class="modal-overlay" @click.self="trainingStartModal=null" style="z-index:200">
     <div class="modal-sheet" style="max-width:360px">
       <h3 style="margin-bottom:14px">▶ {{ trainingStartModal.name }}</h3>
+      <div v-if="resumeFromStep > 0" style="margin-bottom:12px;padding:8px;background:rgba(255,159,10,.1);border-radius:6px;font-size:13px">
+        ⏩ {{ t('training.resume_from') }}: {{ t('training.steps_done', {done: resumeFromStep, total: trainingStartModal.steps?.length}) }}
+      </div>
       <div style="margin-bottom:12px">
         <label style="font-size:12px;color:var(--muted);display:block;margin-bottom:4px">{{ t('players.select') }}</label>
         <select v-model="selectedPlayerId" style="width:100%">
@@ -1618,6 +1669,8 @@ const _app = createApp({
         trainingBallTotal.value = m.count || 0
         trainingBalls.value = m.balls || []
         trainingEstRemaining.value = m.est_remaining_sec || 0
+        trainingExerciseDesc.value = ''
+        nextPercentAdjust.value = 0
       } else if (m.type === 'training_step_done') {
         // step zakończony — nic specjalnego
       } else if (m.type === 'training_drill_progress') {
@@ -1630,10 +1683,13 @@ const _app = createApp({
         trainingTimer.value = m.sec
         trainingBallTotal.value = m.total_sec
         trainingExerciseId.value = m.exercise_id || null
+        trainingExerciseDesc.value = m.description || ''
       } else if (m.type === 'training_pause') {
         trainingPhase.value = 'pause'
         trainingTimer.value = m.sec
         trainingNextDrill.value = m.next_drill || ''
+        stepNote.value = ''
+        nextPercentAdjust.value = 0
       } else if (m.type === 'training_paused') {
         trainingIsPaused.value = true
       } else if (m.type === 'training_resumed') {
@@ -2032,7 +2088,10 @@ const _app = createApp({
     const trainingStepsList = ref([])
     const trainingEstRemaining = ref(0)
     const trainingExerciseId   = ref(null)
+    const trainingExerciseDesc = ref('')
     const trainingIsPaused = ref(false)
+    const stepNote = ref('')
+    const nextPercentAdjust = ref(0)
     // ── Training editor modal ─────────────────────────────────
     const showTrainingModal = ref(false)
     const tEditId = ref(null)
@@ -2045,6 +2104,8 @@ const _app = createApp({
     const openTrainingFolders = reactive(new Set())
     const trainingHistory = ref([])
     const trainingStartModal = ref(null)
+    const resumeFromStep = ref(0)
+    const expandedTraining = ref(null)
     const selectedPlayerId = ref(null)
     const recordTraining = ref(false)
     const historyModal = ref(null)
@@ -2205,8 +2266,9 @@ const _app = createApp({
       trainingHistory.value = await r.json()
     }
 
-    function openTrainingStartModal(tr) {
+    function openTrainingStartModal(tr, fromStep = 0) {
       trainingStartModal.value = tr
+      resumeFromStep.value = fromStep
     }
 
     function startTrainingConfirmed() {
@@ -2218,7 +2280,7 @@ const _app = createApp({
       trainingScenarioName.value = tr.name || ''
       trainingStepsList.value = (tr.steps || []).map(s => ({...s}))
       trainingStep.value = 0
-      send({ action: 'run_training', id: tr.id, player_id: selectedPlayerId.value, record: recordTraining.value })
+      send({ action: 'run_training', id: tr.id, player_id: selectedPlayerId.value, record: recordTraining.value, start_from_step: resumeFromStep.value || 0 })
       trainingStartModal.value = null
     }
 
@@ -2242,6 +2304,54 @@ const _app = createApp({
     function getTrainingName(trainingId) {
       const tr = trainings.value.find(x => x.id === trainingId)
       return tr ? tr.name : `#${trainingId}`
+    }
+
+    function getResumeStep(trainingId) {
+      const stopped = trainingHistory.value.find(h => h.training_id === trainingId && h.status === 'stopped')
+      return stopped ? stopped.steps_completed : null
+    }
+
+    function ballSpinLabel(b) {
+      const top = b.top_speed || 0, bot = b.bot_speed || 0
+      if (Math.abs(top) < 15 && Math.abs(bot) < 15) return 'no-spin'
+      if (top > 0 && bot <= 0) return 'topspin'
+      if (top <= 0 && bot > 0) return 'backspin'
+      if (Math.abs(top - bot) < 20) return 'no-spin'
+      return top > bot ? 'topspin' : 'backspin'
+    }
+
+    function ballPlaceLabel(b) {
+      const osc = b.oscillation || 150
+      if (osc >= 158) return 'FH ➡'
+      if (osc <= 142) return '⬅ BH'
+      return '⬆ center'
+    }
+
+    const nextStepInfo = computed(() => {
+      const idx = trainingStep.value
+      const steps = trainingStepsList.value
+      if (idx >= 0 && idx < steps.length) return steps[idx]
+      return null
+    })
+
+    const nextPercentDisplay = computed(() => {
+      const info = nextStepInfo.value
+      if (!info) return 100
+      return (info.percent || 100) + nextPercentAdjust.value
+    })
+
+    function adjustNextPercent(delta) {
+      const newPct = nextPercentDisplay.value + delta
+      if (newPct < 50 || newPct > 150) return
+      nextPercentAdjust.value += delta
+      send({ action: 'set_next_percent', percent: newPct })
+    }
+
+    function sendStepNote() {
+      if (!stepNote.value.trim()) return
+      send({ action: 'training_note', step: trainingStep.value, note: stepNote.value.trim() })
+      showToast('💬 ' + t('training.note_saved'))
+      stepNote.value = ''
     }
 
     // ── Players functions ─────────────────────────────────────
@@ -2628,7 +2738,7 @@ const _app = createApp({
       trainings, trainingRunning, trainingScenarioName, trainingPhase,
       trainingStep, trainingTotalSteps, trainingDrillName, trainingNextDrill,
       trainingTimer, trainingBall, trainingBallTotal,
-      trainingBalls, trainingStepsList, trainingEstRemaining, trainingIsPaused, trainingExerciseId,
+      trainingBalls, trainingStepsList, trainingEstRemaining, trainingIsPaused, trainingExerciseId, trainingExerciseDesc,
       tEditId, tEditName, tEditDesc, tEditCountdown, tEditSteps,
       loadTrainings, addTrainingStep, moveStep,
       pauseTraining, resumeTraining, skipTraining, runExerciseSolo, fmtDur,
@@ -2636,6 +2746,9 @@ const _app = createApp({
       trainingGroups, openTrainingFolders, toggleTrainingFolder, trainingFolderProgress, trainingFolderPct,
       trainingStatusIcon, lastRunDate, trainingStartModal, selectedPlayerId, recordTraining,
       openTrainingStartModal, startTrainingConfirmed, duplicateTraining,
+      resumeFromStep, getResumeStep, expandedTraining,
+      ballSpinLabel, ballPlaceLabel, nextStepInfo,
+      stepNote, nextPercentAdjust, nextPercentDisplay, adjustNextPercent, sendStepNote,
       historyModal, historyEntries, showTrainingHistory, getPlayerName, getTrainingName,
       playersList, playerDetail, playerHistory, playerRecordings, playingRecording,
       addPlayer, renamePlayer, deletePlayer, openPlayerDetail, playerRunCount, playerProgram30,

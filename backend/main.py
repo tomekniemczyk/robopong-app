@@ -393,9 +393,10 @@ async def _handle(msg: dict, ws: WebSocket):
             return
         player_id = msg.get("player_id")
         record = msg.get("record", False)
-        _log("Training start: \"%s\" — %d steps, player=%s, record=%s",
-             t.get("name", "?"), len(t.get("steps", [])), player_id, record)
-        _training_runner.start(t, robot, broadcast, player_id=player_id, record=record)
+        start_from = msg.get("start_from_step", 0)
+        _log("Training start: \"%s\" — %d steps, player=%s, record=%s, from_step=%s",
+             t.get("name", "?"), len(t.get("steps", [])), player_id, record, start_from)
+        _training_runner.start(t, robot, broadcast, player_id=player_id, record=record, start_from_step=start_from)
 
     elif action == "run_exercise_solo":
         ex = exercises.get_exercise(msg["exercise_id"])
@@ -430,6 +431,20 @@ async def _handle(msg: dict, ws: WebSocket):
         _log("Training resume")
         _training_runner.resume()
         broadcast("training_resumed", {})
+
+    elif action == "training_note":
+        step_idx = msg.get("step", 0)
+        note = msg.get("note", "").strip()
+        if note and _training_runner.running:
+            _training_runner.add_note(step_idx, note)
+            _log("Training note step %d: %s", step_idx, note[:50])
+
+    elif action == "set_next_percent":
+        pct = msg.get("percent", 100)
+        if _training_runner.running:
+            _training_runner.set_next_percent(pct)
+            _log("Next step percent override: %d%%", pct)
+            broadcast("training_percent_changed", {"percent": pct})
 
     elif action == "reset_ble":
         asyncio.create_task(robot.reset_ble())
