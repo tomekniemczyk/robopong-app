@@ -191,7 +191,7 @@ class TrainingRunner:
 
     async def _run(self, scenario: dict, robot, broadcast: Callable):
         steps = scenario.get("steps", [])
-        countdown_sec = scenario.get("countdown_sec", 20)
+        countdown_sec = scenario.get("countdown_sec", 5)
         total_steps = len(steps)
         start_time = time.monotonic()
 

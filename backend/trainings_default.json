@@ -8,7 +8,7 @@
         {
           "name": "Dzień 01: Fundament BH Blocku",
           "description": "Wprowadzenie do BH blocku w wolnym tempie, podstawy footworku FH-BH.",
-          "countdown_sec": 20,
+          "countdown_sec": 5,
           "steps": [
             {
               "exercise_id": 103,
@@ -249,7 +249,7 @@
         {
           "name": "Dzień 02: Timing na Backspin",
           "description": "Topspin vs backspin — budowanie wyczucia na podkręconą piłkę, push drill.",
-          "countdown_sec": 20,
+          "countdown_sec": 5,
           "steps": [
             {
               "exercise_id": 103,
@@ -490,7 +490,7 @@
         {
           "name": "Dzień 03: Podstawowy Footwork",
           "description": "Wzorce ruchu nóg — side shuffle, FH-BH footwork, pivot drill.",
-          "countdown_sec": 20,
+          "countdown_sec": 5,
           "steps": [
             {
               "exercise_id": 103,
@@ -723,7 +723,7 @@
         {
           "name": "Dzień 04: Short Serve Receive",
           "description": "Odbiór krótkich serwów — backspin, no-spin, push i flip.",
-          "countdown_sec": 20,
+          "countdown_sec": 5,
           "steps": [
             {
               "exercise_id": 103,
@@ -964,7 +964,7 @@
         {
           "name": "Dzień 05: Progresja BH Blocku",
           "description": "BH block w średnim tempie, FH-BH block alternujący.",
-          "countdown_sec": 20,
+          "countdown_sec": 5,
           "steps": [
             {
               "exercise_id": 103,
@@ -1205,7 +1205,7 @@
         {
           "name": "Dzień 06: Mixed Backspin + Serve Receive",
           "description": "Łączenie timingu na backspin z odbiorem krótkich serwów mieszanych.",
-          "countdown_sec": 20,
+          "countdown_sec": 5,
           "steps": [
             {
               "exercise_id": 103,
@@ -1446,7 +1446,7 @@
         {
           "name": "Dzień 07: Podsumowanie Tygodnia 1",
           "description": "Test: BH block + footwork + serve receive — sprawdzian postępów z Fazy 1.",
-          "countdown_sec": 20,
+          "countdown_sec": 5,
           "steps": [
             {
               "exercise_id": 103,
@@ -1687,7 +1687,7 @@
         {
           "name": "Dzień 08: Banana Flick — Wprowadzenie",
           "description": "Technika banana flick z BH na krótkie backspin serwisy.",
-          "countdown_sec": 20,
+          "countdown_sec": 5,
           "steps": [
             {
               "exercise_id": 103,
@@ -1928,7 +1928,7 @@
         {
           "name": "Dzień 09: Strawberry Flick — Wprowadzenie",
           "description": "Technika strawberry flick z FH na krótkie backspin serwisy.",
-          "countdown_sec": 20,
+          "countdown_sec": 5,
           "steps": [
             {
               "exercise_id": 103,
@@ -2169,7 +2169,7 @@
         {
           "name": "Dzień 10: Footwork + Szybki BH Block",
           "description": "Zaawansowany footwork z szybkim BH blockiem — budowanie reakcji.",
-          "countdown_sec": 20,
+          "countdown_sec": 5,
           "steps": [
             {
               "exercise_id": 103,
@@ -2410,7 +2410,7 @@
         {
           "name": "Dzień 11: Flick + Rally BH",
           "description": "Banana flick przechodzący w rally — budowanie sekwencji gry po flicku.",
-          "countdown_sec": 20,
+          "countdown_sec": 5,
           "steps": [
             {
               "exercise_id": 103,
@@ -2651,7 +2651,7 @@
         {
           "name": "Dzień 12: Flick + Rally FH",
           "description": "Strawberry flick przechodzący w rally — FH sekwencje po odbiorze serwisu.",
-          "countdown_sec": 20,
+          "countdown_sec": 5,
           "steps": [
             {
               "exercise_id": 103,
@@ -2892,7 +2892,7 @@
         {
           "name": "Dzień 13: Czas Reakcji",
           "description": "Szybkie reakcje — quick reaction random, fast block, krótkie pauzy.",
-          "countdown_sec": 20,
+          "countdown_sec": 5,
           "steps": [
             {
               "exercise_id": 103,
@@ -3133,7 +3133,7 @@
         {
           "name": "Dzień 14: Sidespin Serve Receive",
           "description": "Odbiór serwów z side spinem — lewy i prawy sidespin, mieszane rotacje.",
-          "countdown_sec": 20,
+          "countdown_sec": 5,
           "steps": [
             {
               "exercise_id": 103,
@@ -3374,7 +3374,7 @@
         {
           "name": "Dzień 15: Podsumowanie Tygodnia 2",
           "description": "Test: flick + footwork + reakcja — sprawdzian postępów z Fazy 2.",
-          "countdown_sec": 20,
+          "countdown_sec": 5,
           "steps": [
             {
               "exercise_id": 103,
@@ -3615,7 +3615,7 @@
         {
           "name": "Dzień 16: Sidespin Flick",
           "description": "Odbiór serwów z side spinem flickiem — banana/strawberry na sidespin.",
-          "countdown_sec": 20,
+          "countdown_sec": 5,
           "steps": [
             {
               "exercise_id": 103,
@@ -3856,7 +3856,7 @@
         {
           "name": "Dzień 17: Serwis → Atak",
           "description": "Chiński pattern 3rd ball attack — serwis, odbiór, atak.",
-          "countdown_sec": 20,
+          "countdown_sec": 5,
           "steps": [
             {
               "exercise_id": 103,
@@ -4097,7 +4097,7 @@
         {
           "name": "Dzień 18: Multi-Ball Patterns",
           "description": "Wzorce in-out, FH topspin po całym stole, zaawansowany footwork.",
-          "countdown_sec": 20,
+          "countdown_sec": 5,
           "steps": [
             {
               "exercise_id": 103,
@@ -4338,7 +4338,7 @@
         {
           "name": "Dzień 19: Mixed Serve Read",
           "description": "Czytanie rotacji serwów mieszanych z flickiem — selekcja techniki.",
-          "countdown_sec": 20,
+          "countdown_sec": 5,
           "steps": [
             {
               "exercise_id": 103,
@@ -4579,7 +4579,7 @@
         {
           "name": "Dzień 20: Game Pattern",
           "description": "Pełna sekwencja: serwis → flick → rally — symulacja meczu.",
-          "countdown_sec": 20,
+          "countdown_sec": 5,
           "steps": [
             {
               "exercise_id": 103,
@@ -4820,7 +4820,7 @@
         {
           "name": "Dzień 21: Speed + Reaction",
           "description": "Szybsze piłki, krótsze pauzy, counter-topspin pod presją czasu.",
-          "countdown_sec": 20,
+          "countdown_sec": 5,
           "steps": [
             {
               "exercise_id": 103,
@@ -5061,7 +5061,7 @@
         {
           "name": "Dzień 22: Pokrycie Całego Stołu",
           "description": "Szeroki footwork, FH topspin na całym stole, wide Falkenberg.",
-          "countdown_sec": 20,
+          "countdown_sec": 5,
           "steps": [
             {
               "exercise_id": 103,
@@ -5302,7 +5302,7 @@
         {
           "name": "Dzień 23: Podsumowanie Tygodnia 3",
           "description": "Test integracyjny: sidespin flick + multi-ball + game pattern.",
-          "countdown_sec": 20,
+          "countdown_sec": 5,
           "steps": [
             {
               "exercise_id": 103,
@@ -5543,7 +5543,7 @@
         {
           "name": "Dzień 24: Pełna Symulacja Gry",
           "description": "Sekwencje meczowe: serwis → flick → rally → counter — pełny cykl.",
-          "countdown_sec": 20,
+          "countdown_sec": 5,
           "steps": [
             {
               "exercise_id": 103,
@@ -5784,7 +5784,7 @@
         {
           "name": "Dzień 25: Speed Training",
           "description": "Szybkie bloki, quick reaction, counter-topspin — maksymalna prędkość.",
-          "countdown_sec": 20,
+          "countdown_sec": 5,
           "steps": [
             {
               "exercise_id": 103,
@@ -6025,7 +6025,7 @@
         {
           "name": "Dzień 26: Serve Receive All Types",
           "description": "Wszystkie typy rotacji serwów — losowe plasowanie, pełna paleta odbiorów.",
-          "countdown_sec": 20,
+          "countdown_sec": 5,
           "steps": [
             {
               "exercise_id": 103,
@@ -6266,7 +6266,7 @@
         {
           "name": "Dzień 27: 4th Ball Counter",
           "description": "Chiński pattern 4th ball counter-attack — kontra po flicku przeciwnika.",
-          "countdown_sec": 20,
+          "countdown_sec": 5,
           "steps": [
             {
               "exercise_id": 103,
@@ -6507,7 +6507,7 @@
         {
           "name": "Dzień 28: Wytrzymałość + Regularność",
           "description": "Dłuższe serie, mniej odpoczynku — budowanie kondycji i stabilności.",
-          "countdown_sec": 20,
+          "countdown_sec": 5,
           "steps": [
             {
               "exercise_id": 103,
@@ -6748,7 +6748,7 @@
         {
           "name": "Dzień 29: Pełny Random Challenge",
           "description": "Maksymalna prędkość, losowe rotacje — sprawdzian pod presją.",
-          "countdown_sec": 20,
+          "countdown_sec": 5,
           "steps": [
             {
               "exercise_id": 103,
@@ -6989,7 +6989,7 @@
         {
           "name": "Dzień 30: Egzamin Końcowy",
           "description": "Kompleksowy test wszystkich umiejętności — drille mieszane na pełnej prędkości.",
-          "countdown_sec": 20,
+          "countdown_sec": 5,
           "steps": [
             {
               "exercise_id": 103,

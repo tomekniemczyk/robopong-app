@@ -779,13 +779,14 @@
   </div>
 
   <!-- ── Training runner overlay ─────────────────────────────────────────── -->
-  <div class="runner-overlay" v-if="trainingRunning" style="display:flex;gap:16px;align-items:flex-start;justify-content:center;padding:24px 16px;flex-wrap:wrap">
+  <div class="runner-overlay" v-if="trainingRunning" style="display:flex;gap:16px;align-items:stretch;justify-content:center;padding:24px 16px;flex-wrap:nowrap;height:100vh;box-sizing:border-box">
 
-    <!-- Lewa: lista kroków -->
-    <div style="width:180px;flex-shrink:0">
+    <!-- Lewa: lista kroków (scrollowalna) -->
+    <div style="width:200px;flex-shrink:0;overflow-y:auto;padding-right:8px">
       <h3 style="margin:0 0 8px;font-size:13px;color:var(--muted)">{{ tc('trainings', trainingScenarioName) }}</h3>
       <div v-for="(step, si) in trainingStepsList" :key="si"
-        style="display:flex;align-items:center;gap:6px;padding:5px 8px;margin-bottom:3px;border-radius:6px;font-size:11px"
+        :ref="el => { if (si+1 === trainingStep && el) el.scrollIntoView({block:'nearest',behavior:'smooth'}) }"
+        style="display:flex;align-items:center;gap:6px;padding:5px 8px;margin-bottom:3px;border-radius:6px;font-size:11px;cursor:default"
         :style="{
           background: si+1 === trainingStep ? 'rgba(91,124,247,.2)' : 'transparent',
           border: si+1 === trainingStep ? '1px solid rgba(91,124,247,.4)' : '1px solid transparent'
@@ -798,7 +799,7 @@
           :style="{color: si+1 === trainingStep ? '#fff' : 'var(--muted)'}">
           {{ tcm(step.drill_name || step.exercise_name, 'drills', 'exercises') || t('tr.step_prefix') + ' ' + (si+1) }}
         </span>
-        <span class="time-badge" v-if="step.exercise_id">🕐 {{ fmtDur(step.duration_sec) }}</span>
+        <span class="time-badge" v-if="step.exercise_id">{{ fmtDur(step.duration_sec) }}</span>
         <span style="font-size:9px;color:var(--muted)" v-else>{{ step.count }}p</span>
       </div>
       <div v-if="trainingEstRemaining" style="font-size:10px;color:var(--muted);margin-top:6px;text-align:center">
@@ -806,12 +807,12 @@
       </div>
     </div>
 
-    <!-- Prawa: aktualny stan -->
-    <div style="flex:1;min-width:200px;max-width:360px;text-align:center">
-      <div style="font-size:16px;font-weight:600;margin-bottom:8px">{{ tcm(trainingDrillName, 'drills', 'exercises') }}</div>
+    <!-- Prawa: aktualny stan (pełna szerokość) -->
+    <div style="flex:1;min-width:240px;max-width:600px;text-align:center;display:flex;flex-direction:column;overflow-y:auto">
+      <div style="font-size:20px;font-weight:700;margin-bottom:12px">{{ tcm(trainingDrillName, 'drills', 'exercises') }}</div>
 
       <!-- Stół SVG -->
-      <svg v-if="trainingBalls.length" viewBox="0 0 300 220" style="width:100%;max-width:260px;margin:0 auto 8px;display:block;border-radius:4px">
+      <svg v-if="trainingBalls.length" viewBox="0 0 300 220" style="width:100%;max-width:320px;margin:0 auto 12px;display:block;border-radius:4px">
         <!-- Robot (góra) -->
         <rect x="130" y="0" width="40" height="6" rx="2" fill="#3a3d52" stroke="#6b6f8a" stroke-width="0.5"/>
         <text x="150" y="5" text-anchor="middle" fill="#6b6f8a" font-size="4">ROBOT</text>
@@ -830,21 +831,15 @@
         </g>
         <!-- Gracz (dół) -->
         <g transform="translate(150,200)" opacity="0.7">
-          <!-- Głowa -->
           <circle cx="0" cy="-12" r="5" fill="none" stroke="#ccc" stroke-width="1.5"/>
-          <!-- Tułów -->
           <line x1="0" y1="-7" x2="0" y2="5" stroke="#ccc" stroke-width="1.5"/>
-          <!-- Nogi -->
           <line x1="0" y1="5" x2="-5" y2="14" stroke="#ccc" stroke-width="1.5"/>
           <line x1="0" y1="5" x2="5" y2="14" stroke="#ccc" stroke-width="1.5"/>
-          <!-- Ramię lewe -->
           <line x1="0" y1="-4" x2="-7" y2="2" stroke="#ccc" stroke-width="1.5"/>
-          <!-- Ramię prawe + rakietka -->
           <line x1="0" y1="-4" x2="8" y2="-1" stroke="#ccc" stroke-width="1.5"/>
           <ellipse cx="13" cy="-4" rx="4" ry="5.5" fill="none" stroke="#f44" stroke-width="1.2" transform="rotate(-20,13,-4)"/>
           <line x1="8" y1="-1" x2="10" y2="-2" stroke="#a00" stroke-width="1"/>
         </g>
-        <!-- Etykiety BH/FH -->
         <text x="15" y="194" fill="#6b8ab5" font-size="8" opacity="0.6">BH</text>
         <text x="275" y="194" fill="#6b8ab5" font-size="8" opacity="0.6">FH</text>
       </svg>
@@ -858,7 +853,6 @@
       <!-- Faza: drill -->
       <div v-if="trainingPhase === 'drill'" style="width:90%;margin:0 auto">
         <div class="ball-counter">{{ trainingBall }}<span style="font-size:32px;opacity:.5">/{{ trainingBallTotal }}</span></div>
-        <!-- Ball info chips -->
         <div v-if="trainingBalls.length" style="display:flex;flex-wrap:wrap;gap:4px;justify-content:center;margin:6px 0">
           <span v-for="(b, bi) in trainingBalls" :key="bi" style="font-size:10px;padding:2px 8px;border-radius:10px" :style="{background: b.top_speed > b.bot_speed ? 'rgba(255,107,53,.15)' : b.bot_speed > b.top_speed ? 'rgba(77,171,247,.15)' : 'rgba(255,212,59,.15)'}">
             {{ bi+1 }}. {{ ballSpinLabel(b) }} · {{ ballPlaceLabel(b) }}
@@ -867,19 +861,19 @@
         <div class="progress-bar"><div class="fill" :style="{width: trainingBallTotal ? (trainingBall/trainingBallTotal*100)+'%' : '0'}"></div></div>
       </div>
 
-      <!-- Faza: exercise -->
-      <div v-if="trainingPhase === 'exercise'" style="text-align:center;width:80%;margin:0 auto">
-        <div class="ball-counter" style="color:#a855f7">{{ trainingTimer }}</div>
-        <div class="ball-sub">{{ tc('exercises', trainingDrillName) }}</div>
+      <!-- Faza: exercise (powiększone) -->
+      <div v-if="trainingPhase === 'exercise'" style="text-align:center;flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center">
+        <div class="ball-counter" style="color:#a855f7;font-size:80px">{{ trainingTimer }}</div>
+        <div style="font-size:16px;font-weight:600;color:#a855f7;margin:4px 0 12px">{{ tc('exercises', trainingDrillName) }}</div>
         <img v-if="trainingExerciseId"
           :src="getExFrameSrc(trainingExerciseId)"
           :alt="tc('exercises', trainingDrillName)"
           @error="$event.target.style.display='none'"
-          style="display:block;width:140px;height:140px;object-fit:contain;margin:10px auto;border-radius:10px;background:rgba(168,85,247,.08)">
-        <div v-if="trainingExerciseDesc" style="font-size:12px;color:var(--text2);line-height:1.4;margin-top:8px;text-align:left;padding:0 10px">
+          style="display:block;width:220px;height:220px;object-fit:contain;margin:0 auto 12px;border-radius:14px;background:rgba(168,85,247,.08)">
+        <div v-if="trainingExerciseDesc" style="font-size:14px;color:var(--text2);line-height:1.5;margin-top:4px;text-align:center;padding:0 20px;max-width:400px">
           {{ tc('exercise_desc', trainingExerciseDesc) }}
         </div>
-        <div class="progress-bar"><div class="fill" :style="{width: trainingBallTotal ? ((trainingBallTotal-trainingTimer)/trainingBallTotal*100)+'%' : '0', background:'#a855f7'}"></div></div>
+        <div class="progress-bar" style="margin-top:12px"><div class="fill" :style="{width: trainingBallTotal ? ((trainingBallTotal-trainingTimer)/trainingBallTotal*100)+'%' : '0', background:'#a855f7'}"></div></div>
       </div>
 
       <!-- Faza: pauza -->
@@ -894,7 +888,7 @@
             {{ nextStepInfo.count }} {{ t('tr.balls_label') }} · {{ nextStepInfo.percent }}%
           </div>
           <div v-if="nextStepInfo && nextStepInfo.exercise_id" style="color:#a855f7;font-size:11px;margin-top:2px">
-            🏋 {{ fmtDur(nextStepInfo.duration_sec) }}
+            {{ fmtDur(nextStepInfo.duration_sec) }}
           </div>
         </div>
         <!-- Speed adjustment -->
@@ -909,22 +903,30 @@
       </div>
 
       <!-- Paused -->
-      <div v-if="trainingIsPaused" style="font-size:16px;color:#ff9f0a;font-weight:700;margin:8px 0">{{ t('tr.paused') }}</div>
+      <div v-if="trainingIsPaused" style="font-size:18px;color:#ff9f0a;font-weight:700;margin:12px 0">{{ t('tr.paused') }}</div>
+
+      <!-- Kolejne ćwiczenie (preview na dole) -->
+      <div v-if="nextStepInfo && trainingPhase !== 'pause'" style="margin-top:auto;padding:10px 14px;background:rgba(255,255,255,.04);border-radius:8px;font-size:12px;text-align:left;border:1px solid rgba(255,255,255,.06)">
+        <div style="color:var(--muted);font-size:10px;margin-bottom:2px">{{ t('tr.next_prefix') }}:</div>
+        <div style="font-weight:600;font-size:13px">{{ tcm(nextStepInfo.drill_name || nextStepInfo.exercise_name, 'drills', 'exercises') }}</div>
+        <span v-if="nextStepInfo.exercise_id" style="color:#a855f7;font-size:11px">{{ fmtDur(nextStepInfo.duration_sec) }}</span>
+        <span v-else style="color:var(--text2);font-size:11px">{{ nextStepInfo.count }} {{ t('tr.balls_label') }} · {{ nextStepInfo.percent }}%</span>
+      </div>
 
       <!-- Przyciski -->
-      <div style="display:flex;gap:8px;margin-top:12px">
+      <div style="display:flex;gap:8px;margin-top:12px;flex-shrink:0">
         <button class="btn" style="flex:1;background:#ff9f0a;color:#fff" v-if="!trainingIsPaused" @click="pauseTraining">⏸ Pauza</button>
         <button class="btn btn-success" style="flex:1" v-if="trainingIsPaused" @click="resumeTraining">{{ t('drills.resume_btn') }}</button>
         <button class="btn" style="flex:1;background:#6366f1;color:#fff" v-if="trainingPhase !== 'countdown'" @click="skipTraining" :title="t('tr.skip_hint')">{{ t('tr.skip') }}</button>
         <button class="btn btn-danger" style="flex:1" @click="stopTraining">⏹ Stop</button>
       </div>
 
-      <!-- Komentarz do sesji — zawsze dostępny -->
-      <div v-if="trainingPhase !== 'countdown'" style="margin-top:10px;display:flex;gap:6px">
+      <!-- Komentarz do sesji -->
+      <div v-if="trainingPhase !== 'countdown'" style="margin-top:8px;display:flex;gap:6px;flex-shrink:0">
         <input v-model="stepNote" :placeholder="t('training.add_note')" style="flex:1;font-size:12px;padding:6px 10px" @keyup.enter="sendStepNote">
         <button class="btn btn-ghost" style="font-size:12px;padding:6px 10px" @click="sendStepNote" :disabled="!stepNote.trim()">💬</button>
       </div>
-      <div v-if="sessionNotes.length" style="margin-top:6px;max-height:60px;overflow-y:auto">
+      <div v-if="sessionNotes.length" style="margin-top:6px;max-height:60px;overflow-y:auto;flex-shrink:0">
         <div v-for="(n, ni) in sessionNotes" :key="ni" style="font-size:10px;color:var(--text2);padding:1px 0">
           💬 <span style="color:var(--muted)">krok {{ n.step }}:</span> {{ n.note }}
         </div>
@@ -2277,7 +2279,7 @@ const _app = createApp({
     const tEditId = ref(null)
     const tEditName = ref('')
     const tEditDesc = ref('')
-    const tEditCountdown = ref(20)
+    const tEditCountdown = ref(5)
     const tEditSteps = ref([])
 
     // ── Training folders & history ────────────────────────────
@@ -2315,11 +2317,11 @@ const _app = createApp({
     function openTrainingModal(training) {
       if (training) {
         tEditId.value = training.id; tEditName.value = training.name; tEditDesc.value = training.description || ''
-        tEditCountdown.value = training.countdown_sec || 20
+        tEditCountdown.value = training.countdown_sec || 5
         tEditSteps.value = (training.steps || []).map(s => ({...s}))
       } else {
         tEditId.value = null; tEditName.value = ''; tEditDesc.value = ''
-        tEditCountdown.value = 20; tEditSteps.value = []
+        tEditCountdown.value = 5; tEditSteps.value = []
       }
       showTrainingModal.value = true
     }
@@ -2441,7 +2443,7 @@ const _app = createApp({
     }
     function totalTrainingTime(training) {
       if (!training.steps?.length) return '0s'
-      const totalSec = (training.countdown_sec || 20) + training.steps.reduce((sum, s) => {
+      const totalSec = (training.countdown_sec || 5) + training.steps.reduce((sum, s) => {
         const drillTime = (s.count || 60) * (s.wait_ms || 1500) / 1000
         return sum + drillTime + (s.pause_after_sec || 0)
       }, 0)

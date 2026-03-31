@@ -62,5 +62,5 @@ class TrainingStep(BaseModel):
 class TrainingScenarioIn(BaseModel):
     name:           str
     description:    str = ""
-    countdown_sec:  int = Field(default=20, ge=3, le=120)
+    countdown_sec:  int = Field(default=5, ge=3, le=120)
     steps:          List[TrainingStep]
