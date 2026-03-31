@@ -774,7 +774,7 @@
         </li>
       </ul>
       <div v-if="!playersList.length" style="color:var(--muted);font-size:13px;margin-bottom:12px">{{ t('players.empty') }}</div>
-      <button class="btn btn-primary" style="width:100%" @click="createAndSelectPlayer()">+ {{ t('players.add') }}</button>
+      <button class="btn btn-primary" style="width:100%" @click="createAndSelectPlayer()">{{ t('players.add') }}</button>
     </div>
   </div>
 
@@ -2577,7 +2577,7 @@ const _app = createApp({
       localStorage.setItem('robopong_player_id', pid)
       loadTrainingHistory()
       loadPlayerFavorites(pid)
-      if (!connected.value) page.value = 'connect'
+      page.value = 'players'
     }
 
     async function createAndSelectPlayer() {
@@ -2919,9 +2919,17 @@ const _app = createApp({
       }
     })
     watch(connected, (val, old) => {
-      if (val && !old && !isCalibrated.value) {
-        page.value = 'calibration'
-        showToast(t('toast.not_calibrated'))
+      if (val && !old) {
+        if (!isCalibrated.value) {
+          page.value = 'calibration'
+          showToast(t('toast.not_calibrated'))
+        }
+        // After connection (+ optional calibration), show player select if needed
+        nextTick(() => {
+          if (!selectedPlayerId.value) {
+            showPlayerSelectModal.value = true
+          }
+        })
       }
     })
     watch(lastAddr, addr => {
@@ -3001,13 +3009,14 @@ const _app = createApp({
     onMounted(async () => {
       wsConnect(); loadScenarios(); loadCal(); loadDrillTree(); loadTrainings(); loadExercises(); loadTrainingHistory()
       await loadPlayers()
-      // Restore saved player or show select modal
+      // Restore saved player silently (no modal yet — wait for connection)
       const savedPid = parseInt(localStorage.getItem('robopong_player_id'))
       if (savedPid && playersList.value.some(p => p.id === savedPid)) {
-        selectPlayer(savedPid)
-      } else {
-        showPlayerSelectModal.value = true
+        selectedPlayerId.value = savedPid
+        loadTrainingHistory()
+        loadPlayerFavorites(savedPid)
       }
+      page.value = 'connect'
       document.documentElement.lang = lang.value === 'zh' ? 'zh-CN' : lang.value
       fetch('/api/deploy-time').then(r=>r.json()).then(d => { deployTime.value = d.deploy_time }).catch(()=>{})
     })
