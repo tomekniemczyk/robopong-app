@@ -22,6 +22,7 @@ class Robot:
         self._auto_reconnect: bool = False
         self._health_task: Optional[asyncio.Task] = None
         self._awaiting_version: bool = False
+        self._fw_buffer:   str = ""
         self._emit = on_event or (lambda *_: None)
 
     # ── discovery ─────────────────────────────────────────────────────────────
@@ -266,6 +267,7 @@ class Robot:
         await self._write("F")
         await asyncio.sleep(0.5)
 
+        self._fw_buffer = ""
         self._awaiting_version = True
         await self._write("I")
         for _ in range(10):
@@ -273,6 +275,7 @@ class Robot:
             if not self._awaiting_version:
                 break
         self._awaiting_version = False
+        self._fw_buffer = ""
 
         if self.robot_version < 0 and self.firmware >= 220:
             logger.info("Version unknown, forcing Gen2 (J02)")
@@ -296,12 +299,29 @@ class Robot:
         """Callback from BLE transport notifications."""
         self._emit("robot_response", {"data": text})
 
-        if self._awaiting_version and len(text) == 1 and text in ("0", "1", "2"):
-            self.robot_version = int(text)
-            self._awaiting_version = False
-            logger.info("Robot version: %d (%s)", self.robot_version,
-                        {0: "OriginalNewFW", 1: "Original", 2: "SecondRun/Gen2"}.get(self.robot_version, "?"))
-            self._push_status()
+        if self._awaiting_version:
+            if text in ("K", "N", "M"):
+                return
+            # Version digit (single 0-2) — only after firmware already detected
+            if len(text) == 1 and text in ("0", "1", "2") and self.firmware > 0:
+                self.robot_version = int(text)
+                self._awaiting_version = False
+                self._fw_buffer = ""
+                logger.info("Robot version: %d (%s)", self.robot_version,
+                            {0: "OriginalNewFW", 1: "Original", 2: "SecondRun/Gen2"}.get(self.robot_version, "?"))
+                self._push_status()
+                return
+            # Buffer numeric fragments — BLE may split e.g. "701" into "7"+"01"
+            try:
+                int(text)
+                self._fw_buffer += text
+                fw = int(self._fw_buffer)
+                if 100 <= fw <= 9999:
+                    self.firmware = fw
+                    logger.info("Firmware detected: %d", fw)
+                    self._push_status()
+            except ValueError:
+                self._fw_buffer = ""
             return
 
         try:

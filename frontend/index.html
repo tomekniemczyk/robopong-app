@@ -2921,13 +2921,20 @@ const _app = createApp({
       calDirty.value = false
       showToast(t('toast.motors_start'))
     }
+    let _calThrowStopTimer = null
     function calThrow() {
       _resetCalIdle()
+      clearTimeout(_calThrowStopTimer)
       send({ action:'throw' })
       addLog('→ T (throw)')
       showToast(t('toast.throw'))
+      _calThrowStopTimer = setTimeout(() => {
+        send({ action:'stop' })
+        addLog('→ H (auto-stop)')
+      }, 1500)
     }
     function calStop() {
+      clearTimeout(_calThrowStopTimer)
       send({ action:'stop' })
       addLog('→ H (stop)')
       showToast(t('toast.stop'))
@@ -2959,6 +2966,11 @@ const _app = createApp({
         }
       } else {
         clearTimeout(_calIdleTimer)
+        clearTimeout(_calThrowStopTimer)
+        if (connected.value) {
+          send({ action:'stop' })
+          addLog('→ H (auto-stop: opuszczenie kalibracji)')
+        }
       }
     })
     watch(connected, (val, old) => {
