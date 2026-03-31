@@ -268,11 +268,15 @@ async def ws_endpoint(ws: WebSocket):
     except (WebSocketDisconnect, Exception):
         gone = sessions.pop(ws, None)
         _log("Browser disconnected — session %s, remaining: %d", gone.id if gone else "?", len(sessions))
+        if gone and gone.role == Role.CONTROLLER:
+            if _training_runner.running:
+                _training_runner.stop()
+            asyncio.ensure_future(robot.stop())
         _promote_first_observer()
         _broadcast_sessions()
 
 
-ROBOT_ACTIONS  = {"set_ball", "throw", "run_scenario", "run_drill", "run_training", "begin_calibration"}
+ROBOT_ACTIONS  = {"set_ball", "throw", "run_scenario", "run_drill", "run_training", "begin_calibration", "run_drill_solo", "run_exercise_solo"}
 STANDBY_SECS   = 5 * 60
 _last_activity: float = 0.0
 _training_runner = training.TrainingRunner()
@@ -400,20 +404,41 @@ async def _handle(msg: dict, ws: WebSocket):
              t.get("name", "?"), len(t.get("steps", [])), player_id, record, record_type, start_from)
         _training_runner.start(t, robot, broadcast, player_id=player_id, record=record, record_type=record_type, start_from_step=start_from)
 
+    elif action == "run_drill_solo":
+        d = drills.get_drill(msg["drill_id"])
+        if not d:
+            await _send(ws, "error", {"message": "Nie znaleziono drilla"})
+            return
+        player_id = msg.get("player_id")
+        record = msg.get("record", False)
+        count = msg.get("count") or d.get("user_count") or 60
+        _log("Drill solo: \"%s\" count=%d player=%s record=%s", d.get("name", "?"), count, player_id, record)
+        mini = {
+            "name": d.get("name", "Drill"),
+            "countdown_sec": 3,
+            "steps": [{"drill_id": d["id"], "drill_name": d.get("name", ""),
+                        "count": count, "percent": 100, "pause_after_sec": 0}],
+        }
+        _training_runner.start(mini, robot, broadcast, player_id=player_id,
+                               record=record, solo_drill_id=d["id"])
+
     elif action == "run_exercise_solo":
         ex = exercises.get_exercise(msg["exercise_id"])
         if not ex:
             await _send(ws, "error", {"message": "Nie znaleziono ćwiczenia"})
             return
+        player_id = msg.get("player_id")
+        record = msg.get("record", False)
         duration = msg.get("duration_sec") or ex.get("duration_sec", 60)
-        _log("Exercise solo: \"%s\" %ds", ex.get("name", "?"), duration)
+        _log("Exercise solo: \"%s\" %ds player=%s record=%s", ex.get("name", "?"), duration, player_id, record)
         mini = {
             "name": ex.get("name", "Ćwiczenie"),
             "countdown_sec": 3,
             "steps": [{"exercise_id": ex["id"], "exercise_name": ex.get("name", ""),
                         "duration_sec": duration, "pause_after_sec": 0}],
         }
-        _training_runner.start(mini, robot, broadcast)
+        _training_runner.start(mini, robot, broadcast, player_id=player_id,
+                               record=record, solo_exercise_id=ex["id"])
 
     elif action == "stop_training":
         _log("Training stop")
@@ -624,6 +649,10 @@ def rename_folder(folder_id: int, body: dict):
 
 @app.delete("/api/drills/folders/{folder_id}", status_code=204)
 def delete_folder(folder_id: int):
+    tree = drills.get_tree()
+    folder = next((f for f in tree.get("folders", []) if f.get("id") == folder_id), None)
+    if folder and folder.get("readonly"):
+        raise HTTPException(403, "Cannot delete readonly folder")
     drills.delete_folder(folder_id)
 
 
@@ -656,6 +685,9 @@ def update_drill_endpoint(drill_id: int, body: dict):
 
 @app.delete("/api/drills/{drill_id}", status_code=204)
 def delete_drill_endpoint(drill_id: int):
+    d = drills.get_drill(drill_id)
+    if d and d.get("readonly"):
+        raise HTTPException(403, "Cannot delete readonly drill")
     drills.delete_custom_drill(drill_id)
 
 

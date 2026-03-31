@@ -960,11 +960,11 @@
         <span class="chip" style="margin-left:4px;font-size:10px">{{ folder.drills.length }}</span>
         <div class="spacer"></div>
         <div class="drill-folder-actions" @click.stop>
-          <button class="btn-xs" @click="openDrillModal(null, folder)" :title="t('drills.add_drill')" style="font-weight:700">+</button>
+          <button v-if="!folder.readonly" class="btn-xs" @click="openDrillModal(null, folder)" :title="t('drills.add_drill')" style="font-weight:700">+</button>
           <button class="btn-xs" @click="moveFolderUp(folder)" :disabled="drillTree.folders.indexOf(folder)===0" :title="t('drills.move_up')">↑</button>
           <button class="btn-xs" @click="moveFolderDown(folder)" :disabled="drillTree.folders.indexOf(folder)===drillTree.folders.length-1" :title="t('drills.move_down')">↓</button>
-          <button class="btn-xs" @click="renameFolder(folder)" :title="t('drills.rename')">✏</button>
-          <button class="btn-xs" @click="deleteFolderConfirm(folder.id)" :title="t('drills.delete_folder')">🗑</button>
+          <button v-if="!folder.readonly" class="btn-xs" @click="renameFolder(folder)" :title="t('drills.rename')">✏</button>
+          <button v-if="!folder.readonly" class="btn-xs" @click="deleteFolderConfirm(folder.id)" :title="t('drills.delete_folder')">🗑</button>
         </div>
       </div>
       <div v-if="openFolders.has(folder.id)" class="drill-list">
@@ -974,11 +974,13 @@
             <span v-if="selectedPlayerId" style="cursor:pointer;margin-right:4px" @click.stop="toggleFavorite('drill', drill.id)">{{ isFavorite('drill', drill.id) ? '★' : '☆' }}</span>
             <span class="drill-name" :title="drill.readonly ? tc('drill_desc', drill.description) : (drill.description || drill.name)">{{ drill.readonly ? tc('drills', drill.name) : drill.name }}</span>
             <div class="drill-actions" @click.stop>
-              <button class="btn-xs" @click="moveDrillUp(folder, idx)" :disabled="idx===0">↑</button>
-              <button class="btn-xs" @click="moveDrillDown(folder, idx)" :disabled="idx===folder.drills.length-1">↓</button>
-              <button class="btn-xs" @click="showMoveModal(drill)" :title="t('drills.move_to')">→</button>
-              <button class="btn-xs" @click="openDrillModal(drill, folder)" :title="t('drills.edit')">✏</button>
-              <button class="btn-xs" @click="deleteDrillConfirm(drill.id)" :title="t('presets.delete')">🗑</button>
+              <template v-if="!drill.readonly">
+                <button class="btn-xs" @click="moveDrillUp(folder, idx)" :disabled="idx===0">↑</button>
+                <button class="btn-xs" @click="moveDrillDown(folder, idx)" :disabled="idx===folder.drills.length-1">↓</button>
+                <button class="btn-xs" @click="showMoveModal(drill)" :title="t('drills.move_to')">→</button>
+                <button class="btn-xs" @click="openDrillModal(drill, folder)" :title="t('drills.edit')">✏</button>
+                <button class="btn-xs" @click="deleteDrillConfirm(drill.id)" :title="t('presets.delete')">🗑</button>
+              </template>
             </div>
           </div>
           <!-- Panel drilla -->
@@ -1348,7 +1350,7 @@
       <div v-for="h in playerHistory" :key="h.id" style="border-bottom:1px solid var(--border);padding:8px 0;font-size:12px">
         <div style="display:flex;align-items:center;gap:6px;cursor:pointer" @click="expandedHistoryId = expandedHistoryId === h.id ? null : h.id">
           <span>{{ h.status === 'completed' ? '✅' : h.status === 'stopped' ? '⏹' : '❌' }}</span>
-          <span style="flex:1;font-weight:500">{{ getTrainingName(h.training_id) }}</span>
+          <span style="flex:1;font-weight:500">{{ getHistoryLabel(h) }}</span>
           <span class="chip" style="font-size:10px">{{ fmtDur(h.elapsed_sec) }}</span>
           <span style="font-size:10px;color:var(--muted)">{{ expandedHistoryId === h.id ? '▼' : '▶' }}</span>
         </div>
@@ -1374,7 +1376,7 @@
         <!-- Expanded details -->
         <div v-if="expandedHistoryId === h.id" style="margin-top:6px;padding:8px;background:rgba(255,255,255,.03);border-radius:6px;margin-left:22px">
           <!-- Step list from the training definition -->
-          <template v-if="getTrainingSteps(h.training_id)">
+          <template v-if="h.training_id && getTrainingSteps(h.training_id)">
             <div v-for="(step, si) in getTrainingSteps(h.training_id)" :key="si">
               <div style="display:flex;align-items:center;gap:6px;padding:3px 0;font-size:11px;border-bottom:1px solid rgba(255,255,255,.03)">
                 <span style="width:16px;text-align:center;flex-shrink:0" :style="{color: si < h.steps_completed ? '#34c759' : si === h.steps_completed && h.status === 'stopped' ? '#ff9f0a' : 'var(--muted)'}">
@@ -1405,8 +1407,12 @@
                 style="width:100%;margin:4px 0 6px;border-radius:6px;max-height:250px"></video>
             </div>
           </template>
+          <!-- Solo run (no training) -->
+          <div v-if="!h.training_id" style="color:var(--muted);font-size:11px">
+            {{ getHistoryLabel(h) }} · {{ fmtDur(h.elapsed_sec) }}
+          </div>
           <!-- No training found -->
-          <div v-if="!getTrainingSteps(h.training_id)" style="color:var(--muted);font-size:11px">
+          <div v-else-if="!getTrainingSteps(h.training_id)" style="color:var(--muted);font-size:11px">
             {{ t('training.steps_done', {done: h.steps_completed, total: h.steps_total}) }}
           </div>
         </div>
@@ -2128,7 +2134,12 @@ const _app = createApp({
       drillRun.value       = 0
       drillMaxRepeat.value = drill.repeat
       drillRunning.value   = true
-      send({ action: 'run_drill', id: drill.id, count: drillRunCount.value, percent: drillRunPercent.value })
+      if (selectedPlayerId.value) {
+        send({ action: 'run_drill_solo', drill_id: drill.id, count: drillRunCount.value,
+               player_id: selectedPlayerId.value, record: recordTraining.value })
+      } else {
+        send({ action: 'run_drill', id: drill.id, count: drillRunCount.value, percent: drillRunPercent.value })
+      }
     }
 
     function runDrill(drill) {
@@ -2425,7 +2436,8 @@ const _app = createApp({
       return s > 0 ? m + 'm ' + s + 's' : m + 'm'
     }
     function runExerciseSolo(ex) {
-      send({ action: 'run_exercise_solo', exercise_id: ex.id, duration_sec: ex.duration_sec })
+      send({ action: 'run_exercise_solo', exercise_id: ex.id, duration_sec: ex.duration_sec,
+             player_id: selectedPlayerId.value, record: recordTraining.value })
     }
     function pauseTraining() {
       send({ action: 'pause_training' })
@@ -2552,8 +2564,24 @@ const _app = createApp({
     }
 
     function getTrainingName(trainingId) {
+      if (!trainingId) return null
       const tr = trainings.value.find(x => x.id === trainingId)
       return tr ? tr.name : `#${trainingId}`
+    }
+
+    function getHistoryLabel(h) {
+      if (h.solo_drill_id) return `▶ ${getDrillName(h.solo_drill_id)}`
+      if (h.solo_exercise_id) return `🏋 ${getExerciseName(h.solo_exercise_id)}`
+      return getTrainingName(h.training_id) || `#${h.training_id}`
+    }
+
+    function getExerciseName(exId) {
+      for (const cat of (exerciseCategories.value || [])) {
+        for (const ex of (cat.exercises || [])) {
+          if (ex.id === exId) return tc('exercises', ex.name) || ex.name
+        }
+      }
+      return `#${exId}`
     }
 
     function getTrainingSteps(trainingId) {
@@ -3180,7 +3208,7 @@ const _app = createApp({
       playersList, playerDetail, playerHistory, playerRecordings, playingRecording,
       expandedHistoryId, playerHistoryTotal, playerFavorites,
       favTrainings, favDrills, favExercises,
-      getTrainingSteps, getStepRecording, getDrillName, getExerciseName,
+      getTrainingSteps, getStepRecording, getDrillName, getExerciseName, getHistoryLabel,
       loadPlayerFavorites, isFavorite, toggleFavorite,
       resumeFromHistory,
       addPlayer, renamePlayer, deletePlayer, openPlayerDetail, playerRunCount, playerProgram30,

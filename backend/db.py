@@ -109,6 +109,10 @@ def _migrate(c):
     cols = {r[1] for r in c.execute("PRAGMA table_info(training_history)").fetchall()}
     if "session_comment" not in cols:
         c.execute("ALTER TABLE training_history ADD COLUMN session_comment TEXT DEFAULT ''")
+    if "solo_drill_id" not in cols:
+        c.execute("ALTER TABLE training_history ADD COLUMN solo_drill_id INTEGER")
+    if "solo_exercise_id" not in cols:
+        c.execute("ALTER TABLE training_history ADD COLUMN solo_exercise_id INTEGER")
 
 
 def _seed_drills(c):
@@ -375,24 +379,31 @@ def delete_user_training(tid: int):
 # ── Training History ──────────────────────────────────────────────────────
 
 def record_training_run(training_id, player_id, elapsed_sec, status,
-                        steps_completed, steps_total, steps_skipped=None, step_notes=None):
+                        steps_completed, steps_total, steps_skipped=None, step_notes=None,
+                        solo_drill_id=None, solo_exercise_id=None):
     with sqlite3.connect(DB) as c:
         c.execute(
             "INSERT INTO training_history (training_id, player_id, elapsed_sec, status, "
-            "steps_completed, steps_total, steps_skipped, step_notes) VALUES (?,?,?,?,?,?,?,?)",
-            (training_id, player_id, elapsed_sec, status, steps_completed, steps_total,
-             json.dumps(steps_skipped or []), json.dumps(step_notes or []))
+            "steps_completed, steps_total, steps_skipped, step_notes, solo_drill_id, solo_exercise_id) "
+            "VALUES (?,?,?,?,?,?,?,?,?,?)",
+            (training_id or 0, player_id, elapsed_sec, status, steps_completed, steps_total,
+             json.dumps(steps_skipped or []), json.dumps(step_notes or []),
+             solo_drill_id, solo_exercise_id)
         )
 
 
-def get_training_history(training_id=None, player_id=None, limit=None, offset=0):
+def get_training_history(training_id=None, player_id=None, limit=None, offset=0, solo_only=False):
     with sqlite3.connect(DB) as c:
-        q = "SELECT id, training_id, player_id, started_at, elapsed_sec, status, steps_completed, steps_total, steps_skipped, step_notes, session_comment FROM training_history WHERE 1=1"
+        q = ("SELECT id, training_id, player_id, started_at, elapsed_sec, status, "
+             "steps_completed, steps_total, steps_skipped, step_notes, session_comment, "
+             "solo_drill_id, solo_exercise_id FROM training_history WHERE 1=1")
         params = []
         if training_id is not None:
             q += " AND training_id=?"; params.append(training_id)
         if player_id is not None:
             q += " AND player_id=?"; params.append(player_id)
+        if solo_only:
+            q += " AND (solo_drill_id IS NOT NULL OR solo_exercise_id IS NOT NULL)"
         q += " ORDER BY started_at DESC"
         if limit is not None:
             q += " LIMIT ? OFFSET ?"; params.extend([limit, offset])
@@ -415,8 +426,8 @@ def get_history_entry(hid: int):
     with sqlite3.connect(DB) as c:
         r = c.execute(
             "SELECT id, training_id, player_id, started_at, elapsed_sec, status, "
-            "steps_completed, steps_total, steps_skipped, step_notes, session_comment "
-            "FROM training_history WHERE id=?", (hid,)
+            "steps_completed, steps_total, steps_skipped, step_notes, session_comment, "
+            "solo_drill_id, solo_exercise_id FROM training_history WHERE id=?", (hid,)
         ).fetchone()
         return _history_row(r) if r else None
 
@@ -426,7 +437,8 @@ def _history_row(r):
             "elapsed_sec": r[4], "status": r[5], "steps_completed": r[6],
             "steps_total": r[7], "steps_skipped": json.loads(r[8] or "[]"),
             "step_notes": json.loads(r[9] or "[]"),
-            "session_comment": r[10] or ""}
+            "session_comment": r[10] or "",
+            "solo_drill_id": r[11], "solo_exercise_id": r[12]}
 
 
 def update_session_comment(history_id: int, comment: str):

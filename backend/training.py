@@ -79,12 +79,15 @@ def delete_training(training_id: int):
 
 # ── History ──────────────────────────────────────────────────────────────────
 
-def record_run(training_id: int, player_id: int | None, elapsed_sec: int,
+def record_run(training_id, player_id: int | None, elapsed_sec: int,
                status: str, steps_completed: int, steps_total: int,
                steps_skipped: list[int] | None = None,
-               step_notes: list[dict] | None = None):
+               step_notes: list[dict] | None = None,
+               solo_drill_id: int | None = None,
+               solo_exercise_id: int | None = None):
     db.record_training_run(training_id, player_id, elapsed_sec, status,
-                           steps_completed, steps_total, steps_skipped, step_notes)
+                           steps_completed, steps_total, steps_skipped, step_notes,
+                           solo_drill_id=solo_drill_id, solo_exercise_id=solo_exercise_id)
 
 
 def get_history(training_id: int | None = None, player_id: int | None = None,
@@ -115,7 +118,9 @@ class TrainingRunner:
     def start(self, scenario: dict, robot, broadcast: Callable,
               player_id: int | None = None, record: bool = False,
               record_type: str = "all",
-              start_from_step: int = 0):
+              start_from_step: int = 0,
+              solo_drill_id: int | None = None,
+              solo_exercise_id: int | None = None):
         if self.running:
             self.stop()
         self._stopped = False
@@ -132,6 +137,8 @@ class TrainingRunner:
         self._percent_override = None
         self._start_from_step = start_from_step
         self._scenario = scenario
+        self._solo_drill_id = solo_drill_id
+        self._solo_exercise_id = solo_exercise_id
         self._task = asyncio.create_task(self._run(scenario, robot, broadcast))
 
     def stop(self):
@@ -343,26 +350,29 @@ class TrainingRunner:
             broadcast("training_ended", {"elapsed_sec": elapsed_sec})
 
             record_run(
-                scenario.get("id", 0), self._player_id, elapsed_sec,
+                scenario.get("id"), self._player_id, elapsed_sec,
                 "completed", self._steps_completed, total_steps,
                 self._steps_skipped, self._step_notes,
+                solo_drill_id=self._solo_drill_id, solo_exercise_id=self._solo_exercise_id,
             )
 
         except asyncio.CancelledError:
             elapsed_sec = int(time.monotonic() - start_time)
             record_run(
-                scenario.get("id", 0), self._player_id, elapsed_sec,
+                scenario.get("id"), self._player_id, elapsed_sec,
                 "stopped", self._steps_completed, total_steps,
                 self._steps_skipped, self._step_notes,
+                solo_drill_id=self._solo_drill_id, solo_exercise_id=self._solo_exercise_id,
             )
         except Exception as e:
             logger.error("Training runner error: %s", e)
             elapsed_sec = int(time.monotonic() - start_time)
             broadcast("training_ended", {"error": str(e)})
             record_run(
-                scenario.get("id", 0), self._player_id, elapsed_sec,
+                scenario.get("id"), self._player_id, elapsed_sec,
                 "error", self._steps_completed, total_steps,
                 self._steps_skipped, self._step_notes,
+                solo_drill_id=self._solo_drill_id, solo_exercise_id=self._solo_exercise_id,
             )
         finally:
             self._stop_recording()
