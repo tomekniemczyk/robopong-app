@@ -956,8 +956,4 @@ app.mount("/static", StaticFiles(directory=str(FRONTEND)), name="static")
 
 @app.get("/{full_path:path}")
 def spa(full_path: str = ""):
-    # Serve standalone HTML files directly if they exist
-    candidate = FRONTEND / full_path
-    if full_path and candidate.suffix == ".html" and candidate.exists() and candidate.is_relative_to(FRONTEND):
-        return FileResponse(candidate)
     return FileResponse(FRONTEND / "index.html")
