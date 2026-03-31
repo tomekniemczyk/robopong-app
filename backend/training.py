@@ -91,6 +91,10 @@ def get_history(training_id: int | None = None, player_id: int | None = None) ->
     return db.get_training_history(training_id=training_id, player_id=player_id)
 
 
+def update_session_comment(history_id: int, comment: str):
+    db.update_session_comment(history_id, comment)
+
+
 # ── Runner ───────────────────────────────────────────────────────────────────
 
 class TrainingRunner:

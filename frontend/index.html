@@ -853,11 +853,6 @@
           <button class="btn btn-ghost" style="padding:4px 10px;font-size:11px" @click="adjustNextPercent(5)">+5%</button>
           <button class="btn btn-ghost" style="padding:4px 10px;font-size:11px" @click="adjustNextPercent(10)">+10%</button>
         </div>
-        <!-- Note input -->
-        <div style="margin-top:8px;display:flex;gap:6px">
-          <input v-model="stepNote" :placeholder="t('training.add_note')" style="flex:1;font-size:12px;padding:6px 10px" @keyup.enter="sendStepNote">
-          <button class="btn btn-ghost" style="font-size:12px;padding:6px 10px" @click="sendStepNote" :disabled="!stepNote.trim()">💬</button>
-        </div>
       </div>
 
       <!-- Paused -->
@@ -869,6 +864,17 @@
         <button class="btn btn-success" style="flex:1" v-if="trainingIsPaused" @click="resumeTraining">{{ t('drills.resume_btn') }}</button>
         <button class="btn" style="flex:1;background:#6366f1;color:#fff" v-if="trainingPhase !== 'countdown'" @click="skipTraining" :title="t('tr.skip_hint')">{{ t('tr.skip') }}</button>
         <button class="btn btn-danger" style="flex:1" @click="stopTraining">⏹ Stop</button>
+      </div>
+
+      <!-- Komentarz do sesji — zawsze dostępny -->
+      <div v-if="trainingPhase !== 'countdown'" style="margin-top:10px;display:flex;gap:6px">
+        <input v-model="stepNote" :placeholder="t('training.add_note')" style="flex:1;font-size:12px;padding:6px 10px" @keyup.enter="sendStepNote">
+        <button class="btn btn-ghost" style="font-size:12px;padding:6px 10px" @click="sendStepNote" :disabled="!stepNote.trim()">💬</button>
+      </div>
+      <div v-if="sessionNotes.length" style="margin-top:6px;max-height:60px;overflow-y:auto">
+        <div v-for="(n, ni) in sessionNotes" :key="ni" style="font-size:10px;color:var(--text2);padding:1px 0">
+          💬 <span style="color:var(--muted)">krok {{ n.step }}:</span> {{ n.note }}
+        </div>
       </div>
     </div>
   </div>
@@ -1120,6 +1126,26 @@
           {{ t('training.steps_done', {done: h.steps_completed, total: h.steps_total}) }}
           <span v-if="h.steps_skipped?.length"> · {{ h.steps_skipped.length }} {{ t('training.skipped') || 'skipped' }}</span>
           <span v-if="h.player_id && getPlayerName(h.player_id)"> · 👤 {{ getPlayerName(h.player_id) }}</span>
+        </div>
+        <!-- Notatki per krok -->
+        <div v-if="h.step_notes?.length" style="margin-top:4px">
+          <div v-for="n in h.step_notes" :key="n.step + n.note" style="font-size:11px;color:var(--text2);padding:1px 0">
+            💬 <span style="color:var(--muted)">krok {{ n.step }}:</span> {{ n.note }}
+          </div>
+        </div>
+        <!-- Komentarz sesji (edytowalny) -->
+        <div style="margin-top:4px">
+          <div v-if="h.session_comment && editingCommentId !== h.id" style="font-size:11px;color:var(--text2);cursor:pointer" @click="editingCommentId = h.id; editingCommentText = h.session_comment">
+            📝 {{ h.session_comment }}
+          </div>
+          <div v-if="editingCommentId === h.id" style="display:flex;gap:4px;margin-top:2px">
+            <input v-model="editingCommentText" style="flex:1;font-size:11px;padding:4px 6px" @keyup.enter="saveSessionComment(h)">
+            <button class="btn btn-ghost" style="font-size:11px;padding:3px 8px" @click="saveSessionComment(h)">✓</button>
+            <button class="btn btn-ghost" style="font-size:11px;padding:3px 8px" @click="editingCommentId=null">✕</button>
+          </div>
+          <button v-if="!h.session_comment && editingCommentId !== h.id" class="btn btn-ghost" style="font-size:10px;padding:2px 6px;margin-top:2px" @click="editingCommentId = h.id; editingCommentText = ''">
+            + {{ t('training.add_note') }}
+          </button>
         </div>
       </div>
     </div>
@@ -2126,6 +2152,9 @@ const _app = createApp({
     const recordTraining = ref(false)
     const historyModal = ref(null)
     const historyEntries = ref([])
+    const editingCommentId = ref(null)
+    const editingCommentText = ref('')
+    const sessionNotes = ref([])
 
     // ── Players ───────────────────────────────────────────────
     const playersList = ref([])
@@ -2296,6 +2325,7 @@ const _app = createApp({
       trainingScenarioName.value = tr.name || ''
       trainingStepsList.value = (tr.steps || []).map(s => ({...s}))
       trainingStep.value = 0
+      sessionNotes.value = []
       send({ action: 'run_training', id: tr.id, player_id: selectedPlayerId.value, record: recordTraining.value, start_from_step: resumeFromStep.value || 0 })
       trainingStartModal.value = null
     }
@@ -2308,8 +2338,20 @@ const _app = createApp({
 
     async function showTrainingHistory(tr) {
       historyModal.value = tr
-      const r = await fetch(`/api/training-history?training_id=${tr.id}`)
+      let url = `/api/training-history?training_id=${tr.id}`
+      if (selectedPlayerId.value) url += `&player_id=${selectedPlayerId.value}`
+      const r = await fetch(url)
       historyEntries.value = await r.json()
+      editingCommentId.value = null
+    }
+
+    async function saveSessionComment(h) {
+      await fetch(`/api/training-history/${h.id}/comment`, {
+        method: 'PUT', headers: {'Content-Type':'application/json'},
+        body: JSON.stringify({comment: editingCommentText.value.trim()})
+      })
+      h.session_comment = editingCommentText.value.trim()
+      editingCommentId.value = null
     }
 
     function getPlayerName(playerId) {
@@ -2365,7 +2407,9 @@ const _app = createApp({
 
     function sendStepNote() {
       if (!stepNote.value.trim()) return
-      send({ action: 'training_note', step: trainingStep.value, note: stepNote.value.trim() })
+      const note = { step: trainingStep.value, note: stepNote.value.trim() }
+      send({ action: 'training_note', step: note.step, note: note.note })
+      sessionNotes.value.push(note)
       showToast('💬 ' + t('training.note_saved'))
       stepNote.value = ''
     }
@@ -2765,7 +2809,8 @@ const _app = createApp({
       resumeFromStep, getResumeStep, expandedTraining,
       ballSpinLabel, ballPlaceLabel, nextStepInfo,
       stepNote, nextPercentAdjust, nextPercentDisplay, adjustNextPercent, sendStepNote,
-      historyModal, historyEntries, showTrainingHistory, getPlayerName, getTrainingName,
+      historyModal, historyEntries, showTrainingHistory, getPlayerName, getTrainingName, saveSessionComment,
+      editingCommentId, editingCommentText, sessionNotes,
       playersList, playerDetail, playerHistory, playerRecordings, playingRecording,
       addPlayer, renamePlayer, deletePlayer, openPlayerDetail, playerRunCount, playerProgram30,
       deleteRecording, loadPlayers, loadTrainingHistory, trainingHistory,

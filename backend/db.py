@@ -69,7 +69,8 @@ def init():
                 steps_completed INTEGER DEFAULT 0,
                 steps_total     INTEGER DEFAULT 0,
                 steps_skipped   TEXT DEFAULT '[]',
-                step_notes      TEXT DEFAULT '[]'
+                step_notes      TEXT DEFAULT '[]',
+                session_comment TEXT DEFAULT ''
             )
         """)
         c.execute("""
@@ -367,7 +368,7 @@ def record_training_run(training_id, player_id, elapsed_sec, status,
 
 def get_training_history(training_id=None, player_id=None):
     with sqlite3.connect(DB) as c:
-        q = "SELECT id, training_id, player_id, started_at, elapsed_sec, status, steps_completed, steps_total, steps_skipped, step_notes FROM training_history WHERE 1=1"
+        q = "SELECT id, training_id, player_id, started_at, elapsed_sec, status, steps_completed, steps_total, steps_skipped, step_notes, session_comment FROM training_history WHERE 1=1"
         params = []
         if training_id is not None:
             q += " AND training_id=?"; params.append(training_id)
@@ -378,7 +379,13 @@ def get_training_history(training_id=None, player_id=None):
         return [{"id": r[0], "training_id": r[1], "player_id": r[2], "started_at": r[3],
                  "elapsed_sec": r[4], "status": r[5], "steps_completed": r[6],
                  "steps_total": r[7], "steps_skipped": json.loads(r[8] or "[]"),
-                 "step_notes": json.loads(r[9] or "[]")} for r in rows]
+                 "step_notes": json.loads(r[9] or "[]"),
+                 "session_comment": r[10] or ""} for r in rows]
+
+
+def update_session_comment(history_id: int, comment: str):
+    with sqlite3.connect(DB) as c:
+        c.execute("UPDATE training_history SET session_comment=? WHERE id=?", (comment, history_id))
 
 
 # ── Recordings Meta ───────────────────────────────────────────────────────

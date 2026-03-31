@@ -755,6 +755,13 @@ def list_training_history(training_id: int | None = None, player_id: int | None 
     return training.get_history(training_id=training_id, player_id=player_id)
 
 
+@app.put("/api/training-history/{hid}/comment")
+def update_history_comment(hid: int, body: dict):
+    comment = body.get("comment", "").strip()
+    training.update_session_comment(hid, comment)
+    return {"ok": True}
+
+
 # ── Players ──────────────────────────────────────────────────────────────────
 
 @app.get("/api/players")
