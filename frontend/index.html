@@ -2577,6 +2577,7 @@ const _app = createApp({
       localStorage.setItem('robopong_player_id', pid)
       loadTrainingHistory()
       loadPlayerFavorites(pid)
+      if (!connected.value) page.value = 'connect'
     }
 
     async function createAndSelectPlayer() {
