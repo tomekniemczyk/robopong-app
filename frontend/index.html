@@ -2942,6 +2942,7 @@ const _app = createApp({
         _clampAllCal()
         _resetCalIdle()
         send({ action: 'set_ball', ball: { ...cal } })
+        _calMotorsRunning = true
         addLog(`→ osc=${cal.oscillation} h=${cal.height} top=${cal.top_speed} bot=${cal.bot_speed}`)
       }, 300)
     }
@@ -2950,25 +2951,30 @@ const _app = createApp({
       _clampAllCal()
       _resetCalIdle()
       send({ action: 'set_ball', ball: { ...cal } })
+      _calMotorsRunning = true
       addLog(`⚡ top=${cal.top_speed} bot=${cal.bot_speed} osc=${cal.oscillation} h=${cal.height} rot=${cal.rotation}`)
       calDirty.value = false
       showToast(t('toast.motors_start'))
     }
-    let _calThrowStopTimer = null
-    function calThrow() {
+    let _calMotorsRunning = false
+    async function calThrow() {
       _resetCalIdle()
-      clearTimeout(_calThrowStopTimer)
+      if (!_calMotorsRunning) {
+        _clampAllCal()
+        send({ action: 'set_ball', ball: { ...cal } })
+        addLog('⚡ rozgrzewka silników (5s)')
+        showToast(t('toast.motors_warmup') || 'Rozgrzewka silników…')
+        _calMotorsRunning = true
+        await new Promise(r => setTimeout(r, 5000))
+      }
       send({ action:'throw' })
       addLog('→ T (throw)')
       showToast(t('toast.throw'))
-      _calThrowStopTimer = setTimeout(() => {
-        send({ action:'stop' })
-        addLog('→ H (auto-stop)')
-      }, 1500)
+      _resetCalIdle()
     }
     function calStop() {
-      clearTimeout(_calThrowStopTimer)
       send({ action:'stop' })
+      _calMotorsRunning = false
       addLog('→ H (stop)')
       showToast(t('toast.stop'))
     }
@@ -2978,16 +2984,17 @@ const _app = createApp({
       showToast(t('toast.setup_reset'))
     }
 
-    // Auto-idle: 60s bez aktywności w kalibracji → H (głowica wisi swobodnie)
+    // Auto-idle: 10s bez aktywności → silniki gasną
     let _calIdleTimer = null
     function _resetCalIdle() {
       clearTimeout(_calIdleTimer)
       _calIdleTimer = setTimeout(() => {
         if (page.value === 'calibration' && connected.value) {
           send({ action:'stop' })
-          addLog('→ H (auto-idle 60s)')
+          _calMotorsRunning = false
+          addLog('→ H (auto-idle 10s)')
         }
-      }, 300000)
+      }, 10000)
     }
     watch(page, (p) => {
       if (p === 'calibration') {
@@ -2995,11 +3002,12 @@ const _app = createApp({
         if (connected.value && myRole.value === 'controller') {
           _clampAllCal()
           send({ action: 'set_ball', ball: { ...cal } })
+          _calMotorsRunning = true
           addLog('⚡ kalibracja — silniki start')
         }
       } else {
         clearTimeout(_calIdleTimer)
-        clearTimeout(_calThrowStopTimer)
+        _calMotorsRunning = false
         if (connected.value) {
           send({ action:'stop' })
           addLog('→ H (auto-stop: opuszczenie kalibracji)')
