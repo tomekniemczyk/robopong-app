@@ -720,13 +720,12 @@
   <div class="runner-overlay" v-if="drillRunning">
     <h2>{{ drillScenario }}</h2>
     <!-- Wizualizacja live piłki -->
-    <svg v-if="activeDrill && activeDrill.balls.length" viewBox="0 0 300 180" style="width:90%;max-width:260px;margin:0 auto 8px;display:block;border-radius:4px">
+    <svg v-if="activeDrill && activeDrill.balls.length" viewBox="0 0 300 220" style="width:90%;max-width:260px;margin:0 auto 8px;display:block;border-radius:4px">
+      <rect x="130" y="0" width="40" height="6" rx="2" fill="#3a3d52" stroke="#6b6f8a" stroke-width="0.5"/>
+      <rect x="-2" y="6" width="304" height="4" rx="1" fill="#555"/>
       <rect x="0" y="10" width="300" height="170" fill="#1a4a8a"/>
       <rect x="0" y="10" width="300" height="170" fill="none" stroke="#fff" stroke-width="2"/>
       <line x1="150" y1="10" x2="150" y2="180" stroke="#fff" stroke-width="1" opacity="0.5"/>
-      <rect x="-2" y="6" width="304" height="8" rx="1" fill="#555"/>
-      <rect x="125" y="0" width="50" height="8" rx="2" fill="#3a3d52" stroke="#6b6f8a" stroke-width="0.5"/>
-      <!-- Aktualna piłka (pulsuje) -->
       <g v-if="liveBall">
         <circle :cx="ballTableX(liveBall)" :cy="10+(ballTableY(liveBall)-30)*170/180" r="12"
           :fill="liveBall.top_speed > liveBall.bot_speed ? '#ff6b35' : liveBall.top_speed < liveBall.bot_speed ? '#4dabf7' : '#ffd43b'"
@@ -735,6 +734,17 @@
         </circle>
         <text :x="ballTableX(liveBall)" :y="10+(ballTableY(liveBall)-30)*170/180+4" text-anchor="middle" fill="#fff" font-size="9" font-weight="700">{{ drillBall }}</text>
       </g>
+      <g transform="translate(150,200)" opacity="0.7">
+        <circle cx="0" cy="-12" r="5" fill="none" stroke="#ccc" stroke-width="1.5"/>
+        <line x1="0" y1="-7" x2="0" y2="5" stroke="#ccc" stroke-width="1.5"/>
+        <line x1="0" y1="5" x2="-5" y2="14" stroke="#ccc" stroke-width="1.5"/>
+        <line x1="0" y1="5" x2="5" y2="14" stroke="#ccc" stroke-width="1.5"/>
+        <line x1="0" y1="-4" x2="-7" y2="2" stroke="#ccc" stroke-width="1.5"/>
+        <line x1="0" y1="-4" x2="8" y2="-1" stroke="#ccc" stroke-width="1.5"/>
+        <ellipse cx="13" cy="-4" rx="4" ry="5.5" fill="none" stroke="#f44" stroke-width="1.2" transform="rotate(-20,13,-4)"/>
+      </g>
+      <text x="15" y="194" fill="#6b8ab5" font-size="8" opacity="0.6">BH</text>
+      <text x="275" y="194" fill="#6b8ab5" font-size="8" opacity="0.6">FH</text>
     </svg>
     <div class="ball-counter">{{ drillBall }}</div>
     <div class="ball-sub">{{ t('drills.ball_counter', {total: drillTotal, run: drillRun, max: drillMaxRepeat === 0 ? '∞' : drillMaxRepeat}) }}</div>
@@ -782,18 +792,42 @@
       <div style="font-size:16px;font-weight:600;margin-bottom:8px">{{ tcm(trainingDrillName, 'drills', 'exercises') }}</div>
 
       <!-- Stół SVG -->
-      <svg v-if="trainingBalls.length" viewBox="0 0 300 180" style="width:100%;max-width:260px;margin:0 auto 8px;display:block;border-radius:4px">
+      <svg v-if="trainingBalls.length" viewBox="0 0 300 220" style="width:100%;max-width:260px;margin:0 auto 8px;display:block;border-radius:4px">
+        <!-- Robot (góra) -->
+        <rect x="130" y="0" width="40" height="6" rx="2" fill="#3a3d52" stroke="#6b6f8a" stroke-width="0.5"/>
+        <text x="150" y="5" text-anchor="middle" fill="#6b6f8a" font-size="4">ROBOT</text>
+        <!-- Siatka -->
+        <rect x="-2" y="6" width="304" height="4" rx="1" fill="#555"/>
+        <!-- Stół -->
         <rect x="0" y="10" width="300" height="170" fill="#1a4a8a"/>
         <rect x="0" y="10" width="300" height="170" fill="none" stroke="#fff" stroke-width="2"/>
         <line x1="150" y1="10" x2="150" y2="180" stroke="#fff" stroke-width="1" opacity="0.5"/>
-        <rect x="-2" y="6" width="304" height="8" rx="1" fill="#555"/>
-        <rect x="125" y="0" width="50" height="8" rx="2" fill="#3a3d52" stroke="#6b6f8a" stroke-width="0.5"/>
+        <!-- Piłki -->
         <g v-for="(b, bi) in trainingBalls" :key="bi">
           <circle :cx="ballTableX(b)" :cy="10+(ballTableY(b)-30)*170/180" r="9"
             :fill="b.top_speed > b.bot_speed ? '#ff6b35' : b.top_speed < b.bot_speed ? '#4dabf7' : '#ffd43b'"
             stroke="#fff" stroke-width="1" opacity="0.85"/>
           <text :x="ballTableX(b)" :y="10+(ballTableY(b)-30)*170/180+3" text-anchor="middle" fill="#fff" font-size="7" font-weight="700">{{ bi+1 }}</text>
         </g>
+        <!-- Gracz (dół) -->
+        <g transform="translate(150,200)" opacity="0.7">
+          <!-- Głowa -->
+          <circle cx="0" cy="-12" r="5" fill="none" stroke="#ccc" stroke-width="1.5"/>
+          <!-- Tułów -->
+          <line x1="0" y1="-7" x2="0" y2="5" stroke="#ccc" stroke-width="1.5"/>
+          <!-- Nogi -->
+          <line x1="0" y1="5" x2="-5" y2="14" stroke="#ccc" stroke-width="1.5"/>
+          <line x1="0" y1="5" x2="5" y2="14" stroke="#ccc" stroke-width="1.5"/>
+          <!-- Ramię lewe -->
+          <line x1="0" y1="-4" x2="-7" y2="2" stroke="#ccc" stroke-width="1.5"/>
+          <!-- Ramię prawe + rakietka -->
+          <line x1="0" y1="-4" x2="8" y2="-1" stroke="#ccc" stroke-width="1.5"/>
+          <ellipse cx="13" cy="-4" rx="4" ry="5.5" fill="none" stroke="#f44" stroke-width="1.2" transform="rotate(-20,13,-4)"/>
+          <line x1="8" y1="-1" x2="10" y2="-2" stroke="#a00" stroke-width="1"/>
+        </g>
+        <!-- Etykiety BH/FH -->
+        <text x="15" y="194" fill="#6b8ab5" font-size="8" opacity="0.6">BH</text>
+        <text x="275" y="194" fill="#6b8ab5" font-size="8" opacity="0.6">FH</text>
       </svg>
 
       <!-- Faza: countdown -->
@@ -942,7 +976,7 @@
           <div v-if="activeDrill && activeDrill.id === drill.id" style="background:var(--card);border:1px solid var(--border);border-radius:0 0 12px 12px;margin-top:-4px;padding:12px;margin-bottom:6px">
             <div v-if="activeDrill.description" style="font-size:12px;color:var(--muted);margin-bottom:10px">{{ activeDrill.readonly ? tc('drill_desc', activeDrill.description) : activeDrill.description }}</div>
             <!-- Połowa stołu gracza — niebieski, białe linie -->
-            <svg viewBox="0 0 300 220" style="width:100%;max-width:300px;margin:0 auto 12px;display:block;border-radius:4px;overflow:visible">
+            <svg viewBox="0 0 300 285" style="width:100%;max-width:300px;margin:0 auto 12px;display:block;border-radius:4px;overflow:visible">
               <!-- Blat stołu — niebieski -->
               <rect x="0" y="20" width="300" height="200" fill="#1a4a8a"/>
               <!-- Obramowanie stołu -->
@@ -967,8 +1001,20 @@
                   stroke="#fff" stroke-width="1.5" opacity="0.9"/>
                 <text :x="ballTableX(b)" :y="ballTableY(b)+4" text-anchor="middle" fill="#fff" font-size="9" font-weight="700">{{ bi+1 }}</text>
               </g>
+              <!-- Gracz -->
+              <g transform="translate(150,248)" opacity="0.6">
+                <circle cx="0" cy="-12" r="6" fill="none" stroke="#ccc" stroke-width="1.5"/>
+                <line x1="0" y1="-6" x2="0" y2="6" stroke="#ccc" stroke-width="1.5"/>
+                <line x1="0" y1="6" x2="-6" y2="16" stroke="#ccc" stroke-width="1.5"/>
+                <line x1="0" y1="6" x2="6" y2="16" stroke="#ccc" stroke-width="1.5"/>
+                <line x1="0" y1="-2" x2="-8" y2="4" stroke="#ccc" stroke-width="1.5"/>
+                <line x1="0" y1="-2" x2="9" y2="1" stroke="#ccc" stroke-width="1.5"/>
+                <ellipse cx="15" cy="-2" rx="5" ry="6.5" fill="none" stroke="#f44" stroke-width="1.3" transform="rotate(-20,15,-2)"/>
+              </g>
+              <text x="15" y="232" fill="#6b8ab5" font-size="9" opacity="0.5">BH</text>
+              <text x="275" y="232" fill="#6b8ab5" font-size="9" opacity="0.5">FH</text>
               <!-- Legenda -->
-              <g transform="translate(8, 232)">
+              <g transform="translate(8, 275)">
                 <circle cx="6" cy="0" r="4" fill="#ff6b35"/><text x="14" y="3" fill="var(--muted)" font-size="8">{{ t('misc.topspin') }}</text>
                 <circle cx="66" cy="0" r="4" fill="#4dabf7"/><text x="74" y="3" fill="var(--muted)" font-size="8">{{ t('misc.backspin') }}</text>
                 <circle cx="136" cy="0" r="4" fill="#ffd43b"/><text x="144" y="3" fill="var(--muted)" font-size="8">{{ t('misc.nospin') }}</text>
