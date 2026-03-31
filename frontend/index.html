@@ -754,7 +754,7 @@
 
     <!-- Lewa: lista kroków -->
     <div style="width:180px;flex-shrink:0">
-      <h3 style="margin:0 0 8px;font-size:13px;color:var(--muted)">{{ trainingScenarioName }}</h3>
+      <h3 style="margin:0 0 8px;font-size:13px;color:var(--muted)">{{ tc('trainings', trainingScenarioName) }}</h3>
       <div v-for="(step, si) in trainingStepsList" :key="si"
         style="display:flex;align-items:center;gap:6px;padding:5px 8px;margin-bottom:3px;border-radius:6px;font-size:11px"
         :style="{
@@ -767,7 +767,7 @@
         </span>
         <span style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap"
           :style="{color: si+1 === trainingStep ? '#fff' : 'var(--muted)'}">
-          {{ step.drill_name || step.exercise_name || t('tr.step_prefix') + ' ' + (si+1) }}
+          {{ tcm(step.drill_name || step.exercise_name, 'drills', 'exercises') || t('tr.step_prefix') + ' ' + (si+1) }}
         </span>
         <span class="time-badge" v-if="step.exercise_id">🕐 {{ fmtDur(step.duration_sec) }}</span>
         <span style="font-size:9px;color:var(--muted)" v-else>{{ step.count }}p</span>
@@ -779,7 +779,7 @@
 
     <!-- Prawa: aktualny stan -->
     <div style="flex:1;min-width:200px;max-width:360px;text-align:center">
-      <div style="font-size:16px;font-weight:600;margin-bottom:8px">{{ trainingDrillName }}</div>
+      <div style="font-size:16px;font-weight:600;margin-bottom:8px">{{ tcm(trainingDrillName, 'drills', 'exercises') }}</div>
 
       <!-- Stół SVG -->
       <svg v-if="trainingBalls.length" viewBox="0 0 300 180" style="width:100%;max-width:260px;margin:0 auto 8px;display:block;border-radius:4px">
@@ -817,14 +817,14 @@
       <!-- Faza: exercise -->
       <div v-if="trainingPhase === 'exercise'" style="text-align:center;width:80%;margin:0 auto">
         <div class="ball-counter" style="color:#a855f7">{{ trainingTimer }}</div>
-        <div class="ball-sub">{{ trainingDrillName }}</div>
+        <div class="ball-sub">{{ tc('exercises', trainingDrillName) }}</div>
         <img v-if="trainingExerciseId"
           :src="`/static/exercises/${trainingExerciseId}.gif`"
-          :alt="trainingDrillName"
+          :alt="tc('exercises', trainingDrillName)"
           @error="$event.target.style.display='none'"
           style="display:block;width:140px;height:140px;object-fit:contain;margin:10px auto;border-radius:10px;background:rgba(168,85,247,.08)">
         <div v-if="trainingExerciseDesc" style="font-size:12px;color:var(--text2);line-height:1.4;margin-top:8px;text-align:left;padding:0 10px">
-          {{ trainingExerciseDesc }}
+          {{ tc('exercise_desc', trainingExerciseDesc) }}
         </div>
         <div class="progress-bar"><div class="fill" :style="{width: trainingBallTotal ? ((trainingBallTotal-trainingTimer)/trainingBallTotal*100)+'%' : '0', background:'#a855f7'}"></div></div>
       </div>
@@ -836,7 +836,7 @@
         <!-- Next step preview -->
         <div style="margin-top:8px;padding:8px 12px;background:rgba(255,255,255,.05);border-radius:6px;font-size:12px;text-align:left">
           <div style="color:var(--muted);margin-bottom:2px">{{ t('tr.next_prefix') }}:</div>
-          <div style="font-weight:600">{{ trainingNextDrill }}</div>
+          <div style="font-weight:600">{{ tcm(trainingNextDrill, 'drills', 'exercises') }}</div>
           <div v-if="nextStepInfo && !nextStepInfo.exercise_id" style="color:var(--text2);font-size:11px;margin-top:2px">
             {{ nextStepInfo.count }} {{ t('tr.balls_label') }} · {{ nextStepInfo.percent }}%
           </div>
@@ -907,7 +907,7 @@
     <div v-for="folder in drillTree.folders" :key="folder.id" class="drill-folder">
       <div class="drill-folder-header" @click="toggleFolder(folder.id)">
         <span class="drill-folder-arrow">{{ openFolders.has(folder.id) ? '▼' : '▶' }}</span>
-        <span class="drill-folder-name">{{ folder.name }}</span>
+        <span class="drill-folder-name">{{ folder.readonly ? tc('folders', folder.name) : folder.name }}</span>
         <span class="chip" style="margin-left:4px;font-size:10px">{{ folder.drills.length }}</span>
         <div class="spacer"></div>
         <div class="drill-folder-actions" @click.stop>
@@ -922,7 +922,7 @@
         <div v-if="folder.drills.length === 0" style="padding:8px 6px;font-size:12px;color:var(--muted)">{{ t('drills.no_drills') }}</div>
         <div v-for="(drill, idx) in folder.drills" :key="drill.id">
           <div class="drill-row" @click="openDrillPanel(drill, folder)" style="cursor:pointer">
-            <span class="drill-name" :title="drill.description || drill.name">{{ drill.name }}</span>
+            <span class="drill-name" :title="drill.readonly ? tc('drill_desc', drill.description) : (drill.description || drill.name)">{{ drill.readonly ? tc('drills', drill.name) : drill.name }}</span>
             <div class="drill-actions" @click.stop>
               <button class="btn-xs" @click="moveDrillUp(folder, idx)" :disabled="idx===0">↑</button>
               <button class="btn-xs" @click="moveDrillDown(folder, idx)" :disabled="idx===folder.drills.length-1">↓</button>
@@ -933,7 +933,7 @@
           </div>
           <!-- Panel drilla -->
           <div v-if="activeDrill && activeDrill.id === drill.id" style="background:var(--card);border:1px solid var(--border);border-radius:0 0 12px 12px;margin-top:-4px;padding:12px;margin-bottom:6px">
-            <div v-if="activeDrill.description" style="font-size:12px;color:var(--muted);margin-bottom:10px">{{ activeDrill.description }}</div>
+            <div v-if="activeDrill.description" style="font-size:12px;color:var(--muted);margin-bottom:10px">{{ activeDrill.readonly ? tc('drill_desc', activeDrill.description) : activeDrill.description }}</div>
             <!-- Połowa stołu gracza — niebieski, białe linie -->
             <svg viewBox="0 0 300 220" style="width:100%;max-width:300px;margin:0 auto 12px;display:block;border-radius:4px;overflow:visible">
               <!-- Blat stołu — niebieski -->
@@ -1024,7 +1024,7 @@
         <!-- Folder header (only for folder groups) -->
         <div v-if="group.folder" class="drill-folder-header" @click="toggleTrainingFolder(group.folder)" style="margin-bottom:6px">
           <span class="drill-folder-arrow">{{ openTrainingFolders.has(group.folder) ? '▼' : '▶' }}</span>
-          <span class="drill-folder-name">{{ group.icon }} {{ group.folder }}</span>
+          <span class="drill-folder-name">{{ group.icon }} {{ tc('folders', group.folder) }}</span>
           <span class="chip">{{ trainingFolderProgress(group) }}</span>
         </div>
         <!-- Progress bar for folders -->
@@ -1038,7 +1038,7 @@
             <div style="flex:1;min-width:0">
               <div style="display:flex;align-items:center;gap:6px;cursor:pointer" @click="expandedTraining = expandedTraining === tr.id ? null : tr.id">
                 <span style="font-size:12px">{{ trainingStatusIcon(tr.id) }}</span>
-                <span style="font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ tr.name }}</span>
+                <span style="font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ tr.readonly ? tc('trainings', tr.name) : tr.name }}</span>
                 <span v-if="tr.readonly" class="chip" style="font-size:9px;padding:1px 5px">{{ t('training.readonly') }}</span>
                 <span style="font-size:10px;color:var(--muted)">{{ expandedTraining === tr.id ? '▲' : '▼' }}</span>
               </div>
@@ -1057,9 +1057,9 @@
             <div v-if="expandedTraining === tr.id" style="width:100%;margin-top:8px;padding:8px;background:rgba(255,255,255,.03);border-radius:6px;font-size:12px">
               <div v-for="(step, si) in tr.steps" :key="si" style="display:flex;align-items:center;gap:6px;padding:4px 0;border-bottom:1px solid rgba(255,255,255,.05)">
                 <span style="width:20px;color:var(--muted);text-align:right;flex-shrink:0">{{ si+1 }}.</span>
-                <span v-if="step.exercise_id" style="color:#a855f7">🏋 {{ step.exercise_name }}</span>
+                <span v-if="step.exercise_id" style="color:#a855f7">🏋 {{ tc('exercises', step.exercise_name) }}</span>
                 <span v-else style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">
-                  {{ step.drill_name || 'Drill #'+step.drill_id }}
+                  {{ tc('drills', step.drill_name) || 'Drill #'+step.drill_id }}
                 </span>
                 <span v-if="!step.exercise_id" style="color:var(--muted);font-size:10px">{{ step.count }}p · {{ step.percent }}%</span>
                 <span v-if="step.exercise_id" style="color:var(--muted);font-size:10px">{{ fmtDur(step.duration_sec) }}</span>
@@ -1078,7 +1078,7 @@
   <!-- Training start modal — player selection + record toggle -->
   <div v-if="trainingStartModal" class="modal-overlay" @click.self="trainingStartModal=null" style="z-index:200">
     <div class="modal-sheet" style="max-width:360px">
-      <h3 style="margin-bottom:14px">▶ {{ trainingStartModal.name }}</h3>
+      <h3 style="margin-bottom:14px">▶ {{ trainingStartModal.readonly ? tc('trainings', trainingStartModal.name) : trainingStartModal.name }}</h3>
       <div v-if="resumeFromStep > 0" style="margin-bottom:12px;padding:8px;background:rgba(255,159,10,.1);border-radius:6px;font-size:13px">
         ⏩ {{ t('training.resume_from') }}: {{ t('training.steps_done', {done: resumeFromStep, total: trainingStartModal.steps?.length}) }}
       </div>
@@ -1106,7 +1106,7 @@
   <div v-if="historyModal" class="modal-overlay" @click.self="historyModal=null" style="z-index:200">
     <div class="modal-sheet" style="max-width:440px;max-height:80vh;overflow-y:auto">
       <div style="display:flex;align-items:center;margin-bottom:14px">
-        <h3 style="flex:1">📊 {{ historyModal.name }}</h3>
+        <h3 style="flex:1">📊 {{ historyModal.readonly ? tc('trainings', historyModal.name) : historyModal.name }}</h3>
         <button class="btn btn-ghost btn-icon" @click="historyModal=null">✕</button>
       </div>
       <div v-if="!historyEntries.length" style="color:var(--muted);font-size:13px">{{ t('training.not_started') }}</div>
@@ -1130,7 +1130,7 @@
     <div class="move-sheet">
       <h3>{{ t('move.title', {name: moveModalDrill.name}) }}</h3>
       <button v-for="f in drillTree.folders" :key="f.id" class="move-btn" @click="moveDrillToFolder(moveModalDrill.id, f.id)">
-        📁 {{ f.name }}
+        📁 {{ f.readonly ? tc('folders', f.name) : f.name }}
       </button>
       <button class="move-btn" style="color:var(--muted)" @click="moveDrillToFolder(moveModalDrill.id, null)">
         {{ t('move.no_folder') }}
@@ -1147,12 +1147,12 @@
     <div v-for="cat in exerciseCategories" :key="cat.id" class="drill-folder">
       <div class="drill-folder-header" @click="toggleExCat(cat.id)">
         <span class="drill-folder-arrow">{{ openExCats.has(cat.id) ? '▼' : '▶' }}</span>
-        <span class="drill-folder-name">{{ cat.icon }} {{ cat.name }}</span>
+        <span class="drill-folder-name">{{ cat.icon }} {{ tc('categories', cat.name) }}</span>
         <span class="chip">{{ cat.exercises.length }}</span>
       </div>
       <div v-if="openExCats.has(cat.id)" class="drill-list">
         <div v-for="ex in cat.exercises" :key="ex.id" class="drill-row" @click="selectedExercise = selectedExercise?.id === ex.id ? null : ex" style="cursor:pointer">
-          <span class="drill-name">{{ ex.name }}</span>
+          <span class="drill-name">{{ tc('exercises', ex.name) }}</span>
           <span class="time-badge">🕐 {{ fmtDur(ex.duration_sec) }}</span>
         </div>
         <!-- Wybrany exercise detail -->
@@ -1163,14 +1163,14 @@
             <div style="display:flex;justify-content:space-around;margin-bottom:5px">
               <div v-for="n in 7" :key="n" style="width:9px;height:7px;background:#111;border-radius:2px;border:1px solid #2a2a3e"></div>
             </div>
-            <img :src="getExFrameSrc(selectedExercise)" :alt="selectedExercise.name"
+            <img :src="getExFrameSrc(selectedExercise)" :alt="tc('exercises', selectedExercise.name)"
               style="width:100%;display:block;border-radius:4px"
               @error="$event.target.style.display='none'"/>
             <div style="display:flex;justify-content:space-around;margin-top:5px">
               <div v-for="n in 7" :key="n" style="width:9px;height:7px;background:#111;border-radius:2px;border:1px solid #2a2a3e"></div>
             </div>
           </div>
-          <div style="font-size:12px;color:var(--text2);line-height:1.5;margin-bottom:8px">{{ selectedExercise.description }}</div>
+          <div style="font-size:12px;color:var(--text2);line-height:1.5;margin-bottom:8px">{{ tc('exercise_desc', selectedExercise.description) }}</div>
           <div style="display:flex;align-items:center;gap:8px;margin-top:8px">
             <span style="font-size:11px;color:var(--muted)">{{ t('ex.time') }}</span>
             <input type="number" v-model.number="selectedExercise.duration_sec" min="10" max="600" style="width:60px;text-align:center">
@@ -1329,11 +1329,11 @@
         <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
           <select @change="onStepTypeSelect(step, $event.target.value)" style="flex:1;min-width:120px;background:var(--surface);color:var(--text);border:1px solid var(--border);border-radius:8px;padding:6px 8px;font-size:12px">
             <option value="">{{ t('tr.select') }}</option>
-            <optgroup v-for="f in drillTree.folders" :label="'🏓 '+f.name" :key="f.id">
-              <option v-for="d in f.drills" :value="'drill:'+d.id" :key="d.id" :selected="step.drill_id===d.id">{{ d.name }}</option>
+            <optgroup v-for="f in drillTree.folders" :label="'🏓 '+(f.readonly ? tc('folders', f.name) : f.name)" :key="f.id">
+              <option v-for="d in f.drills" :value="'drill:'+d.id" :key="d.id" :selected="step.drill_id===d.id">{{ d.readonly ? tc('drills', d.name) : d.name }}</option>
             </optgroup>
-            <optgroup v-for="cat in exerciseCategories" :label="cat.icon+' '+cat.name" :key="'ex-'+cat.id">
-              <option v-for="ex in cat.exercises" :value="'exercise:'+ex.id" :key="'ex-'+ex.id" :selected="step.exercise_id===ex.id">{{ ex.name }}</option>
+            <optgroup v-for="cat in exerciseCategories" :label="cat.icon+' '+tc('categories', cat.name)" :key="'ex-'+cat.id">
+              <option v-for="ex in cat.exercises" :value="'exercise:'+ex.id" :key="'ex-'+ex.id" :selected="step.exercise_id===ex.id">{{ tc('exercises', ex.name) }}</option>
             </optgroup>
           </select>
           <template v-if="!step.exercise_id">
@@ -1453,6 +1453,7 @@
 
 <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
 <script src="/static/i18n.js"></script>
+<script src="/static/content_i18n.js"></script>
 <script>
 const { createApp, ref, reactive, computed, watch, onMounted, nextTick } = Vue
 
@@ -1464,6 +1465,21 @@ function t(key, params) {
   let s = entry[lang.value] || entry.en || key
   if (params) Object.entries(params).forEach(([k, v]) => { s = s.replaceAll('{' + k + '}', v) })
   return s
+}
+function tc(type, key) {
+  const map = window.CONTENT_I18N?.[type]
+  if (!map || !key) return key
+  const entry = map[key]
+  if (!entry) return key
+  return entry[lang.value] || key
+}
+function tcm(key, ...types) {
+  if (!key) return key
+  for (const type of types) {
+    const map = window.CONTENT_I18N?.[type]
+    if (map?.[key]?.[lang.value]) return map[key][lang.value]
+  }
+  return key
 }
 function setLang(l) {
   lang.value = l
@@ -2758,6 +2774,8 @@ const _app = createApp({
   }
 })
 _app.config.globalProperties.t = t
+_app.config.globalProperties.tc = tc
+_app.config.globalProperties.tcm = tcm
 _app.mount('#app')
 </script>
 </body>
