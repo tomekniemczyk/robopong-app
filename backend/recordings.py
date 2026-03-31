@@ -31,6 +31,7 @@ def _safe_filename(name: str) -> str:
 class Recorder:
     def __init__(self):
         self._proc: subprocess.Popen | None = None
+        self._log_file = None
         self._current_file: Path | None = None
         self._current_meta: dict | None = None
         self._start_time: datetime | None = None
@@ -51,22 +52,24 @@ class Recorder:
         filepath = player_dir / filename
 
         try:
+            log_path = filepath.with_suffix(".log")
+            self._log_file = open(log_path, "w")
             self._proc = subprocess.Popen(
                 [
                     "ffmpeg", "-y",
                     "-use_wallclock_as_timestamps", "1",
-                    "-f", "mjpeg",
                     "-i", MOTION_STREAM,
                     "-c:v", "libx264",
                     "-preset", "ultrafast",
                     "-crf", "18",
                     "-vsync", "vfr",
+                    "-r", "15",
                     "-t", "600",  # max 10 min safety
                     str(filepath),
                 ],
                 stdin=subprocess.PIPE,
-                stdout=subprocess.DEVNULL,
-                stderr=subprocess.DEVNULL,
+                stdout=self._log_file,
+                stderr=self._log_file,
             )
             self._current_file = filepath
             self._start_time = datetime.now()
@@ -119,7 +122,13 @@ class Recorder:
         else:
             logger.warning("Recording file not found after stop")
 
+        if self._log_file:
+            try:
+                self._log_file.close()
+            except Exception:
+                pass
         self._proc = None
+        self._log_file = None
         self._current_file = None
         self._current_meta = None
         self._start_time = None

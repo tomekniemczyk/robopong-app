@@ -1406,7 +1406,16 @@
             <span v-for="n in (h.step_notes || []).filter(n => n.step === si+1)" :key="n.note" style="font-size:10px;color:var(--text2)">
               💬 {{ n.note }}
             </span>
+            <!-- Play recording for this step -->
+            <button v-if="getStepRecording(h, si)" class="btn btn-ghost" style="font-size:10px;padding:1px 6px"
+              @click.stop="playingRecording = playingRecording === getStepRecording(h, si).filename ? null : getStepRecording(h, si).filename">
+              {{ playingRecording === getStepRecording(h, si)?.filename ? '⏹' : '▶' }}
+            </button>
           </div>
+          <!-- Inline video player for step recording -->
+          <video v-if="getStepRecording(h, si) && playingRecording === getStepRecording(h, si).filename"
+            :src="'/api/recordings/' + getStepRecording(h, si).filename" controls autoplay
+            style="width:100%;margin:4px 0 6px 22px;border-radius:6px;max-height:250px"></video>
           <!-- No training found -->
           <div v-if="!getTrainingSteps(h.training_id)" style="color:var(--muted);font-size:11px">
             {{ t('training.steps_done', {done: h.steps_completed, total: h.steps_total}) }}
@@ -2576,6 +2585,15 @@ const _app = createApp({
       return tr?.steps || null
     }
 
+    function getStepRecording(h, stepIdx) {
+      const hStart = new Date(h.started_at).getTime()
+      const hEnd = hStart + (h.elapsed_sec + 60) * 1000
+      return playerRecordings.value.find(r => {
+        const rStart = new Date(r.started_at).getTime()
+        return r.step_idx === stepIdx && rStart >= hStart && rStart <= hEnd
+      })
+    }
+
     function getDrillName(drillId) {
       for (const folder of (drillTree.folders || [])) {
         for (const d of (folder.drills || [])) {
@@ -3178,7 +3196,7 @@ const _app = createApp({
       playersList, playerDetail, playerHistory, playerRecordings, playingRecording,
       expandedHistoryId, playerHistoryTotal, playerFavorites,
       favTrainings, favDrills, favExercises,
-      getTrainingSteps, getDrillName, getExerciseName,
+      getTrainingSteps, getStepRecording, getDrillName, getExerciseName,
       loadPlayerFavorites, isFavorite, toggleFavorite,
       resumeFromHistory,
       addPlayer, renamePlayer, deletePlayer, openPlayerDetail, playerRunCount, playerProgram30,
