@@ -1,0 +1,775 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Robopong 3050XL — Protocol Flow</title>
+<style>
+  :root { --bg:#0d0f18; --surface:#1a1d2e; --border:#2a2d3e; --text:#e8e8ed; --muted:#8e8e93; --accent:#0a84ff; --green:#34c759; --red:#ff453a; --orange:#ff9f0a; --purple:#bf5af2; --yellow:#ffd60a; }
+  * { box-sizing:border-box; margin:0; padding:0; }
+  body { font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif; background:var(--bg); color:var(--text); line-height:1.5; }
+  .container { max-width:1100px; margin:0 auto; padding:20px; }
+  h1 { font-size:28px; margin-bottom:4px; }
+  h1 small { font-size:14px; color:var(--muted); font-weight:400; }
+  h2 { font-size:20px; margin:32px 0 12px; padding-bottom:6px; border-bottom:1px solid var(--border); color:var(--accent); }
+  h3 { font-size:15px; margin:16px 0 8px; color:var(--orange); }
+
+  /* Nav tabs */
+  .tabs { display:flex; gap:4px; margin:20px 0 24px; flex-wrap:wrap; }
+  .tab { padding:6px 14px; border-radius:8px; background:var(--surface); border:1px solid var(--border); color:var(--muted); cursor:pointer; font-size:13px; font-weight:600; transition:.15s; }
+  .tab:hover { border-color:var(--accent); color:var(--text); }
+  .tab.active { background:var(--accent); border-color:var(--accent); color:#fff; }
+  .section { display:none; }
+  .section.active { display:block; }
+
+  /* Flow boxes */
+  .flow { display:flex; flex-direction:column; gap:0; margin:12px 0; }
+  .flow-row { display:flex; align-items:stretch; gap:12px; }
+  .flow-step { background:var(--surface); border:1px solid var(--border); border-radius:10px; padding:10px 14px; flex:1; font-size:12px; position:relative; }
+  .flow-step.highlight { border-color:var(--accent); background:rgba(10,132,255,.08); }
+  .flow-step.warn { border-color:var(--orange); background:rgba(255,159,10,.06); }
+  .flow-step.ok { border-color:var(--green); background:rgba(52,199,89,.06); }
+  .flow-step.err { border-color:var(--red); background:rgba(255,69,58,.06); }
+  .flow-step .label { font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.05em; color:var(--muted); margin-bottom:4px; }
+  .flow-step code { background:rgba(255,255,255,.06); padding:1px 5px; border-radius:4px; font-size:11px; color:var(--yellow); }
+  .flow-step .cmd { font-family:'SF Mono',Consolas,monospace; color:var(--green); font-size:12px; font-weight:600; }
+  .flow-step .resp { font-family:'SF Mono',Consolas,monospace; color:var(--orange); font-size:11px; }
+  .arrow { text-align:center; color:var(--muted); font-size:18px; padding:2px 0; line-height:1; }
+  .arrow-right { writing-mode:horizontal-tb; padding:0 8px; display:flex; align-items:center; color:var(--muted); font-size:18px; }
+
+  /* Command table */
+  table { width:100%; border-collapse:collapse; margin:12px 0; font-size:12px; }
+  th { text-align:left; padding:8px 10px; background:var(--surface); border:1px solid var(--border); font-size:11px; color:var(--muted); text-transform:uppercase; letter-spacing:.04em; }
+  td { padding:7px 10px; border:1px solid var(--border); vertical-align:top; }
+  td code { background:rgba(255,255,255,.06); padding:1px 5px; border-radius:3px; font-size:11px; }
+  tr:hover td { background:rgba(255,255,255,.02); }
+  .cmd-name { font-family:'SF Mono',Consolas,monospace; color:var(--green); font-weight:700; font-size:13px; }
+  .fw-badge { display:inline-block; font-size:9px; padding:1px 5px; border-radius:4px; font-weight:700; }
+  .fw-all { background:rgba(52,199,89,.15); color:var(--green); }
+  .fw-701 { background:rgba(191,90,242,.15); color:var(--purple); }
+  .fw-old { background:rgba(255,159,10,.15); color:var(--orange); }
+
+  /* Formula box */
+  .formula-box { background:var(--surface); border:1px solid var(--border); border-radius:10px; padding:14px 16px; margin:8px 0; font-family:'SF Mono',Consolas,monospace; font-size:12px; line-height:1.7; white-space:pre-wrap; }
+  .formula-box .comment { color:var(--muted); }
+  .formula-box .val { color:var(--yellow); }
+  .formula-box .key { color:var(--accent); }
+  .formula-box .range { color:var(--green); }
+
+  /* Sources */
+  .sources { background:var(--surface); border:1px solid var(--border); border-radius:10px; padding:14px 16px; margin:16px 0; font-size:12px; }
+  .sources h4 { font-size:12px; color:var(--muted); text-transform:uppercase; letter-spacing:.05em; margin-bottom:8px; }
+  .sources li { margin:3px 0; color:var(--muted); }
+  .sources code { color:var(--accent); }
+
+  /* Parallel cols */
+  .cols { display:grid; grid-template-columns:1fr 1fr; gap:16px; margin:12px 0; }
+  @media(max-width:700px) { .cols { grid-template-columns:1fr; } }
+
+  /* Note */
+  .note { background:rgba(255,159,10,.08); border-left:3px solid var(--orange); padding:8px 12px; margin:8px 0; font-size:12px; border-radius:0 6px 6px 0; }
+  .note.bug { background:rgba(255,69,58,.08); border-color:var(--red); }
+  .note.info { background:rgba(10,132,255,.08); border-color:var(--accent); }
+
+  /* Inline sequence */
+  .seq { display:flex; flex-wrap:wrap; gap:4px; align-items:center; margin:6px 0; }
+  .seq-item { background:var(--surface); border:1px solid var(--border); border-radius:6px; padding:3px 8px; font-size:11px; font-family:'SF Mono',Consolas,monospace; }
+  .seq-arrow { color:var(--muted); font-size:14px; }
+</style>
+</head>
+<body>
+<div class="container">
+
+<h1>Robopong 3050XL — Protocol Flow <small>Donic Newgy</small></h1>
+<p style="color:var(--muted);font-size:13px;margin-bottom:8px">Kompletna mapa komunikacji z robotem na podstawie reverse-engineeringu aplikacji Android, iOS i Windows.</p>
+
+<div class="tabs" id="tabs">
+  <div class="tab active" data-tab="overview">Przegląd</div>
+  <div class="tab" data-tab="connect">Połączenie</div>
+  <div class="tab" data-tab="calibration">Kalibracja</div>
+  <div class="tab" data-tab="drill">Drille</div>
+  <div class="tab" data-tab="advanced">Advanced / Manual</div>
+  <div class="tab" data-tab="commands">Komendy</div>
+  <div class="tab" data-tab="formulas">Formuły</div>
+  <div class="tab" data-tab="bugs">Bugi oryginału</div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════════ -->
+<div class="section active" id="overview">
+<h2>Przegląd przepływu</h2>
+<p style="font-size:13px;color:var(--muted);margin-bottom:12px">Główna sekwencja od włączenia do treningu:</p>
+
+<div class="flow">
+  <div class="flow-step highlight">
+    <div class="label">1. Połączenie</div>
+    BLE: skan urządzeń "NEWGY"/"NWGY" → GATT → MLDP service<br>
+    USB: FTDI 9600 baud → 0x5A × 2 → 115200 baud
+  </div>
+  <div class="arrow">↓</div>
+  <div class="flow-step highlight">
+    <div class="label">2. Inicjalizacja</div>
+    <div class="seq">
+      <span class="seq-item cmd" style="color:var(--green)">Z</span><span class="seq-arrow">→</span>
+      <span class="seq-item cmd" style="color:var(--green)">Z</span><span class="seq-arrow">→</span>
+      <span class="seq-item cmd" style="color:var(--green)">Z</span><span class="seq-arrow">→</span>
+      <span class="seq-item cmd" style="color:var(--green)">H</span><span class="seq-arrow">→</span>
+      <span class="seq-item resp" style="color:var(--orange)">K</span>
+    </div>
+    Czekaj max 20s na odpowiedź <code>K</code>
+  </div>
+  <div class="arrow">↓</div>
+  <div class="flow-step">
+    <div class="label">3. Detekcja firmware</div>
+    <div class="seq">
+      <span class="seq-item cmd" style="color:var(--green)">F</span><span class="seq-arrow">→</span>
+      <span class="seq-item resp" style="color:var(--orange)">701</span>
+      <span style="color:var(--muted);font-size:11px;margin-left:8px">(3-cyfrowy numer ASCII)</span>
+    </div>
+    FW ≥ 701 → nowy protokół (A/wTA/END), asynchroniczne rzuty
+  </div>
+  <div class="arrow">↓</div>
+  <div class="flow-step warn">
+    <div class="label">4. Kalibracja</div>
+    Ustawienie TopMotor, Height, Oscillation → komendy <code>V</code>, <code>B</code>, <code>T</code>, <code>U</code>, <code>O</code>, <code>R</code><br>
+    Wynik: SpeedCAL, OscCAL, RotCAL, HeightCAL
+  </div>
+  <div class="arrow">↓</div>
+  <div class="flow-step ok">
+    <div class="label">5. Drill / Trening</div>
+    FW &lt; 701: <code>B</code> → delay → <code>T</code> (synchronicznie, pilot steruje)<br>
+    FW ≥ 701 BLE: <code>wTA</code> + <code>A</code> × N → <code>END</code> (robot steruje)
+  </div>
+</div>
+
+<h3>Kluczowe wartości (nie zmieniaj!)</h3>
+<div class="formula-box"><span class="key">Centrum głowicy</span> = <span class="val">150</span>  <span class="comment">(oscylacja, rotacja, height bazowy)</span>
+<span class="key">Oscylacja</span>: zakres <span class="range">127–173</span>, centrum <span class="val">150</span>
+<span class="key">Height</span>:    zakres <span class="range">75–210</span>
+<span class="key">Rotacja</span>:   zakres <span class="range">90–210</span>, centrum <span class="val">150</span>
+<span class="key">Prędkość</span>:  raw × <span class="val">4.016</span> = wartość PWM w komendzie B/A
+<span class="key">BLE terminator</span>: <span class="val">\r</span>  (0x0D)
+<span class="key">USB terminator</span>: <span class="val">\r\n</span> (0x0D 0x0A)  <span class="comment">— Android USB: \r only!</span></div>
+
+<div class="sources">
+  <h4>Pliki źródłowe analizy</h4>
+  <ul>
+    <li><code>re/ANDROID_APP_RE.md</code> — Xamarin Android (BLE + USB), 988 linii</li>
+    <li><code>re/WINDOWS_APP_RE.md</code> — WPF Windows (FTDI USB), 542 linie</li>
+    <li><code>re/IOS_APP_RE.md</code> — Xamarin iOS (CoreBluetooth), 481 linii</li>
+    <li><code>re/BUSINESS_LOGIC_COMPLETE.md</code> — wspólna logika, formuły, bugi, 606 linii</li>
+  </ul>
+</div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════════ -->
+<div class="section" id="connect">
+<h2>Połączenie z robotem</h2>
+
+<div class="cols">
+<div>
+<h3>BLE (Android / iOS)</h3>
+<div class="flow">
+  <div class="flow-step"><div class="label">Skan</div>Filter: nazwa urządzenia <code>"NEWGY"</code> lub <code>"NWGY"</code></div>
+  <div class="arrow">↓</div>
+  <div class="flow-step"><div class="label">GATT Connect</div>Android: <code>ConnectGatt(AUTO, HIGH_PRIORITY)</code><br>iOS: <code>ConnectPeripheral</code></div>
+  <div class="arrow">↓</div>
+  <div class="flow-step"><div class="label">Discover Services</div>
+    Szukaj MLDP service:<br>
+    <code style="font-size:10px">00035b03-58e6-07dd-021a-08123a000300</code><br>
+    Data char: <code style="font-size:10px">...0301</code><br>
+    Control: <code style="font-size:10px">...03ff</code>
+  </div>
+  <div class="arrow">↓</div>
+  <div class="flow-step"><div class="label">Enable Notifications</div><code>SetNotifyValue(true)</code> na data characteristic</div>
+  <div class="arrow">↓</div>
+  <div class="flow-step highlight"><div class="label">Init Sequence</div>
+    <div class="cmd">Z\r</div> × 3 (100ms między) + <div class="cmd">H\r</div><br>
+    Max <strong>20 sekund</strong> czekania na <span class="resp">K</span>
+  </div>
+</div>
+
+<div class="note info">BLE max 20 bajtów na pakiet. Komendy &gt;20 znaków dzielone na 2 części z <code>\r</code> między.</div>
+</div>
+
+<div>
+<h3>USB Windows (FTDI)</h3>
+<div class="flow">
+  <div class="flow-step"><div class="label">Krok 1: 9600 baud</div>
+    <code>OpenByDescription("NEWGY3050")</code><br>
+    Baud: <code>9600</code>, 8-N-1, RTS+DTR=true<br>
+    Wyślij bajt <code>0x5A</code>, 250ms, <code>0x5A</code>, 250ms<br>
+    <strong>Close</strong>
+  </div>
+  <div class="arrow">↓</div>
+  <div class="flow-step"><div class="label">Krok 2: 115200 baud</div>
+    Ponowne <code>OpenByDescription("NEWGY3050")</code><br>
+    Baud: <code>115200</code><br>
+    <div class="cmd">Z\r\n</div> → czekaj max <strong>60s</strong> (retry co 3s)<br>
+    <div class="cmd">H\r\n</div> → <span class="resp">K</span>
+  </div>
+</div>
+
+<div class="note warn">USB Windows używa <code>\r\n</code> (CRLF) jako terminator!<br>USB Android używa <code>\r</code> (CR) jak BLE.</div>
+
+<h3>USB Android (Hoho Serial)</h3>
+<div class="flow">
+  <div class="flow-step"><div class="label">Detect</div>
+    <code>ProductName == "NEWGY3050"</code><br>
+    Baud: 9600 → 115200<br>
+    Terminator: <code>\r</code> (CR only, jak BLE)<br>
+    Buffer: 4096 bytes
+  </div>
+</div>
+</div>
+</div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════════ -->
+<div class="section" id="calibration">
+<h2>Kalibracja</h2>
+<p style="font-size:13px;color:var(--muted);margin-bottom:12px">3-etapowa kalibracja z oryginalnych aplikacji. AcePad upraszcza to do jednego ekranu.</p>
+
+<h3>Etap 1: Rotacja</h3>
+<div class="flow">
+  <div class="flow-step highlight">
+    <div class="label">Begin Calibration</div>
+    <div class="cmd">V\r</div> × 2 (500ms między) — wchodzi w tryb kalibracji
+  </div>
+  <div class="arrow">↓</div>
+  <div class="flow-step">
+    <div class="label">Ustaw piłkę kalibracyjną</div>
+    Height=50%, Osc=50%, Rot=0, TopMotor=0%, BottomMotor=0%<br>
+    → <span class="cmd">B000000000015014215008\r</span>
+  </div>
+  <div class="arrow">↓</div>
+  <div class="flow-step warn">
+    <div class="label">User adjusts rotation</div>
+    Strzałki: ±1 (ciągły kierunek), ±2 (zmiana kierunku)<br>
+    Każda zmiana → <span class="cmd">B...{rot}...\r</span>
+  </div>
+  <div class="arrow">↓</div>
+  <div class="flow-step ok">
+    <div class="label">Zapisz</div>
+    RotCAL = raw - 150<br>
+    <span class="cmd">R{raw:000}\r</span> np. <span class="cmd">R153\r</span>
+  </div>
+</div>
+
+<h3>Etap 2: Wysokość</h3>
+<div class="flow">
+  <div class="flow-step warn">
+    <div class="label">User adjusts height</div>
+    Strzałki ±1 → <span class="cmd">B...{height}...\r</span>
+  </div>
+  <div class="arrow">↓</div>
+  <div class="flow-step ok">
+    <div class="label">Zapisz</div>
+    HeightCAL = raw - 150<br>
+    <span class="cmd">U{raw:000}\r</span> np. <span class="cmd">U142\r</span>
+  </div>
+</div>
+
+<h3>Etap 3: Prędkość + Oscylacja</h3>
+<div class="flow">
+  <div class="flow-step">
+    <div class="label">Piłka kalibracyjna</div>
+    <strong>Gen2:</strong> TopMotor=73%, Bot=0%, Height=80%, Osc=50%, Rot=0 → raw top=<code>161</code><br>
+    <strong>Gen1:</strong> TopMotor=77%, Bot=0%, Height=80%, Osc=50%, Rot=0 → raw top=<code>168</code>
+  </div>
+  <div class="arrow">↓</div>
+  <div class="flow-step highlight">
+    <div class="label">Wyślij piłkę — silniki kręcą</div>
+    <span class="cmd">B0646000000150183150 6\r</span><br>
+    <span style="font-size:11px;color:var(--muted)">top=161×4.016=646, bot=0, osc=150, h=183, rot=150</span>
+  </div>
+  <div class="arrow">↓</div>
+  <div class="flow-step warn">
+    <div class="label">User adjusts</div>
+    ↑↓ TopMotorSpeed ±1%<br>
+    ←→ Oscillation ±2 (Win) / ±4 (Android/iOS)<br>
+    Każda zmiana → <span class="cmd">B...{updated}...\r</span>
+  </div>
+  <div class="arrow">↓</div>
+  <div class="flow-step">
+    <div class="label">Test throw</div>
+    <span class="cmd">T\r</span> → <span class="resp">K</span> (max 7s timeout)
+  </div>
+  <div class="arrow">↓</div>
+  <div class="flow-step ok">
+    <div class="label">Done — zapisz kalibrację</div>
+    <strong>a)</strong> Height -= 30 (baseline offset!)<br>
+    <strong>b)</strong> SpeedCAL = raw - baseline (161 Gen2 / 170 Gen1)<br>
+    &nbsp;&nbsp;&nbsp;Jeśli offset &gt; 0: <span class="cmd">Q{offset:000}\r</span><br>
+    <strong>c)</strong> Zeruj silniki: <span class="cmd">B0000000000150142150 0\r</span><br>
+    <strong>d)</strong> OscCAL = osc_raw - 150: <span class="cmd">O{raw:000}\r</span> × 2 (500ms)<br>
+    <strong>e)</strong> Finish: <span class="cmd">H\r</span> + <span class="cmd">W000\r</span>
+  </div>
+</div>
+
+<div class="note info">AcePad defaults (Gen2): top=160, bot=0, osc=150, h=183, rot=150, wait=1000ms.<br>
+Kalibracja per-device (keyed by BLE address w <code>.calibration.json</code>).</div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════════ -->
+<div class="section" id="drill">
+<h2>Drill — wykonanie</h2>
+
+<h3>Setup (wspólny)</h3>
+<div class="flow">
+  <div class="flow-step">
+    <div class="label">Clear</div>
+    <span class="cmd">H\r</span> → 200ms → <span class="cmd">H\r</span> → 1000ms
+  </div>
+  <div class="arrow">↓</div>
+  <div class="flow-step">
+    <div class="label">FW &lt; 701: Pre-load first ball</div>
+    <span class="cmd">B{first_ball}\r</span> → 300ms → <span class="cmd">B{first_ball}\r</span> → 1500ms
+  </div>
+</div>
+
+<div class="cols">
+<div>
+<h3>FW &lt; 701 lub USB — synchroniczny</h3>
+<p style="font-size:12px;color:var(--muted);margin-bottom:8px">Pilot steruje każdym rzutem.</p>
+<div class="flow">
+  <div class="flow-step highlight">
+    <div class="label">Loop: dla każdej piłki</div>
+    <span class="cmd">B{ball_params}\r</span> → <span class="resp">K</span><br>
+    wait(WaitTime ms)<br>
+    <span class="cmd">T\r</span> → <span class="resp">K</span> (max 7s)<br>
+    drillBallCount++
+  </div>
+  <div class="arrow">↓ powtórz × count</div>
+  <div class="flow-step">
+    <div class="label">Delay między cyklami</div>
+    Jeśli delay &gt; 0: <span class="cmd">B{first_ball}\r</span> + wait(delay × 1000ms)
+  </div>
+  <div class="arrow">↓</div>
+  <div class="flow-step ok">
+    <div class="label">Cleanup</div>
+    <span class="cmd">H\r</span> — ClearBall
+  </div>
+</div>
+
+<div class="note">Kompensacja wolnych rzutów: jeśli throw &gt; 625ms, następny wait *= (0.000125 × waitTime + 0.5625)</div>
+</div>
+
+<div>
+<h3>FW ≥ 701 + BLE — asynchroniczny</h3>
+<p style="font-size:12px;color:var(--muted);margin-bottom:8px">Robot sam zarządza rzutami.</p>
+<div class="flow">
+  <div class="flow-step highlight">
+    <div class="label">Załaduj wszystkie piłki</div>
+    Dla każdej piłki:<br>
+    <span class="cmd">wTA{wait/10:000}\r</span> → <span class="resp">K</span><br>
+    <span class="cmd">A{ball_params}\r</span> → <span class="resp">K</span><br>
+    wait 250ms → następna
+  </div>
+  <div class="arrow">↓</div>
+  <div class="flow-step warn">
+    <div class="label">Execute</div>
+    <span class="cmd">END{count:3}{seed:3}{delay×10:3}\r</span><br>
+    <span style="font-size:11px;color:var(--muted)">np. END050127080 = 50 piłek, seed=127, delay=8s</span>
+  </div>
+  <div class="arrow">↓</div>
+  <div class="flow-step">
+    <div class="label">Robot rzuca autonomicznie</div>
+    <span class="resp">K</span> po każdym rzucie (count++)<br>
+    <span class="resp">N</span> = drill zakończony
+  </div>
+  <div class="arrow">↓</div>
+  <div class="flow-step ok">
+    <div class="label">Cleanup</div>
+    <span class="cmd">H\r</span>
+  </div>
+</div>
+</div>
+</div>
+
+<h3>Przykład: 3 piłki, FW ≥ 701</h3>
+<div class="formula-box"><span class="comment">-- Ball 1: top=50%, bot=30%, h=70%, osc=50%, rot=0°, wait=1500ms --</span>
+<span class="cmd">wTA150\r</span>           <span class="comment">← 1500/10 = 150</span>
+<span class="resp">K</span>
+<span class="cmd">A0478024100150167150 5\r</span>
+<span class="resp">K</span>
+
+<span class="comment">-- Ball 2: top=60%, bot=20%, h=60%, osc=60%, rot=10° --</span>
+<span class="cmd">wTA150\r</span>
+<span class="resp">K</span>
+<span class="cmd">A0557016100155156157 5\r</span>
+<span class="resp">K</span>
+
+<span class="comment">-- Ball 3: top=70%, bot=10%, h=50%, osc=40%, rot=-10° --</span>
+<span class="cmd">wTA150\r</span>
+<span class="resp">K</span>
+<span class="cmd">A0637008000145142143 4\r</span>
+<span class="resp">K</span>
+
+<span class="comment">-- Execute: 3 balls, seed=127, delay=5s --</span>
+<span class="cmd">END003127050\r</span>
+<span class="resp">K</span>  <span class="comment">← ball 1 thrown</span>
+<span class="resp">K</span>  <span class="comment">← ball 2 thrown</span>
+<span class="resp">K</span>  <span class="comment">← ball 3 thrown</span>
+<span class="resp">N</span>  <span class="comment">← drill complete</span></div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════════ -->
+<div class="section" id="advanced">
+<h2>Advanced / Manual Mode</h2>
+<p style="font-size:13px;color:var(--muted);margin-bottom:12px">Pojedyncza piłka z pełną kontrolą parametrów.</p>
+
+<h3>Ustawienie piłki</h3>
+<div class="flow">
+  <div class="flow-step">
+    <div class="label">Parametry wejściowe</div>
+    TopMotorSpeed: -100% do +100% (ujemne = reverse)<br>
+    BottomMotorSpeed: -100% do +100%<br>
+    Height: 0–100%<br>
+    Oscillation: 0–100% (0=prawo, 50=środek, 100=lewo)<br>
+    Rotation: -90° do +90°<br>
+    WaitTime: 500–2000ms
+  </div>
+  <div class="arrow">↓ konwersja</div>
+  <div class="flow-step highlight">
+    <div class="label">Obliczenie wartości raw</div>
+    Motor raw = 28 + 182 × (percent / 100)<br>
+    B-value = raw × 4.016<br>
+    Height raw = 75 + 135 × (percent / 100)<br>
+    Osc raw = 173 - 46 × (percent / 100)<br>
+    Rot raw = 150 + 60 × (degrees / 90)
+  </div>
+  <div class="arrow">↓</div>
+  <div class="flow-step ok">
+    <div class="label">Wyślij</div>
+    FW &lt; 701: <span class="cmd">B{dir}{top:3}{dir}{bot:3}{osc:3}{h:3}{rot:3}{led:1}\r</span><br>
+    FW ≥ 701: <span class="cmd">wTA{wait/10:3}\r</span> + <span class="cmd">A{dir}{top:3}{dir}{bot:3}{osc:3}{h:3}{rot:3}{led:1}\r</span>
+  </div>
+</div>
+
+<h3>Pojedynczy rzut</h3>
+<div class="seq">
+  <span class="seq-item cmd" style="color:var(--green)">B/A (set ball)</span>
+  <span class="seq-arrow">→</span>
+  <span class="seq-item" style="color:var(--muted)">300ms</span>
+  <span class="seq-arrow">→</span>
+  <span class="seq-item cmd" style="color:var(--green)">T</span>
+  <span class="seq-arrow">→</span>
+  <span class="seq-item resp" style="color:var(--orange)">K</span>
+  <span class="seq-arrow">→</span>
+  <span class="seq-item" style="color:var(--muted)">1500ms</span>
+  <span class="seq-arrow">→</span>
+  <span class="seq-item cmd" style="color:var(--green)">H</span>
+  <span style="color:var(--muted);font-size:11px;margin-left:6px">(auto-stop silników)</span>
+</div>
+
+<h3>Random Mode (FW ≥ 701)</h3>
+<p style="font-size:12px;margin-bottom:8px">Dwie komendy definiujące zakresy losowych parametrów:</p>
+<div class="formula-box"><span class="key">Y</span>{numBallsLow:2}{numBallsHigh:2}{numBallsType:1}
+ {topMotorLow:2}{topMotorHigh:2}{topMotorType:1}
+ {bottomMotorLow:2}{bottomMotorHigh:2}{bottomMotorType:1}
+ {heightLow:3}{heightHigh:3}\r
+
+<span class="key">P</span>{heightType:1}{oscLow:2}{oscHigh:2}
+ {oscType:1}{rotLow:2}{rotHigh:2}
+ {rotType:1}{waitTimeLow/10:3}{waitTimeHigh/10:3}
+ {waitTimeType:1}{dirTopLow:1}{dirTopHigh:1}
+ {dirBottomLow:1}{dirBottomHigh:1}{dirRotLow:1}{dirRotHigh:1}\r
+
+<span class="comment">RandomType: 1=Range (losowy), 2=EitherOr (50/50), 3=None (stały)</span></div>
+
+<h3>Fill Robot (ładowanie piłek)</h3>
+<div class="seq">
+  <span class="seq-item cmd" style="color:var(--green)">B (top=80,bot=0,h=128,osc=128,rot=128)</span>
+  <span class="seq-arrow">→</span>
+  <span class="seq-item cmd" style="color:var(--green)">T × 11</span>
+  <span style="color:var(--muted);font-size:11px">(1000ms między)</span>
+  <span class="seq-arrow">→</span>
+  <span class="seq-item cmd" style="color:var(--green)">H</span>
+</div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════════ -->
+<div class="section" id="commands">
+<h2>Tabela komend</h2>
+
+<table>
+<tr>
+  <th>Cmd</th><th>Format</th><th>Odpowiedź</th><th>Timeout</th><th>FW</th><th>Opis</th>
+</tr>
+<tr>
+  <td class="cmd-name">Z</td>
+  <td><code>Z\r</code></td>
+  <td><span class="resp">K / N / M</span></td>
+  <td>60s</td>
+  <td><span class="fw-badge fw-all">ALL</span></td>
+  <td>Ping / inicjalizacja / keep-alive</td>
+</tr>
+<tr>
+  <td class="cmd-name">H</td>
+  <td><code>H\r</code></td>
+  <td><span class="resp">K / M</span></td>
+  <td>5s</td>
+  <td><span class="fw-badge fw-all">ALL</span></td>
+  <td>Reset pozycji / homing / stop silników</td>
+</tr>
+<tr>
+  <td class="cmd-name">T</td>
+  <td><code>T\r</code></td>
+  <td><span class="resp">K / N / M</span></td>
+  <td>7s</td>
+  <td><span class="fw-badge fw-all">ALL</span></td>
+  <td>Rzuć piłkę</td>
+</tr>
+<tr>
+  <td class="cmd-name">F</td>
+  <td><code>F\r</code></td>
+  <td><span class="resp">3-digit ASCII</span></td>
+  <td>2s</td>
+  <td><span class="fw-badge fw-all">ALL</span></td>
+  <td>Zapytaj o firmware (np. "701")</td>
+</tr>
+<tr>
+  <td class="cmd-name">I</td>
+  <td><code>I\r</code></td>
+  <td><span class="resp">0 / 1 / 2</span></td>
+  <td>300ms</td>
+  <td><span class="fw-badge fw-all">≥220</span></td>
+  <td>Robot version (Gen1/Gen2)</td>
+</tr>
+<tr>
+  <td class="cmd-name">V</td>
+  <td><code>V\r</code> × 2 (500ms)</td>
+  <td>—</td>
+  <td>1s</td>
+  <td><span class="fw-badge fw-all">ALL</span></td>
+  <td>Tryb kalibracji</td>
+</tr>
+<tr>
+  <td class="cmd-name">B</td>
+  <td><code>B{d}{top:3}{d}{bot:3}{osc:3}{h:3}{rot:3}{led:1}\r</code></td>
+  <td><span class="resp">K / M</span></td>
+  <td>500ms</td>
+  <td><span class="fw-badge fw-old">&lt;701</span></td>
+  <td>Ustaw piłkę (stary protokół / USB)</td>
+</tr>
+<tr>
+  <td class="cmd-name">wTA</td>
+  <td><code>wTA{ms/10:3}\r</code></td>
+  <td><span class="resp">K / M</span></td>
+  <td>5s</td>
+  <td><span class="fw-badge fw-701">≥701</span></td>
+  <td>Ustaw wait time (przed A)</td>
+</tr>
+<tr>
+  <td class="cmd-name">A</td>
+  <td><code>A{d}{top:3}{d}{bot:3}{osc:3}{h:3}{rot:3}{led:1}\r</code></td>
+  <td><span class="resp">K / M</span></td>
+  <td>5s</td>
+  <td><span class="fw-badge fw-701">≥701 BLE</span></td>
+  <td>Ustaw piłkę (nowy protokół)</td>
+</tr>
+<tr>
+  <td class="cmd-name">END</td>
+  <td><code>END{count:3}{seed:3}{delay×10:3}\r</code></td>
+  <td><span class="resp">K...N</span></td>
+  <td>—</td>
+  <td><span class="fw-badge fw-701">≥701 BLE</span></td>
+  <td>Wykonaj drill (robot steruje)</td>
+</tr>
+<tr>
+  <td class="cmd-name">U</td>
+  <td><code>U{height:3}\r</code></td>
+  <td><span class="resp">K</span></td>
+  <td>1s</td>
+  <td><span class="fw-badge fw-all">ALL</span></td>
+  <td>Kalibracja height</td>
+</tr>
+<tr>
+  <td class="cmd-name">O</td>
+  <td><code>O{osc:3}\r</code></td>
+  <td><span class="resp">K</span></td>
+  <td>1s</td>
+  <td><span class="fw-badge fw-all">ALL</span></td>
+  <td>Kalibracja oscylacji</td>
+</tr>
+<tr>
+  <td class="cmd-name">R</td>
+  <td><code>R{rot:3}\r</code></td>
+  <td><span class="resp">K</span></td>
+  <td>1s</td>
+  <td><span class="fw-badge fw-all">ALL</span></td>
+  <td>Kalibracja rotacji</td>
+</tr>
+<tr>
+  <td class="cmd-name">W</td>
+  <td><code>W{ms:3}\r</code></td>
+  <td><span class="resp">K</span></td>
+  <td>1s</td>
+  <td><span class="fw-badge fw-all">ALL</span></td>
+  <td>Ustaw adjustment delay</td>
+</tr>
+<tr>
+  <td class="cmd-name">Q</td>
+  <td><code>Q{offset:3}\r</code></td>
+  <td><span class="resp">K</span></td>
+  <td>500ms</td>
+  <td><span class="fw-badge fw-all">ALL</span></td>
+  <td>SpeedCAL offset (jeśli &gt; 0)</td>
+</tr>
+<tr>
+  <td class="cmd-name">Y + P</td>
+  <td>2 komendy, format w sekcji Advanced</td>
+  <td><span class="resp">K / M</span></td>
+  <td>5s</td>
+  <td><span class="fw-badge fw-701">≥701</span></td>
+  <td>Random ball (zakresy parametrów)</td>
+</tr>
+<tr>
+  <td class="cmd-name">J</td>
+  <td><code>J{ver:2}\r</code></td>
+  <td><span class="resp">K</span></td>
+  <td>1s</td>
+  <td><span class="fw-badge fw-all">≥220</span></td>
+  <td>Ustaw robot version</td>
+</tr>
+<tr>
+  <td class="cmd-name">X</td>
+  <td><code>X\r</code></td>
+  <td>—</td>
+  <td>—</td>
+  <td><span class="fw-badge fw-all">ALL</span></td>
+  <td>Bootloader mode</td>
+</tr>
+</table>
+
+<h3>Odpowiedzi robota</h3>
+<table style="max-width:500px">
+<tr><th>Bajt</th><th>ASCII</th><th>Znaczenie</th></tr>
+<tr><td><code>0x4B</code></td><td><strong>K</strong></td><td>OK — komenda wykonana</td></tr>
+<tr><td><code>0x4E</code></td><td><strong>N</strong></td><td>Nack — drill stop / error / drill complete</td></tr>
+<tr><td><code>0x4D</code></td><td><strong>M</strong></td><td>Alternate OK</td></tr>
+</table>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════════ -->
+<div class="section" id="formulas">
+<h2>Formuły konwersji</h2>
+
+<h3>Motor Speed (% → raw → B-command value)</h3>
+<div class="formula-box"><span class="key">raw</span> = 28 + 182 × (percent / 100)     <span class="comment">// percent > 0</span>
+<span class="key">raw</span> = -(210 × |percent| / 100)      <span class="comment">// percent < 0 (reverse)</span>
+<span class="key">raw</span> = 0                              <span class="comment">// percent = 0</span>
+
+<span class="key">B-value</span> = |raw| × <span class="val">4.016</span>            <span class="comment">// firmware != 206</span>
+<span class="key">B-value</span> = |raw| + 5                  <span class="comment">// firmware == 206 (legacy)</span>
+
+<span class="comment">-- Tabela konwersji --</span>
+  <span class="val"> 0%</span> → raw=  0 → B=   0     <span class="val">50%</span> → raw=119 → B= 478
+ <span class="val">10%</span> → raw= 46 → B= 185     <span class="val">73%</span> → raw=161 → B= 646 <span class="comment">(Gen2 baseline)</span>
+ <span class="val">25%</span> → raw= 73 → B= 293     <span class="val">77%</span> → raw=168 → B= 675 <span class="comment">(Gen1 baseline)</span>
+                              <span class="val">100%</span> → raw=210 → B= 843</div>
+
+<h3>Height (% → raw)</h3>
+<div class="formula-box"><span class="key">raw</span> = 75 + round(135 × percent / 100)
+
+  <span class="val">  0%</span> → <span class="range"> 75</span> (najniżej)
+  <span class="val"> 50%</span> → <span class="range">142</span>
+  <span class="val"> 80%</span> → <span class="range">183</span> <span class="comment">(domyślna kalibracja)</span>
+  <span class="val">100%</span> → <span class="range">210</span> (najwyżej)</div>
+
+<h3>Oscillation (% → raw)</h3>
+<div class="formula-box"><span class="key">raw</span> = 173 - round(46 × percent / 100)    <span class="comment">// praworęczny</span>
+<span class="key">raw</span> = 173 - round(46 × (100-percent) / 100)  <span class="comment">// leworęczny (mirror)</span>
+
+  <span class="val">  0%</span> → <span class="range">173</span> (skrajnie prawo)
+  <span class="val"> 50%</span> → <span class="range">150</span> (centrum)
+  <span class="val">100%</span> → <span class="range">127</span> (skrajnie lewo)</div>
+
+<h3>Rotation (degrees → raw)</h3>
+<div class="formula-box"><span class="key">raw</span> = 150 + round(60 × degrees / 90)
+
+  <span class="val">-90°</span> → <span class="range"> 90</span> (pełno lewo)
+  <span class="val">-45°</span> → <span class="range">120</span>
+  <span class="val">  0°</span> → <span class="range">150</span> (prosto)
+  <span class="val"> 45°</span> → <span class="range">180</span>
+  <span class="val"> 90°</span> → <span class="range">210</span> (pełno prawo)</div>
+
+<h3>LEDs (spin indicator)</h3>
+<div class="formula-box"><span class="key">ratio</span> = |topMotor_raw - botMotor_raw| / 360
+
+ratio = 0        → <span class="val">0</span> (NoSpin)
+ratio &lt; 0.08     → <span class="val">1</span> (OneTop)
+ratio &lt; 0.17     → <span class="val">2</span> (OneBottom)
+ratio &lt; 0.225    → <span class="val">3</span> (TwoBottom)
+ratio &lt; 0.28     → <span class="val">4</span> (ThreeBottom)
+ratio &lt; 0.4      → <span class="val">5</span> (FourBottom)
+ratio &lt; 0.55     → <span class="val">6</span> (TwoTop)
+ratio &lt; 0.7      → <span class="val">7</span> (ThreeTop)
+ratio ≥ 0.7      → <span class="val">8</span> (FourTop)</div>
+
+<h3>Format komendy B/A</h3>
+<div class="formula-box"><span class="key">B</span><span class="val">{dirTop:1}</span><span class="val">{|topSpeed|:3}</span><span class="val">{dirBot:1}</span><span class="val">{|botSpeed|:3}</span><span class="val">{osc:3}</span><span class="val">{height:3}</span><span class="val">{rot:3}</span> <span class="val">{leds:1}</span>\r
+
+<span class="comment">dirTop/dirBot: 0 = forward, 1 = reverse</span>
+<span class="comment">topSpeed/botSpeed: 3 cyfry zero-padded (B-value po ×4.016)</span>
+<span class="comment">osc/height/rot: 3 cyfry zero-padded (raw values)</span>
+<span class="comment">leds: 1 cyfra 0-8 (spacja przed!)</span>
+
+<span class="comment">Przykład: B0663029700150142150 6\r</span>
+<span class="comment">         B|0|663|0|297|150|142|150| 6|</span>
+<span class="comment">          d top  d bot osc  h  rot led</span></div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════════ -->
+<div class="section" id="bugs">
+<h2>Bugi w oryginalnym kodzie Newgy</h2>
+
+<div class="note bug" style="margin-bottom:12px">
+  <strong>1. SpeedCAL zawsze zerowany</strong><br>
+  <code>BUSINESS_LOGIC_COMPLETE.md:503-510</code><br>
+  Wartość SpeedCAL jest odczytywana z config, a potem natychmiast ustawiana na 0. Nigdy nie jest dodawana do obliczeń prędkości — jedynie wysyłana przez komendę <code>Q</code>.
+</div>
+
+<div class="note bug" style="margin-bottom:12px">
+  <strong>2. Random ball — BottomMotorHigh sprawdzany 2×</strong><br>
+  <code>BUSINESS_LOGIC_COMPLETE.md:512-518</code><br>
+  W warunku clamping, BottomMotorHigh jest sprawdzany zamiast BottomMotorLow w drugiej gałęzi.
+</div>
+
+<div class="note bug" style="margin-bottom:12px">
+  <strong>3. Random ball P-command — zły kierunek</strong><br>
+  <code>BUSINESS_LOGIC_COMPLETE.md:519-524</code><br>
+  Kierunek (direction) dla BottomMotorLow w komendzie P bierze wartość z TopMotorLow zamiast BottomMotorLow.
+</div>
+
+<div class="note bug" style="margin-bottom:12px">
+  <strong>4. RobotBall.Equals ignoruje WaitTime</strong><br>
+  Dwie piłki z różnym WaitTime są traktowane jako identyczne — porównanie nie uwzględnia tego pola.
+</div>
+
+<h3>Różnice między platformami</h3>
+<table>
+<tr><th>Cecha</th><th>Android</th><th>iOS</th><th>Windows</th></tr>
+<tr><td>Terminator</td><td><code>\r</code></td><td><code>\r</code></td><td><code>\r\n</code></td></tr>
+<tr><td>Kalibracja osc step</td><td>±4</td><td>±4</td><td>±2</td></tr>
+<tr><td>BLE chunking</td><td>20 bytes</td><td>20 bytes</td><td>—</td></tr>
+<tr><td>USB baud init</td><td>0x5A (CR)</td><td>—</td><td>0x5A raw byte</td></tr>
+<tr><td>Async drills</td><td>BLE only</td><td>BLE only</td><td>Nie (USB)</td></tr>
+<tr><td>Config storage</td><td>SharedPreferences</td><td>NSUserDefaults + iCloud</td><td>Configuration.xml</td></tr>
+</table>
+</div>
+
+</div><!-- container -->
+
+<script>
+document.querySelectorAll('.tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'))
+    document.querySelectorAll('.section').forEach(s => s.classList.remove('active'))
+    tab.classList.add('active')
+    document.getElementById(tab.dataset.tab).classList.add('active')
+  })
+})
+</script>
+</body>
+</html>
