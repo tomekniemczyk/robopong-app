@@ -55,10 +55,12 @@ class Recorder:
                 [
                     "ffmpeg", "-y",
                     "-use_wallclock_as_timestamps", "1",
+                    "-f", "mjpeg",
                     "-i", MOTION_STREAM,
                     "-c:v", "libx264",
                     "-preset", "ultrafast",
                     "-crf", "18",
+                    "-vsync", "vfr",
                     "-t", "600",  # max 10 min safety
                     str(filepath),
                 ],
