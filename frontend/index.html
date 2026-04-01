@@ -615,7 +615,7 @@
       <div style="margin-top:16px;padding-top:14px;border-top:1px solid var(--border);display:flex;gap:8px">
         <button class="btn" style="flex:1;padding:12px;font-size:14px;font-weight:700;background:#6366f1;color:#fff"
           :disabled="!connected || myRole !== 'controller'" @click="wizStart">
-          🧙 {{ t('wizard.start') || 'Asystent kalibracji' }}
+          🧙 {{ t('wizard.start') }}
         </button>
         <button class="btn btn-success" style="flex:1;padding:12px;font-size:14px;font-weight:700"
           :disabled="!connected || myRole !== 'controller'" @click="calDone">
@@ -631,10 +631,10 @@
     <!-- Header + progress -->
     <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
       <div style="flex:1">
-        <div style="font-size:16px;font-weight:700">🧙 {{ t('wizard.title') || 'Kalibracja' }}</div>
+        <div style="font-size:16px;font-weight:700">🧙 {{ t('wizard.title') }}</div>
         <div style="font-size:12px;color:var(--muted)">
-          {{ t('wizard.step') || 'Krok' }} {{ wizPhase + 1 }}/3:
-          {{ wizPhase === 0 ? (t('wizard.phase_height') || 'Wysokość') : wizPhase === 1 ? (t('wizard.phase_osc') || 'Pozycja L/P') : (t('wizard.phase_speed') || 'Prędkość') }}
+          {{ t('wizard.step') }} {{ wizPhase + 1 }}/3:
+          {{ wizPhase === 0 ? (t('wizard.phase_height')) : wizPhase === 1 ? (t('wizard.phase_osc')) : (t('wizard.phase_speed')) }}
         </div>
       </div>
       <button class="btn btn-ghost" style="font-size:18px;padding:4px 10px" @click="wizCancel">✕</button>
@@ -687,50 +687,50 @@
 
     <!-- Status -->
     <div style="font-size:11px;color:var(--muted);text-align:center;margin-bottom:12px">
-      {{ t('wizard.throw_n') || 'Rzut' }} #{{ wizThrows }} ·
+      {{ t('wizard.throw_n') }} #{{ wizThrows }} ·
       {{ wizPhase === 0 ? 'H' : wizPhase === 1 ? 'Osc' : 'Speed' }}={{ cal[WIZARD_PHASES[wizPhase].key] }} ·
-      {{ t('wizard.step_size') || 'Krok' }}: {{ wizStep }}
+      {{ t('wizard.step_size') }}: {{ wizStep }}
     </div>
 
     <!-- Warmup countdown -->
     <div v-if="wizState === 'warmup'" style="text-align:center;padding:20px 0">
       <div style="font-size:48px;font-weight:800;color:#ff9f0a">{{ wizWarmup }}</div>
-      <div style="font-size:14px;color:var(--muted)">{{ t('wizard.warmup') || 'Rozgrzewka silników...' }}</div>
+      <div style="font-size:14px;color:var(--muted)">{{ t('wizard.warmup') }}</div>
     </div>
 
     <!-- Throw button -->
     <div v-if="wizState === 'ready'" style="text-align:center">
       <button class="btn btn-success" style="width:100%;padding:18px;font-size:18px;font-weight:700" @click="wizThrow">
-        🎯 {{ t('wizard.throw_btn') || 'RZUĆ PIŁKĘ' }}
+        🎯 {{ t('wizard.throw_btn') }}
       </button>
     </div>
 
     <!-- Feedback buttons -->
     <div v-if="wizState === 'waiting'" style="text-align:center">
-      <div style="font-size:14px;font-weight:600;margin-bottom:10px">{{ t('wizard.where') || 'Gdzie wylądowała piłka?' }}</div>
+      <div style="font-size:14px;font-weight:600;margin-bottom:10px">{{ t('wizard.where') }}</div>
 
       <!-- Phase 1: Height -->
       <div v-if="wizPhase === 0" style="display:flex;flex-direction:column;gap:8px">
-        <button class="btn" style="padding:16px;font-size:15px;background:#34c759;color:#fff" @click="wizFeedback(1)">↑ {{ t('wizard.too_short') || 'Za krótko (siatka)' }}</button>
-        <button class="btn" style="padding:16px;font-size:15px;background:var(--accent);color:#fff" @click="wizFeedback(0)">✓ {{ t('wizard.on_table') || 'Na stole!' }}</button>
-        <button class="btn" style="padding:16px;font-size:15px;background:#ef4444;color:#fff" @click="wizFeedback(-1)">↓ {{ t('wizard.too_far') || 'Za daleko (za stół)' }}</button>
-        <button class="btn btn-ghost" style="padding:10px;font-size:12px;color:var(--muted)" @click="wizFeedback('miss')">{{ t('wizard.missed') || 'Nie trafił w stół' }}</button>
+        <button class="btn" style="padding:16px;font-size:15px;background:#34c759;color:#fff" @click="wizFeedback(1)">↑ {{ t('wizard.too_short') }}</button>
+        <button class="btn" style="padding:16px;font-size:15px;background:var(--accent);color:#fff" @click="wizFeedback(0)">✓ {{ t('wizard.on_table') }}</button>
+        <button class="btn" style="padding:16px;font-size:15px;background:#ef4444;color:#fff" @click="wizFeedback(-1)">↓ {{ t('wizard.too_far') }}</button>
+        <button class="btn btn-ghost" style="padding:10px;font-size:12px;color:var(--muted)" @click="wizFeedback('miss')">{{ t('wizard.missed') }}</button>
       </div>
 
       <!-- Phase 2: Oscillation -->
       <div v-if="wizPhase === 1" style="display:flex;flex-direction:column;gap:8px">
-        <button class="btn" style="padding:16px;font-size:15px;background:#4dabf7;color:#fff" @click="wizFeedback(-1)">← {{ t('wizard.too_left') || 'Za lewo (BH)' }}</button>
-        <button class="btn" style="padding:16px;font-size:15px;background:var(--accent);color:#fff" @click="wizFeedback(0)">✓ {{ t('wizard.centered') || 'Centrum!' }}</button>
-        <button class="btn" style="padding:16px;font-size:15px;background:#ff6b35;color:#fff" @click="wizFeedback(1)">→ {{ t('wizard.too_right') || 'Za prawo (FH)' }}</button>
-        <button class="btn btn-ghost" style="padding:10px;font-size:12px;color:var(--muted)" @click="wizFeedback('miss')">{{ t('wizard.missed') || 'Nie trafił w stół' }}</button>
+        <button class="btn" style="padding:16px;font-size:15px;background:#4dabf7;color:#fff" @click="wizFeedback(-1)">← {{ t('wizard.too_left') }}</button>
+        <button class="btn" style="padding:16px;font-size:15px;background:var(--accent);color:#fff" @click="wizFeedback(0)">✓ {{ t('wizard.centered') }}</button>
+        <button class="btn" style="padding:16px;font-size:15px;background:#ff6b35;color:#fff" @click="wizFeedback(1)">→ {{ t('wizard.too_right') }}</button>
+        <button class="btn btn-ghost" style="padding:10px;font-size:12px;color:var(--muted)" @click="wizFeedback('miss')">{{ t('wizard.missed') }}</button>
       </div>
 
       <!-- Phase 3: Speed -->
       <div v-if="wizPhase === 2" style="display:flex;flex-direction:column;gap:8px">
-        <button class="btn" style="padding:16px;font-size:15px;background:#ef4444;color:#fff" @click="wizFeedback(-1)">↑ {{ t('wizard.too_fast') || 'Za szybko (leci za stół)' }}</button>
-        <button class="btn" style="padding:16px;font-size:15px;background:var(--accent);color:#fff" @click="wizFeedback(0)">✓ {{ t('wizard.good_speed') || 'Dobra prędkość!' }}</button>
-        <button class="btn" style="padding:16px;font-size:15px;background:#34c759;color:#fff" @click="wizFeedback(1)">↓ {{ t('wizard.too_slow') || 'Za wolno (pada)' }}</button>
-        <button class="btn btn-ghost" style="padding:10px;font-size:12px;color:var(--muted)" @click="wizFeedback('miss')">{{ t('wizard.missed') || 'Nie trafił w stół' }}</button>
+        <button class="btn" style="padding:16px;font-size:15px;background:#ef4444;color:#fff" @click="wizFeedback(-1)">↑ {{ t('wizard.too_fast') }}</button>
+        <button class="btn" style="padding:16px;font-size:15px;background:var(--accent);color:#fff" @click="wizFeedback(0)">✓ {{ t('wizard.good_speed') }}</button>
+        <button class="btn" style="padding:16px;font-size:15px;background:#34c759;color:#fff" @click="wizFeedback(1)">↓ {{ t('wizard.too_slow') }}</button>
+        <button class="btn btn-ghost" style="padding:10px;font-size:12px;color:var(--muted)" @click="wizFeedback('miss')">{{ t('wizard.missed') }}</button>
       </div>
     </div>
 
@@ -738,24 +738,24 @@
     <div v-if="wizState === 'phase_done'" style="text-align:center;padding:16px 0">
       <div style="font-size:32px;margin-bottom:8px">✅</div>
       <div style="font-size:16px;font-weight:700;margin-bottom:4px">
-        {{ wizPhase === 0 ? (t('wizard.phase_height') || 'Wysokość') : wizPhase === 1 ? (t('wizard.phase_osc') || 'Pozycja') : (t('wizard.phase_speed') || 'Prędkość') }}
-        {{ t('wizard.calibrated') || 'skalibrowana!' }}
+        {{ wizPhase === 0 ? (t('wizard.phase_height')) : wizPhase === 1 ? (t('wizard.phase_osc')) : (t('wizard.phase_speed')) }}
+        {{ t('wizard.calibrated') }}
       </div>
       <div style="font-size:13px;color:var(--muted);margin-bottom:16px">{{ cal[WIZARD_PHASES[wizPhase].key] }}</div>
       <button class="btn btn-success" style="width:100%;padding:14px;font-size:15px" @click="wizNextPhase">
-        {{ wizPhase < 2 ? (t('wizard.next_phase') || 'Następny krok →') : (t('wizard.finish') || 'Zakończ i zapisz') }}
+        {{ wizPhase < 2 ? (t('wizard.next_phase')) : (t('wizard.finish')) }}
       </button>
     </div>
 
     <!-- All complete -->
     <div v-if="wizState === 'complete'" style="text-align:center;padding:16px 0">
       <div style="font-size:48px;margin-bottom:8px">🎉</div>
-      <div style="font-size:18px;font-weight:700;margin-bottom:8px">{{ t('wizard.done') || 'Kalibracja zakończona!' }}</div>
+      <div style="font-size:18px;font-weight:700;margin-bottom:8px">{{ t('wizard.done') }}</div>
       <div style="font-size:12px;color:var(--muted);margin-bottom:16px">
-        H={{ cal.height }} · Osc={{ cal.oscillation }} · Speed={{ cal.top_speed }} · {{ wizThrows }} {{ t('wizard.throws') || 'rzutów' }}
+        H={{ cal.height }} · Osc={{ cal.oscillation }} · Speed={{ cal.top_speed }} · {{ wizThrows }} {{ t('wizard.throws') }}
       </div>
       <button class="btn btn-success" style="width:100%;padding:14px;font-size:15px" @click="wizFinish">
-        💾 {{ t('wizard.save') || 'Zapisz kalibrację' }}
+        💾 {{ t('wizard.save') }}
       </button>
     </div>
   </div>
