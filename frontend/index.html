@@ -2417,7 +2417,7 @@ const _app = createApp({
       clearInterval(exAnimTimer)
       exAnimTimer = setInterval(() => {
         exAnimFrame.value = (exAnimFrame.value + 1) % frames.length
-      }, 500)
+      }, 900)
     }
     function stopExAnim() {
       clearInterval(exAnimTimer)
