@@ -1740,6 +1740,7 @@
           <div class="stat-item"><div class="stat-value">{{ fmtDur(playerStats.avg_duration_sec) }}</div><div class="stat-label">{{ t('stats.avg') }}</div></div>
           <div class="stat-item"><div class="stat-value">{{ playerStats.current_streak }} <span style="font-size:10px;font-weight:400;color:var(--muted)">{{ t('stats.days') }}</span></div><div class="stat-label">{{ t('stats.streak') }}</div></div>
           <div class="stat-item"><div class="stat-value">{{ playerStats.longest_streak }} <span style="font-size:10px;font-weight:400;color:var(--muted)">{{ t('stats.days') }}</span></div><div class="stat-label">{{ t('stats.best_streak') }}</div></div>
+          <div class="stat-item"><div class="stat-value">{{ playerStats.total_balls || 0 }}</div><div class="stat-label">{{ t('stats.total_balls') }}</div></div>
         </div>
         <!-- Activity chart -->
         <div style="cursor:pointer;font-size:11px;color:var(--muted);margin-bottom:4px" @click="showActivity=!showActivity">
@@ -1888,6 +1889,192 @@
           </div>
         </div>
       </div>
+    </div>
+  </div>
+
+  <!-- ── Historia ────────────────────────────────────────────────────── -->
+  <div class="page" v-show="page === 'history'">
+    <div class="card">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
+        <h2 style="flex:1">📊 {{ t('nav.history') }}</h2>
+      </div>
+      <!-- Player selector -->
+      <div style="display:flex;gap:8px;margin-bottom:12px;align-items:center">
+        <select v-model="historyPlayerId" @change="loadAllHistory()" style="flex:1;background:var(--surface);color:var(--text);border:1px solid var(--border);border-radius:8px;padding:6px 8px;font-size:12px">
+          <option :value="null">{{ t('history.all_players') }}</option>
+          <option v-for="p in playersList" :key="p.id" :value="p.id">{{ p.name }}</option>
+        </select>
+      </div>
+
+      <!-- Leaderboard (when all players) -->
+      <div v-if="historyPlayerId === null && leaderboard.length" style="margin-bottom:14px">
+        <div style="font-size:13px;font-weight:600;margin-bottom:8px">{{ t('leaderboard.title') }}</div>
+        <table style="width:100%;font-size:11px;border-collapse:collapse">
+          <thead>
+            <tr style="border-bottom:1px solid var(--border);color:var(--muted);font-size:10px">
+              <th style="text-align:left;padding:4px 6px;cursor:pointer" @click="historySort='player'">{{ t('leaderboard.player') }}</th>
+              <th style="text-align:right;padding:4px 6px;cursor:pointer" @click="historySort='sessions'">{{ t('leaderboard.sessions') }}</th>
+              <th style="text-align:right;padding:4px 6px;cursor:pointer" @click="historySort='time'">{{ t('leaderboard.time') }}</th>
+              <th style="text-align:right;padding:4px 6px;cursor:pointer" @click="historySort='balls'">{{ t('leaderboard.balls') }}</th>
+              <th style="text-align:right;padding:4px 6px;cursor:pointer" @click="historySort='completion'">%</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="r in leaderboard" :key="r.player.id" style="border-bottom:1px solid rgba(255,255,255,.03);cursor:pointer" @click="historyPlayerId = r.player.id; loadAllHistory()">
+              <td style="padding:5px 6px;font-weight:500">{{ r.player.name }}</td>
+              <td style="padding:5px 6px;text-align:right">{{ r.sessions }}</td>
+              <td style="padding:5px 6px;text-align:right">{{ fmtDur(r.time_sec) }}</td>
+              <td style="padding:5px 6px;text-align:right">{{ r.balls }}</td>
+              <td style="padding:5px 6px;text-align:right">{{ r.completion }}%</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Tree: Treningi -->
+      <div v-if="historyTree.trainings.length" style="margin-bottom:8px">
+        <div style="font-size:13px;font-weight:600;padding:6px 0;cursor:pointer;display:flex;align-items:center;gap:6px" @click="toggleHistNode('t')">
+          <span style="font-size:10px">{{ historyExpanded.has('t') ? '▼' : '▶' }}</span>
+          {{ t('history.trainings') }} <span style="font-weight:400;color:var(--muted);font-size:11px">({{ historyTree.trainingCount }})</span>
+        </div>
+        <div v-if="historyExpanded.has('t')" style="padding-left:12px">
+          <div v-for="folder in historyTree.trainings" :key="'tf-'+folder.name">
+            <div style="font-size:12px;padding:4px 0;cursor:pointer;display:flex;align-items:center;gap:5px" @click="toggleHistNode('tf-'+folder.name)">
+              <span style="font-size:9px">{{ historyExpanded.has('tf-'+folder.name) ? '▼' : '▶' }}</span>
+              📁 {{ folder.name }} <span style="color:var(--muted);font-size:10px">({{ folder.count }})</span>
+            </div>
+            <div v-if="historyExpanded.has('tf-'+folder.name)" style="padding-left:14px">
+              <div v-for="tr in folder.trainings" :key="'tt-'+tr.id">
+                <div style="font-size:11px;padding:3px 0;cursor:pointer;display:flex;align-items:center;gap:5px" @click="toggleHistNode('tt-'+tr.id)">
+                  <span style="font-size:9px">{{ historyExpanded.has('tt-'+tr.id) ? '▼' : '▶' }}</span>
+                  {{ tr.name }} <span style="color:var(--muted);font-size:10px">({{ tr.entries.length }})</span>
+                </div>
+                <div v-if="historyExpanded.has('tt-'+tr.id)" style="padding-left:14px">
+                  <div v-for="e in tr.entries" :key="e.id" style="margin-bottom:2px">
+                    <!-- Entry header: Player (date range) REC status time balls -->
+                    <div style="font-size:11px;padding:4px 0;cursor:pointer;display:flex;align-items:center;gap:5px;flex-wrap:wrap" @click="toggleHistNode('he-'+e.id)">
+                      <span style="font-size:9px">{{ historyExpanded.has('he-'+e.id) ? '▼' : '▶' }}</span>
+                      <span v-if="historyPlayerId === null" style="font-weight:500">{{ getPlayerName(e.player_id) }}</span>
+                      <span style="color:var(--muted);font-size:10px">({{ histDateRange(e) }})</span>
+                      <span v-if="histHasRec(e)" style="display:inline-flex;align-items:center;gap:2px;font-size:9px;color:#ff3b30;font-weight:700"><span style="width:6px;height:6px;border-radius:50%;background:#ff3b30;animation:recBlink 1s infinite"></span>REC</span>
+                      <span>{{ e.status === 'completed' ? '✅' : e.status === 'stopped' ? '⏹' : '❌' }}</span>
+                      <button v-if="e.status === 'stopped'" class="btn btn-ghost" style="font-size:9px;padding:1px 5px;background:rgba(255,159,10,.15)" :title="t('tooltip.resume')" @click.stop="resumeFromHistory(e)">⏩</button>
+                      <span style="font-size:10px" :title="t('stats.total_time')">⏱{{ fmtDur(e.elapsed_sec) }}</span>
+                      <span v-if="e.total_balls" style="font-size:10px" :title="t('stats.total_balls')">🏓{{ e.total_balls }}</span>
+                    </div>
+                    <!-- Expanded: training steps with recording controls -->
+                    <div v-if="historyExpanded.has('he-'+e.id) && getTrainingSteps(e.training_id)" style="padding:4px 0 6px 20px;background:rgba(255,255,255,.02);border-radius:6px;margin:2px 0">
+                      <div v-for="(step, si) in getTrainingSteps(e.training_id)" :key="si" style="display:flex;align-items:center;gap:5px;padding:2px 0;font-size:10px;border-bottom:1px solid rgba(255,255,255,.02)">
+                        <span style="width:14px;text-align:center;flex-shrink:0" :style="{color: si < e.steps_completed ? '#34c759' : 'var(--muted)'}">{{ si < e.steps_completed ? '✓' : '○' }}</span>
+                        <span style="flex:1">{{ step.exercise_id ? '🏋 ' + (step.exercise_name || '') : (step.drill_name || 'Drill') }}
+                          <span v-if="!step.exercise_id" style="color:var(--muted)">({{ step.count }}p)</span>
+                          <span v-if="step.exercise_id" style="color:var(--muted)">({{ fmtDur(step.duration_sec) }})</span>
+                        </span>
+                        <template v-if="histGetStepRec(e, si)">
+                          <button class="btn btn-ghost" style="font-size:9px;padding:1px 4px;color:#ff3b30" :title="t('tooltip.play')"
+                            @click.stop="histPlayRec = histPlayRec === histGetStepRec(e, si).filename ? null : histGetStepRec(e, si).filename">
+                            {{ histPlayRec === histGetStepRec(e, si)?.filename ? '⏹' : '🎥▶' }}
+                          </button>
+                          <a :href="'/api/recordings/' + histGetStepRec(e, si).filename" :download="histGetStepRec(e, si).filename.replace('/', '_')" class="btn btn-ghost" style="font-size:9px;padding:1px 4px" :title="t('tooltip.download')" @click.stop>⬇</a>
+                          <button class="btn btn-ghost" style="font-size:9px;padding:1px 4px" :title="t('tooltip.compare')" @click.stop="openVideoCompare(histGetStepRec(e, si))">🔀</button>
+                        </template>
+                      </div>
+                      <video v-if="histPlayRec" :src="'/api/recordings/' + histPlayRec" controls autoplay style="width:100%;margin:4px 0;border-radius:6px;max-height:200px"></video>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tree: Drille -->
+      <div v-if="historyTree.drills.length" style="margin-bottom:8px">
+        <div style="font-size:13px;font-weight:600;padding:6px 0;cursor:pointer;display:flex;align-items:center;gap:6px" @click="toggleHistNode('d')">
+          <span style="font-size:10px">{{ historyExpanded.has('d') ? '▼' : '▶' }}</span>
+          {{ t('history.drills') }} <span style="font-weight:400;color:var(--muted);font-size:11px">({{ historyTree.drillCount }})</span>
+        </div>
+        <div v-if="historyExpanded.has('d')" style="padding-left:12px">
+          <div v-for="folder in historyTree.drills" :key="'df-'+folder.name">
+            <div style="font-size:12px;padding:4px 0;cursor:pointer;display:flex;align-items:center;gap:5px" @click="toggleHistNode('df-'+folder.name)">
+              <span style="font-size:9px">{{ historyExpanded.has('df-'+folder.name) ? '▼' : '▶' }}</span>
+              📁 {{ folder.name }} <span style="color:var(--muted);font-size:10px">({{ folder.count }})</span>
+            </div>
+            <div v-if="historyExpanded.has('df-'+folder.name)" style="padding-left:14px">
+              <div v-for="dr in folder.drills" :key="'dd-'+dr.id">
+                <div style="font-size:11px;padding:3px 0;cursor:pointer;display:flex;align-items:center;gap:5px" @click="toggleHistNode('dd-'+dr.id)">
+                  <span style="font-size:9px">{{ historyExpanded.has('dd-'+dr.id) ? '▼' : '▶' }}</span>
+                  {{ dr.name }} <span style="color:var(--muted);font-size:10px">({{ dr.entries.length }})</span>
+                </div>
+                <div v-if="historyExpanded.has('dd-'+dr.id)" style="padding-left:14px">
+                  <div v-for="e in dr.entries" :key="e.id" style="font-size:11px;padding:4px 0;border-bottom:1px solid rgba(255,255,255,.02);display:flex;align-items:center;gap:5px;flex-wrap:wrap">
+                    <span v-if="historyPlayerId === null" style="font-weight:500">{{ getPlayerName(e.player_id) }}</span>
+                    <span style="color:var(--muted);font-size:10px">({{ histDateRange(e) }})</span>
+                    <span>{{ e.status === 'completed' ? '✅' : '⏹' }}</span>
+                    <span style="font-size:10px">⏱{{ fmtDur(e.elapsed_sec) }}</span>
+                    <span v-if="e.total_balls" style="font-size:10px">🏓{{ e.total_balls }}</span>
+                    <template v-if="histGetStepRec(e, 0)">
+                      <span v-if="histHasRec(e)" style="display:inline-flex;align-items:center;gap:2px;font-size:9px;color:#ff3b30;font-weight:700"><span style="width:6px;height:6px;border-radius:50%;background:#ff3b30;animation:recBlink 1s infinite"></span>REC</span>
+                      <button class="btn btn-ghost" style="font-size:9px;padding:1px 4px;color:#ff3b30" :title="t('tooltip.play')"
+                        @click.stop="histPlayRec = histPlayRec === histGetStepRec(e, 0).filename ? null : histGetStepRec(e, 0).filename">
+                        {{ histPlayRec === histGetStepRec(e, 0)?.filename ? '⏹' : '🎥▶' }}
+                      </button>
+                      <a :href="'/api/recordings/' + histGetStepRec(e, 0).filename" :download="histGetStepRec(e, 0).filename.replace('/', '_')" class="btn btn-ghost" style="font-size:9px;padding:1px 4px" :title="t('tooltip.download')" @click.stop>⬇</a>
+                      <button class="btn btn-ghost" style="font-size:9px;padding:1px 4px" :title="t('tooltip.compare')" @click.stop="openVideoCompare(histGetStepRec(e, 0))">🔀</button>
+                    </template>
+                  </div>
+                  <video v-if="histPlayRec" :src="'/api/recordings/' + histPlayRec" controls autoplay style="width:100%;margin:2px 0 6px;border-radius:6px;max-height:200px"></video>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tree: Cwiczenia -->
+      <div v-if="historyTree.exercises.length" style="margin-bottom:8px">
+        <div style="font-size:13px;font-weight:600;padding:6px 0;cursor:pointer;display:flex;align-items:center;gap:6px" @click="toggleHistNode('e')">
+          <span style="font-size:10px">{{ historyExpanded.has('e') ? '▼' : '▶' }}</span>
+          {{ t('history.exercises') }} <span style="font-weight:400;color:var(--muted);font-size:11px">({{ historyTree.exerciseCount }})</span>
+        </div>
+        <div v-if="historyExpanded.has('e')" style="padding-left:12px">
+          <div v-for="cat in historyTree.exercises" :key="'ec-'+cat.name">
+            <div style="font-size:12px;padding:4px 0;cursor:pointer;display:flex;align-items:center;gap:5px" @click="toggleHistNode('ec-'+cat.name)">
+              <span style="font-size:9px">{{ historyExpanded.has('ec-'+cat.name) ? '▼' : '▶' }}</span>
+              {{ cat.icon }} {{ cat.name }} <span style="color:var(--muted);font-size:10px">({{ cat.count }})</span>
+            </div>
+            <div v-if="historyExpanded.has('ec-'+cat.name)" style="padding-left:14px">
+              <div v-for="ex in cat.exercises" :key="'ee-'+ex.id">
+                <div style="font-size:11px;padding:3px 0;cursor:pointer;display:flex;align-items:center;gap:5px" @click="toggleHistNode('ee-'+ex.id)">
+                  <span style="font-size:9px">{{ historyExpanded.has('ee-'+ex.id) ? '▼' : '▶' }}</span>
+                  🏋 {{ ex.name }} <span style="color:var(--muted);font-size:10px">({{ ex.entries.length }})</span>
+                </div>
+                <div v-if="historyExpanded.has('ee-'+ex.id)" style="padding-left:14px">
+                  <div v-for="e in ex.entries" :key="e.id" style="font-size:11px;padding:4px 0;border-bottom:1px solid rgba(255,255,255,.02);display:flex;align-items:center;gap:5px;flex-wrap:wrap">
+                    <span v-if="historyPlayerId === null" style="font-weight:500">{{ getPlayerName(e.player_id) }}</span>
+                    <span style="color:var(--muted);font-size:10px">({{ histDateRange(e) }})</span>
+                    <span>{{ e.status === 'completed' ? '✅' : '⏹' }}</span>
+                    <span style="font-size:10px">⏱{{ fmtDur(e.elapsed_sec) }}</span>
+                    <template v-if="histGetStepRec(e, 0)">
+                      <span style="display:inline-flex;align-items:center;gap:2px;font-size:9px;color:#ff3b30;font-weight:700"><span style="width:6px;height:6px;border-radius:50%;background:#ff3b30;animation:recBlink 1s infinite"></span>REC</span>
+                      <button class="btn btn-ghost" style="font-size:9px;padding:1px 4px;color:#ff3b30" :title="t('tooltip.play')"
+                        @click.stop="histPlayRec = histPlayRec === histGetStepRec(e, 0).filename ? null : histGetStepRec(e, 0).filename">
+                        {{ histPlayRec === histGetStepRec(e, 0)?.filename ? '⏹' : '🎥▶' }}
+                      </button>
+                      <a :href="'/api/recordings/' + histGetStepRec(e, 0).filename" :download="histGetStepRec(e, 0).filename.replace('/', '_')" class="btn btn-ghost" style="font-size:9px;padding:1px 4px" :title="t('tooltip.download')" @click.stop>⬇</a>
+                      <button class="btn btn-ghost" style="font-size:9px;padding:1px 4px" :title="t('tooltip.compare')" @click.stop="openVideoCompare(histGetStepRec(e, 0))">🔀</button>
+                    </template>
+                  </div>
+                  <video v-if="histPlayRec" :src="'/api/recordings/' + histPlayRec" controls autoplay style="width:100%;margin:2px 0 6px;border-radius:6px;max-height:200px"></video>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div v-if="!allHistory.length" style="color:var(--muted);font-size:12px;text-align:center;padding:20px 0">{{ t('history.no_data') }}</div>
     </div>
   </div>
 
@@ -3762,6 +3949,128 @@ const _app = createApp({
       )
     }
 
+    // ── Historia tab ─────────────────────────────────────────────
+    const historyPlayerId = ref(null)
+    const allHistory = ref([])
+    const allRecordings = ref([])
+    const historyExpanded = reactive(new Set())
+    const historySort = ref('sessions')
+
+    async function loadAllHistory() {
+      const pid = historyPlayerId.value
+      const [hRes, rRes] = await Promise.all([
+        fetch(pid ? `/api/training-history?player_id=${pid}` : '/api/training-history'),
+        fetch(pid ? `/api/recordings?player_id=${pid}` : '/api/recordings'),
+      ])
+      allHistory.value = await hRes.json()
+      allRecordings.value = await rRes.json()
+    }
+
+    const histPlayRec = ref(null)
+
+    function toggleHistNode(key) {
+      if (historyExpanded.has(key)) historyExpanded.delete(key)
+      else historyExpanded.add(key)
+    }
+
+    function histDateRange(e) {
+      const s = new Date(e.started_at)
+      const end = new Date(s.getTime() + e.elapsed_sec * 1000)
+      const d = s.toLocaleDateString(undefined, {day:'2-digit', month:'short', year:'numeric'})
+      const t1 = s.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'})
+      const t2 = end.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'})
+      return `${d} ${t1} - ${t2}`
+    }
+
+    function histGetStepRec(h, stepIdx) {
+      const hStart = new Date(h.started_at).getTime()
+      const hEnd = hStart + (h.elapsed_sec + 60) * 1000
+      return allRecordings.value.find(r => {
+        const rStart = new Date(r.started_at).getTime()
+        return r.player_id === h.player_id && r.step_idx === stepIdx && rStart >= hStart && rStart <= hEnd
+      })
+    }
+
+    function histHasRec(h) {
+      const hStart = new Date(h.started_at).getTime()
+      const hEnd = hStart + (h.elapsed_sec + 60) * 1000
+      return allRecordings.value.some(r => {
+        const rStart = new Date(r.started_at).getTime()
+        return r.player_id === h.player_id && rStart >= hStart && rStart <= hEnd
+      })
+    }
+
+    const historyTree = computed(() => {
+      const hist = allHistory.value
+      // === TRENINGI: group by folder → training ===
+      const trainingEntries = hist.filter(h => h.training_id && !h.solo_drill_id && !h.solo_exercise_id)
+      const trainingFolderMap = {}
+      for (const tr of trainings.value) {
+        const folder = tr.folder || tr.readonly ? (tr.folder || 'Default') : 'Custom'
+        if (!trainingFolderMap[folder]) trainingFolderMap[folder] = []
+        const entries = trainingEntries.filter(h => h.training_id === tr.id).sort((a, b) => b.started_at.localeCompare(a.started_at))
+        if (entries.length) trainingFolderMap[folder].push({ id: tr.id, name: tr.name, entries })
+      }
+      const trainingFolders = Object.entries(trainingFolderMap).map(([name, trs]) => ({
+        name, trainings: trs, count: trs.reduce((s, t) => s + t.entries.length, 0)
+      })).filter(f => f.count > 0)
+
+      // === DRILLE: group by folder → drill ===
+      const drillEntries = hist.filter(h => h.solo_drill_id)
+      const drillFolderArr = []
+      for (const folder of (drillTree.folders || [])) {
+        const drillArr = []
+        for (const dr of folder.drills) {
+          const entries = drillEntries.filter(h => h.solo_drill_id === dr.id).sort((a, b) => b.started_at.localeCompare(a.started_at))
+          if (entries.length) drillArr.push({ id: dr.id, name: dr.name, entries })
+        }
+        if (drillArr.length) drillFolderArr.push({ name: folder.name, drills: drillArr, count: drillArr.reduce((s, d) => s + d.entries.length, 0) })
+      }
+
+      // === CWICZENIA: group by category → exercise ===
+      const exEntries = hist.filter(h => h.solo_exercise_id)
+      const exCatArr = []
+      for (const cat of (exerciseCategories.value || [])) {
+        const exArr = []
+        for (const ex of cat.exercises) {
+          const entries = exEntries.filter(h => h.solo_exercise_id === ex.id).sort((a, b) => b.started_at.localeCompare(a.started_at))
+          if (entries.length) exArr.push({ id: ex.id, name: ex.name, entries })
+        }
+        if (exArr.length) exCatArr.push({ name: cat.name, icon: cat.icon || '', exercises: exArr, count: exArr.reduce((s, e) => s + e.entries.length, 0) })
+      }
+
+      return {
+        trainings: trainingFolders,
+        trainingCount: trainingEntries.length,
+        drills: drillFolderArr,
+        drillCount: drillEntries.length,
+        exercises: exCatArr,
+        exerciseCount: exEntries.length,
+      }
+    })
+
+    const leaderboard = computed(() => {
+      const rows = playersList.value.map(p => {
+        const runs = allHistory.value.filter(h => h.player_id === p.id)
+        const completed = runs.filter(h => h.status === 'completed').length
+        return {
+          player: p,
+          sessions: runs.length,
+          completed,
+          time_sec: runs.reduce((s, h) => s + h.elapsed_sec, 0),
+          balls: runs.reduce((s, h) => s + (h.total_balls || 0), 0),
+          completion: runs.length ? Math.round(completed / runs.length * 100) : 0,
+        }
+      }).filter(r => r.sessions > 0)
+      const key = historySort.value
+      if (key === 'player') rows.sort((a, b) => a.player.name.localeCompare(b.player.name))
+      else if (key === 'sessions') rows.sort((a, b) => b.sessions - a.sessions)
+      else if (key === 'time') rows.sort((a, b) => b.time_sec - a.time_sec)
+      else if (key === 'balls') rows.sort((a, b) => b.balls - a.balls)
+      else if (key === 'completion') rows.sort((a, b) => b.completion - a.completion)
+      return rows
+    })
+
     // ── Calibration ────────────────────────────────────────────
     const CAL_DEFAULTS = { top_speed: 161, bot_speed: 0, oscillation: 150, height: 183, rotation: 150, wait_ms: 1000 }
     async function loadCal() {
@@ -4456,6 +4765,9 @@ const _app = createApp({
       addPlayer, renamePlayer, deletePlayer, openPlayerDetail, playerRunCount, playerProgram30,
       deleteRecording, loadPlayers, loadTrainingHistory, trainingHistory,
       exerciseCategories, openExCats, selectedExercise, toggleExCat, loadExercises, onStepTypeSelect, getExFrameSrc, exAnimFrame,
+      // Historia tab
+      historyPlayerId, allHistory, allRecordings, historyExpanded, historySort,
+      loadAllHistory, toggleHistNode, histHasRec, histGetStepRec, histPlayRec, histDateRange, historyTree, leaderboard,
     }
   }
 })

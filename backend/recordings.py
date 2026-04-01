@@ -112,17 +112,23 @@ class Recorder:
 
         if self._current_file and self._current_file.exists():
             duration = (datetime.now() - self._start_time).total_seconds() if self._start_time else 0
-            self._current_meta["duration_sec"] = int(duration)
-            self._current_meta["size_bytes"] = self._current_file.stat().st_size
-            meta = self._current_meta
+            if duration < 3:
+                logger.info("Recording discarded (%.1fs < 3s): %s", duration, self._current_file)
+                self._current_file.unlink(missing_ok=True)
+                log = self._current_file.with_suffix(".log")
+                log.unlink(missing_ok=True)
+            else:
+                self._current_meta["duration_sec"] = int(duration)
+                self._current_meta["size_bytes"] = self._current_file.stat().st_size
+                meta = self._current_meta
 
-            db.save_recording_meta(
-                meta["player_id"], meta["training_id"], meta["training_name"],
-                meta["step_idx"], meta["step_name"], meta["filename"],
-                meta["duration_sec"], meta["size_bytes"],
-                drill_id=meta.get("drill_id"), exercise_id=meta.get("exercise_id"),
-            )
-            logger.info("Recording saved: %s (%.0fs)", self._current_file, duration)
+                db.save_recording_meta(
+                    meta["player_id"], meta["training_id"], meta["training_name"],
+                    meta["step_idx"], meta["step_name"], meta["filename"],
+                    meta["duration_sec"], meta["size_bytes"],
+                    drill_id=meta.get("drill_id"), exercise_id=meta.get("exercise_id"),
+                )
+                logger.info("Recording saved: %s (%.0fs)", self._current_file, duration)
         else:
             logger.warning("Recording file not found after stop")
 

@@ -737,6 +737,9 @@ def delete_drill_endpoint(drill_id: int):
     d = drills.get_drill(drill_id)
     if d and d.get("readonly"):
         raise HTTPException(403, "Cannot delete readonly drill")
+    refs = training.get_trainings_referencing_drill(drill_id)
+    if refs:
+        raise HTTPException(409, f"Drill używany w treningach: {', '.join(refs)}")
     drills.delete_custom_drill(drill_id)
 
 

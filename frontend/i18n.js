@@ -501,6 +501,37 @@ window.I18N = {
   'btn.delete_no_download':   { pl:'Usuń bez pobierania',     en:'Delete without download',de:'Löschen ohne Download',   fr:'Supprimer sans télécharger',zh:'不下载直接删除' },
   'confirm.recordings_info':  { pl:'{count} nagrań ({size})', en:'{count} recordings ({size})', de:'{count} Aufnahmen ({size})', fr:'{count} enregistrements ({size})', zh:'{count} 个录像 ({size})' },
 
+  // ── Tooltips ──────────────────────────────────────────────────────
+  'tooltip.play':        { pl:'Odtwórz nagranie',  en:'Play recording',     de:'Aufnahme abspielen',    fr:'Lire l\'enregistrement',  zh:'播放录像' },
+  'tooltip.download':    { pl:'Pobierz nagranie',  en:'Download recording', de:'Aufnahme herunterladen',fr:'Télécharger',             zh:'下载录像' },
+  'tooltip.compare':     { pl:'Porównaj nagranie', en:'Compare recording',  de:'Aufnahme vergleichen',  fr:'Comparer',                zh:'比较录像' },
+  'tooltip.delete_rec':  { pl:'Usuń nagranie',     en:'Delete recording',   de:'Aufnahme löschen',      fr:'Supprimer l\'enregistrement', zh:'删除录像' },
+  'tooltip.delete_session':{ pl:'Usuń sesję',      en:'Delete session',     de:'Sitzung löschen',       fr:'Supprimer la session',    zh:'删除会话' },
+  'tooltip.resume':      { pl:'Wznów trening',     en:'Resume training',    de:'Training fortsetzen',   fr:'Reprendre',               zh:'恢复训练' },
+
+  // ── History tab ───────────────────────────────────────────────────
+  'nav.history':         { pl:'Historia',           en:'History',            de:'Verlauf',               fr:'Historique',              zh:'历史' },
+  'history.trainings':   { pl:'Treningi',           en:'Trainings',          de:'Trainings',             fr:'Entraînements',           zh:'训练' },
+  'history.drills':      { pl:'Drille',             en:'Drills',             de:'Drills',                fr:'Lancers',                 zh:'训练方案' },
+  'history.exercises':   { pl:'Ćwiczenia',          en:'Exercises',          de:'Übungen',               fr:'Exercices',               zh:'体能训练' },
+  'history.all_players': { pl:'Wszyscy',            en:'All players',        de:'Alle Spieler',          fr:'Tous les joueurs',        zh:'所有球员' },
+  'history.balls':       { pl:'piłek',              en:'balls',              de:'Bälle',                 fr:'balles',                  zh:'球' },
+  'history.no_data':     { pl:'Brak danych',        en:'No data',            de:'Keine Daten',           fr:'Aucune donnée',           zh:'无数据' },
+
+  // ── Stats extras ──────────────────────────────────────────────────
+  'stats.total_balls':   { pl:'Piłki',              en:'Balls',              de:'Bälle',                 fr:'Balles',                  zh:'球数' },
+
+  // ── Leaderboard ───────────────────────────────────────────────────
+  'leaderboard.title':    { pl:'Ranking',            en:'Leaderboard',        de:'Rangliste',             fr:'Classement',              zh:'排行榜' },
+  'leaderboard.player':   { pl:'Gracz',              en:'Player',             de:'Spieler',               fr:'Joueur',                  zh:'球员' },
+  'leaderboard.sessions': { pl:'Sesje',              en:'Sessions',           de:'Sitzungen',             fr:'Sessions',                zh:'次数' },
+  'leaderboard.time':     { pl:'Czas',               en:'Time',               de:'Zeit',                  fr:'Temps',                   zh:'时间' },
+  'leaderboard.balls':    { pl:'Piłki',              en:'Balls',              de:'Bälle',                 fr:'Balles',                  zh:'球数' },
+  'leaderboard.completion':{ pl:'Ukończone',         en:'Completed',          de:'Abgeschlossen',         fr:'Terminées',               zh:'完成率' },
+
+  // ── Reference protection ──────────────────────────────────────────
+  'drill.referenced':    { pl:'Drill używany w treningach: {names}', en:'Drill used in trainings: {names}', de:'Drill in Trainings verwendet: {names}', fr:'Drill utilisé dans: {names}', zh:'训练方案被引用: {names}' },
+
   // ── Favorites ──────────────────────────────────────────────────────
   'favorites.title':       { pl:'Ulubione',        en:'Favorites',        de:'Favoriten',        fr:'Favoris',          zh:'收藏' },
   'favorites.add':         { pl:'Dodaj do ulubionych', en:'Add to favorites', de:'Zu Favoriten',  fr:'Ajouter aux favoris', zh:'添加收藏' },

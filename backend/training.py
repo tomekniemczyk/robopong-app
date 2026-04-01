@@ -77,6 +77,16 @@ def delete_training(training_id: int):
     db.delete_user_training(training_id)
 
 
+def get_trainings_referencing_drill(drill_id: int) -> list[str]:
+    return [t["name"] for t in get_trainings()
+            if any(s.get("drill_id") == drill_id for s in t.get("steps", []))]
+
+
+def get_trainings_referencing_exercise(exercise_id) -> list[str]:
+    return [t["name"] for t in get_trainings()
+            if any(s.get("exercise_id") == exercise_id for s in t.get("steps", []))]
+
+
 # ── History ──────────────────────────────────────────────────────────────────
 
 def record_run(training_id, player_id: int | None, elapsed_sec: int,
@@ -84,10 +94,12 @@ def record_run(training_id, player_id: int | None, elapsed_sec: int,
                steps_skipped: list[int] | None = None,
                step_notes: list[dict] | None = None,
                solo_drill_id: int | None = None,
-               solo_exercise_id: int | None = None) -> int:
+               solo_exercise_id: int | None = None,
+               total_balls: int | None = None) -> int:
     return db.record_training_run(training_id, player_id, elapsed_sec, status,
                                   steps_completed, steps_total, steps_skipped, step_notes,
-                                  solo_drill_id=solo_drill_id, solo_exercise_id=solo_exercise_id)
+                                  solo_drill_id=solo_drill_id, solo_exercise_id=solo_exercise_id,
+                                  total_balls=total_balls)
 
 
 def get_history(training_id: int | None = None, player_id: int | None = None,
@@ -354,32 +366,38 @@ class TrainingRunner:
             # ── Done ─────────────────────────────────────────────
             elapsed_sec = int(time.monotonic() - start_time)
             audio.play("training_complete")
+            total_balls = self._count_balls(steps)
             history_id = record_run(
                 scenario.get("id"), self._player_id, elapsed_sec,
                 "completed", self._steps_completed, total_steps,
                 self._steps_skipped, self._step_notes,
                 solo_drill_id=self._solo_drill_id, solo_exercise_id=self._solo_exercise_id,
+                total_balls=total_balls,
             )
             broadcast("training_ended", {"elapsed_sec": elapsed_sec, "history_id": history_id})
 
         except asyncio.CancelledError:
             elapsed_sec = int(time.monotonic() - start_time)
+            total_balls = self._count_balls(steps)
             history_id = record_run(
                 scenario.get("id"), self._player_id, elapsed_sec,
                 "stopped", self._steps_completed, total_steps,
                 self._steps_skipped, self._step_notes,
                 solo_drill_id=self._solo_drill_id, solo_exercise_id=self._solo_exercise_id,
+                total_balls=total_balls,
             )
             broadcast("training_ended", {"elapsed_sec": elapsed_sec, "history_id": history_id, "status": "stopped"})
         except Exception as e:
             logger.error("Training runner error: %s", e)
             elapsed_sec = int(time.monotonic() - start_time)
             broadcast("training_ended", {"error": str(e)})
+            total_balls = self._count_balls(steps)
             record_run(
                 scenario.get("id"), self._player_id, elapsed_sec,
                 "error", self._steps_completed, total_steps,
                 self._steps_skipped, self._step_notes,
                 solo_drill_id=self._solo_drill_id, solo_exercise_id=self._solo_exercise_id,
+                total_balls=total_balls,
             )
         finally:
             self._stop_recording()
@@ -447,6 +465,17 @@ class TrainingRunner:
                 if sec <= 3:
                     audio.play("beep_high")
                 await asyncio.sleep(1)
+
+    def _count_balls(self, steps: list) -> int:
+        total = 0
+        for i, step in enumerate(steps):
+            if i >= self._steps_completed:
+                break
+            if i in self._steps_skipped:
+                continue
+            if not step.get("exercise_id"):
+                total += step.get("count", 60)
+        return total
 
     def _resolve_drill(self, step: dict) -> dict | None:
         drill_id = step.get("drill_id")

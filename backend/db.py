@@ -163,6 +163,8 @@ def _migrate(c):
         c.execute("ALTER TABLE training_history ADD COLUMN solo_drill_id INTEGER")
     if "solo_exercise_id" not in cols:
         c.execute("ALTER TABLE training_history ADD COLUMN solo_exercise_id INTEGER")
+    if "total_balls" not in cols:
+        c.execute("ALTER TABLE training_history ADD COLUMN total_balls INTEGER")
     rec_cols = {r[1] for r in c.execute("PRAGMA table_info(recordings_meta)").fetchall()}
     if "drill_id" not in rec_cols:
         c.execute("ALTER TABLE recordings_meta ADD COLUMN drill_id INTEGER")
@@ -435,15 +437,16 @@ def delete_user_training(tid: int):
 
 def record_training_run(training_id, player_id, elapsed_sec, status,
                         steps_completed, steps_total, steps_skipped=None, step_notes=None,
-                        solo_drill_id=None, solo_exercise_id=None) -> int:
+                        solo_drill_id=None, solo_exercise_id=None,
+                        total_balls=None) -> int:
     with sqlite3.connect(DB) as c:
         cur = c.execute(
             "INSERT INTO training_history (training_id, player_id, elapsed_sec, status, "
-            "steps_completed, steps_total, steps_skipped, step_notes, solo_drill_id, solo_exercise_id) "
-            "VALUES (?,?,?,?,?,?,?,?,?,?)",
+            "steps_completed, steps_total, steps_skipped, step_notes, solo_drill_id, solo_exercise_id, total_balls) "
+            "VALUES (?,?,?,?,?,?,?,?,?,?,?)",
             (training_id or 0, player_id, elapsed_sec, status, steps_completed, steps_total,
              json.dumps(steps_skipped or []), json.dumps(step_notes or []),
-             solo_drill_id, solo_exercise_id)
+             solo_drill_id, solo_exercise_id, total_balls)
         )
         return cur.lastrowid
 
@@ -452,7 +455,7 @@ def get_training_history(training_id=None, player_id=None, limit=None, offset=0,
     with sqlite3.connect(DB) as c:
         q = ("SELECT id, training_id, player_id, started_at, elapsed_sec, status, "
              "steps_completed, steps_total, steps_skipped, step_notes, session_comment, "
-             "solo_drill_id, solo_exercise_id FROM training_history WHERE 1=1")
+             "solo_drill_id, solo_exercise_id, total_balls FROM training_history WHERE 1=1")
         params = []
         if training_id is not None:
             q += " AND training_id=?"; params.append(training_id)
@@ -483,7 +486,7 @@ def get_history_entry(hid: int):
         r = c.execute(
             "SELECT id, training_id, player_id, started_at, elapsed_sec, status, "
             "steps_completed, steps_total, steps_skipped, step_notes, session_comment, "
-            "solo_drill_id, solo_exercise_id FROM training_history WHERE id=?", (hid,)
+            "solo_drill_id, solo_exercise_id, total_balls FROM training_history WHERE id=?", (hid,)
         ).fetchone()
         return _history_row(r) if r else None
 
@@ -494,7 +497,8 @@ def _history_row(r):
             "steps_total": r[7], "steps_skipped": json.loads(r[8] or "[]"),
             "step_notes": json.loads(r[9] or "[]"),
             "session_comment": r[10] or "",
-            "solo_drill_id": r[11], "solo_exercise_id": r[12]}
+            "solo_drill_id": r[11], "solo_exercise_id": r[12],
+            "total_balls": r[13]}
 
 
 def update_session_comment(history_id: int, comment: str):
@@ -516,12 +520,13 @@ def get_player_stats(player_id: int) -> dict:
         # Totals
         r = c.execute(
             "SELECT COUNT(*), SUM(CASE WHEN status='completed' THEN 1 ELSE 0 END),"
-            " SUM(elapsed_sec), AVG(elapsed_sec)"
+            " SUM(elapsed_sec), AVG(elapsed_sec), COALESCE(SUM(total_balls), 0)"
             " FROM training_history WHERE player_id=?", (player_id,)
         ).fetchone()
         total = r[0] or 0
         completed = r[1] or 0
         total_sec = r[2] or 0
+        total_balls = r[4] or 0
         avg_sec = int(r[3] or 0)
 
         # 30-Day Challenge (training_id 101-130)
@@ -592,6 +597,7 @@ def get_player_stats(player_id: int) -> dict:
         "current_streak": current_streak,
         "longest_streak": longest_streak,
         "program30_completed": p30,
+        "total_balls": total_balls,
         "weekly_activity": weekly,
     }
 
