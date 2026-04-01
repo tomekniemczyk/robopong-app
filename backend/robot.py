@@ -24,6 +24,7 @@ class Robot:
         self._awaiting_version: bool = False
         self._fw_buffer:   str = ""
         self._emit = on_event or (lambda *_: None)
+        self.left_handed: bool = False
 
     # ── discovery ─────────────────────────────────────────────────────────────
 
@@ -128,6 +129,8 @@ class Robot:
     # ── robot control ─────────────────────────────────────────────────────────
 
     async def set_ball(self, top: int, bot: int, osc: int, height: int, rotation: int, wait_ms: int = 1500):
+        if self.left_handed:
+            osc = 300 - osc  # mirror around center 150 (127↔173)
         dir_t = 1 if top < 0 else 0
         dir_b = 1 if bot < 0 else 0
         spd_t = min(999, int(abs(top) * 4.016))

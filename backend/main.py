@@ -39,6 +39,15 @@ def _dbg(msg: str, *args):
         logger.debug(msg, *args)
 
 
+def _apply_player_handedness(robot_inst, player_id):
+    """Set robot.left_handed based on player profile."""
+    if player_id:
+        p = players.get_player(player_id)
+        robot_inst.left_handed = (p.get("handedness") == "left") if p else False
+    else:
+        robot_inst.left_handed = False
+
+
 class _WsLogHandler(logging.Handler):
     """Broadcastuje logi przez WebSocket do przeglądarki."""
 
@@ -435,6 +444,7 @@ async def _handle(msg: dict, ws: WebSocket):
             await _send(ws, "error", {"message": "Nie znaleziono treningu"})
             return
         player_id = msg.get("player_id")
+        _apply_player_handedness(robot, player_id)
         record = msg.get("record", False)
         record_type = msg.get("record_type", "all")
         start_from = msg.get("start_from_step", 0)
@@ -448,6 +458,7 @@ async def _handle(msg: dict, ws: WebSocket):
             await _send(ws, "error", {"message": "Nie znaleziono drilla"})
             return
         player_id = msg.get("player_id")
+        _apply_player_handedness(robot, player_id)
         record = msg.get("record", False)
         count = msg.get("count") or d.get("user_count") or 60
         percent = msg.get("percent", 100)
@@ -467,6 +478,7 @@ async def _handle(msg: dict, ws: WebSocket):
             await _send(ws, "error", {"message": "Nie znaleziono ćwiczenia"})
             return
         player_id = msg.get("player_id")
+        _apply_player_handedness(robot, player_id)
         record = msg.get("record", False)
         duration = msg.get("duration_sec") or ex.get("duration_sec", 60)
         _log("Exercise solo: \"%s\" %ds player=%s record=%s", ex.get("name", "?"), duration, player_id, record)
@@ -483,6 +495,7 @@ async def _handle(msg: dict, ws: WebSocket):
         step = msg.get("step", {})
         record = msg.get("record", False)
         player_id = msg.get("player_id")
+        _apply_player_handedness(robot, player_id)
         training_name = msg.get("training_name", "Solo")
         step_name = step.get("drill_name") or step.get("exercise_name") or "Step"
         _log("Step solo: \"%s\", record=%s, player=%s", step_name, record, player_id)
@@ -891,15 +904,18 @@ def create_player(body: dict):
     name = body.get("name", "").strip()
     if not name:
         raise HTTPException(400, "Name required")
-    return players.create_player(name)
+    try:
+        return players.create_player(name, body.get("handedness", "right"), body.get("lang", "pl"))
+    except ValueError as e:
+        raise HTTPException(400, str(e))
 
 
 @app.put("/api/players/{pid}")
 def update_player(pid: int, body: dict):
-    name = body.get("name", "").strip()
-    if not name:
-        raise HTTPException(400, "Name required")
-    p = players.update_player(pid, name)
+    try:
+        p = players.update_player(pid, name=body.get("name"), handedness=body.get("handedness"), lang=body.get("lang"))
+    except ValueError as e:
+        raise HTTPException(400, str(e))
     if not p:
         raise HTTPException(404)
     return p

@@ -165,6 +165,11 @@ def _migrate(c):
         c.execute("ALTER TABLE training_history ADD COLUMN solo_exercise_id INTEGER")
     if "total_balls" not in cols:
         c.execute("ALTER TABLE training_history ADD COLUMN total_balls INTEGER")
+    player_cols = {r[1] for r in c.execute("PRAGMA table_info(players)").fetchall()}
+    if "handedness" not in player_cols:
+        c.execute("ALTER TABLE players ADD COLUMN handedness TEXT DEFAULT 'right'")
+    if "lang" not in player_cols:
+        c.execute("ALTER TABLE players ADD COLUMN lang TEXT DEFAULT 'pl'")
     rec_cols = {r[1] for r in c.execute("PRAGMA table_info(recordings_meta)").fetchall()}
     if "drill_id" not in rec_cols:
         c.execute("ALTER TABLE recordings_meta ADD COLUMN drill_id INTEGER")
@@ -355,31 +360,55 @@ def _drill_row(r):
 
 # ── Players ───────────────────────────────────────────────────────────────
 
+def _player_row(r):
+    return {"id": r[0], "name": r[1], "created_at": r[2],
+            "handedness": r[3] if len(r) > 3 else "right",
+            "lang": r[4] if len(r) > 4 else "pl"}
+
+_PLAYER_COLS = "id, name, created_at, handedness, lang"
+
+
 def get_players():
     with sqlite3.connect(DB) as c:
-        rows = c.execute("SELECT id, name, created_at FROM players ORDER BY name").fetchall()
-        return [{"id": r[0], "name": r[1], "created_at": r[2]} for r in rows]
+        rows = c.execute(f"SELECT {_PLAYER_COLS} FROM players ORDER BY name").fetchall()
+        return [_player_row(r) for r in rows]
 
 
 def get_player(pid: int):
     with sqlite3.connect(DB) as c:
-        r = c.execute("SELECT id, name, created_at FROM players WHERE id=?", (pid,)).fetchone()
-        return {"id": r[0], "name": r[1], "created_at": r[2]} if r else None
+        r = c.execute(f"SELECT {_PLAYER_COLS} FROM players WHERE id=?", (pid,)).fetchone()
+        return _player_row(r) if r else None
 
 
-def create_player(name: str) -> dict:
+def player_name_exists(name: str, exclude_id: int | None = None) -> bool:
     with sqlite3.connect(DB) as c:
-        cur = c.execute("INSERT INTO players (name) VALUES (?)", (name,))
+        if exclude_id:
+            return c.execute("SELECT 1 FROM players WHERE name=? AND id!=?", (name, exclude_id)).fetchone() is not None
+        return c.execute("SELECT 1 FROM players WHERE name=?", (name,)).fetchone() is not None
+
+
+def create_player(name: str, handedness: str = "right", lang: str = "pl") -> dict:
+    with sqlite3.connect(DB) as c:
+        cur = c.execute("INSERT INTO players (name, handedness, lang) VALUES (?,?,?)", (name, handedness, lang))
         pid = cur.lastrowid
-        r = c.execute("SELECT id, name, created_at FROM players WHERE id=?", (pid,)).fetchone()
-        return {"id": r[0], "name": r[1], "created_at": r[2]}
+        r = c.execute(f"SELECT {_PLAYER_COLS} FROM players WHERE id=?", (pid,)).fetchone()
+        return _player_row(r)
 
 
-def update_player(pid: int, name: str) -> dict | None:
+def update_player(pid: int, name: str | None = None, handedness: str | None = None, lang: str | None = None) -> dict | None:
     with sqlite3.connect(DB) as c:
-        c.execute("UPDATE players SET name=? WHERE id=?", (name, pid))
-        r = c.execute("SELECT id, name, created_at FROM players WHERE id=?", (pid,)).fetchone()
-        return {"id": r[0], "name": r[1], "created_at": r[2]} if r else None
+        updates, params = [], []
+        if name is not None:
+            updates.append("name=?"); params.append(name)
+        if handedness is not None:
+            updates.append("handedness=?"); params.append(handedness)
+        if lang is not None:
+            updates.append("lang=?"); params.append(lang)
+        if updates:
+            params.append(pid)
+            c.execute(f"UPDATE players SET {','.join(updates)} WHERE id=?", params)
+        r = c.execute(f"SELECT {_PLAYER_COLS} FROM players WHERE id=?", (pid,)).fetchone()
+        return _player_row(r) if r else None
 
 
 def delete_player(pid: int) -> bool:

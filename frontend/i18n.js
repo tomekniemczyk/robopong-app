@@ -225,6 +225,10 @@ window.I18N = {
   'explore.save_new':     { pl:'Utwórz nowy',                 en:'Create new',            de:'Neu erstellen',        fr:'Créer nouveau',          zh:'新建' },
   'explore.new_name':     { pl:'Nazwa nowego drilla:',        en:'New drill name:',       de:'Neuer Drill-Name:',    fr:'Nom du nouveau drill:', zh:'新训练方案名称:' },
 
+  // ── Profile ────────────────────────────────────────────────────────
+  'profile.right':   { pl:'Praworęczny',   en:'Right-handed', de:'Rechtshänder',    fr:'Droitier',          zh:'右手' },
+  'profile.left':    { pl:'Leworęczny',    en:'Left-handed',  de:'Linkshänder',     fr:'Gaucher',           zh:'左手' },
+
   // ── Volume ─────────────────────────────────────────────────────────
   'volume.title': { pl:'Głośność serwera', en:'Server volume', de:'Server-Lautstärke', fr:'Volume serveur', zh:'服务器音量' },
   'volume.test':  { pl:'Test',             en:'Test',          de:'Test',              fr:'Test',           zh:'测试' },
