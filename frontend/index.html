@@ -778,6 +778,8 @@
       <div style="font-size:11px;color:var(--muted)">{{ drillBall }}/{{ drillTotal }} {{ t('tr.balls_label') }}</div>
       <div class="progress-bar" style="margin-top:4px;height:4px"><div class="fill" :style="{width: drillTotal ? (drillBall/drillTotal*100)+'%' : '0'}"></div></div>
     </div>
+    <!-- Recording indicator -->
+    <span v-if="recordTraining && selectedPlayerId" style="display:inline-flex;align-items:center;gap:3px;font-size:10px;color:#ff3b30;font-weight:700"><span style="width:7px;height:7px;border-radius:50%;background:#ff3b30;animation:recBlink 1s infinite"></span>REC</span>
     <!-- Paused indicator -->
     <span v-if="drillPaused" style="color:#ff9f0a;font-weight:700;font-size:12px">⏸</span>
     <!-- Buttons -->
@@ -1063,7 +1065,10 @@
                 </div>
               </div>
             </div>
-            <!-- Nawigacja + Start -->
+            <!-- Record toggle + Nawigacja + Start -->
+            <label v-if="selectedPlayerId" style="font-size:11px;display:flex;align-items:center;gap:5px;cursor:pointer;margin-bottom:6px;color:var(--text2)">
+              <input type="checkbox" v-model="recordTraining"> 🎥 {{ t('recordings.record') }}
+            </label>
             <div style="display:flex;gap:6px;align-items:center">
               <button class="btn btn-ghost" style="padding:6px 10px" @click="prevDrill(folder)" :disabled="idx===0" :title="t('drills.prev')">◀</button>
               <button class="btn btn-success" style="flex:1;padding:8px" :disabled="!connected || drillRunning || myRole !== 'controller'" @click="startDrill">{{ t('btn.start') }}</button>
@@ -1284,7 +1289,9 @@
             <span style="font-size:11px;color:var(--muted)">{{ t('ex.time') }}</span>
             <input type="number" v-model.number="selectedExercise.duration_sec" min="10" max="600" style="width:60px;text-align:center">
             <span style="font-size:11px;color:var(--muted)">{{ t('ex.sec') }}</span>
-            <div style="flex:1"></div>
+            <label v-if="selectedPlayerId" style="font-size:11px;display:flex;align-items:center;gap:4px;cursor:pointer;color:var(--text2);margin-left:auto">
+              <input type="checkbox" v-model="recordTraining"> 🎥
+            </label>
             <button class="btn btn-success" style="padding:7px 18px;font-size:13px"
               :disabled="!connected || myRole !== 'controller'"
               @click="runExerciseSolo(selectedExercise)">▶ Start</button>
