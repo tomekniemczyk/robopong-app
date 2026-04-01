@@ -1806,8 +1806,23 @@
             </div>
           </template>
           <!-- Solo run (no training) -->
-          <div v-if="!h.training_id" style="color:var(--muted);font-size:11px">
-            {{ getHistoryLabel(h) }} · {{ fmtDur(h.elapsed_sec) }}
+          <div v-if="!h.training_id">
+            <div style="display:flex;align-items:center;gap:6px;padding:3px 0;font-size:11px;border-bottom:1px solid rgba(255,255,255,.03)">
+              <span style="width:16px;text-align:center;flex-shrink:0;color:#34c759">{{ h.status === 'completed' ? '✓' : '○' }}</span>
+              <span style="flex:1">{{ getHistoryLabel(h) }}</span>
+              <template v-if="getStepRecording(h, 0)">
+                <button class="btn btn-ghost" style="font-size:10px;padding:1px 6px;color:#ff3b30"
+                  @click.stop="playingRecording = playingRecording === getStepRecording(h, 0).filename ? null : getStepRecording(h, 0).filename">
+                  {{ playingRecording === getStepRecording(h, 0)?.filename ? '⏹' : '🎥 ▶' }}
+                </button>
+                <button class="btn btn-ghost" style="font-size:10px;padding:1px 6px" @click.stop="openVideoCompare(getStepRecording(h, 0))">🔀</button>
+                <a :href="'/api/recordings/' + getStepRecording(h, 0).filename" :download="recDownloadName(h, getStepRecording(h, 0))" class="btn btn-ghost" style="font-size:10px;padding:1px 6px" @click.stop>⬇</a>
+                <button class="btn btn-ghost" style="font-size:10px;padding:1px 6px;color:var(--danger)" @click.stop="deleteRecording(getStepRecording(h, 0).filename)">✕</button>
+              </template>
+            </div>
+            <video v-if="getStepRecording(h, 0) && playingRecording === getStepRecording(h, 0).filename"
+              :src="'/api/recordings/' + getStepRecording(h, 0).filename" controls autoplay
+              style="width:100%;margin:4px 0 6px;border-radius:6px;max-height:250px"></video>
           </div>
           <!-- No training found -->
           <div v-else-if="!getTrainingSteps(h.training_id)" style="color:var(--muted);font-size:11px">
@@ -1885,7 +1900,7 @@
             <select v-if="videoCompare.others.length > 1" v-model="videoCompare.rightFile"
               style="background:var(--surface);color:var(--text);border:1px solid var(--border);border-radius:6px;padding:2px 6px;font-size:10px">
               <option v-for="r in videoCompare.others" :key="r.filename" :value="r.filename">
-                {{ getPlayerName(r.player_id) }} · {{ new Date(r.started_at).toLocaleDateString() }}
+                {{ getPlayerName(r.player_id) }} · {{ r.training_name || 'Solo' }} · {{ new Date(r.started_at).toLocaleDateString() }} {{ new Date(r.started_at).toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'}) }}
               </option>
             </select>
             <span v-else>{{ videoCompare.rightLabel }}</span>
@@ -1907,11 +1922,14 @@
 
   <!-- ── Confirm modal ────────────────────────────────────────────────────── -->
   <div v-if="confirmCb" class="modal-overlay" @click.self="confirmCb=null" style="z-index:300">
-    <div class="modal-sheet" style="max-width:320px;text-align:center">
-      <div style="font-size:15px;margin-bottom:20px;line-height:1.4">{{ confirmMsg }}</div>
-      <div style="display:flex;gap:10px;justify-content:center">
-        <button class="btn btn-ghost" style="flex:1" @click="confirmCb=null">{{ t('btn.cancel') }}</button>
-        <button class="btn" :style="{ flex: 1, background: confirmOkColor, color: '#fff', fontWeight: 700 }" @click="runConfirm()">{{ confirmOkLabel }}</button>
+    <div class="modal-sheet" style="max-width:340px;text-align:center">
+      <div style="font-size:15px;margin-bottom:8px;line-height:1.4">{{ confirmMsg }}</div>
+      <div v-if="confirmExtra" style="font-size:12px;color:var(--muted);margin-bottom:16px">{{ confirmExtra }}</div>
+      <div v-if="!confirmExtra" style="margin-bottom:12px"></div>
+      <div style="display:flex;flex-direction:column;gap:8px">
+        <button v-if="confirmDownloadCb" class="btn" style="width:100%;background:#34c759;color:#fff;font-weight:700" @click="runDownloadAndDelete()">{{ t('btn.download_and_delete') }}</button>
+        <button class="btn" :style="{ width: '100%', background: confirmOkColor, color: '#fff', fontWeight: 700 }" @click="runConfirm()">{{ confirmDownloadCb ? t('btn.delete_no_download') : confirmOkLabel }}</button>
+        <button class="btn btn-ghost" style="width:100%" @click="confirmCb=null">{{ t('btn.cancel') }}</button>
       </div>
     </div>
   </div>
@@ -2176,13 +2194,28 @@ const _app = createApp({
 
     // ── Confirm modal ────────────────────────────────────────
     const confirmMsg      = ref('')
+    const confirmExtra    = ref('')
     const confirmOkLabel  = ref('')
     const confirmOkColor  = ref('var(--danger)')
     const confirmCb       = ref(null)
+    const confirmDownloadCb = ref(null)
     function showConfirm(msg, cb, okLabel, okColor = 'var(--danger)') {
-      confirmMsg.value = msg; confirmOkLabel.value = okLabel || t('btn.delete'); confirmOkColor.value = okColor; confirmCb.value = cb
+      confirmMsg.value = msg; confirmExtra.value = ''; confirmOkLabel.value = okLabel || t('btn.delete')
+      confirmOkColor.value = okColor; confirmCb.value = cb; confirmDownloadCb.value = null
     }
-    function runConfirm() { const cb = confirmCb.value; confirmCb.value = null; cb && cb() }
+    function showConfirmWithDownload(msg, extra, downloadCb, deleteCb) {
+      confirmMsg.value = msg; confirmExtra.value = extra
+      confirmOkLabel.value = t('btn.delete'); confirmOkColor.value = 'var(--danger)'
+      confirmCb.value = deleteCb; confirmDownloadCb.value = downloadCb
+    }
+    function runConfirm() { const cb = confirmCb.value; confirmCb.value = null; confirmDownloadCb.value = null; cb && cb() }
+    function runDownloadAndDelete() { const cb = confirmDownloadCb.value; confirmCb.value = null; confirmDownloadCb.value = null; cb && cb() }
+    function formatSize(bytes) {
+      if (bytes < 1024) return bytes + ' B'
+      if (bytes < 1048576) return (bytes / 1024).toFixed(0) + ' KB'
+      if (bytes < 1073741824) return (bytes / 1048576).toFixed(1) + ' MB'
+      return (bytes / 1073741824).toFixed(1) + ' GB'
+    }
 
     // ── Drill editor modal ────────────────────────────────────
     const showDrillModal = ref(false)
@@ -3328,11 +3361,27 @@ const _app = createApp({
     }
 
     async function deleteHistoryEntry(hid) {
-      showConfirm(t('recordings.delete') + '?', async () => {
+      const info = await (await fetch(`/api/recordings/info?history_id=${hid}`)).json()
+      const doDelete = async () => {
         await fetch(`/api/training-history/${hid}`, { method: 'DELETE' })
         if (playerDetail.value) await openPlayerDetail(playerDetail.value)
         await loadTrainingHistory()
-      })
+      }
+      if (info.count > 0) {
+        const extra = t('confirm.recordings_info', {count: info.count, size: formatSize(info.total_size)})
+        showConfirmWithDownload(
+          t('recordings.delete') + '?',
+          extra,
+          async () => {
+            window.location.href = `/api/recordings/download-zip?history_id=${hid}`
+            await new Promise(r => setTimeout(r, 2000))
+            await doDelete()
+          },
+          doDelete
+        )
+      } else {
+        showConfirm(t('recordings.delete') + '?', doDelete)
+      }
     }
 
     function historyEndTime(h) {
@@ -3407,11 +3456,27 @@ const _app = createApp({
     }
 
     async function deletePlayer(id) {
-      showConfirm(t('confirm.delete_player'), async () => {
+      const info = await (await fetch(`/api/recordings/info?player_id=${id}`)).json()
+      const doDelete = async () => {
         await fetch(`/api/players/${id}`, { method: 'DELETE' })
         if (playerDetail.value?.id === id) playerDetail.value = null
         await loadPlayers()
-      })
+      }
+      if (info.count > 0) {
+        const extra = t('confirm.recordings_info', {count: info.count, size: formatSize(info.total_size)})
+        showConfirmWithDownload(
+          t('confirm.delete_player'),
+          extra,
+          async () => {
+            window.location.href = `/api/recordings/download-zip?player_id=${id}`
+            await new Promise(r => setTimeout(r, 2000))
+            await doDelete()
+          },
+          doDelete
+        )
+      } else {
+        showConfirm(t('confirm.delete_player'), doDelete)
+      }
     }
 
     async function loadPlayerVoiceNotes(pid) {
@@ -3503,25 +3568,32 @@ const _app = createApp({
       else compareStatsB.value = d
     }
 
+    function _recLabel(r) {
+      const name = getPlayerName(r.player_id)
+      const trn = r.training_name || 'Solo'
+      const d = new Date(r.started_at)
+      return `${name} · ${trn} · ${d.toLocaleDateString()} ${d.toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'})}`
+    }
     async function openVideoCompare(rec) {
       videoCompare.leftFile = rec.filename
       videoCompare.stepName = rec.step_name
-      videoCompare.leftLabel = getPlayerName(rec.player_id) + ' · ' + new Date(rec.started_at).toLocaleDateString()
+      videoCompare.leftLabel = _recLabel(rec)
       videoCompare.speed = 1
       videoCompare.others = []
       videoCompare.rightFile = ''
       videoCompare.rightLabel = ''
       videoCompare.show = true
-      const r = await fetch(`/api/recordings/compare?training_id=${rec.training_id}&step_idx=${rec.step_idx}&exclude_player_id=${rec.player_id}`)
+      let url = '/api/recordings/compare?'
+      if (rec.drill_id) url += `drill_id=${rec.drill_id}`
+      else if (rec.exercise_id) url += `exercise_id=${rec.exercise_id}`
+      else url += `training_id=${rec.training_id}&step_idx=${rec.step_idx}`
+      url += `&exclude_filename=${encodeURIComponent(rec.filename)}`
+      const r = await fetch(url)
       const others = await r.json()
-      // Also add same player's other recordings of same step
-      const samePlayer = playerRecordings.value.filter(pr =>
-        pr.training_id === rec.training_id && pr.step_idx === rec.step_idx && pr.filename !== rec.filename
-      )
-      videoCompare.others = [...samePlayer, ...others]
+      videoCompare.others = others
       if (videoCompare.others.length) {
         videoCompare.rightFile = videoCompare.others[0].filename
-        videoCompare.rightLabel = getPlayerName(videoCompare.others[0].player_id) + ' · ' + new Date(videoCompare.others[0].started_at).toLocaleDateString()
+        videoCompare.rightLabel = _recLabel(videoCompare.others[0])
       }
     }
     function closeVideoCompare() {
@@ -3564,11 +3636,23 @@ const _app = createApp({
     }
 
     async function deleteRecording(filename) {
-      showConfirm(t('recordings.delete') + '?', async () => {
+      const doDelete = async () => {
         await fetch(`/api/recordings/${filename}`, { method: 'DELETE' })
         if (playingRecording.value === filename) playingRecording.value = null
         if (playerDetail.value) await openPlayerDetail(playerDetail.value)
-      })
+      }
+      showConfirmWithDownload(
+        t('recordings.delete') + '?', '',
+        async () => {
+          const a = document.createElement('a')
+          a.href = '/api/recordings/' + filename
+          a.download = filename.replace('/', '_')
+          a.click()
+          await new Promise(r => setTimeout(r, 1000))
+          await doDelete()
+        },
+        doDelete
+      )
     }
 
     // ── Calibration ────────────────────────────────────────────
@@ -3757,7 +3841,10 @@ const _app = createApp({
       showToast(t('toast.motors_start'))
     }
     let _calMotorsRunning = false
+    let _calThrowBusy = false
     async function calThrow() {
+      if (_calThrowBusy) return
+      _calThrowBusy = true
       _resetCalIdle()
       if (!_calMotorsRunning) {
         _clampAllCal()
@@ -3771,6 +3858,8 @@ const _app = createApp({
       addLog('→ T (throw)')
       showToast(t('toast.throw'))
       _resetCalIdle()
+      await new Promise(r => setTimeout(r, 1500))
+      _calThrowBusy = false
     }
     function calStop() {
       send({ action:'stop' })
@@ -3844,14 +3933,17 @@ const _app = createApp({
       }, 6000)
     }
 
+    let _wizBusy = false
     async function wizThrow() {
+      if (_wizBusy) return
+      _wizBusy = true
       wizState.value = 'waiting'
       clearTimeout(_calIdleTimer)
-      send({ action: 'set_ball', ball: { ...cal } })
+      send({ action: 'throw_ball', ball: { ...cal } })
       _calMotorsRunning = true
-      await new Promise(r => setTimeout(r, 300))
-      send({ action: 'throw' })
       wizThrows.value++
+      await new Promise(r => setTimeout(r, 2000))
+      _wizBusy = false
     }
 
     function wizFeedback(dir) {
@@ -3936,21 +4028,19 @@ const _app = createApp({
       expHistory.value = await (await fetch(url)).json()
     }
 
+    let _expBusy = false
     async function expThrow() {
-      if (!connected.value) return
+      if (!connected.value || myRole.value !== 'controller' || _expBusy) return
+      _expBusy = true
       clearTimeout(_calIdleTimer)
-      send({ action: 'set_ball', ball: { ...expParams } })
+      send({ action: 'throw_ball', ball: { ...expParams } })
       _expMotorsRunning = true
-      if (!_expMotorsRunning) {
-        showToast(t('toast.motors_warmup'))
-        await new Promise(r => setTimeout(r, 5000))
-      }
-      await new Promise(r => setTimeout(r, 300))
-      send({ action: 'throw' })
       showToast(t('toast.throw'))
       expBounce1.value = null
       expBounce2.value = null
       expClickPhase.value = 1
+      await new Promise(r => setTimeout(r, 2000))
+      _expBusy = false
     }
 
     function onExpTableClick(evt) {
@@ -4152,7 +4242,7 @@ const _app = createApp({
       activeDrill, drillRunCount, drillRunPercent, liveBall,
       openDrillPanel, prevDrill, nextDrill, startDrill,
       ballTableX, ballTableY,
-      confirmMsg, confirmOkLabel, confirmOkColor, confirmCb, runConfirm,
+      confirmMsg, confirmExtra, confirmOkLabel, confirmOkColor, confirmCb, confirmDownloadCb, runConfirm, runDownloadAndDelete,
       showDrillModal, drillModalId, openDrillModal, saveDrillModal,
       showTrainingModal, openTrainingModal,
       editId, editName, editDesc, editRepeat, editBalls,

@@ -487,6 +487,11 @@ window.I18N = {
   'recordings.all_steps':  { pl:'Drille + ćwiczenia',en:'Drills + exercises',de:'Drills + Übungen',fr:'Lancers + exercices',zh:'训练+体能' },
   'recordings.step':       { pl:'Krok {idx}',      en:'Step {idx}',       de:'Schritt {idx}',    fr:'Étape {idx}',      zh:'步骤 {idx}' },
 
+  // ── Delete with download ──────────────────────────────────────────
+  'btn.download_and_delete':  { pl:'Pobierz i usuń',          en:'Download & delete',      de:'Herunterladen & löschen', fr:'Télécharger et supprimer', zh:'下载并删除' },
+  'btn.delete_no_download':   { pl:'Usuń bez pobierania',     en:'Delete without download',de:'Löschen ohne Download',   fr:'Supprimer sans télécharger',zh:'不下载直接删除' },
+  'confirm.recordings_info':  { pl:'{count} nagrań ({size})', en:'{count} recordings ({size})', de:'{count} Aufnahmen ({size})', fr:'{count} enregistrements ({size})', zh:'{count} 个录像 ({size})' },
+
   // ── Favorites ──────────────────────────────────────────────────────
   'favorites.title':       { pl:'Ulubione',        en:'Favorites',        de:'Favoriten',        fr:'Favoris',          zh:'收藏' },
   'favorites.add':         { pl:'Dodaj do ulubionych', en:'Add to favorites', de:'Zu Favoriten',  fr:'Ajouter aux favoris', zh:'添加收藏' },

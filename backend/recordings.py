@@ -4,9 +4,11 @@ Uses ffmpeg to capture from motion MJPEG stream (port 8081) into MP4 files.
 Each drill/exercise step gets its own recording file.
 """
 
+import io
 import logging
 import re
 import subprocess
+import zipfile
 from datetime import datetime
 from pathlib import Path
 
@@ -41,7 +43,8 @@ class Recorder:
         return self._proc is not None and self._proc.poll() is None
 
     def start(self, player_id: int, training_id: int, training_name: str,
-              step_idx: int, step_name: str):
+              step_idx: int, step_name: str,
+              drill_id: int | None = None, exercise_id: int | None = None):
         if self.recording:
             self.stop()
 
@@ -79,6 +82,8 @@ class Recorder:
                 "step_name": step_name,
                 "filename": f"{player_id}/{filename}",
                 "started_at": self._start_time.isoformat(),
+                "drill_id": drill_id,
+                "exercise_id": exercise_id,
             }
             logger.info("Recording started: %s", filepath)
         except FileNotFoundError:
@@ -115,6 +120,7 @@ class Recorder:
                 meta["player_id"], meta["training_id"], meta["training_name"],
                 meta["step_idx"], meta["step_name"], meta["filename"],
                 meta["duration_sec"], meta["size_bytes"],
+                drill_id=meta.get("drill_id"), exercise_id=meta.get("exercise_id"),
             )
             logger.info("Recording saved: %s (%.0fs)", self._current_file, duration)
         else:
@@ -150,5 +156,31 @@ def delete_recording(filename: str) -> bool:
     path = RECORDINGS_DIR / filename
     if path.exists() and path.is_relative_to(RECORDINGS_DIR):
         path.unlink()
+        log = path.with_suffix(".log")
+        if log.exists():
+            log.unlink()
     db.delete_recording_meta(filename)
     return True
+
+
+def delete_files(filenames: list[str]):
+    """Delete recording files from disk (meta already removed by db cascade)."""
+    for fn in filenames:
+        path = RECORDINGS_DIR / fn
+        if path.exists() and path.is_relative_to(RECORDINGS_DIR):
+            path.unlink()
+            log = path.with_suffix(".log")
+            if log.exists():
+                log.unlink()
+
+
+def create_zip(filenames: list[str]) -> io.BytesIO:
+    """Create a ZIP archive of recording files."""
+    buf = io.BytesIO()
+    with zipfile.ZipFile(buf, 'w', zipfile.ZIP_STORED) as zf:
+        for fn in filenames:
+            path = RECORDINGS_DIR / fn
+            if path.exists() and path.is_relative_to(RECORDINGS_DIR):
+                zf.write(path, fn.replace('/', '_'))
+    buf.seek(0)
+    return buf

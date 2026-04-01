@@ -163,6 +163,11 @@ def _migrate(c):
         c.execute("ALTER TABLE training_history ADD COLUMN solo_drill_id INTEGER")
     if "solo_exercise_id" not in cols:
         c.execute("ALTER TABLE training_history ADD COLUMN solo_exercise_id INTEGER")
+    rec_cols = {r[1] for r in c.execute("PRAGMA table_info(recordings_meta)").fetchall()}
+    if "drill_id" not in rec_cols:
+        c.execute("ALTER TABLE recordings_meta ADD COLUMN drill_id INTEGER")
+    if "exercise_id" not in rec_cols:
+        c.execute("ALTER TABLE recordings_meta ADD COLUMN exercise_id INTEGER")
 
 
 def _seed_drills(c):
@@ -624,19 +629,22 @@ def remove_favorite(player_id: int, item_type: str, item_id: int):
 # ── Recordings Meta ───────────────────────────────────────────────────────
 
 def save_recording_meta(player_id, training_id, training_name, step_idx,
-                        step_name, filename, duration_sec, size_bytes):
+                        step_name, filename, duration_sec, size_bytes,
+                        drill_id=None, exercise_id=None):
     with sqlite3.connect(DB) as c:
         c.execute(
             "INSERT INTO recordings_meta (player_id, training_id, training_name, step_idx, "
-            "step_name, filename, duration_sec, size_bytes) VALUES (?,?,?,?,?,?,?,?)",
+            "step_name, filename, duration_sec, size_bytes, drill_id, exercise_id) VALUES (?,?,?,?,?,?,?,?,?,?)",
             (player_id, training_id, training_name, step_idx, step_name,
-             filename, duration_sec, size_bytes)
+             filename, duration_sec, size_bytes, drill_id, exercise_id)
         )
 
 
 def get_recordings_meta(player_id=None):
     with sqlite3.connect(DB) as c:
-        q = "SELECT id, player_id, training_id, training_name, step_idx, step_name, filename, started_at, duration_sec, size_bytes FROM recordings_meta"
+        q = ("SELECT id, player_id, training_id, training_name, step_idx, step_name,"
+             " filename, started_at, duration_sec, size_bytes, drill_id, exercise_id"
+             " FROM recordings_meta")
         params = []
         if player_id is not None:
             q += " WHERE player_id=?"; params.append(player_id)
@@ -644,29 +652,111 @@ def get_recordings_meta(player_id=None):
         rows = c.execute(q, params).fetchall()
         return [{"id": r[0], "player_id": r[1], "training_id": r[2], "training_name": r[3],
                  "step_idx": r[4], "step_name": r[5], "filename": r[6], "started_at": r[7],
-                 "duration_sec": r[8], "size_bytes": r[9]} for r in rows]
+                 "duration_sec": r[8], "size_bytes": r[9], "drill_id": r[10], "exercise_id": r[11]}
+                for r in rows]
 
 
-def get_comparable_recordings(training_id: int, step_idx: int, exclude_player_id: int | None = None):
-    """Get recordings of the same training step from other players."""
+def get_comparable_recordings(training_id: int | None = None, step_idx: int | None = None,
+                              drill_id: int | None = None, exercise_id: int | None = None,
+                              exclude_filename: str | None = None):
+    """Get comparable recordings — by drill_id/exercise_id or fallback to training_id+step_idx."""
     with sqlite3.connect(DB) as c:
         q = ("SELECT id, player_id, training_id, training_name, step_idx, step_name,"
-             " filename, started_at, duration_sec, size_bytes FROM recordings_meta"
-             " WHERE training_id=? AND step_idx=?")
-        params = [training_id, step_idx]
-        if exclude_player_id is not None:
-            q += " AND player_id != ?"
-            params.append(exclude_player_id)
+             " filename, started_at, duration_sec, size_bytes, drill_id, exercise_id"
+             " FROM recordings_meta WHERE 1=1")
+        params = []
+        if drill_id is not None:
+            q += " AND drill_id=?"; params.append(drill_id)
+        elif exercise_id is not None:
+            q += " AND exercise_id=?"; params.append(exercise_id)
+        elif training_id is not None and step_idx is not None:
+            q += " AND training_id=? AND step_idx=?"; params.extend([training_id, step_idx])
+        if exclude_filename:
+            q += " AND filename != ?"; params.append(exclude_filename)
         q += " ORDER BY started_at DESC"
         rows = c.execute(q, params).fetchall()
         return [{"id": r[0], "player_id": r[1], "training_id": r[2], "training_name": r[3],
                  "step_idx": r[4], "step_name": r[5], "filename": r[6], "started_at": r[7],
-                 "duration_sec": r[8], "size_bytes": r[9]} for r in rows]
+                 "duration_sec": r[8], "size_bytes": r[9], "drill_id": r[10], "exercise_id": r[11]}
+                for r in rows]
 
 
 def delete_recording_meta(filename: str):
     with sqlite3.connect(DB) as c:
         c.execute("DELETE FROM recordings_meta WHERE filename=?", (filename,))
+
+
+def get_recordings_stats(player_id: int | None = None, history_id: int | None = None) -> dict:
+    """Return count + total_size for recordings matching criteria."""
+    with sqlite3.connect(DB) as c:
+        if history_id is not None:
+            h = get_history_entry(history_id)
+            if not h:
+                return {"count": 0, "total_size": 0, "filenames": []}
+            filenames = _get_session_filenames(c, h)
+            if not filenames:
+                return {"count": 0, "total_size": 0, "filenames": []}
+            placeholders = ",".join("?" * len(filenames))
+            r = c.execute(
+                f"SELECT COUNT(*), COALESCE(SUM(size_bytes),0) FROM recordings_meta WHERE filename IN ({placeholders})",
+                filenames
+            ).fetchone()
+            return {"count": r[0], "total_size": r[1], "filenames": filenames}
+        q = "SELECT COUNT(*), COALESCE(SUM(size_bytes),0) FROM recordings_meta WHERE 1=1"
+        params = []
+        if player_id is not None:
+            q += " AND player_id=?"; params.append(player_id)
+        r = c.execute(q, params).fetchone()
+        fq = "SELECT filename FROM recordings_meta WHERE 1=1"
+        if player_id is not None:
+            fq += " AND player_id=?"; params_f = [player_id]
+        else:
+            params_f = []
+        filenames = [row[0] for row in c.execute(fq, params_f).fetchall()]
+        return {"count": r[0], "total_size": r[1], "filenames": filenames}
+
+
+def _get_session_filenames(c, h: dict) -> list[str]:
+    """Get recording filenames matching a history session by player_id + time window."""
+    if not h.get("player_id"):
+        return []
+    q = ("SELECT filename FROM recordings_meta"
+         " WHERE player_id=? AND started_at >= ? AND started_at <= datetime(?, '+' || ? || ' seconds')")
+    rows = c.execute(q, (h["player_id"], h["started_at"], h["started_at"],
+                         h["elapsed_sec"] + 60)).fetchall()
+    return [r[0] for r in rows]
+
+
+def delete_player_cascade(pid: int):
+    """Delete player + all associated data (history, recordings meta, favorites, voice notes, landings)."""
+    with sqlite3.connect(DB) as c:
+        filenames = [r[0] for r in c.execute(
+            "SELECT filename FROM recordings_meta WHERE player_id=?", (pid,)
+        ).fetchall()]
+        voice_files = [r[0] for r in c.execute(
+            "SELECT filename FROM voice_notes WHERE player_id=?", (pid,)
+        ).fetchall()]
+        c.execute("DELETE FROM recordings_meta WHERE player_id=?", (pid,))
+        c.execute("DELETE FROM training_history WHERE player_id=?", (pid,))
+        c.execute("DELETE FROM voice_notes WHERE player_id=?", (pid,))
+        c.execute("DELETE FROM ball_landings WHERE player_id=?", (pid,))
+        c.execute("DELETE FROM favorites WHERE player_id=?", (pid,))
+        c.execute("DELETE FROM players WHERE id=?", (pid,))
+    return filenames, voice_files
+
+
+def delete_history_cascade(hid: int) -> list[str]:
+    """Delete history entry + associated recording metadata. Returns filenames to delete."""
+    h = get_history_entry(hid)
+    if not h:
+        return []
+    with sqlite3.connect(DB) as c:
+        filenames = _get_session_filenames(c, h)
+        if filenames:
+            placeholders = ",".join("?" * len(filenames))
+            c.execute(f"DELETE FROM recordings_meta WHERE filename IN ({placeholders})", filenames)
+        c.execute("DELETE FROM training_history WHERE id=?", (hid,))
+    return filenames
 
 
 # ── Voice notes ───────────────────────────────────────────────────────────────

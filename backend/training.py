@@ -184,7 +184,8 @@ class TrainingRunner:
         while self._paused and not self._stopped:
             await asyncio.sleep(0.5)
 
-    def _start_recording(self, scenario: dict, step_idx: int, step_name: str):
+    def _start_recording(self, scenario: dict, step_idx: int, step_name: str,
+                         drill_id: int | None = None, exercise_id: int | None = None):
         if self._record and self._player_id:
             self._recorder.start(
                 self._player_id,
@@ -192,6 +193,8 @@ class TrainingRunner:
                 scenario.get("name", ""),
                 step_idx,
                 step_name,
+                drill_id=drill_id,
+                exercise_id=exercise_id,
             )
 
     def _stop_recording(self):
@@ -259,7 +262,8 @@ class TrainingRunner:
                 avg_wait = 1.5
                 est_remaining = int(remaining_balls * avg_wait + sum(s.get("pause_after_sec", 30) for s in steps[step_idx+1:]))
 
-                self._start_recording(scenario, step_idx, drill_name)
+                self._start_recording(scenario, step_idx, drill_name,
+                                     drill_id=step.get("drill_id"))
 
                 broadcast("training_step", {
                     "step": step_idx + 1, "total": total_steps,
@@ -389,7 +393,8 @@ class TrainingRunner:
         duration = step.get("duration_sec") or ex.get("duration_sec", 60)
         pause_sec = step.get("pause_after_sec", 30)
 
-        self._start_recording(scenario, step_idx, name)
+        self._start_recording(scenario, step_idx, name,
+                             exercise_id=step.get("exercise_id"))
 
         broadcast("training_step", {
             "step": step_idx + 1, "total": total_steps,

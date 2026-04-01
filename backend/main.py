@@ -9,7 +9,7 @@ from pathlib import Path
 from typing import Dict
 
 from fastapi import FastAPI, Form, HTTPException, UploadFile, WebSocket, WebSocketDisconnect
-from fastapi.responses import FileResponse
+from fastapi.responses import FileResponse, StreamingResponse
 from fastapi.staticfiles import StaticFiles
 
 import audio
@@ -261,11 +261,32 @@ async def ws_endpoint(ws: WebSocket):
         "session_id": sess.id,
         "role":       sess.role,
     }))
+    robot_q = asyncio.Queue()
+
+    async def _robot_worker():
+        """Process robot commands — drain queue, execute only the latest."""
+        while True:
+            msg_item = await robot_q.get()
+            # Drain: skip to latest command
+            while not robot_q.empty():
+                msg_item = robot_q.get_nowait()
+            try:
+                await _handle(msg_item, ws)
+            except Exception as e:
+                logger.error("Robot cmd error: %s", e)
+
+    worker = asyncio.create_task(_robot_worker())
     try:
         while True:
             raw = await ws.receive_text()
-            await _handle(json.loads(raw), ws)
+            msg = json.loads(raw)
+            action = msg.get("action", "")
+            if action in ROBOT_ACTIONS:
+                robot_q.put_nowait(msg)
+            else:
+                await _handle(msg, ws)
     except (WebSocketDisconnect, Exception):
+        worker.cancel()
         gone = sessions.pop(ws, None)
         _log("Browser disconnected — session %s, remaining: %d", gone.id if gone else "?", len(sessions))
         if gone and gone.role == Role.CONTROLLER:
@@ -276,10 +297,11 @@ async def ws_endpoint(ws: WebSocket):
         _broadcast_sessions()
 
 
-ROBOT_ACTIONS  = {"set_ball", "throw", "run_scenario", "run_drill", "run_training", "begin_calibration", "run_drill_solo", "run_exercise_solo", "run_step_solo"}
+ROBOT_ACTIONS  = {"set_ball", "throw", "throw_ball", "run_scenario", "run_drill", "run_training", "begin_calibration", "run_drill_solo", "run_exercise_solo", "run_step_solo"}
 STANDBY_SECS   = 5 * 60
 _last_activity: float = 0.0
 _training_runner = training.TrainingRunner()
+_robot_queue: asyncio.Queue | None = None  # Command queue — set per active WS session
 
 
 async def _handle(msg: dict, ws: WebSocket):
@@ -353,6 +375,18 @@ async def _handle(msg: dict, ws: WebSocket):
 
     elif action == "throw":
         _log("Throw")
+        await robot.throw()
+
+    elif action == "throw_ball":
+        b = msg["ball"]
+        _log("Throw ball: top=%s bot=%s osc=%s h=%s rot=%s wait=%sms",
+             b["top_speed"], b["bot_speed"], b["oscillation"], b["height"], b["rotation"], b.get("wait_ms", 1500))
+        await robot.set_ball(
+            b["top_speed"], b["bot_speed"],
+            b["oscillation"], b["height"],
+            b["rotation"], b.get("wait_ms", 1500),
+        )
+        await asyncio.sleep(0.3)
         await robot.throw()
 
     elif action == "stop":
@@ -826,8 +860,8 @@ def update_history_comment(hid: int, body: dict):
 
 @app.delete("/api/training-history/{hid}", status_code=204)
 def delete_history_entry(hid: int):
-    if not db.delete_history_entry(hid):
-        raise HTTPException(404)
+    filenames = db.delete_history_cascade(hid)
+    recordings.delete_files(filenames)
 
 
 # ── Players ──────────────────────────────────────────────────────────────────
@@ -866,8 +900,9 @@ def update_player(pid: int, body: dict):
 
 @app.delete("/api/players/{pid}", status_code=204)
 def delete_player_endpoint(pid: int):
-    if not players.delete_player(pid):
-        raise HTTPException(404)
+    rec_files, voice_files = db.delete_player_cascade(pid)
+    recordings.delete_files(rec_files)
+    recordings.delete_files(voice_files)
 
 
 @app.get("/api/players/{pid}/stats")
@@ -912,8 +947,29 @@ def list_recordings(player_id: int | None = None):
 
 
 @app.get("/api/recordings/compare")
-def get_comparable_recordings(training_id: int, step_idx: int, exclude_player_id: int | None = None):
-    return db.get_comparable_recordings(training_id, step_idx, exclude_player_id)
+def get_comparable_recordings(training_id: int | None = None, step_idx: int | None = None,
+                              drill_id: int | None = None, exercise_id: int | None = None,
+                              exclude_filename: str | None = None):
+    return db.get_comparable_recordings(
+        training_id=training_id, step_idx=step_idx,
+        drill_id=drill_id, exercise_id=exercise_id,
+        exclude_filename=exclude_filename)
+
+
+@app.get("/api/recordings/info")
+def get_recordings_info(player_id: int | None = None, history_id: int | None = None):
+    return db.get_recordings_stats(player_id=player_id, history_id=history_id)
+
+
+@app.get("/api/recordings/download-zip")
+def download_recordings_zip(player_id: int | None = None, history_id: int | None = None):
+    stats = db.get_recordings_stats(player_id=player_id, history_id=history_id)
+    if not stats["filenames"]:
+        raise HTTPException(404, "No recordings")
+    buf = recordings.create_zip(stats["filenames"])
+    name = f"recordings_player{player_id}.zip" if player_id else f"recordings_session{history_id}.zip"
+    return StreamingResponse(buf, media_type="application/zip",
+                             headers={"Content-Disposition": f'attachment; filename="{name}"'})
 
 
 @app.get("/api/recordings/{player_id}/{filename}")
