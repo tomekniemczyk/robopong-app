@@ -169,9 +169,10 @@ Protokół Robopong 3050XL jest w pełni udokumentowany w `re/`:
 ### Git workflow (OBOWIĄZKOWE)
 - **Commituj prosto na `main`** — bez feature branchy, bez PRów
 - **Zawsze pracuj w worktree** (`git worktree add /tmp/robopong-work HEAD`) — nie edytuj plików bezpośrednio w głównym katalogu roboczym
-- Po zakończeniu pracy w worktree: commit, wróć do main, `git merge`, push, `git worktree remove`
 - Przy każdym nowym zadaniu — twórz **nowy worktree od aktualnego main** (`git pull` + `git worktree add`), nigdy nie reużywaj starego
-- Push: `git push origin main`
+- **Przed pushem ZAWSZE rebase na main**: `git pull --rebase origin main`
+- **Push z `--force-with-lease`**: `git push --force-with-lease origin main` — bezpieczny force push, chroni przed nadpisaniem cudzych commitów
+- Pełna sekwencja po pracy w worktree: commit → `git checkout main` → `git pull --rebase origin main` → `git merge <worktree-branch>` → `git push --force-with-lease origin main` → `git worktree remove`
 - Nie używaj `/commit-push-pr` — tylko `/commit` + push na main
 
 ### Zarządzanie zadaniami (OBOWIĄZKOWE)
