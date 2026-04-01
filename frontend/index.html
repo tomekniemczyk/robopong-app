@@ -1527,7 +1527,7 @@
         <div v-for="ex in cat.exercises" :key="ex.id" class="drill-row" @click="selectedExercise = selectedExercise?.id === ex.id ? null : ex" style="cursor:pointer">
           <span v-if="selectedPlayerId" style="cursor:pointer;margin-right:4px" @click.stop="toggleFavorite('exercise', ex.id)">{{ isFavorite('exercise', ex.id) ? '★' : '☆' }}</span>
           <span class="drill-name">{{ tc('exercises', ex.name) }}</span>
-          <span class="time-badge">🕐 {{ fmtDur(ex.duration_sec) }}</span>
+          <span class="time-badge">⏱ {{ fmtDur(ex.duration_sec) }}</span>
         </div>
         <!-- Wybrany exercise detail -->
         <div v-if="selectedExercise && cat.exercises.some(e => e.id === selectedExercise.id)"
