@@ -379,15 +379,19 @@ async def _handle(msg: dict, ws: WebSocket):
 
     elif action == "throw_ball":
         b = msg["ball"]
-        _log("Throw ball: top=%s bot=%s osc=%s h=%s rot=%s wait=%sms",
-             b["top_speed"], b["bot_speed"], b["oscillation"], b["height"], b["rotation"], b.get("wait_ms", 1500))
-        await robot.set_ball(
-            b["top_speed"], b["bot_speed"],
-            b["oscillation"], b["height"],
-            b["rotation"], b.get("wait_ms", 1500),
-        )
-        await asyncio.sleep(0.3)
-        await robot.throw()
+        count = msg.get("count", 1)
+        _log("Throw ball: top=%s bot=%s osc=%s h=%s rot=%s wait=%sms count=%d",
+             b["top_speed"], b["bot_speed"], b["oscillation"], b["height"], b["rotation"], b.get("wait_ms", 1500), count)
+        if count > 1:
+            await robot.run_drill([b], repeat=0, count=count, percent=100)
+        else:
+            await robot.set_ball(
+                b["top_speed"], b["bot_speed"],
+                b["oscillation"], b["height"],
+                b["rotation"], b.get("wait_ms", 1500),
+            )
+            await asyncio.sleep(0.3)
+            await robot.throw()
 
     elif action == "stop":
         _log("Motors stop")

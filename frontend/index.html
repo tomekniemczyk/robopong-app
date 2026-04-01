@@ -1555,9 +1555,19 @@
               <button class="btn btn-ghost" style="padding:2px 8px;font-size:13px" @click="expParams[k] += (k==='wait_ms'?100:2)">+</button>
             </div>
           </div>
+          <div style="display:flex;gap:6px;margin-top:6px">
+            <div class="field" style="margin:0;flex:1">
+              <label style="font-size:10px;color:var(--muted)">{{ t('exp.ball_count') }}</label>
+              <input type="number" v-model.number="expCount" min="1" max="100" style="width:100%;text-align:center;font-size:12px">
+            </div>
+            <div class="field" style="margin:0;flex:1">
+              <label style="font-size:10px;color:var(--muted)">{{ t('exp.interval') }}</label>
+              <input type="number" v-model.number="expInterval" min="500" max="5000" step="100" style="width:100%;text-align:center;font-size:12px">
+            </div>
+          </div>
           <button class="btn btn-success" style="width:100%;padding:14px;font-size:15px;font-weight:700;margin-top:8px"
             :disabled="!connected || myRole !== 'controller'" @click="expThrow">
-            🎯 {{ t('exp.throw') }}
+            🎯 {{ expCount > 1 ? t('exp.throw_n', {n: expCount}) : t('exp.throw') }}
           </button>
         </div>
 
@@ -4405,6 +4415,8 @@ const _app = createApp({
 
     // ── Exploration ──────────────────────────────────────────
     const expParams = reactive({ top_speed: 120, bot_speed: 0, oscillation: 150, height: 190, rotation: 150, wait_ms: 2000 })
+    const expCount = ref(1)
+    const expInterval = ref(1500)
     const expBounce1 = ref(null)
     const expBounce2 = ref(null)
     const expClickPhase = ref(0)
@@ -4428,9 +4440,14 @@ const _app = createApp({
       if (!connected.value || myRole.value !== 'controller' || _expBusy) return
       _expBusy = true
       clearTimeout(_calIdleTimer)
-      send({ action: 'throw_ball', ball: { ...expParams } })
+      const ball = { ...expParams, wait_ms: expInterval.value }
+      if (expCount.value > 1) {
+        send({ action: 'throw_ball', ball, count: expCount.value })
+      } else {
+        send({ action: 'throw_ball', ball })
+      }
       _expMotorsRunning = true
-      showToast(t('toast.throw'))
+      showToast(expCount.value > 1 ? `${expCount.value}x` : t('toast.throw'))
       expBounce1.value = null
       expBounce2.value = null
       expClickPhase.value = 1
@@ -4706,7 +4723,7 @@ const _app = createApp({
       wizStart, wizThrow, wizFeedback, wizNextPhase, wizFinish, wizCancel,
       presets, savePreset, updatePreset, loadPreset, setDefaultPreset, deletePreset,
       calDone, importCalRef, exportCalibration, importCalibration, showToast,
-      expParams, expBounce1, expBounce2, expClickPhase, expSpin, expArc, expSpd, expUseful, expRating, expComment, expHistory,
+      expParams, expCount, expInterval, expBounce1, expBounce2, expClickPhase, expSpin, expArc, expSpd, expUseful, expRating, expComment, expHistory,
       expThrow, onExpTableClick, expSave, expReset, expDelete, loadExpHistory,
       roleLabel, rolePillClass,
       requestTakeover, cancelTakeover, respondTakeover, releaseControl,
