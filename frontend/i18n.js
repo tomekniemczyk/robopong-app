@@ -520,5 +520,6 @@ window.I18N = {
   'wizard.done':         { pl:'Kalibracja zakończona!',en:'Calibration complete!', de:'Kalibrierung abgeschlossen!', fr:'Calibrage terminé !', zh:'校准完成！' },
   'wizard.throws':       { pl:'rzutów',               en:'throws',               de:'Würfe',                   fr:'lancers',                  zh:'次发球' },
   'wizard.save':         { pl:'Zapisz kalibrację',    en:'Save calibration',     de:'Kalibrierung speichern',  fr:'Sauvegarder le calibrage', zh:'保存校准' },
+  'wizard.target_zone':  { pl:'CEL',                  en:'TARGET',               de:'ZIEL',                    fr:'CIBLE',                    zh:'目标' },
 
 }

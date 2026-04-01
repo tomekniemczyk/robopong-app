@@ -657,6 +657,9 @@
       <line x1="150" y1="17" x2="150" y2="227" stroke="#fff" stroke-width="1" opacity="0.4"/>
       <!-- Linia środkowa (siatka na stole) -->
       <line x1="0" y1="122" x2="300" y2="122" stroke="#fff" stroke-width="1" opacity="0.3"/>
+      <!-- Strefa celowa: koniec stołu po stronie gracza -->
+      <rect x="20" y="190" width="260" height="30" rx="4" fill="none" stroke="#34c759" stroke-width="1.5" stroke-dasharray="6,3" opacity="0.5"/>
+      <text x="150" y="208" text-anchor="middle" fill="#34c759" font-size="7" opacity="0.6">{{ t('wizard.target_zone') }}</text>
       <!-- Trail (zanikające) -->
       <circle v-for="(t, ti) in wizTrail" :key="ti"
         :cx="20 + (173 - Math.max(127, Math.min(173, t.oscillation))) / 46 * 260"
@@ -926,6 +929,49 @@
     <button class="btn btn-danger" style="padding:6px 12px;font-size:12px" @click="stopDrill">⏹</button>
   </div>
 
+  <!-- ── Landing marking overlay ─────────────────────────────────────────── -->
+  <div v-if="landingMode" style="position:fixed;inset:0;z-index:200;background:rgba(0,0,0,0.93);display:flex;flex-direction:column;align-items:center;padding:16px;box-sizing:border-box;overflow-y:auto">
+    <div style="font-size:16px;font-weight:700;margin-bottom:4px;color:#fff">🎯 Zaznacz lądowanie</div>
+    <div style="font-size:12px;color:var(--muted);margin-bottom:10px">Kliknij gdzie wylądowała piłka. Możesz zaznaczyć wiele punktów.</div>
+    <svg viewBox="0 0 300 340" style="width:100%;max-width:320px;cursor:crosshair;touch-action:none;flex-shrink:0" @click="handleLandingClick">
+      <!-- Robot half (darker) -->
+      <rect x="0" y="10" width="300" height="160" fill="#122a5a"/>
+      <!-- Player half (normal blue) -->
+      <rect x="0" y="170" width="300" height="160" fill="#1a4a8a"/>
+      <!-- Outer border -->
+      <rect x="0" y="10" width="300" height="320" fill="none" stroke="#fff" stroke-width="2"/>
+      <!-- Center longitudinal line -->
+      <line x1="150" y1="10" x2="150" y2="330" stroke="#fff" stroke-width="1" opacity="0.4"/>
+      <!-- Net bar -->
+      <rect x="-4" y="164" width="308" height="8" rx="1" fill="#666" stroke="#888" stroke-width="0.5"/>
+      <line x1="0" y1="170" x2="300" y2="170" stroke="#fff" stroke-width="1.5"/>
+      <!-- Robot label -->
+      <text x="150" y="8" text-anchor="middle" fill="#888" font-size="9">ROBOT</text>
+      <!-- Player figure -->
+      <g transform="translate(150,318)" opacity="0.4">
+        <circle cx="0" cy="-10" r="5" fill="none" stroke="#ccc" stroke-width="1.5"/>
+        <line x1="0" y1="-5" x2="0" y2="5" stroke="#ccc" stroke-width="1.5"/>
+        <line x1="0" y1="5" x2="-5" y2="14" stroke="#ccc" stroke-width="1.5"/>
+        <line x1="0" y1="5" x2="5" y2="14" stroke="#ccc" stroke-width="1.5"/>
+        <line x1="0" y1="-2" x2="-7" y2="3" stroke="#ccc" stroke-width="1.5"/>
+        <line x1="0" y1="-2" x2="8" y2="0" stroke="#ccc" stroke-width="1.5"/>
+      </g>
+      <text x="8" y="338" fill="#6b8ab5" font-size="9" opacity="0.6">BH</text>
+      <text x="272" y="338" fill="#6b8ab5" font-size="9" opacity="0.6">FH</text>
+      <!-- Pending landing dots -->
+      <g v-for="(pt, i) in pendingLandings" :key="i">
+        <circle :cx="pt.x * 300" :cy="10 + pt.y * 320" r="11"
+          :fill="pt.y < 0.5 ? '#4dabf7' : '#ff6b35'" stroke="#fff" stroke-width="1.5" opacity="0.9"/>
+        <text :x="pt.x * 300" :y="10 + pt.y * 320 + 4" text-anchor="middle" fill="#fff" font-size="8" font-weight="700">{{ i+1 }}</text>
+      </g>
+    </svg>
+    <div style="display:flex;gap:8px;margin-top:12px;width:100%;max-width:320px">
+      <button class="btn btn-ghost" style="flex:1" @click="pendingLandings.length && pendingLandings.splice(-1)" :disabled="!pendingLandings.length">↩ Cofnij</button>
+      <button class="btn btn-danger" style="flex:1" @click="landingMode=false;pendingLandings.splice(0)">Pomiń</button>
+      <button class="btn btn-success" style="flex:1" @click="saveLandings" :disabled="!pendingLandings.length">✓ Zapisz ({{ pendingLandings.length }})</button>
+    </div>
+  </div>
+
   <!-- ── Player select modal (required on startup) ──────────────────────── -->
   <div v-if="showPlayerSelectModal" class="modal-overlay" style="z-index:500">
     <div class="modal-sheet" style="max-width:340px;text-align:center">
@@ -1189,6 +1235,24 @@
                 <circle cx="136" cy="0" r="4" fill="#ffd43b"/><text x="144" y="3" fill="var(--muted)" font-size="8">{{ t('misc.nospin') }}</text>
               </g>
             </svg>
+            <!-- Historical landings for this drill -->
+            <div v-if="drillLandings.length && selectedPlayerId" style="margin-bottom:12px">
+              <div style="font-size:11px;color:var(--muted);margin-bottom:5px">🎯 Lądowania ({{ drillLandings.length }})</div>
+              <svg viewBox="0 0 300 340" style="width:160px;display:block;border-radius:4px;margin:0 auto">
+                <rect x="0" y="10" width="300" height="160" fill="#122a5a"/>
+                <rect x="0" y="170" width="300" height="160" fill="#1a4a8a"/>
+                <rect x="0" y="10" width="300" height="320" fill="none" stroke="#fff" stroke-width="2"/>
+                <line x1="150" y1="10" x2="150" y2="330" stroke="#fff" stroke-width="1" opacity="0.4"/>
+                <rect x="-4" y="164" width="308" height="8" rx="1" fill="#666"/>
+                <text x="150" y="8" text-anchor="middle" fill="#888" font-size="8">ROBOT</text>
+                <text x="8" y="338" fill="#6b8ab5" font-size="9" opacity="0.6">BH</text>
+                <text x="272" y="338" fill="#6b8ab5" font-size="9" opacity="0.6">FH</text>
+                <circle v-for="pt in drillLandings" :key="pt.id"
+                  :cx="pt.x * 300" :cy="10 + pt.y * 320" r="9"
+                  :fill="pt.y < 0.5 ? '#4dabf7' : '#ff6b35'"
+                  stroke="#fff" stroke-width="1" opacity="0.7"/>
+              </svg>
+            </div>
             <!-- Kontrolki -->
             <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px">
               <div class="field" style="margin:0">
@@ -2391,6 +2455,46 @@ const _app = createApp({
     })
     const drillRunCount  = ref(60)
     const drillRunPercent = ref(100)
+    const drillIsSolo    = ref(false)
+
+    // ── Ball landings ─────────────────────────────────────────
+    const landingMode    = ref(false)
+    const landingDrillId = ref(null)
+    const pendingLandings = ref([])
+    const drillLandings  = ref([])
+
+    function handleLandingClick(evt) {
+      const svg = evt.currentTarget
+      const pt = svg.createSVGPoint()
+      pt.x = evt.clientX
+      pt.y = evt.clientY
+      const svgPt = pt.matrixTransform(svg.getScreenCTM().inverse())
+      const x = Math.max(0, Math.min(1, svgPt.x / 300))
+      const y = Math.max(0, Math.min(1, (svgPt.y - 10) / 320))
+      pendingLandings.value.push({ x, y })
+    }
+
+    async function saveLandings() {
+      if (!pendingLandings.value.length || !landingDrillId.value || !selectedPlayerId.value) return
+      await Promise.all(pendingLandings.value.map(pt =>
+        fetch('/api/ball-landings', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ player_id: selectedPlayerId.value, drill_id: landingDrillId.value, x: pt.x, y: pt.y })
+        })
+      ))
+      pendingLandings.value = []
+      landingMode.value = false
+      if (activeDrill.value && activeDrill.value.id === landingDrillId.value) {
+        await loadDrillLandings(landingDrillId.value)
+      }
+    }
+
+    async function loadDrillLandings(drillId) {
+      if (!selectedPlayerId.value) { drillLandings.value = []; return }
+      const r = await fetch(`/api/ball-landings?drill_id=${drillId}&player_id=${selectedPlayerId.value}`)
+      drillLandings.value = await r.json()
+    }
 
     // Pozycja piłki na stole SVG (300×220, połowa gracza)
     // Oscillation 127-173 → X: 173=lewa=20, 150=środek=150, 127=prawa=280
@@ -2408,11 +2512,12 @@ const _app = createApp({
 
     function openDrillPanel(drill, folder) {
       if (activeDrill.value && activeDrill.value.id === drill.id) {
-        activeDrill.value = null; return
+        activeDrill.value = null; drillLandings.value = []; return
       }
       activeDrill.value = drill
       drillRunCount.value = drill.user_count || 60
       drillRunPercent.value = 100
+      if (selectedPlayerId.value) loadDrillLandings(drill.id)
     }
 
     function prevDrill(folder) {
@@ -2434,6 +2539,7 @@ const _app = createApp({
       drillRun.value       = 0
       drillMaxRepeat.value = drill.repeat
       drillRunning.value   = true
+      drillIsSolo.value    = !!selectedPlayerId.value
       if (selectedPlayerId.value) {
         send({ action: 'run_drill_solo', drill_id: drill.id, count: drillRunCount.value,
                player_id: selectedPlayerId.value, record: recordTraining.value })
@@ -3552,7 +3658,7 @@ const _app = createApp({
     }
     // ── Calibration Wizard ──────────────────────────────────
     const WIZARD_PHASES = [
-      { key: 'height', step0: 16, minStep: 2, min: 75, max: 210 },
+      { key: 'height', step0: 12, minStep: 2, min: 75, max: 210 },
       { key: 'oscillation', step0: 6, minStep: 2, min: 127, max: 173 },
       { key: 'top_speed', step0: 10, minStep: 2, min: 40, max: 249 },
     ]
@@ -3573,6 +3679,7 @@ const _app = createApp({
       wizTrail.value = []
       wizLastDir.value = 0
       wizStep.value = WIZARD_PHASES[0].step0
+      cal.height = 190
       cal.bot_speed = 0
       cal.rotation = 150
       cal.wait_ms = 3000
