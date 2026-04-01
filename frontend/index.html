@@ -402,7 +402,7 @@
 
 
   <!-- ── Kalibracja ───────────────────────────────────────────────────── -->
-  <div class="page" v-show="page === 'calibration'">
+  <div class="page" v-show="page === 'calibration' && !wizActive">
 
     <!-- instrukcja -->
     <div class="card" style="margin-bottom:12px">
@@ -3671,14 +3671,11 @@ const _app = createApp({
 
     watch(page, (p) => {
       if (p === 'calibration') {
-        _resetCalIdle()
         if (connected.value && myRole.value === 'controller') {
-          _clampAllCal()
-          send({ action: 'set_ball', ball: { ...cal } })
-          _calMotorsRunning = true
-          addLog('⚡ kalibracja — silniki start')
+          wizStart()
         }
       } else {
+        if (wizActive.value) wizCancel()
         clearTimeout(_calIdleTimer)
         _calMotorsRunning = false
         if (connected.value) {
