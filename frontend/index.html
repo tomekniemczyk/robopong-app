@@ -2548,7 +2548,7 @@ const _app = createApp({
       drillIsSolo.value    = !!selectedPlayerId.value
       if (selectedPlayerId.value) {
         send({ action: 'run_drill_solo', drill_id: drill.id, count: drillRunCount.value,
-               player_id: selectedPlayerId.value, record: recordTraining.value })
+               percent: drillRunPercent.value, player_id: selectedPlayerId.value, record: recordTraining.value })
       } else {
         send({ action: 'run_drill', id: drill.id, count: drillRunCount.value, percent: drillRunPercent.value })
       }

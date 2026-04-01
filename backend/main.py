@@ -412,12 +412,13 @@ async def _handle(msg: dict, ws: WebSocket):
         player_id = msg.get("player_id")
         record = msg.get("record", False)
         count = msg.get("count") or d.get("user_count") or 60
-        _log("Drill solo: \"%s\" count=%d player=%s record=%s", d.get("name", "?"), count, player_id, record)
+        percent = msg.get("percent", 100)
+        _log("Drill solo: \"%s\" count=%d percent=%d player=%s record=%s", d.get("name", "?"), count, percent, player_id, record)
         mini = {
             "name": d.get("name", "Drill"),
             "countdown_sec": 3,
             "steps": [{"drill_id": d["id"], "drill_name": d.get("name", ""),
-                        "count": count, "percent": 100, "pause_after_sec": 0}],
+                        "count": count, "percent": percent, "pause_after_sec": 0}],
         }
         _training_runner.start(mini, robot, broadcast, player_id=player_id,
                                record=record, solo_drill_id=d["id"])
