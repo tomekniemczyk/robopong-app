@@ -179,6 +179,15 @@ Protokół Robopong 3050XL jest w pełni udokumentowany w `re/`:
 - Priorytety (etykiety): `wysoki`, `sredni`, `niski` — domyślnie `sredni`
 - Nowe zadania: etykieta `backlog`
 
+### Spójność UI — ikony i konwencje (OBOWIĄZKOWE)
+- **Czas/timer:** zawsze `⏱` (U+23F1) — drill config, drill popup, training overlay
+- **Nagrywanie:** zawsze `🎥` + czerwony REC z pulsem (`recBlink`)
+- **Piłki:** zawsze `tr.balls_label` z i18n, format `thrown/total`
+- **Pauza/Stop/Play:** `⏸` / `⏹` / `▶` — te same znaki w całej aplikacji
+- **Notatki:** `💬`, **Mikrofon:** `🎙`
+- Przy dodawaniu nowej ikony — sprawdź czy istnieje już konwencja w systemie i użyj tej samej
+- Fonty w overlay'ach: kluczowe dane (counter, czas) muszą być czytelne z 3m (~28px+)
+
 ### Styl kodu
 - Zwięzły, bez nadmiarowych komentarzy
 - Brak nadmiarowej obsługi błędów dla scenariuszy niemożliwych
