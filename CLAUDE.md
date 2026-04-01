@@ -171,8 +171,9 @@ Protokół Robopong 3050XL jest w pełni udokumentowany w `re/`:
 - **Zawsze pracuj w worktree** (`git worktree add /tmp/robopong-work HEAD`) — nie edytuj plików bezpośrednio w głównym katalogu roboczym
 - Przy każdym nowym zadaniu — twórz **nowy worktree od aktualnego main** (`git pull` + `git worktree add`), nigdy nie reużywaj starego
 - **Przed pushem ZAWSZE rebase na main**: `git pull --rebase origin main`
+- **Konflikty przy rebase: ZAWSZE rozwiązuj logicznie** — przeczytaj obie strony konfliktu, zrozum intencję obu zmian, scal je zachowując funkcjonalność obu. NIGDY nie wybieraj ślepo "ours" ani "theirs". Po rozwiązaniu: `git add` + `git rebase --continue`
 - **Push z `--force-with-lease`**: `git push --force-with-lease origin main` — bezpieczny force push, chroni przed nadpisaniem cudzych commitów
-- Pełna sekwencja po pracy w worktree: commit → `git checkout main` → `git pull --rebase origin main` → `git merge <worktree-branch>` → `git push --force-with-lease origin main` → `git worktree remove`
+- Pełna sekwencja po pracy w worktree: commit → `git checkout main` → `git pull --rebase origin main` → rozwiąż konflikty → `git push --force-with-lease origin main` → `git worktree remove`
 - Nie używaj `/commit-push-pr` — tylko `/commit` + push na main
 
 ### Zarządzanie zadaniami (OBOWIĄZKOWE)
