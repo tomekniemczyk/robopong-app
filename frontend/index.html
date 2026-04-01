@@ -69,6 +69,13 @@
     .day-sq { width:14px; height:14px; border-radius:2px; background:var(--border); }
     .day-sq.done { background:#34c759; }
 
+    /* ── Video compare ──────────────────────────────────────── */
+    .vid-compare { display:flex; gap:4px; }
+    .vid-compare video { flex:1; border-radius:6px; max-height:40vh; object-fit:contain; background:#000; }
+    .vid-controls { display:flex; align-items:center; gap:8px; margin:6px 0; justify-content:center; }
+    .speed-btn { background:var(--surface); border:1px solid var(--border); border-radius:6px; padding:3px 8px; font-size:11px; color:var(--text); cursor:pointer; }
+    .speed-btn.active { background:var(--accent); border-color:var(--accent); color:#fff; }
+
     /* ── Observer / Pending banner ──────────────────────────── */
     .role-banner {
       display:flex; align-items:center; gap:10px; flex-wrap:wrap;
@@ -1436,6 +1443,7 @@
                     @click.stop="playingRecording = playingRecording === getStepRecording(h, si).filename ? null : getStepRecording(h, si).filename">
                     {{ playingRecording === getStepRecording(h, si)?.filename ? '⏹' : '🎥 ▶' }}
                   </button>
+                  <button class="btn btn-ghost" style="font-size:10px;padding:1px 6px" @click.stop="openVideoCompare(getStepRecording(h, si))">🔀</button>
                   <a :href="'/api/recordings/' + getStepRecording(h, si).filename" :download="recDownloadName(h, getStepRecording(h, si))" class="btn btn-ghost" style="font-size:10px;padding:1px 6px" @click.stop>⬇</a>
                   <button class="btn btn-ghost" style="font-size:10px;padding:1px 6px;color:var(--danger)" @click.stop="deleteRecording(getStepRecording(h, si).filename)">✕</button>
                 </template>
@@ -1510,6 +1518,51 @@
         </div>
       </div>
       <button class="btn btn-ghost" style="width:100%;margin-top:14px" @click="showCompareModal=false">{{ t('btn.close') }}</button>
+    </div>
+  </div>
+
+  <!-- ── Video compare modal ──────────────────────────────────────────── -->
+  <div v-if="videoCompare.show" class="modal-overlay" @click.self="closeVideoCompare()" style="z-index:250">
+    <div class="modal-sheet" style="max-width:95vw;width:800px">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
+        <h3 style="flex:1;font-size:14px">{{ t('stats.compare_video') }}: {{ videoCompare.stepName }}</h3>
+        <button class="btn btn-ghost" style="font-size:14px;padding:2px 6px" @click="closeVideoCompare()">✕</button>
+      </div>
+      <!-- Speed controls -->
+      <div class="vid-controls">
+        <span style="font-size:11px;color:var(--muted)">{{ t('stats.speed') }}:</span>
+        <button v-for="s in [0.25, 0.5, 0.75, 1]" :key="s" class="speed-btn" :class="{active: videoCompare.speed === s}" @click="setVideoSpeed(s)">{{ s }}x</button>
+      </div>
+      <!-- Side by side videos -->
+      <div class="vid-compare">
+        <div style="flex:1;text-align:center">
+          <div style="font-size:10px;color:var(--muted);margin-bottom:3px">{{ videoCompare.leftLabel }}</div>
+          <video ref="vidLeft" :src="'/api/recordings/' + videoCompare.leftFile" controls
+            style="width:100%;border-radius:6px;max-height:40vh;background:#000"
+            @play="syncVideos('play')" @pause="syncVideos('pause')" @seeked="syncVideos('seek')"></video>
+        </div>
+        <div style="flex:1;text-align:center">
+          <div style="font-size:10px;color:var(--muted);margin-bottom:3px">
+            <select v-if="videoCompare.others.length > 1" v-model="videoCompare.rightFile"
+              style="background:var(--surface);color:var(--text);border:1px solid var(--border);border-radius:6px;padding:2px 6px;font-size:10px">
+              <option v-for="r in videoCompare.others" :key="r.filename" :value="r.filename">
+                {{ getPlayerName(r.player_id) }} · {{ new Date(r.started_at).toLocaleDateString() }}
+              </option>
+            </select>
+            <span v-else>{{ videoCompare.rightLabel }}</span>
+          </div>
+          <video ref="vidRight" :src="'/api/recordings/' + videoCompare.rightFile" controls
+            style="width:100%;border-radius:6px;max-height:40vh;background:#000"></video>
+        </div>
+      </div>
+      <div v-if="!videoCompare.others.length" style="text-align:center;color:var(--muted);font-size:12px;padding:20px 0">
+        {{ t('stats.no_compare') }}
+      </div>
+      <!-- Play/pause both -->
+      <div class="vid-controls" style="margin-top:8px">
+        <button class="btn btn-primary" style="font-size:12px;padding:5px 16px" @click="toggleBothVideos()">⏯ Play/Pause</button>
+        <button class="btn btn-ghost" style="font-size:12px;padding:5px 12px" @click="restartBothVideos()">⏮ Restart</button>
+      </div>
     </div>
   </div>
 
@@ -2427,6 +2480,9 @@ const _app = createApp({
     const compareIdB = ref(null)
     const compareStatsA = ref(null)
     const compareStatsB = ref(null)
+    const videoCompare = reactive({ show: false, leftFile: '', rightFile: '', others: [], stepName: '', leftLabel: '', rightLabel: '', speed: 1 })
+    const vidLeft = ref(null)
+    const vidRight = ref(null)
     const playerFavorites = ref([])
     const favTrainings = computed(() => playerFavorites.value.filter(f => f.item_type === 'training'))
     const favDrills = computed(() => playerFavorites.value.filter(f => f.item_type === 'drill'))
@@ -3054,6 +3110,53 @@ const _app = createApp({
       else compareStatsB.value = d
     }
 
+    async function openVideoCompare(rec) {
+      videoCompare.leftFile = rec.filename
+      videoCompare.stepName = rec.step_name
+      videoCompare.leftLabel = getPlayerName(rec.player_id) + ' · ' + new Date(rec.started_at).toLocaleDateString()
+      videoCompare.speed = 1
+      videoCompare.others = []
+      videoCompare.rightFile = ''
+      videoCompare.rightLabel = ''
+      videoCompare.show = true
+      const r = await fetch(`/api/recordings/compare?training_id=${rec.training_id}&step_idx=${rec.step_idx}&exclude_player_id=${rec.player_id}`)
+      const others = await r.json()
+      // Also add same player's other recordings of same step
+      const samePlayer = playerRecordings.value.filter(pr =>
+        pr.training_id === rec.training_id && pr.step_idx === rec.step_idx && pr.filename !== rec.filename
+      )
+      videoCompare.others = [...samePlayer, ...others]
+      if (videoCompare.others.length) {
+        videoCompare.rightFile = videoCompare.others[0].filename
+        videoCompare.rightLabel = getPlayerName(videoCompare.others[0].player_id) + ' · ' + new Date(videoCompare.others[0].started_at).toLocaleDateString()
+      }
+    }
+    function closeVideoCompare() {
+      videoCompare.show = false
+      if (vidLeft.value) vidLeft.value.pause()
+      if (vidRight.value) vidRight.value.pause()
+    }
+    function setVideoSpeed(s) {
+      videoCompare.speed = s
+      if (vidLeft.value) vidLeft.value.playbackRate = s
+      if (vidRight.value) vidRight.value.playbackRate = s
+    }
+    function syncVideos(action) {
+      if (!vidLeft.value || !vidRight.value) return
+      if (action === 'play') { vidRight.value.currentTime = vidLeft.value.currentTime; vidRight.value.play() }
+      if (action === 'pause') { vidRight.value.pause() }
+      if (action === 'seek') { vidRight.value.currentTime = vidLeft.value.currentTime }
+    }
+    function toggleBothVideos() {
+      if (!vidLeft.value) return
+      if (vidLeft.value.paused) { vidLeft.value.play(); if (vidRight.value) vidRight.value.play() }
+      else { vidLeft.value.pause(); if (vidRight.value) vidRight.value.pause() }
+    }
+    function restartBothVideos() {
+      if (vidLeft.value) { vidLeft.value.currentTime = 0; vidLeft.value.play() }
+      if (vidRight.value) { vidRight.value.currentTime = 0; vidRight.value.play() }
+    }
+
     function playerRunCount(playerId) {
       return trainingHistory.value.filter(h => h.player_id === playerId).length
     }
@@ -3484,6 +3587,7 @@ const _app = createApp({
       expandedHistoryId, playerHistoryTotal, playerFavorites, playerStats, showActivity, statsMaxWeek,
       showCompareModal, compareIdA, compareIdB, compareStatsA, compareStatsB,
       compareMetrics, compareNameA, compareNameB, compare30A, compare30B, openCompare, loadCompareStats,
+      videoCompare, vidLeft, vidRight, openVideoCompare, closeVideoCompare, setVideoSpeed, syncVideos, toggleBothVideos, restartBothVideos,
       favTrainings, favDrills, favExercises,
       getTrainingSteps, getStepRecording, getDrillName, getExerciseName, getHistoryLabel,
       getStepVoiceNote, deleteVoiceNote, toggleVoiceRecord, loadPlayerVoiceNotes,

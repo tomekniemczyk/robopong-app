@@ -210,6 +210,10 @@ window.I18N = {
   'stats.compare':    { pl:'Porównaj',       en:'Compare',        de:'Vergleichen',      fr:'Comparer',          zh:'对比' },
   'stats.days':       { pl:'dni',            en:'days',           de:'Tage',             fr:'jours',             zh:'天' },
   'stats.vs':         { pl:'vs',             en:'vs',             de:'vs',               fr:'vs',                zh:'vs' },
+  'stats.compare_video': { pl:'Porównaj wideo', en:'Compare video', de:'Video vergleichen', fr:'Comparer vidéo', zh:'对比视频' },
+  'stats.speed':      { pl:'Prędkość',       en:'Speed',          de:'Geschw.',          fr:'Vitesse',           zh:'速度' },
+  'stats.select_rec': { pl:'Wybierz nagranie', en:'Select recording', de:'Aufnahme wählen', fr:'Choisir enregistrement', zh:'选择录制' },
+  'stats.no_compare': { pl:'Brak nagrań do porównania', en:'No recordings to compare', de:'Keine Aufnahmen', fr:'Aucun enregistrement', zh:'没有可比较的录制' },
 
   // ── Volume ─────────────────────────────────────────────────────────
   'volume.title': { pl:'Głośność serwera', en:'Server volume', de:'Server-Lautstärke', fr:'Volume serveur', zh:'服务器音量' },

@@ -910,6 +910,11 @@ def list_recordings(player_id: int | None = None):
     return recordings.get_recordings(player_id=player_id)
 
 
+@app.get("/api/recordings/compare")
+def get_comparable_recordings(training_id: int, step_idx: int, exclude_player_id: int | None = None):
+    return db.get_comparable_recordings(training_id, step_idx, exclude_player_id)
+
+
 @app.get("/api/recordings/{player_id}/{filename}")
 def get_recording(player_id: int, filename: str):
     path = recordings.get_recording_path(f"{player_id}/{filename}")

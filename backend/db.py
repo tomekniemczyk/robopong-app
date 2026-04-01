@@ -608,6 +608,23 @@ def get_recordings_meta(player_id=None):
                  "duration_sec": r[8], "size_bytes": r[9]} for r in rows]
 
 
+def get_comparable_recordings(training_id: int, step_idx: int, exclude_player_id: int | None = None):
+    """Get recordings of the same training step from other players."""
+    with sqlite3.connect(DB) as c:
+        q = ("SELECT id, player_id, training_id, training_name, step_idx, step_name,"
+             " filename, started_at, duration_sec, size_bytes FROM recordings_meta"
+             " WHERE training_id=? AND step_idx=?")
+        params = [training_id, step_idx]
+        if exclude_player_id is not None:
+            q += " AND player_id != ?"
+            params.append(exclude_player_id)
+        q += " ORDER BY started_at DESC"
+        rows = c.execute(q, params).fetchall()
+        return [{"id": r[0], "player_id": r[1], "training_id": r[2], "training_name": r[3],
+                 "step_idx": r[4], "step_name": r[5], "filename": r[6], "started_at": r[7],
+                 "duration_sec": r[8], "size_bytes": r[9]} for r in rows]
+
+
 def delete_recording_meta(filename: str):
     with sqlite3.connect(DB) as c:
         c.execute("DELETE FROM recordings_meta WHERE filename=?", (filename,))
