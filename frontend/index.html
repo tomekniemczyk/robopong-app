@@ -48,9 +48,28 @@
     .s-id { font-family:monospace; font-size:11px; color:var(--muted); flex:1; }
     .s-you { font-size:10px; color:var(--accent); font-weight:700; }
 
-    /* ── Stats grid & activity bars ────────────────────────── */
-    .stats-grid { display:grid; grid-template-columns:1fr 1fr 1fr; gap:6px; margin-bottom:10px; }
-    .stat-item { background:rgba(10,132,255,.06); border:1px solid var(--border); border-radius:8px; padding:6px 8px; text-align:center; }
+    /* ── Player avatar in topbar ───────────────────────────── */
+    .player-avatar-btn {
+      background:none; border:1px solid var(--border); border-radius:20px;
+      color:var(--text); font-size:11px; padding:2px 10px 2px 2px; cursor:pointer;
+      display:inline-flex; align-items:center; gap:5px; transition:.15s;
+    }
+    .player-avatar-btn:hover { border-color:var(--accent); }
+    .player-avatar-sm {
+      width:22px; height:22px; border-radius:50%; background:linear-gradient(135deg,#6366f1,#8b5cf6);
+      color:#fff; font-size:11px; font-weight:700; display:flex; align-items:center; justify-content:center;
+    }
+    .player-avatar-name { font-weight:600; max-width:60px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+
+    /* ── Stats dashboard tiles ─────────────────────────────── */
+    .stats-grid { display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:10px; }
+    .stat-tile {
+      border-radius:12px; padding:10px 12px; position:relative; overflow:hidden;
+    }
+    .stat-tile .st-icon { font-size:20px; margin-bottom:4px; }
+    .stat-tile .st-value { font-size:22px; font-weight:800; color:#fff; line-height:1.1; }
+    .stat-tile .st-label { font-size:9px; color:rgba(255,255,255,.7); text-transform:uppercase; letter-spacing:.04em; margin-top:2px; }
+    .stat-tile .st-bg { position:absolute; right:-8px; bottom:-8px; font-size:48px; opacity:.1; }
     .stat-value { font-size:17px; font-weight:700; color:var(--accent); }
     .stat-label { font-size:8px; color:var(--muted); text-transform:uppercase; letter-spacing:.04em; margin-top:1px; }
     .activity-row { display:flex; align-items:center; gap:6px; padding:2px 0; }
@@ -287,6 +306,11 @@
       <!-- sessions button -->
       <button class="sessions-btn" @click="showSessions=!showSessions" :title="t('sessions.title')">
         👥 {{ sessionsList.length }}
+      </button>
+      <!-- active player avatar -->
+      <button v-if="currentPlayerName" class="player-avatar-btn" @click="page='players'; selectedPlayerId && openPlayerDetail(playersList.find(p=>p.id===selectedPlayerId))" :title="currentPlayerName">
+        <span class="player-avatar-sm">{{ currentPlayerName.charAt(0).toUpperCase() }}</span>
+        <span class="player-avatar-name">{{ currentPlayerName }}</span>
       </button>
     </div>
   </div>
@@ -1714,24 +1738,56 @@
       <h3 style="margin-bottom:10px">👤 {{ playerDetail.name }}</h3>
 
       <!-- 30-Day Progress -->
-      <div v-if="playerProgram30(playerDetail.id)" style="margin-bottom:12px">
-        <div style="font-size:12px;color:var(--muted);margin-bottom:4px">30-Day Challenge: {{ playerProgram30(playerDetail.id) }}/30</div>
-        <div style="height:6px;background:var(--border);border-radius:3px;overflow:hidden">
-          <div :style="{width: (playerProgram30(playerDetail.id)/30*100)+'%', height:'100%', background:'var(--success)', transition:'width 0.3s'}"></div>
+      <div v-if="playerProgram30(playerDetail.id)" style="margin-bottom:12px;background:linear-gradient(135deg,#0d9488,#0f766e);border-radius:12px;padding:10px 14px">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
+          <span style="font-size:18px">🏆</span>
+          <span style="font-size:13px;font-weight:700;color:#fff">30-Day Challenge</span>
+          <span style="margin-left:auto;font-size:14px;font-weight:800;color:#fff">{{ playerProgram30(playerDetail.id) }}/30</span>
+        </div>
+        <div style="height:8px;background:rgba(0,0,0,.25);border-radius:4px;overflow:hidden">
+          <div :style="{width: (playerProgram30(playerDetail.id)/30*100)+'%', height:'100%', background:'linear-gradient(90deg,#34d399,#6ee7b7)', borderRadius:'4px', transition:'width 0.3s'}"></div>
         </div>
       </div>
 
-      <!-- Stats -->
+      <!-- Stats Dashboard -->
       <div v-if="playerStats" style="margin-bottom:14px">
-        <div style="font-size:13px;font-weight:600;margin-bottom:8px">{{ t('stats.title') }}</div>
         <div class="stats-grid">
-          <div class="stat-item"><div class="stat-value">{{ playerStats.total_sessions }}</div><div class="stat-label">{{ t('stats.sessions') }}</div></div>
-          <div class="stat-item"><div class="stat-value">{{ fmtDur(playerStats.total_time_sec) }}</div><div class="stat-label">{{ t('stats.total_time') }}</div></div>
-          <div class="stat-item"><div class="stat-value">{{ playerStats.completion_rate }}%</div><div class="stat-label">{{ t('stats.completion') }}</div></div>
-          <div class="stat-item"><div class="stat-value">{{ fmtDur(playerStats.avg_duration_sec) }}</div><div class="stat-label">{{ t('stats.avg') }}</div></div>
-          <div class="stat-item"><div class="stat-value">{{ playerStats.current_streak }} <span style="font-size:10px;font-weight:400;color:var(--muted)">{{ t('stats.days') }}</span></div><div class="stat-label">{{ t('stats.streak') }}</div></div>
-          <div class="stat-item"><div class="stat-value">{{ playerStats.longest_streak }} <span style="font-size:10px;font-weight:400;color:var(--muted)">{{ t('stats.days') }}</span></div><div class="stat-label">{{ t('stats.best_streak') }}</div></div>
-          <div class="stat-item"><div class="stat-value">{{ playerStats.total_balls || 0 }}</div><div class="stat-label">{{ t('stats.total_balls') }}</div></div>
+          <div class="stat-tile" style="background:linear-gradient(135deg,#6366f1,#4f46e5)">
+            <div class="st-icon">🏋</div>
+            <div class="st-value">{{ playerStats.total_sessions }}</div>
+            <div class="st-label">{{ t('stats.sessions') }}</div>
+            <div class="st-bg">🏋</div>
+          </div>
+          <div class="stat-tile" style="background:linear-gradient(135deg,#0ea5e9,#0284c7)">
+            <div class="st-icon">⏱</div>
+            <div class="st-value">{{ fmtDur(playerStats.total_time_sec) }}</div>
+            <div class="st-label">{{ t('stats.total_time') }}</div>
+            <div class="st-bg">⏱</div>
+          </div>
+          <div class="stat-tile" style="background:linear-gradient(135deg,#22c55e,#16a34a)">
+            <div class="st-icon">✅</div>
+            <div class="st-value">{{ playerStats.completion_rate }}%</div>
+            <div class="st-label">{{ t('stats.completion') }}</div>
+            <div class="st-bg">✅</div>
+          </div>
+          <div class="stat-tile" style="background:linear-gradient(135deg,#f59e0b,#d97706)">
+            <div class="st-icon">⚡</div>
+            <div class="st-value">{{ fmtDur(playerStats.avg_duration_sec) }}</div>
+            <div class="st-label">{{ t('stats.avg') }}</div>
+            <div class="st-bg">⚡</div>
+          </div>
+          <div class="stat-tile" style="background:linear-gradient(135deg,#ef4444,#dc2626)">
+            <div class="st-icon">🔥</div>
+            <div class="st-value">{{ playerStats.current_streak }}<span style="font-size:11px;opacity:.7"> {{ t('stats.days') }}</span></div>
+            <div class="st-label">{{ t('stats.streak') }}</div>
+            <div class="st-bg">🔥</div>
+          </div>
+          <div class="stat-tile" style="background:linear-gradient(135deg,#8b5cf6,#7c3aed)">
+            <div class="st-icon">🏓</div>
+            <div class="st-value">{{ playerStats.total_balls || 0 }}</div>
+            <div class="st-label">{{ t('stats.total_balls') }}</div>
+            <div class="st-bg">🏓</div>
+          </div>
         </div>
         <!-- Activity chart -->
         <div style="cursor:pointer;font-size:11px;color:var(--muted);margin-bottom:4px" @click="showActivity=!showActivity">
@@ -2349,9 +2405,8 @@
       <span class="nav-icon">📷</span>{{ t('nav.camera') }}
     </button>
     <button :class="{ active: page === 'players' }" @click="page='players'">
-      <span class="nav-icon">👤</span>{{ currentPlayerName || t('nav.players') }}
+      <span class="nav-icon">👤</span>{{ t('nav.players') }}
     </button>
-    <button v-if="selectedPlayerId" @click="showPlayerSelectModal=true" style="font-size:10px;padding:2px 6px;opacity:0.6" :title="t('players.select')">🔄</button>
     <button :class="{ active: page === 'history' }" @click="page='history'; loadAllHistory()">
       <span class="nav-icon">📊</span>{{ t('nav.history') }}
     </button>
