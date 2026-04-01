@@ -49,6 +49,72 @@ venv/bin/pytest tests/test_api.py::nazwa_testu
 - **Deploy:** `./deploy.sh` — polling co 15s, deploy tylko po CI pass (`gh run`)
 - **Kamera:** motion, port `8081`
 
+## Mapa projektu
+
+```
+robopong-app/
+├── start.sh                    # dev server (port 8000)
+├── deploy.sh                   # prod deploy script (polling CI)
+├── CLAUDE.md                   # instrukcje dla Claude Code
+│
+├── backend/                    # FastAPI + robot control
+│   ├── main.py          (1027) # REST API + WebSocket /ws + static files
+│   ├── robot.py          (397) # Robot: orkiestracja połączenia, komendy, drill loop
+│   ├── transport.py      (361) # ABC RobotTransport → BLE / USB / Simulation
+│   ├── db.py             (674) # SQLite: scenarios, drills, drill_folders
+│   ├── presets.py         (74) # SQLite: presety konfiguracji robota
+│   ├── drills.py         (284) # CRUD drilli (file-based JSON)
+│   ├── exercises.py       (80) # CRUD ćwiczeń (file-based JSON)
+│   ├── training.py       (446) # CRUD treningów (file-based JSON)
+│   ├── recordings.py     (154) # nagrywanie wideo sesji
+│   ├── players.py         (23) # zarządzanie profilami graczy
+│   ├── models.py          (66) # Pydantic: Ball, ScenarioIn, DrillIn, TrainingStep
+│   ├── audio.py           (40) # dźwięki treningowe
+│   ├── cli.py            (209) # CLI do sterowania robotem
+│   ├── *_default.json          # domyślne dane: drills, exercises, trainings
+│   ├── sounds/                 # pliki WAV (beepy, countdown, training events)
+│   ├── requirements.txt        # zależności produkcyjne
+│   ├── requirements-test.txt   # zależności testowe (pytest)
+│   └── tests/                  # 143 testów (pytest)
+│       ├── conftest.py         # shared fixtures
+│       ├── test_api.py         # integracja: scenariusze, kalibracja, presety
+│       ├── test_api_drills.py  # integracja: CRUD drilli
+│       ├── test_api_training.py# integracja: CRUD treningów
+│       ├── test_api_exercises.py# integracja: exercises
+│       ├── test_db.py          # unit: SQLite
+│       ├── test_presets.py     # unit: presety
+│       ├── test_drills.py      # unit: drills storage
+│       ├── test_exercises.py   # unit: exercises storage
+│       ├── test_training_storage.py # unit: training storage
+│       ├── test_transport.py   # unit: transport layer
+│       └── test_models.py      # unit: Pydantic validation
+│
+├── frontend/                   # Vue 3 (CDN, SPA)
+│   ├── index.html       (3615) # cała aplikacja Vue (single file)
+│   ├── style.css               # style CSS
+│   ├── i18n.js           (492) # tłumaczenia UI (PL/EN/DE/FR/ZH)
+│   ├── content_i18n.js   (262) # tłumaczenia treści (ćwiczenia, drille)
+│   ├── manifest.json           # PWA manifest
+│   ├── drills_default.json     # domyślne drille (kopia frontend)
+│   └── img/                    # SVG ikony (height, oscillation, rotation)
+│
+├── re/                         # reverse engineering protokołu (16MB)
+│   ├── ANDROID_APP_RE.md       # RE aplikacji Android
+│   ├── WINDOWS_APP_RE.md       # RE aplikacji Windows
+│   ├── IOS_APP_RE.md           # RE aplikacji iOS
+│   ├── BUSINESS_LOGIC_COMPLETE.md # wspólna logika, formuły
+│   ├── PROTOCOL_RE.md          # protokół komunikacji
+│   └── convert_drills.py + raw data  # ekstrakcja drilli z oryginalnych app
+│
+├── docs/                       # dokumentacja
+│   ├── protocol.md             # protokół robota
+│   └── ux-flow.html            # diagram UX flow
+│
+└── .github/workflows/ci.yml   # GitHub Actions CI
+```
+
+> **UWAGA:** Mapa musi być aktualizowana przy istotnych zmianach struktury — nowy moduł, nowy katalog, usunięcie pliku. Drobne zmiany wewnątrz istniejących plików nie wymagają aktualizacji.
+
 ### Warstwy backendu
 
 - `transport.py` — ABC `RobotTransport` → `BLETransport` (Bleak/MLDP), `USBTransport` (pyserial FTDI), `SimulationTransport`
@@ -127,6 +193,11 @@ Protokół Robopong 3050XL jest w pełni udokumentowany w `re/`:
 ### Dokumentowanie ustaleń
 - Każde ustalenie dot. protokołu/wartości/UX zapisuj w memory i CLAUDE.md
 - Ustalenia z testów na żywo mają priorytet nad RE dokumentacją
+
+### Aktualizacja mapy projektu (OBOWIĄZKOWE)
+- Przy dodaniu/usunięciu pliku źródłowego, modułu lub katalogu — zaktualizuj sekcję "Mapa projektu" w CLAUDE.md
+- Przy zmianie liczby linii o >20% w kluczowym pliku — zaktualizuj liczbę w nawiasie
+- Nie aktualizuj mapy przy drobnych zmianach wewnątrz istniejących plików
 
 ## Slash commands
 
