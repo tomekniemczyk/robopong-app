@@ -112,6 +112,35 @@ def init():
         if count == 0 and DRILLS_DEFAULT.exists():
             _seed_drills(c)
         c.execute("""
+            CREATE TABLE IF NOT EXISTS ball_exploration (
+                id              INTEGER PRIMARY KEY AUTOINCREMENT,
+                player_id       INTEGER,
+                firmware        INTEGER,
+                top_speed       INTEGER,
+                bot_speed       INTEGER,
+                oscillation     INTEGER,
+                height          INTEGER,
+                rotation        INTEGER,
+                wait_ms         INTEGER,
+                cal_top         INTEGER,
+                cal_bot         INTEGER,
+                cal_osc         INTEGER,
+                cal_h           INTEGER,
+                cal_rot         INTEGER,
+                bounce1_x       REAL,
+                bounce1_y       REAL,
+                bounce2_x       REAL,
+                bounce2_y       REAL,
+                spin            TEXT,
+                arc             TEXT,
+                perceived_speed TEXT,
+                useful_for      TEXT,
+                rating          INTEGER,
+                comment         TEXT DEFAULT '',
+                created_at      TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            )
+        """)
+        c.execute("""
             CREATE TABLE IF NOT EXISTS favorites (
                 id          INTEGER PRIMARY KEY AUTOINCREMENT,
                 player_id   INTEGER NOT NULL,
@@ -677,6 +706,48 @@ def get_voice_note(nid: int) -> dict | None:
 def delete_voice_note(nid: int):
     with sqlite3.connect(DB) as c:
         c.execute("DELETE FROM voice_notes WHERE id=?", (nid,))
+
+
+# ── Ball exploration ─────────────────────────────────────────────────────────
+
+def save_ball_exploration(data: dict) -> int:
+    with sqlite3.connect(DB) as c:
+        cur = c.execute(
+            "INSERT INTO ball_exploration (player_id, firmware, top_speed, bot_speed, oscillation, height, rotation, wait_ms,"
+            " cal_top, cal_bot, cal_osc, cal_h, cal_rot, bounce1_x, bounce1_y, bounce2_x, bounce2_y,"
+            " spin, arc, perceived_speed, useful_for, rating, comment) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
+            (data.get("player_id"), data.get("firmware"),
+             data.get("top_speed"), data.get("bot_speed"), data.get("oscillation"),
+             data.get("height"), data.get("rotation"), data.get("wait_ms"),
+             data.get("cal_top"), data.get("cal_bot"), data.get("cal_osc"),
+             data.get("cal_h"), data.get("cal_rot"),
+             data.get("bounce1_x"), data.get("bounce1_y"),
+             data.get("bounce2_x"), data.get("bounce2_y"),
+             data.get("spin"), data.get("arc"), data.get("perceived_speed"),
+             data.get("useful_for"), data.get("rating"), data.get("comment", ""))
+        )
+        return cur.lastrowid
+
+
+def get_ball_explorations(player_id: int | None = None, limit: int = 50) -> list:
+    with sqlite3.connect(DB) as c:
+        q = ("SELECT id, player_id, firmware, top_speed, bot_speed, oscillation, height, rotation, wait_ms,"
+             " cal_top, cal_bot, cal_osc, cal_h, cal_rot, bounce1_x, bounce1_y, bounce2_x, bounce2_y,"
+             " spin, arc, perceived_speed, useful_for, rating, comment, created_at FROM ball_exploration WHERE 1=1")
+        params = []
+        if player_id is not None:
+            q += " AND player_id=?"; params.append(player_id)
+        q += " ORDER BY created_at DESC LIMIT ?"
+        params.append(limit)
+        cols = ["id", "player_id", "firmware", "top_speed", "bot_speed", "oscillation", "height", "rotation", "wait_ms",
+                "cal_top", "cal_bot", "cal_osc", "cal_h", "cal_rot", "bounce1_x", "bounce1_y", "bounce2_x", "bounce2_y",
+                "spin", "arc", "perceived_speed", "useful_for", "rating", "comment", "created_at"]
+        return [dict(zip(cols, r)) for r in c.execute(q, params).fetchall()]
+
+
+def delete_ball_exploration(eid: int):
+    with sqlite3.connect(DB) as c:
+        c.execute("DELETE FROM ball_exploration WHERE id=?", (eid,))
 
 
 def _voice_note_row(r) -> dict:

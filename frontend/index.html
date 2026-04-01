@@ -1503,6 +1503,136 @@
     </div>
   </div>
 
+  <!-- ── Eksploracja robota ──────────────────────────────────────────────── -->
+  <div class="page" v-show="page === 'exploration'">
+    <div class="card">
+      <h2 style="margin-bottom:12px">🔬 {{ t('exp.title') }}</h2>
+
+      <div style="display:flex;gap:14px;flex-wrap:wrap">
+        <!-- Panel parametrów -->
+        <div style="min-width:180px;flex:0 0 180px">
+          <div class="field" v-for="k in ['top_speed','bot_speed','oscillation','height','rotation','wait_ms']" :key="k" style="margin-bottom:6px">
+            <label style="font-size:10px;color:var(--muted)">{{ k }}</label>
+            <div style="display:flex;align-items:center;gap:4px">
+              <button class="btn btn-ghost" style="padding:2px 8px;font-size:13px" @click="expParams[k] -= (k==='wait_ms'?100:2)">−</button>
+              <input type="number" v-model.number="expParams[k]" style="width:60px;text-align:center;font-size:12px">
+              <button class="btn btn-ghost" style="padding:2px 8px;font-size:13px" @click="expParams[k] += (k==='wait_ms'?100:2)">+</button>
+            </div>
+          </div>
+          <button class="btn btn-success" style="width:100%;padding:14px;font-size:15px;font-weight:700;margin-top:8px"
+            :disabled="!connected || myRole !== 'controller'" @click="expThrow">
+            🎯 {{ t('exp.throw') }}
+          </button>
+        </div>
+
+        <!-- SVG stołu (proporcjonalny 152.5 × 274) -->
+        <div style="flex:1;min-width:200px;max-width:340px">
+          <svg viewBox="0 0 305 548" style="width:100%;display:block;border-radius:6px;cursor:crosshair"
+            @click="onExpTableClick($event)">
+            <!-- Robot -->
+            <rect x="112" y="0" width="80" height="12" rx="4" fill="#3a3d52" stroke="#6b6f8a" stroke-width="1"/>
+            <text x="152" y="9" text-anchor="middle" fill="#6b6f8a" font-size="8">ROBOT</text>
+            <!-- Siatka -->
+            <rect x="0" y="14" width="305" height="6" rx="2" fill="#555"/>
+            <!-- Stół -->
+            <rect x="0" y="20" width="305" height="500" fill="#1a4a8a"/>
+            <rect x="0" y="20" width="305" height="500" fill="none" stroke="#fff" stroke-width="2.5"/>
+            <line x1="152.5" y1="20" x2="152.5" y2="520" stroke="#fff" stroke-width="1" opacity="0.4"/>
+            <line x1="0" y1="270" x2="305" y2="270" stroke="#fff" stroke-width="1.5" opacity="0.5"/>
+            <!-- Odbicie 1 -->
+            <circle v-if="expBounce1" :cx="expBounce1.x * 305" :cy="20 + expBounce1.y * 500" r="10" fill="#4dabf7" stroke="#fff" stroke-width="2" opacity="0.9"/>
+            <text v-if="expBounce1" :x="expBounce1.x * 305" :y="20 + expBounce1.y * 500 + 4" text-anchor="middle" fill="#fff" font-size="8" font-weight="700">1</text>
+            <!-- Odbicie 2 -->
+            <circle v-if="expBounce2" :cx="expBounce2.x * 305" :cy="20 + expBounce2.y * 500" r="10" fill="#ff6b35" stroke="#fff" stroke-width="2" opacity="0.9"/>
+            <text v-if="expBounce2" :x="expBounce2.x * 305" :y="20 + expBounce2.y * 500 + 4" text-anchor="middle" fill="#fff" font-size="8" font-weight="700">2</text>
+            <!-- Etykiety -->
+            <text x="15" y="535" fill="#6b8ab5" font-size="10" opacity="0.6">BH</text>
+            <text x="280" y="535" fill="#6b8ab5" font-size="10" opacity="0.6">FH</text>
+            <!-- Gracz -->
+            <g transform="translate(152,540)" opacity="0.5">
+              <circle cx="0" cy="-6" r="4" fill="none" stroke="#ccc" stroke-width="1.2"/>
+              <line x1="0" y1="-2" x2="0" y2="5" stroke="#ccc" stroke-width="1.2"/>
+            </g>
+          </svg>
+          <div v-if="expClickPhase === 1" style="text-align:center;font-size:12px;color:#4dabf7;margin-top:4px">{{ t('exp.click_bounce1') }}</div>
+          <div v-if="expClickPhase === 2" style="text-align:center;font-size:12px;color:#ff6b35;margin-top:4px">{{ t('exp.click_bounce2') }}</div>
+        </div>
+      </div>
+
+      <!-- Tagi opis piłki -->
+      <div v-if="expClickPhase === 3" style="margin-top:14px;padding:12px;background:rgba(255,255,255,.03);border-radius:8px">
+        <div style="font-size:13px;font-weight:600;margin-bottom:8px">{{ t('exp.describe') }}</div>
+
+        <div style="margin-bottom:8px">
+          <div style="font-size:10px;color:var(--muted);margin-bottom:3px">Spin</div>
+          <div style="display:flex;flex-wrap:wrap;gap:4px">
+            <button v-for="s in ['topspin','backspin','sidespin-L','sidespin-R','no-spin','knuckle']" :key="s"
+              class="btn btn-ghost" style="padding:5px 10px;font-size:11px;border-radius:16px"
+              :style="{background: expSpin === s ? 'var(--accent)' : '', color: expSpin === s ? '#fff' : ''}"
+              @click="expSpin = expSpin === s ? null : s">{{ s }}</button>
+          </div>
+        </div>
+
+        <div style="margin-bottom:8px">
+          <div style="font-size:10px;color:var(--muted);margin-bottom:3px">{{ t('exp.arc') }}</div>
+          <div style="display:flex;flex-wrap:wrap;gap:4px">
+            <button v-for="a in ['high','flat','low','bouncy']" :key="a"
+              class="btn btn-ghost" style="padding:5px 10px;font-size:11px;border-radius:16px"
+              :style="{background: expArc === a ? 'var(--accent)' : '', color: expArc === a ? '#fff' : ''}"
+              @click="expArc = expArc === a ? null : a">{{ t('exp.' + a) }}</button>
+          </div>
+        </div>
+
+        <div style="margin-bottom:8px">
+          <div style="font-size:10px;color:var(--muted);margin-bottom:3px">{{ t('exp.speed') }}</div>
+          <div style="display:flex;flex-wrap:wrap;gap:4px">
+            <button v-for="sp in ['slow','medium','fast','very-fast']" :key="sp"
+              class="btn btn-ghost" style="padding:5px 10px;font-size:11px;border-radius:16px"
+              :style="{background: expSpd === sp ? 'var(--accent)' : '', color: expSpd === sp ? '#fff' : ''}"
+              @click="expSpd = expSpd === sp ? null : sp">{{ t('exp.' + sp) }}</button>
+          </div>
+        </div>
+
+        <div style="margin-bottom:8px">
+          <div style="font-size:10px;color:var(--muted);margin-bottom:3px">{{ t('exp.useful') }}</div>
+          <div style="display:flex;flex-wrap:wrap;gap:4px">
+            <button v-for="u in ['block','topspin','push','flick','chop','rally']" :key="u"
+              class="btn btn-ghost" style="padding:5px 10px;font-size:11px;border-radius:16px"
+              :style="{background: expUseful.includes(u) ? '#6366f1' : '', color: expUseful.includes(u) ? '#fff' : ''}"
+              @click="expUseful.includes(u) ? expUseful.splice(expUseful.indexOf(u),1) : expUseful.push(u)">{{ u }}</button>
+          </div>
+        </div>
+
+        <div style="margin-bottom:8px">
+          <div style="font-size:10px;color:var(--muted);margin-bottom:3px">{{ t('exp.rating') }}</div>
+          <div style="display:flex;gap:4px">
+            <span v-for="r in 5" :key="r" style="font-size:22px;cursor:pointer" @click="expRating = r">{{ r <= expRating ? '★' : '☆' }}</span>
+          </div>
+        </div>
+
+        <input v-model="expComment" :placeholder="t('exp.comment')" style="width:100%;font-size:12px;padding:8px;margin-bottom:8px;box-sizing:border-box">
+
+        <div style="display:flex;gap:8px">
+          <button class="btn btn-success" style="flex:1;padding:10px;font-size:14px" @click="expSave">💾 {{ t('exp.save') }}</button>
+          <button class="btn btn-ghost" style="padding:10px;font-size:14px" @click="expReset">{{ t('exp.skip') }}</button>
+        </div>
+      </div>
+
+      <!-- Historia ostatnich -->
+      <div v-if="expHistory.length" style="margin-top:14px">
+        <div style="font-size:12px;font-weight:600;color:var(--muted);margin-bottom:6px">{{ t('exp.history') }} ({{ expHistory.length }})</div>
+        <div v-for="e in expHistory.slice(0,10)" :key="e.id" style="font-size:11px;padding:4px 0;border-bottom:1px solid rgba(255,255,255,.04);display:flex;align-items:center;gap:6px">
+          <span style="color:var(--muted)">#{{ e.id }}</span>
+          <span>top={{ e.top_speed }} bot={{ e.bot_speed }} osc={{ e.oscillation }} h={{ e.height }}</span>
+          <span v-if="e.spin" style="color:#4dabf7">{{ e.spin }}</span>
+          <span v-if="e.rating">{{ '★'.repeat(e.rating) }}</span>
+          <span v-if="e.comment" style="color:var(--text2);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">"{{ e.comment }}"</span>
+          <button class="btn btn-ghost" style="font-size:10px;padding:1px 6px;color:var(--danger)" @click="expDelete(e.id)">✕</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- ── Gracze ──────────────────────────────────────────────────────────── -->
   <div class="page" v-show="page === 'players'">
     <div class="card">
@@ -1957,6 +2087,9 @@
     </button>
     <button :class="{active: page==='exercises'}" @click="page='exercises'">
       <span class="nav-icon">🏋</span>{{ t('nav.exercises') }}
+    </button>
+    <button :class="{active: page==='exploration'}" :style="connected && !isCalibrated ? 'opacity:0.4' : ''" @click="connected && !isCalibrated ? (showToast(t('toast.cal_required')), page='calibration') : page='exploration'">
+      <span class="nav-icon">🔬</span>{{ t('nav.exploration') }}
     </button>
     <button :class="{ active: page === 'camera' }" @click="page='camera'">
       <span class="nav-icon">📷</span>{{ t('nav.camera') }}
@@ -3783,7 +3916,102 @@ const _app = createApp({
       wizState.value = 'idle'
     }
 
+    // ── Exploration ──────────────────────────────────────────
+    const expParams = reactive({ top_speed: 120, bot_speed: 0, oscillation: 150, height: 190, rotation: 150, wait_ms: 2000 })
+    const expBounce1 = ref(null)
+    const expBounce2 = ref(null)
+    const expClickPhase = ref(0)
+    const expSpin = ref(null)
+    const expArc = ref(null)
+    const expSpd = ref(null)
+    const expUseful = reactive([])
+    const expRating = ref(0)
+    const expComment = ref('')
+    const expHistory = ref([])
+    let _expMotorsRunning = false
+
+    async function loadExpHistory() {
+      const pid = selectedPlayerId.value
+      const url = pid ? `/api/ball-exploration?player_id=${pid}` : '/api/ball-exploration'
+      expHistory.value = await (await fetch(url)).json()
+    }
+
+    async function expThrow() {
+      if (!connected.value) return
+      clearTimeout(_calIdleTimer)
+      send({ action: 'set_ball', ball: { ...expParams } })
+      _expMotorsRunning = true
+      if (!_expMotorsRunning) {
+        showToast(t('toast.motors_warmup'))
+        await new Promise(r => setTimeout(r, 5000))
+      }
+      await new Promise(r => setTimeout(r, 300))
+      send({ action: 'throw' })
+      showToast(t('toast.throw'))
+      expBounce1.value = null
+      expBounce2.value = null
+      expClickPhase.value = 1
+    }
+
+    function onExpTableClick(evt) {
+      if (expClickPhase.value < 1 || expClickPhase.value > 2) return
+      const svg = evt.currentTarget
+      const rect = svg.getBoundingClientRect()
+      const x = (evt.clientX - rect.left) / rect.width
+      const y = Math.max(0, ((evt.clientY - rect.top) / rect.height - 20/548)) / (500/548)
+      const pt = { x: Math.max(0, Math.min(1, x)), y: Math.max(0, Math.min(1, y)) }
+      if (expClickPhase.value === 1) {
+        expBounce1.value = pt
+        expClickPhase.value = 2
+      } else {
+        expBounce2.value = pt
+        expClickPhase.value = 3
+      }
+    }
+
+    async function expSave() {
+      const body = {
+        player_id: selectedPlayerId.value,
+        firmware: firmware.value,
+        ...expParams,
+        cal_top: cal.top_speed, cal_bot: cal.bot_speed,
+        cal_osc: cal.oscillation, cal_h: cal.height, cal_rot: cal.rotation,
+        bounce1_x: expBounce1.value?.x, bounce1_y: expBounce1.value?.y,
+        bounce2_x: expBounce2.value?.x, bounce2_y: expBounce2.value?.y,
+        spin: expSpin.value, arc: expArc.value,
+        perceived_speed: expSpd.value,
+        useful_for: expUseful.join(','),
+        rating: expRating.value,
+        comment: expComment.value,
+      }
+      await fetch('/api/ball-exploration', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body)
+      })
+      showToast(t('toast.saved') || '💾')
+      expReset()
+      loadExpHistory()
+    }
+
+    function expReset() {
+      expBounce1.value = null
+      expBounce2.value = null
+      expClickPhase.value = 0
+      expSpin.value = null
+      expArc.value = null
+      expSpd.value = null
+      expUseful.splice(0)
+      expRating.value = 0
+      expComment.value = ''
+    }
+
+    async function expDelete(id) {
+      await fetch(`/api/ball-exploration/${id}`, { method: 'DELETE' })
+      loadExpHistory()
+    }
+
     watch(page, (p) => {
+      if (p === 'exploration') loadExpHistory()
       if (p === 'calibration') {
         if (connected.value && myRole.value === 'controller') {
           wizStart()
@@ -3942,6 +4170,8 @@ const _app = createApp({
       wizStart, wizThrow, wizFeedback, wizNextPhase, wizFinish, wizCancel,
       presets, savePreset, updatePreset, loadPreset, setDefaultPreset, deletePreset,
       calDone, importCalRef, exportCalibration, importCalibration, showToast,
+      expParams, expBounce1, expBounce2, expClickPhase, expSpin, expArc, expSpd, expUseful, expRating, expComment, expHistory,
+      expThrow, onExpTableClick, expSave, expReset, expDelete, loadExpHistory,
       roleLabel, rolePillClass,
       requestTakeover, cancelTakeover, respondTakeover, releaseControl,
       trainings, trainingRunning, trainingScenarioName, trainingPhase,

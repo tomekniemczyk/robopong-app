@@ -1031,6 +1031,24 @@ def test_volume():
     return {"ok": True}
 
 
+# ── Ball exploration ──────────────────────────────────────────────────────────
+
+@app.post("/api/ball-exploration", status_code=201)
+def create_ball_exploration(body: dict):
+    eid = db.save_ball_exploration(body)
+    return {"id": eid}
+
+
+@app.get("/api/ball-exploration")
+def list_ball_explorations(player_id: int | None = None, limit: int = 50):
+    return db.get_ball_explorations(player_id=player_id, limit=limit)
+
+
+@app.delete("/api/ball-exploration/{eid}", status_code=204)
+def delete_ball_exploration_endpoint(eid: int):
+    db.delete_ball_exploration(eid)
+
+
 # ── Frontend ───────────────────────────────────────────────────────────────────
 
 @app.middleware("http")
