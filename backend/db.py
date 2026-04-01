@@ -87,6 +87,17 @@ def init():
                 size_bytes      INTEGER DEFAULT 0
             )
         """)
+        c.execute("""
+            CREATE TABLE IF NOT EXISTS voice_notes (
+                id                  INTEGER PRIMARY KEY AUTOINCREMENT,
+                player_id           INTEGER NOT NULL,
+                training_history_id INTEGER,
+                step_idx            INTEGER DEFAULT 0,
+                filename            TEXT NOT NULL,
+                started_at          TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                duration_ms         INTEGER DEFAULT 0
+            )
+        """)
         count = c.execute("SELECT COUNT(*) FROM drill_folders").fetchone()[0]
         if count == 0 and DRILLS_DEFAULT.exists():
             _seed_drills(c)
@@ -380,9 +391,9 @@ def delete_user_training(tid: int):
 
 def record_training_run(training_id, player_id, elapsed_sec, status,
                         steps_completed, steps_total, steps_skipped=None, step_notes=None,
-                        solo_drill_id=None, solo_exercise_id=None):
+                        solo_drill_id=None, solo_exercise_id=None) -> int:
     with sqlite3.connect(DB) as c:
-        c.execute(
+        cur = c.execute(
             "INSERT INTO training_history (training_id, player_id, elapsed_sec, status, "
             "steps_completed, steps_total, steps_skipped, step_notes, solo_drill_id, solo_exercise_id) "
             "VALUES (?,?,?,?,?,?,?,?,?,?)",
@@ -390,6 +401,7 @@ def record_training_run(training_id, player_id, elapsed_sec, status,
              json.dumps(steps_skipped or []), json.dumps(step_notes or []),
              solo_drill_id, solo_exercise_id)
         )
+        return cur.lastrowid
 
 
 def get_training_history(training_id=None, player_id=None, limit=None, offset=0, solo_only=False):
@@ -452,6 +464,94 @@ def delete_history_entry(hid: int) -> bool:
         return c.total_changes > 0
 
 
+# ── Player Stats ─────────────────────────────────────────────────────────
+
+def get_player_stats(player_id: int) -> dict:
+    from datetime import datetime, timedelta
+    with sqlite3.connect(DB) as c:
+        # Totals
+        r = c.execute(
+            "SELECT COUNT(*), SUM(CASE WHEN status='completed' THEN 1 ELSE 0 END),"
+            " SUM(elapsed_sec), AVG(elapsed_sec)"
+            " FROM training_history WHERE player_id=?", (player_id,)
+        ).fetchone()
+        total = r[0] or 0
+        completed = r[1] or 0
+        total_sec = r[2] or 0
+        avg_sec = int(r[3] or 0)
+
+        # 30-Day Challenge (training_id 101-130)
+        p30 = c.execute(
+            "SELECT COUNT(DISTINCT training_id) FROM training_history"
+            " WHERE player_id=? AND status='completed' AND training_id BETWEEN 101 AND 130",
+            (player_id,)
+        ).fetchone()[0] or 0
+
+        # Streak (consecutive days from today)
+        days = [row[0] for row in c.execute(
+            "SELECT DISTINCT date(started_at) FROM training_history"
+            " WHERE player_id=? ORDER BY date(started_at) DESC", (player_id,)
+        ).fetchall()]
+
+        today = datetime.now().date()
+        current_streak = 0
+        longest_streak = 0
+        streak = 0
+        for i, d in enumerate(days):
+            dt = datetime.strptime(d, "%Y-%m-%d").date()
+            expected = today - timedelta(days=i)
+            if dt == expected:
+                streak += 1
+                current_streak = streak
+            else:
+                break
+        # longest streak from all days
+        streak = 0
+        for i, d in enumerate(days):
+            dt = datetime.strptime(d, "%Y-%m-%d").date()
+            if i == 0:
+                streak = 1
+            else:
+                prev = datetime.strptime(days[i - 1], "%Y-%m-%d").date()
+                streak = streak + 1 if (prev - dt).days == 1 else 1
+            longest_streak = max(longest_streak, streak)
+
+        # Weekly activity (last 8 weeks)
+        cutoff = (today - timedelta(days=55)).isoformat()
+        weeks_raw = c.execute(
+            "SELECT strftime('%%Y-%%W', started_at) as w, COUNT(*),"
+            " SUM(CASE WHEN status='completed' THEN 1 ELSE 0 END), SUM(elapsed_sec)"
+            " FROM training_history WHERE player_id=? AND date(started_at) >= ?"
+            " GROUP BY w ORDER BY w", (player_id, cutoff)
+        ).fetchall()
+
+        # Build 8-week grid with labels
+        weekly = []
+        for i in range(7, -1, -1):
+            week_start = today - timedelta(days=today.weekday() + 7 * i)
+            wk = week_start.strftime("%Y-%W")
+            label = week_start.strftime("%d %b")
+            match = next((r for r in weeks_raw if r[0] == wk), None)
+            weekly.append({
+                "week": wk, "week_label": label,
+                "sessions": match[1] if match else 0,
+                "completed": match[2] if match else 0,
+                "total_sec": match[3] if match else 0,
+            })
+
+    return {
+        "total_sessions": total,
+        "completed_sessions": completed,
+        "total_time_sec": total_sec,
+        "avg_duration_sec": avg_sec,
+        "completion_rate": round(completed / total * 100) if total else 0,
+        "current_streak": current_streak,
+        "longest_streak": longest_streak,
+        "program30_completed": p30,
+        "weekly_activity": weekly,
+    }
+
+
 # ── Favorites ─────────────────────────────────────────────────────────────
 
 def get_favorites(player_id: int):
@@ -511,3 +611,47 @@ def get_recordings_meta(player_id=None):
 def delete_recording_meta(filename: str):
     with sqlite3.connect(DB) as c:
         c.execute("DELETE FROM recordings_meta WHERE filename=?", (filename,))
+
+
+# ── Voice notes ───────────────────────────────────────────────────────────────
+
+def save_voice_note(player_id: int, filename: str, step_idx: int = 0,
+                    training_history_id: int | None = None, duration_ms: int = 0) -> int:
+    with sqlite3.connect(DB) as c:
+        cur = c.execute(
+            "INSERT INTO voice_notes (player_id, training_history_id, step_idx, filename, duration_ms)"
+            " VALUES (?,?,?,?,?)",
+            (player_id, training_history_id, step_idx, filename, duration_ms)
+        )
+        return cur.lastrowid
+
+
+def get_voice_notes(player_id: int | None = None, training_history_id: int | None = None) -> list:
+    with sqlite3.connect(DB) as c:
+        q = "SELECT id, player_id, training_history_id, step_idx, filename, started_at, duration_ms FROM voice_notes WHERE 1=1"
+        params = []
+        if player_id is not None:
+            q += " AND player_id=?"; params.append(player_id)
+        if training_history_id is not None:
+            q += " AND training_history_id=?"; params.append(training_history_id)
+        q += " ORDER BY started_at DESC"
+        return [_voice_note_row(r) for r in c.execute(q, params).fetchall()]
+
+
+def get_voice_note(nid: int) -> dict | None:
+    with sqlite3.connect(DB) as c:
+        r = c.execute(
+            "SELECT id, player_id, training_history_id, step_idx, filename, started_at, duration_ms"
+            " FROM voice_notes WHERE id=?", (nid,)
+        ).fetchone()
+        return _voice_note_row(r) if r else None
+
+
+def delete_voice_note(nid: int):
+    with sqlite3.connect(DB) as c:
+        c.execute("DELETE FROM voice_notes WHERE id=?", (nid,))
+
+
+def _voice_note_row(r) -> dict:
+    return {"id": r[0], "player_id": r[1], "training_history_id": r[2],
+            "step_idx": r[3], "filename": r[4], "started_at": r[5], "duration_ms": r[6]}

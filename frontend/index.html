@@ -48,6 +48,27 @@
     .s-id { font-family:monospace; font-size:11px; color:var(--muted); flex:1; }
     .s-you { font-size:10px; color:var(--accent); font-weight:700; }
 
+    /* ── Stats grid & activity bars ────────────────────────── */
+    .stats-grid { display:grid; grid-template-columns:1fr 1fr 1fr; gap:6px; margin-bottom:10px; }
+    .stat-item { background:rgba(10,132,255,.06); border:1px solid var(--border); border-radius:8px; padding:6px 8px; text-align:center; }
+    .stat-value { font-size:17px; font-weight:700; color:var(--accent); }
+    .stat-label { font-size:8px; color:var(--muted); text-transform:uppercase; letter-spacing:.04em; margin-top:1px; }
+    .activity-row { display:flex; align-items:center; gap:6px; padding:2px 0; }
+    .activity-week { width:44px; font-size:10px; color:var(--muted); flex-shrink:0; }
+    .activity-track { flex:1; height:10px; background:var(--border); border-radius:3px; overflow:hidden; display:flex; }
+    .activity-fill-ok { background:#34c759; height:100%; }
+    .activity-fill-stop { background:#ff9f0a; height:100%; }
+    .activity-cnt { width:16px; text-align:right; font-size:10px; color:var(--muted); }
+
+    /* ── Compare modal ─────────────────────────────────────── */
+    .compare-row { display:flex; align-items:center; padding:5px 0; border-bottom:1px solid var(--border); font-size:12px; }
+    .compare-label { flex:1; text-align:center; color:var(--muted); font-size:11px; }
+    .compare-val { width:70px; text-align:center; font-weight:600; }
+    .compare-val.win { color:var(--accent); }
+    .day-grid { display:flex; flex-wrap:wrap; gap:2px; }
+    .day-sq { width:14px; height:14px; border-radius:2px; background:var(--border); }
+    .day-sq.done { background:#34c759; }
+
     /* ── Observer / Pending banner ──────────────────────────── */
     .role-banner {
       display:flex; align-items:center; gap:10px; flex-wrap:wrap;
@@ -898,6 +919,11 @@
       <div v-if="trainingPhase !== 'countdown'" style="margin-top:8px;display:flex;gap:6px;flex-shrink:0">
         <input v-model="stepNote" :placeholder="t('training.add_note')" style="flex:1;font-size:12px;padding:6px 10px" @keyup.enter="sendStepNote">
         <button class="btn btn-ghost" style="font-size:12px;padding:6px 10px" @click="sendStepNote" :disabled="!stepNote.trim()">💬</button>
+        <button v-if="selectedPlayerId" class="btn btn-ghost" style="font-size:14px;padding:6px 10px"
+          :style="{color: voiceRecording ? '#ff3b30' : undefined, animation: voiceRecording ? 'recBlink 1s infinite' : 'none'}"
+          @click="toggleVoiceRecord" :title="voiceRecording ? t('training.voice_stop') : t('training.voice_start')">
+          {{ voiceRecording ? '⏹' : '🎙' }}
+        </button>
       </div>
       <div v-if="sessionNotes.length" style="margin-top:4px;max-height:50px;overflow-y:auto;flex-shrink:0">
         <div v-for="(n, ni) in sessionNotes" :key="ni" style="font-size:10px;color:var(--text2);padding:1px 0">
@@ -1266,6 +1292,7 @@
     <div class="card">
       <div style="display:flex;align-items:center;gap:8px;margin-bottom:14px">
         <h2 style="flex:1">{{ t('players.title') }}</h2>
+        <button v-if="playersList.length >= 2" class="btn btn-ghost" style="font-size:11px;padding:4px 10px" @click="openCompare()">{{ t('stats.compare') }}</button>
         <button class="btn btn-primary" @click="addPlayer()">{{ t('players.add') }}</button>
       </div>
       <div v-if="!playersList.length" style="color:var(--muted);font-size:13px">{{ t('players.empty') }}</div>
@@ -1296,6 +1323,33 @@
         <div style="font-size:12px;color:var(--muted);margin-bottom:4px">30-Day Challenge: {{ playerProgram30(playerDetail.id) }}/30</div>
         <div style="height:6px;background:var(--border);border-radius:3px;overflow:hidden">
           <div :style="{width: (playerProgram30(playerDetail.id)/30*100)+'%', height:'100%', background:'var(--success)', transition:'width 0.3s'}"></div>
+        </div>
+      </div>
+
+      <!-- Stats -->
+      <div v-if="playerStats" style="margin-bottom:14px">
+        <div style="font-size:13px;font-weight:600;margin-bottom:8px">{{ t('stats.title') }}</div>
+        <div class="stats-grid">
+          <div class="stat-item"><div class="stat-value">{{ playerStats.total_sessions }}</div><div class="stat-label">{{ t('stats.sessions') }}</div></div>
+          <div class="stat-item"><div class="stat-value">{{ fmtDur(playerStats.total_time_sec) }}</div><div class="stat-label">{{ t('stats.total_time') }}</div></div>
+          <div class="stat-item"><div class="stat-value">{{ playerStats.completion_rate }}%</div><div class="stat-label">{{ t('stats.completion') }}</div></div>
+          <div class="stat-item"><div class="stat-value">{{ fmtDur(playerStats.avg_duration_sec) }}</div><div class="stat-label">{{ t('stats.avg') }}</div></div>
+          <div class="stat-item"><div class="stat-value">{{ playerStats.current_streak }} <span style="font-size:10px;font-weight:400;color:var(--muted)">{{ t('stats.days') }}</span></div><div class="stat-label">{{ t('stats.streak') }}</div></div>
+          <div class="stat-item"><div class="stat-value">{{ playerStats.longest_streak }} <span style="font-size:10px;font-weight:400;color:var(--muted)">{{ t('stats.days') }}</span></div><div class="stat-label">{{ t('stats.best_streak') }}</div></div>
+        </div>
+        <!-- Activity chart -->
+        <div style="cursor:pointer;font-size:11px;color:var(--muted);margin-bottom:4px" @click="showActivity=!showActivity">
+          {{ t('stats.activity') }} {{ showActivity ? '▼' : '▶' }}
+        </div>
+        <div v-if="showActivity">
+          <div v-for="w in playerStats.weekly_activity" :key="w.week" class="activity-row">
+            <span class="activity-week">{{ w.week_label }}</span>
+            <div class="activity-track">
+              <div class="activity-fill-ok" :style="{width: (w.completed / statsMaxWeek * 100)+'%'}"></div>
+              <div class="activity-fill-stop" :style="{width: ((w.sessions - w.completed) / statsMaxWeek * 100)+'%'}"></div>
+            </div>
+            <span class="activity-cnt">{{ w.sessions }}</span>
+          </div>
         </div>
       </div>
 
@@ -1402,6 +1456,48 @@
           </div>
         </div>
       </div>
+    </div>
+  </div>
+
+  <!-- ── Compare modal ─────────────────────────────────────────────────── -->
+  <div v-if="showCompareModal" class="modal-overlay" @click.self="showCompareModal=false" style="z-index:200">
+    <div class="modal-sheet" style="max-width:400px">
+      <h3 style="margin-bottom:12px">{{ t('stats.compare') }}</h3>
+      <div style="display:flex;gap:8px;margin-bottom:14px">
+        <select v-model="compareIdA" @change="loadCompareStats('A')" style="flex:1;background:var(--surface);color:var(--text);border:1px solid var(--border);border-radius:8px;padding:6px 8px;font-size:12px">
+          <option v-for="p in playersList" :key="p.id" :value="p.id">{{ p.name }}</option>
+        </select>
+        <span style="color:var(--muted);font-size:12px;align-self:center">{{ t('stats.vs') }}</span>
+        <select v-model="compareIdB" @change="loadCompareStats('B')" style="flex:1;background:var(--surface);color:var(--text);border:1px solid var(--border);border-radius:8px;padding:6px 8px;font-size:12px">
+          <option v-for="p in playersList" :key="p.id" :value="p.id">{{ p.name }}</option>
+        </select>
+      </div>
+      <div v-if="compareStatsA && compareStatsB">
+        <div class="compare-row" v-for="m in compareMetrics" :key="m.key">
+          <div class="compare-val" :class="{win: m.valA > m.valB}">{{ m.dispA }}</div>
+          <div class="compare-label">{{ m.label }}</div>
+          <div class="compare-val" :class="{win: m.valB > m.valA}">{{ m.dispB }}</div>
+        </div>
+        <!-- 30-Day visual -->
+        <div style="margin-top:12px">
+          <div style="font-size:11px;color:var(--muted);margin-bottom:4px">30-Day Challenge</div>
+          <div style="display:flex;gap:12px">
+            <div style="flex:1">
+              <div style="font-size:10px;color:var(--muted);margin-bottom:3px">{{ compareNameA }}</div>
+              <div class="day-grid">
+                <div v-for="d in 30" :key="d" class="day-sq" :class="{done: compare30A.has(100+d)}"></div>
+              </div>
+            </div>
+            <div style="flex:1">
+              <div style="font-size:10px;color:var(--muted);margin-bottom:3px">{{ compareNameB }}</div>
+              <div class="day-grid">
+                <div v-for="d in 30" :key="d" class="day-sq" :class="{done: compare30B.has(100+d)}"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <button class="btn btn-ghost" style="width:100%;margin-top:14px" @click="showCompareModal=false">{{ t('btn.close') }}</button>
     </div>
   </div>
 
@@ -2307,6 +2403,13 @@ const _app = createApp({
     const playingRecording = ref(null)
     const expandedHistoryId = ref(null)
     const playerHistoryTotal = ref(0)
+    const playerStats = ref(null)
+    const showActivity = ref(false)
+    const showCompareModal = ref(false)
+    const compareIdA = ref(null)
+    const compareIdB = ref(null)
+    const compareStatsA = ref(null)
+    const compareStatsB = ref(null)
     const playerFavorites = ref([])
     const favTrainings = computed(() => playerFavorites.value.filter(f => f.item_type === 'training'))
     const favDrills = computed(() => playerFavorites.value.filter(f => f.item_type === 'drill'))
@@ -2786,15 +2889,84 @@ const _app = createApp({
     async function openPlayerDetail(p) {
       playerDetail.value = p
       expandedHistoryId.value = null
-      const [hRes, rRes, fRes] = await Promise.all([
+      playerStats.value = null
+      showActivity.value = false
+      const [hRes, rRes, fRes, sRes] = await Promise.all([
         fetch(`/api/players/${p.id}/history`),
         fetch(`/api/players/${p.id}/recordings`),
-        fetch(`/api/players/${p.id}/favorites`)
+        fetch(`/api/players/${p.id}/favorites`),
+        fetch(`/api/players/${p.id}/stats`),
       ])
       playerHistory.value = await hRes.json()
       playerRecordings.value = await rRes.json()
       playerFavorites.value = await fRes.json()
+      playerStats.value = await sRes.json()
       playerHistoryTotal.value = playerHistory.value.length
+    }
+
+    const statsMaxWeek = computed(() => {
+      if (!playerStats.value) return 1
+      return Math.max(1, ...playerStats.value.weekly_activity.map(w => w.sessions))
+    })
+
+    const compareNameA = computed(() => playersList.value.find(p => p.id === compareIdA.value)?.name || '')
+    const compareNameB = computed(() => playersList.value.find(p => p.id === compareIdB.value)?.name || '')
+
+    function compare30Days(stats) {
+      if (!stats) return new Set()
+      return new Set(
+        trainingHistory.value
+          .filter(h => h.player_id === stats._player_id && h.status === 'completed' && h.training_id >= 101 && h.training_id <= 130)
+          .map(h => h.training_id)
+      )
+    }
+    const compare30A = computed(() => {
+      if (!compareIdA.value) return new Set()
+      return new Set(
+        trainingHistory.value
+          .filter(h => h.player_id === compareIdA.value && h.status === 'completed' && h.training_id >= 101 && h.training_id <= 130)
+          .map(h => h.training_id)
+      )
+    })
+    const compare30B = computed(() => {
+      if (!compareIdB.value) return new Set()
+      return new Set(
+        trainingHistory.value
+          .filter(h => h.player_id === compareIdB.value && h.status === 'completed' && h.training_id >= 101 && h.training_id <= 130)
+          .map(h => h.training_id)
+      )
+    })
+
+    const compareMetrics = computed(() => {
+      const a = compareStatsA.value, b = compareStatsB.value
+      if (!a || !b) return []
+      return [
+        { key:'sessions', label: t('stats.sessions'), valA: a.total_sessions, valB: b.total_sessions, dispA: a.total_sessions, dispB: b.total_sessions },
+        { key:'time', label: t('stats.total_time'), valA: a.total_time_sec, valB: b.total_time_sec, dispA: fmtDur(a.total_time_sec), dispB: fmtDur(b.total_time_sec) },
+        { key:'rate', label: t('stats.completion'), valA: a.completion_rate, valB: b.completion_rate, dispA: a.completion_rate+'%', dispB: b.completion_rate+'%' },
+        { key:'avg', label: t('stats.avg'), valA: a.avg_duration_sec, valB: b.avg_duration_sec, dispA: fmtDur(a.avg_duration_sec), dispB: fmtDur(b.avg_duration_sec) },
+        { key:'streak', label: t('stats.streak'), valA: a.current_streak, valB: b.current_streak, dispA: a.current_streak+' '+t('stats.days'), dispB: b.current_streak+' '+t('stats.days') },
+        { key:'p30', label: '30-Day', valA: a.program30_completed, valB: b.program30_completed, dispA: a.program30_completed+'/30', dispB: b.program30_completed+'/30' },
+      ]
+    })
+
+    function openCompare() {
+      compareIdA.value = playersList.value[0]?.id || null
+      compareIdB.value = playersList.value[1]?.id || null
+      compareStatsA.value = null
+      compareStatsB.value = null
+      showCompareModal.value = true
+      loadCompareStats('A')
+      loadCompareStats('B')
+    }
+
+    async function loadCompareStats(side) {
+      const pid = side === 'A' ? compareIdA.value : compareIdB.value
+      if (!pid) return
+      const r = await fetch(`/api/players/${pid}/stats`)
+      const d = await r.json()
+      if (side === 'A') compareStatsA.value = d
+      else compareStatsB.value = d
     }
 
     function playerRunCount(playerId) {
@@ -3223,7 +3395,9 @@ const _app = createApp({
       historyModal, historyEntries, showTrainingHistory, getPlayerName, getTrainingName, saveSessionComment,
       editingCommentId, editingCommentText, sessionNotes,
       playersList, playerDetail, playerHistory, playerRecordings, playingRecording,
-      expandedHistoryId, playerHistoryTotal, playerFavorites,
+      expandedHistoryId, playerHistoryTotal, playerFavorites, playerStats, showActivity, statsMaxWeek,
+      showCompareModal, compareIdA, compareIdB, compareStatsA, compareStatsB,
+      compareMetrics, compareNameA, compareNameB, compare30A, compare30B, openCompare, loadCompareStats,
       favTrainings, favDrills, favExercises,
       getTrainingSteps, getStepRecording, getDrillName, getExerciseName, getHistoryLabel,
       loadPlayerFavorites, isFavorite, toggleFavorite,

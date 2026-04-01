@@ -8,7 +8,7 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Dict
 
-from fastapi import FastAPI, HTTPException, WebSocket, WebSocketDisconnect
+from fastapi import FastAPI, Form, HTTPException, UploadFile, WebSocket, WebSocketDisconnect
 from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 
@@ -869,6 +869,11 @@ def delete_player_endpoint(pid: int):
         raise HTTPException(404)
 
 
+@app.get("/api/players/{pid}/stats")
+def get_player_stats(pid: int):
+    return db.get_player_stats(pid)
+
+
 @app.get("/api/players/{pid}/history")
 def get_player_history(pid: int):
     return training.get_history(player_id=pid)
@@ -917,6 +922,64 @@ def get_recording(player_id: int, filename: str):
 def delete_recording(player_id: int, filename: str):
     if not recordings.delete_recording(f"{player_id}/{filename}"):
         raise HTTPException(404)
+
+
+# ── Voice notes ───────────────────────────────────────────────────────────────
+
+VOICE_DIR = Path(__file__).parent / "recordings"
+
+
+@app.post("/api/voice-notes", status_code=201)
+async def upload_voice_note(
+    file: UploadFile,
+    player_id: int = Form(...),
+    step_idx: int = Form(0),
+    training_history_id: int | None = Form(None),
+    duration_ms: int = Form(0),
+):
+    player_dir = VOICE_DIR / str(player_id)
+    player_dir.mkdir(parents=True, exist_ok=True)
+    from datetime import datetime
+    ts = datetime.now().strftime("%Y%m%d_%H%M%S")
+    filename = f"voice_s{step_idx:02d}_{ts}.webm"
+    filepath = player_dir / filename
+    content = await file.read()
+    filepath.write_bytes(content)
+    nid = db.save_voice_note(
+        player_id=player_id,
+        filename=f"{player_id}/{filename}",
+        step_idx=step_idx,
+        training_history_id=training_history_id,
+        duration_ms=duration_ms or len(content) // 8,  # rough estimate if not provided
+    )
+    return db.get_voice_note(nid)
+
+
+@app.get("/api/voice-notes")
+def list_voice_notes(player_id: int | None = None, training_history_id: int | None = None):
+    return db.get_voice_notes(player_id=player_id, training_history_id=training_history_id)
+
+
+@app.get("/api/voice-notes/{nid}/audio")
+def get_voice_note_audio(nid: int):
+    note = db.get_voice_note(nid)
+    if not note:
+        raise HTTPException(404)
+    path = VOICE_DIR / note["filename"]
+    if not path.exists() or not path.is_relative_to(VOICE_DIR):
+        raise HTTPException(404)
+    return FileResponse(path, media_type="audio/webm")
+
+
+@app.delete("/api/voice-notes/{nid}", status_code=204)
+def delete_voice_note(nid: int):
+    note = db.get_voice_note(nid)
+    if not note:
+        raise HTTPException(404)
+    path = VOICE_DIR / note["filename"]
+    if path.exists() and path.is_relative_to(VOICE_DIR):
+        path.unlink()
+    db.delete_voice_note(nid)
 
 
 # ── Volume ─────────────────────────────────────────────────────────────────────

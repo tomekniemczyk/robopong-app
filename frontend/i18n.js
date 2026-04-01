@@ -198,6 +198,19 @@ window.I18N = {
   'presets.delete':     { pl:'Usuń',            en:'Delete',           de:'Löschen',             fr:'Supprimer',          zh:'删除' },
   'presets.none':       { pl:'Brak zapisanych presetów.', en:'No saved presets.', de:'Keine gespeicherten Presets.', fr:'Aucun préréglage enregistré.', zh:'无已保存的预设。' },
 
+  // ── Stats ──────────────────────────────────────────────────────────
+  'stats.title':      { pl:'Statystyki',     en:'Statistics',     de:'Statistiken',      fr:'Statistiques',      zh:'统计' },
+  'stats.sessions':   { pl:'Sesje',          en:'Sessions',       de:'Sitzungen',        fr:'Sessions',          zh:'训练次数' },
+  'stats.total_time': { pl:'Czas',           en:'Time',           de:'Zeit',             fr:'Temps',             zh:'总时长' },
+  'stats.completion': { pl:'Ukończone',      en:'Completed',      de:'Abgeschl.',        fr:'Terminés',          zh:'完成率' },
+  'stats.avg':        { pl:'Śr. czas',       en:'Avg time',       de:'Durchschn.',       fr:'Moy. durée',       zh:'平均时长' },
+  'stats.streak':     { pl:'Seria',          en:'Streak',         de:'Serie',            fr:'Série',             zh:'连续天数' },
+  'stats.best_streak':{ pl:'Rekord serii',   en:'Best streak',    de:'Rekordserie',      fr:'Meilleure série',   zh:'最长连续' },
+  'stats.activity':   { pl:'Aktywność',      en:'Activity',       de:'Aktivität',        fr:'Activité',          zh:'活动' },
+  'stats.compare':    { pl:'Porównaj',       en:'Compare',        de:'Vergleichen',      fr:'Comparer',          zh:'对比' },
+  'stats.days':       { pl:'dni',            en:'days',           de:'Tage',             fr:'jours',             zh:'天' },
+  'stats.vs':         { pl:'vs',             en:'vs',             de:'vs',               fr:'vs',                zh:'vs' },
+
   // ── Volume ─────────────────────────────────────────────────────────
   'volume.title': { pl:'Głośność serwera', en:'Server volume', de:'Server-Lautstärke', fr:'Volume serveur', zh:'服务器音量' },
   'volume.test':  { pl:'Test',             en:'Test',          de:'Test',              fr:'Test',           zh:'测试' },
