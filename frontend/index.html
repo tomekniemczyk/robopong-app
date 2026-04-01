@@ -329,7 +329,7 @@
         👥 {{ sessionsList.length }}
       </button>
       <!-- active player avatar + switch -->
-      <button v-if="currentPlayerName" class="player-avatar-btn" @click="page='players'; selectedPlayerId && openPlayerDetail(playersList.find(p=>p.id===selectedPlayerId))" :title="currentPlayerName">
+      <button v-if="currentPlayerName" class="player-avatar-btn" @click="openMyProfile()" :title="currentPlayerName">
         <span class="player-avatar-sm">{{ currentPlayerName.charAt(0).toUpperCase() }}</span>
         <span class="player-avatar-name">{{ currentPlayerName }}</span>
       </button>
@@ -352,7 +352,7 @@
       <div style="display:flex;align-items:center;gap:6px;width:100%">
         <span :class="['role-pill', rolePillClass(s.role)]" style="font-size:9px;padding:2px 6px">{{ roleLabel(s.role) }}</span>
         <span class="s-id">{{ s.id }}</span>
-        <span class="s-you" v-if="s.id === mySessionId">{{ t('sessions.you') }}</span>
+        <span class="s-you" v-if="s.id === mySessionId">{{ t('sessions.you') }}{{ currentPlayerName ? ' (' + currentPlayerName + ')' : '' }}</span>
         <span style="flex:1"></span>
         <span style="font-size:10px;color:var(--muted)" v-if="s.since">{{ sessionAge(s.since) }}</span>
       </div>
@@ -1737,34 +1737,20 @@
 
   <!-- ── Gracze ──────────────────────────────────────────────────────────── -->
   <div class="page" v-show="page === 'players'">
-    <div class="card">
-      <div style="display:flex;align-items:center;gap:8px;margin-bottom:14px">
-        <h2 style="flex:1">{{ t('players.title') }}</h2>
-        <button v-if="playersList.length >= 2" class="btn btn-ghost" style="font-size:11px;padding:4px 10px" @click="openCompare()">{{ t('stats.compare') }}</button>
-        <button class="btn btn-primary" @click="addPlayer()">{{ t('players.add') }}</button>
-      </div>
-      <div v-if="!playersList.length" style="color:var(--muted);font-size:13px">{{ t('players.empty') }}</div>
-      <ul class="device-list" v-else>
-        <li v-for="p in playersList" :key="p.id" @click="openPlayerDetail(p)" style="cursor:pointer">
-          <div style="width:36px;height:36px;border-radius:50%;background:var(--primary);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px">
-            {{ p.name.charAt(0).toUpperCase() }}
-          </div>
-          <div style="flex:1;margin-left:10px">
-            <div style="font-weight:600">{{ p.name }}</div>
-            <div style="font-size:11px;color:var(--muted)">
-              {{ t('players.trainings_done') }}: {{ playerRunCount(p.id) }}
-              <span v-if="playerProgram30(p.id)"> · 30D: {{ playerProgram30(p.id) }}/30</span>
-            </div>
-          </div>
-          <button class="btn btn-ghost btn-icon" @click.stop="renamePlayer(p)" :title="t('btn.edit')">✏</button>
-          <button class="btn btn-ghost btn-icon" style="color:var(--danger)" @click.stop="deletePlayer(p.id)" :title="t('btn.delete')">✕</button>
-        </li>
-      </ul>
-    </div>
 
-    <!-- Player detail (history + recordings) -->
-    <div v-if="playerDetail" class="card" style="margin-top:12px">
-      <h3 style="margin-bottom:10px">👤 {{ playerDetail.name }}</h3>
+    <!-- Player profile dashboard (gdy wybrany gracz) -->
+    <div v-if="playerDetail" class="card">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
+        <div style="width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#6366f1,#8b5cf6);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:18px;flex-shrink:0">
+          {{ playerDetail.name.charAt(0).toUpperCase() }}
+        </div>
+        <div style="flex:1">
+          <h3 style="margin:0;font-size:16px">{{ playerDetail.name }}</h3>
+          <div style="font-size:11px;color:var(--muted)">{{ t('players.trainings_done') }}: {{ playerRunCount(playerDetail.id) }}</div>
+        </div>
+        <button class="btn btn-ghost btn-icon" @click.stop="renamePlayer(playerDetail)" :title="t('btn.edit')">✏</button>
+        <button v-if="playersList.length >= 2" class="btn btn-ghost" style="font-size:11px;padding:4px 10px" @click="openCompare()">{{ t('stats.compare') }}</button>
+      </div>
 
       <!-- 30-Day Progress -->
       <div v-if="playerProgram30(playerDetail.id)" style="margin-bottom:12px;background:linear-gradient(135deg,#0d9488,#0f766e);border-radius:12px;padding:10px 14px">
@@ -2427,7 +2413,7 @@
     <button :class="{active: page==='exercises'}" @click="page='exercises'">
       <span class="nav-icon">🏋</span>{{ t('nav.exercises') }}
     </button>
-    <button :class="{ active: page === 'players' }" @click="page='players'">
+    <button :class="{ active: page === 'players' }" @click="openMyProfile()">
       <span class="nav-icon">👤</span>{{ t('nav.players') }}
     </button>
     <button :class="{ active: page === 'history' }" @click="page='history'; loadAllHistory()">
@@ -3861,6 +3847,11 @@ const _app = createApp({
       playerVoiceNotes.value = await r.json()
     }
 
+    function openMyProfile() {
+      const p = playersList.value.find(x => x.id === selectedPlayerId.value)
+      if (p) { page.value = 'players'; openPlayerDetail(p) }
+    }
+
     async function openPlayerDetail(p) {
       playerDetail.value = p
       expandedHistoryId.value = null
@@ -4850,7 +4841,7 @@ const _app = createApp({
       getStepVoiceNote, deleteVoiceNote, toggleVoiceRecord, loadPlayerVoiceNotes,
       loadPlayerFavorites, isFavorite, toggleFavorite,
       resumeFromHistory,
-      addPlayer, renamePlayer, deletePlayer, openPlayerDetail, playerRunCount, playerProgram30,
+      addPlayer, renamePlayer, deletePlayer, openPlayerDetail, openMyProfile, playerRunCount, playerProgram30,
       deleteRecording, loadPlayers, loadTrainingHistory, trainingHistory,
       exerciseCategories, openExCats, selectedExercise, toggleExCat, loadExercises, onStepTypeSelect, getExFrameSrc, exAnimFrame,
       // Historia tab
