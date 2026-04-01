@@ -1319,10 +1319,10 @@
         </label>
         <div v-if="recordTraining" style="margin:6px 0 0 24px;display:flex;flex-direction:column;gap:4px">
           <label style="font-size:11px;display:flex;align-items:center;gap:5px;cursor:pointer;color:var(--text2)">
-            <input type="radio" v-model="recordType" value="drills"> {{ t('recordings.drills_only') || 'Tylko drille' }}
+            <input type="radio" v-model="recordType" value="drills"> {{ t('recordings.drills_only') }}
           </label>
           <label style="font-size:11px;display:flex;align-items:center;gap:5px;cursor:pointer;color:var(--text2)">
-            <input type="radio" v-model="recordType" value="all"> {{ t('recordings.all_steps') || 'Drille + ćwiczenia' }}
+            <input type="radio" v-model="recordType" value="all"> {{ t('recordings.all_steps') }}
           </label>
         </div>
       </div>
@@ -1349,7 +1349,7 @@
         </div>
         <div style="font-size:11px;color:var(--muted);margin-top:2px">
           {{ t('training.steps_done', {done: h.steps_completed, total: h.steps_total}) }}
-          <span v-if="h.steps_skipped?.length"> · {{ h.steps_skipped.length }} {{ t('training.skipped') || 'skipped' }}</span>
+          <span v-if="h.steps_skipped?.length"> · {{ h.steps_skipped.length }} {{ t('training.skipped') }}</span>
           <span v-if="h.player_id && getPlayerName(h.player_id)"> · 👤 {{ getPlayerName(h.player_id) }}</span>
         </div>
         <!-- Notatki per krok -->
@@ -3161,7 +3161,7 @@ const _app = createApp({
     }
 
     async function deletePlayer(id) {
-      showConfirm(t('confirm.delete_player') || 'Delete player?', async () => {
+      showConfirm(t('confirm.delete_player'), async () => {
         await fetch(`/api/players/${id}`, { method: 'DELETE' })
         if (playerDetail.value?.id === id) playerDetail.value = null
         await loadPlayers()
@@ -3517,7 +3517,7 @@ const _app = createApp({
         _clampAllCal()
         send({ action: 'set_ball', ball: { ...cal } })
         addLog('⚡ rozgrzewka silników (5s)')
-        showToast(t('toast.motors_warmup') || 'Rozgrzewka silników…')
+        showToast(t('toast.motors_warmup'))
         _calMotorsRunning = true
         await new Promise(r => setTimeout(r, 5000))
       }

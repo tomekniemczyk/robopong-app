@@ -364,6 +364,7 @@ window.I18N = {
   'toast.saved':          { pl:'✅ Zapisano!',                    en:'✅ Saved!',                        de:'✅ Gespeichert!',                     fr:'✅ Enregistré !',                     zh:'✅ 已保存！' },
   'toast.drill_saved':    { pl:'✅ Zapisano drill',               en:'✅ Drill saved',                   de:'✅ Drill gespeichert',                fr:'✅ Lancer enregistré',                zh:'✅ 训练方案已保存' },
   'toast.motors_start':   { pl:'⚡ Silniki start',                en:'⚡ Motors started',                de:'⚡ Motoren gestartet',                fr:'⚡ Moteurs démarrés',                 zh:'⚡ 电机启动' },
+  'toast.motors_warmup':  { pl:'Rozgrzewka silników…',            en:'Motor warmup…',                   de:'Motor-Aufwärmung…',                  fr:'Préchauffage moteur…',                zh:'电机预热…' },
   'toast.throw':          { pl:'🏓 Rzut!',                       en:'🏓 Throw!',                       de:'🏓 Wurf!',                           fr:'🏓 Lancer !',                        zh:'🏓 发射！' },
   'toast.stop':           { pl:'⏹ Stop',                          en:'⏹ Stop',                           de:'⏹ Stopp',                           fr:'⏹ Arrêt',                            zh:'⏹ 停止' },
   'toast.setup_reset':    { pl:'⚙ Głowica resetowana do pozycji domyślnej',
@@ -482,6 +483,8 @@ window.I18N = {
   'recordings.download':   { pl:'Pobierz',         en:'Download',         de:'Herunterladen',    fr:'Télécharger',      zh:'下载' },
   'recordings.delete':     { pl:'Usuń',            en:'Delete',           de:'Löschen',          fr:'Supprimer',        zh:'删除' },
   'recordings.record':     { pl:'Nagrywaj',        en:'Record',           de:'Aufnehmen',        fr:'Enregistrer',      zh:'录制' },
+  'recordings.drills_only':{ pl:'Tylko drille',     en:'Drills only',      de:'Nur Drills',       fr:'Lancers uniquement',zh:'仅训练' },
+  'recordings.all_steps':  { pl:'Drille + ćwiczenia',en:'Drills + exercises',de:'Drills + Übungen',fr:'Lancers + exercices',zh:'训练+体能' },
   'recordings.step':       { pl:'Krok {idx}',      en:'Step {idx}',       de:'Schritt {idx}',    fr:'Étape {idx}',      zh:'步骤 {idx}' },
 
   // ── Favorites ──────────────────────────────────────────────────────
