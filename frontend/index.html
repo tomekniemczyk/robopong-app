@@ -60,6 +60,12 @@
       color:#fff; font-size:11px; font-weight:700; display:flex; align-items:center; justify-content:center;
     }
     .player-avatar-name { font-weight:600; max-width:60px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+    .player-switch-btn {
+      background:none; border:1px solid var(--border); border-radius:50%;
+      width:24px; height:24px; display:flex; align-items:center; justify-content:center;
+      color:var(--muted); cursor:pointer; padding:0; transition:.15s; margin-left:-4px;
+    }
+    .player-switch-btn:hover { border-color:var(--accent); color:var(--accent); }
 
     /* ── Stats dashboard tiles ─────────────────────────────── */
     .stats-grid { display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:10px; }
@@ -307,10 +313,18 @@
       <button class="sessions-btn" @click="showSessions=!showSessions" :title="t('sessions.title')">
         👥 {{ sessionsList.length }}
       </button>
-      <!-- active player avatar -->
+      <!-- active player avatar + switch -->
       <button v-if="currentPlayerName" class="player-avatar-btn" @click="page='players'; selectedPlayerId && openPlayerDetail(playersList.find(p=>p.id===selectedPlayerId))" :title="currentPlayerName">
         <span class="player-avatar-sm">{{ currentPlayerName.charAt(0).toUpperCase() }}</span>
         <span class="player-avatar-name">{{ currentPlayerName }}</span>
+      </button>
+      <button v-if="currentPlayerName && playersList.length > 1" class="player-switch-btn" @click.stop="showPlayerSelectModal=true" :title="t('players.select')">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+          <circle cx="8" cy="6" r="3" stroke="currentColor" stroke-width="1.4" fill="none"/>
+          <path d="M3 14c0-2.8 2.2-5 5-5s5 2.2 5 5" stroke="currentColor" stroke-width="1.4" fill="none" stroke-linecap="round"/>
+          <path d="M12.5 2.5l1.5 1.5-1.5 1.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M14 4H11.5a2 2 0 00-2 2" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" fill="none"/>
+        </svg>
       </button>
     </div>
   </div>
