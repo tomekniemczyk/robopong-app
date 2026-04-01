@@ -10,6 +10,7 @@ window.I18N = {
   'nav.exercises': { pl:'Ćwiczenia', en:'Exercises', de:'Übungen',    fr:'Exercices',      zh:'体能训练' },
   'nav.camera':    { pl:'Kamera',    en:'Camera',    de:'Kamera',     fr:'Caméra',         zh:'摄像头' },
   'nav.logs':      { pl:'Logi',      en:'Logs',      de:'Protokolle', fr:'Journaux',       zh:'日志' },
+  'nav.service':   { pl:'Serwis',    en:'Service',   de:'Service',    fr:'Service',        zh:'服务' },
 
   // ── Connection ─────────────────────────────────────────────────────
   'conn.offline':    { pl:'Offline',    en:'Offline',      de:'Offline',     fr:'Hors ligne',    zh:'离线' },

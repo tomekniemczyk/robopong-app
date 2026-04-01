@@ -101,6 +101,21 @@
     .speed-btn { background:var(--surface); border:1px solid var(--border); border-radius:6px; padding:3px 8px; font-size:11px; color:var(--text); cursor:pointer; }
     .speed-btn.active { background:var(--accent); border-color:var(--accent); color:#fff; }
 
+    /* ── Service menu ──────────────────────────────────────── */
+    .service-backdrop { position:fixed; inset:0; z-index:140; }
+    .service-menu {
+      position:fixed; bottom:56px; right:8px; z-index:150;
+      background:var(--surface); border:1px solid var(--border); border-radius:12px;
+      padding:6px; min-width:160px; box-shadow:0 -4px 24px rgba(0,0,0,.5);
+    }
+    .service-menu button {
+      display:flex; align-items:center; gap:8px; width:100%;
+      padding:10px 12px; border:none; background:none; color:var(--text);
+      font-size:13px; border-radius:8px; cursor:pointer; text-align:left;
+    }
+    .service-menu button:hover { background:rgba(255,255,255,.06); }
+    .service-menu button span { font-size:16px; width:22px; text-align:center; }
+
     /* ── Observer / Pending banner ──────────────────────────── */
     .role-banner {
       display:flex; align-items:center; gap:10px; flex-wrap:wrap;
@@ -2412,22 +2427,30 @@
     <button :class="{active: page==='exercises'}" @click="page='exercises'">
       <span class="nav-icon">🏋</span>{{ t('nav.exercises') }}
     </button>
-    <button :class="{active: page==='exploration'}" :style="connected && !isCalibrated ? 'opacity:0.4' : ''" @click="connected && !isCalibrated ? (showToast(t('toast.cal_required')), page='calibration') : page='exploration'">
-      <span class="nav-icon">🔬</span>{{ t('nav.exploration') }}
-    </button>
-    <button :class="{ active: page === 'camera' }" @click="page='camera'">
-      <span class="nav-icon">📷</span>{{ t('nav.camera') }}
-    </button>
     <button :class="{ active: page === 'players' }" @click="page='players'">
       <span class="nav-icon">👤</span>{{ t('nav.players') }}
     </button>
     <button :class="{ active: page === 'history' }" @click="page='history'; loadAllHistory()">
       <span class="nav-icon">📊</span>{{ t('nav.history') }}
     </button>
-    <button :class="{ active: page === 'logs' }" @click="page='logs'">
-      <span class="nav-icon">🖥</span>{{ t('nav.logs') }}
+    <button :class="{ active: ['exploration','camera','logs'].includes(page) }" @click="showServiceMenu = !showServiceMenu" style="position:relative">
+      <span class="nav-icon">🔧</span>{{ t('nav.service') }}
     </button>
   </nav>
+
+  <!-- ── Service menu popup ─────────────────────────────────────────────── -->
+  <div v-if="showServiceMenu" class="service-backdrop" @click="showServiceMenu=false"></div>
+  <div v-if="showServiceMenu" class="service-menu">
+    <button @click="connected && !isCalibrated ? (showToast(t('toast.cal_required')), page='calibration') : page='exploration'; showServiceMenu=false">
+      <span>🔬</span>{{ t('nav.exploration') }}
+    </button>
+    <button @click="page='camera'; showServiceMenu=false">
+      <span>📷</span>{{ t('nav.camera') }}
+    </button>
+    <button @click="page='logs'; showServiceMenu=false">
+      <span>🖥</span>{{ t('nav.logs') }}
+    </button>
+  </div>
 
   <!-- ── Toast ────────────────────────────────────────────────────────────── -->
   <div class="toast" v-if="toast">{{ toast }}</div>
@@ -2565,6 +2588,7 @@ const _app = createApp({
     const mySessionId     = ref('')
     const sessionsList    = ref([])
     const showSessions    = ref(false)
+    const showServiceMenu = ref(false)
     const showDeviceInfo  = ref(false)
     const takeoverReq     = ref(null)      // { id } — ktoś chce przejąć od nas
     const takeoverCountdown = ref(30)
@@ -4782,7 +4806,7 @@ const _app = createApp({
       expDrillId, expDrillData, expBallIdx, loadExpDrill, loadExpBall, saveExpToDrill, saveExpAsNew,
       lastAddr, robotName, editingName, robotNameEdit, camErr, camSrc,
       transport, deployTime, usbPorts, usbScanning, simulationMode, toggleSimulation,
-      myRole, mySessionId, sessionsList, showSessions, showDeviceInfo, copyDiagReport, diagModalText, diagModalOpen, diagModalCopy, sessionAge, parseUA,
+      myRole, mySessionId, sessionsList, showSessions, showServiceMenu, showDeviceInfo, copyDiagReport, diagModalText, diagModalOpen, diagModalCopy, sessionAge, parseUA,
       takeoverReq, takeoverCountdown, takeoverCooldown,
       scan, connect, disconnect, saveName, usbScan, usbConnect, reconnectLast,
       runScenario, pauseDrill, resumeDrill, stopDrill, drillPaused,
