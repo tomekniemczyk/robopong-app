@@ -538,7 +538,7 @@
               "top_speed": 62,
               "bot_speed": 50,
               "oscillation": 138,
-              "height": 113,
+              "height": 120,
               "rotation": 150,
               "wait_ms": 1400
             },
@@ -546,7 +546,7 @@
               "top_speed": 62,
               "bot_speed": 50,
               "oscillation": 164,
-              "height": 113,
+              "height": 120,
               "rotation": 150,
               "wait_ms": 1400
             }
