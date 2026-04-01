@@ -404,6 +404,47 @@
   <!-- ── Kalibracja ───────────────────────────────────────────────────── -->
   <div class="page" v-show="page === 'calibration' && !wizActive">
 
+    <!-- ── Eksplorator drilli ── -->
+    <div class="card" style="margin-bottom:12px" :class="{ 'observer-lock': myRole !== 'controller' }">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;cursor:pointer" @click="exploreOpen=!exploreOpen">
+        <span class="section-title" style="margin-bottom:0">{{ t('explore.title') }}</span>
+        <span style="color:var(--muted);font-size:12px;margin-left:auto">{{ exploreOpen ? '▼' : '▶' }}</span>
+      </div>
+      <div v-if="exploreOpen">
+        <!-- Wybór drilla -->
+        <select v-model="exploreDrillId" @change="loadExploreDrill"
+          style="width:100%;background:var(--surface);color:var(--text);border:1px solid var(--border);border-radius:8px;padding:8px;font-size:12px;margin-bottom:8px">
+          <option :value="null" disabled>{{ t('explore.select_drill') }}</option>
+          <optgroup v-for="f in drillTree.folders" :key="f.id" :label="f.readonly ? tc('folders', f.name) : f.name">
+            <option v-for="d in f.drills" :key="d.id" :value="d.id">{{ d.readonly ? tc('drills', d.name) : d.name }}</option>
+          </optgroup>
+        </select>
+
+        <!-- Piłki drilla -->
+        <div v-if="exploreDrill" style="margin-bottom:8px">
+          <div style="display:flex;gap:4px;margin-bottom:8px">
+            <button v-for="(b, i) in exploreDrill.balls" :key="i" class="btn"
+              :style="{padding:'4px 10px', fontSize:'11px', background: exploreBallIdx === i ? 'var(--accent)' : 'var(--surface)', color: exploreBallIdx === i ? '#fff' : 'var(--text)', border: '1px solid ' + (exploreBallIdx === i ? 'var(--accent)' : 'var(--border)')}"
+              @click="loadExploreBall(i)">
+              {{ t('explore.ball_n', {n: i+1}) }}
+            </button>
+          </div>
+
+          <!-- Info: parametry ładują się do kontrolek poniżej -->
+          <div style="font-size:11px;color:var(--muted);margin-bottom:8px;background:rgba(10,132,255,.08);border-radius:6px;padding:6px 10px">
+            {{ t('explore.params_info') }}
+          </div>
+
+          <!-- Akcje -->
+          <div style="display:flex;gap:6px;flex-wrap:wrap">
+            <button class="btn btn-success" style="font-size:12px;padding:6px 12px" :disabled="!connected || myRole !== 'controller'" @click="calThrow">{{ t('cal.throw') }}</button>
+            <button class="btn btn-primary" style="font-size:12px;padding:6px 12px" @click="saveExploreToDrill" :disabled="!connected">{{ t('explore.save_drill') }}</button>
+            <button class="btn btn-ghost" style="font-size:12px;padding:6px 12px" @click="saveExploreAsNew">{{ t('explore.save_new') }}</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <!-- instrukcja -->
     <div class="card" style="margin-bottom:12px">
       <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;cursor:pointer" @click="helpOpen=!helpOpen">
@@ -2231,6 +2272,10 @@ const _app = createApp({
     const calMotorLocked = ref(true)
     const helpOpen       = ref(false)
     const calImgOpen     = ref(null)
+    const exploreOpen    = ref(false)
+    const exploreDrillId = ref(null)
+    const exploreDrill   = ref(null)
+    const exploreBallIdx = ref(0)
     const presets        = ref([])
     const isCalibrated   = ref(!!localStorage.getItem('lastAddr') && localStorage.getItem(`cal_done:${localStorage.getItem('lastAddr')}`) === '1')
 
@@ -3873,6 +3918,58 @@ const _app = createApp({
       showToast(t('toast.setup_reset'))
     }
 
+    // ── Drill explorer ──────────────────────────────────────
+    function loadExploreDrill() {
+      const did = exploreDrillId.value
+      if (!did) { exploreDrill.value = null; return }
+      for (const f of drillTree.folders || []) {
+        const d = (f.drills || []).find(d => d.id === did)
+        if (d) {
+          exploreDrill.value = JSON.parse(JSON.stringify(d))
+          exploreBallIdx.value = 0
+          loadExploreBall(0)
+          return
+        }
+      }
+    }
+    function loadExploreBall(idx) {
+      exploreBallIdx.value = idx
+      if (!exploreDrill.value) return
+      const b = exploreDrill.value.balls[idx]
+      if (!b) return
+      Object.assign(cal, {
+        top_speed: b.top_speed, bot_speed: b.bot_speed,
+        oscillation: b.oscillation, height: b.height,
+        rotation: b.rotation, wait_ms: b.wait_ms || 1000,
+      })
+      calDirty.value = true
+    }
+    async function saveExploreToDrill() {
+      if (!exploreDrill.value) return
+      // Update current ball from cal values
+      const b = exploreDrill.value.balls[exploreBallIdx.value]
+      Object.assign(b, { top_speed: cal.top_speed, bot_speed: cal.bot_speed, oscillation: cal.oscillation, height: cal.height, rotation: cal.rotation, wait_ms: cal.wait_ms })
+      await fetch(`/api/drills/${exploreDrill.value.id}`, {
+        method: 'PUT', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name: exploreDrill.value.name, description: exploreDrill.value.description, balls: exploreDrill.value.balls, repeat: exploreDrill.value.repeat || 0 }),
+      })
+      await loadDrillTree()
+      showToast(t('toast.drill_saved'))
+    }
+    async function saveExploreAsNew() {
+      const name = prompt(t('explore.new_name'), (exploreDrill.value?.name || '') + ' (kopia)')
+      if (!name) return
+      const balls = JSON.parse(JSON.stringify(exploreDrill.value?.balls || []))
+      const b = balls[exploreBallIdx.value]
+      if (b) Object.assign(b, { top_speed: cal.top_speed, bot_speed: cal.bot_speed, oscillation: cal.oscillation, height: cal.height, rotation: cal.rotation, wait_ms: cal.wait_ms })
+      await fetch('/api/drills', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name, description: '', balls, repeat: 0 }),
+      })
+      await loadDrillTree()
+      showToast(t('toast.drill_saved'))
+    }
+
     // Auto-idle: 10s bez aktywności → silniki gasną
     let _calIdleTimer = null
     function _resetCalIdle() {
@@ -4247,6 +4344,7 @@ const _app = createApp({
       showTrainingModal, openTrainingModal,
       editId, editName, editDesc, editRepeat, editBalls,
       cal, calDirty, calMotorLocked, isCalibrated, helpOpen, calImgOpen,
+      exploreOpen, exploreDrillId, exploreDrill, exploreBallIdx, loadExploreDrill, loadExploreBall, saveExploreToDrill, saveExploreAsNew,
       lastAddr, robotName, editingName, robotNameEdit, camErr, camSrc,
       transport, deployTime, usbPorts, usbScanning, simulationMode, toggleSimulation,
       myRole, mySessionId, sessionsList, showSessions, showDeviceInfo, copyDiagReport, diagModalText, diagModalOpen, diagModalCopy, sessionAge, parseUA,

@@ -206,6 +206,7 @@ class TrainingRunner:
         countdown_sec = scenario.get("countdown_sec", 5)
         total_steps = len(steps)
         start_time = time.monotonic()
+        ball_preloaded = False
 
         try:
             # ── Countdown ────────────────────────────────────────
@@ -230,6 +231,7 @@ class TrainingRunner:
                     await robot.set_ball(b["top_speed"], b["bot_speed"],
                                         b["oscillation"], b["height"], b["rotation"],
                                         b.get("wait_ms", 1000))
+                    ball_preloaded = True
                 if sec <= 5:
                     audio.play("beep" if sec > 3 else "beep_high")
                 await asyncio.sleep(1)
@@ -294,7 +296,8 @@ class TrainingRunner:
                     return _intercept
 
                 robot._emit = _make_interceptor(step_idx, drill_name)
-                await robot.run_drill(drill["balls"], repeat=0, count=count, percent=percent)
+                await robot.run_drill(drill["balls"], repeat=0, count=count, percent=percent, skip_warmup=ball_preloaded)
+                ball_preloaded = False
 
                 timeout = max(300, count * 30)
                 elapsed = 0.0
@@ -343,6 +346,7 @@ class TrainingRunner:
                             await robot.set_ball(b["top_speed"], b["bot_speed"],
                                                 b["oscillation"], b["height"], b["rotation"],
                                                 b.get("wait_ms", 1000))
+                            ball_preloaded = True
                         if sec <= 3:
                             audio.play("beep_high")
                         await asyncio.sleep(1)

@@ -215,6 +215,15 @@ window.I18N = {
   'stats.select_rec': { pl:'Wybierz nagranie', en:'Select recording', de:'Aufnahme wählen', fr:'Choisir enregistrement', zh:'选择录制' },
   'stats.no_compare': { pl:'Brak nagrań do porównania', en:'No recordings to compare', de:'Keine Aufnahmen', fr:'Aucun enregistrement', zh:'没有可比较的录制' },
 
+  // ── Drill Explorer ──────────────────────────────────────────────────
+  'explore.title':        { pl:'Eksplorator drilli',          en:'Drill Explorer',        de:'Drill-Explorer',       fr:'Explorateur de drills',  zh:'训练方案探索' },
+  'explore.select_drill': { pl:'Wybierz drill...',            en:'Select drill...',       de:'Drill wählen...',      fr:'Choisir un drill...',    zh:'选择训练方案...' },
+  'explore.ball_n':       { pl:'Piłka {n}',                   en:'Ball {n}',              de:'Ball {n}',             fr:'Balle {n}',              zh:'球 {n}' },
+  'explore.params_info':  { pl:'Parametry załadowane — zmień poniżej i rzuć testowo', en:'Parameters loaded — adjust below and test throw', de:'Parameter geladen — unten ändern und testen', fr:'Paramètres chargés — ajustez et testez', zh:'参数已加载 — 在下方调整并测试' },
+  'explore.save_drill':   { pl:'Zapisz w drillu',             en:'Save to drill',         de:'Im Drill speichern',   fr:'Enregistrer dans le drill', zh:'保存到训练' },
+  'explore.save_new':     { pl:'Utwórz nowy',                 en:'Create new',            de:'Neu erstellen',        fr:'Créer nouveau',          zh:'新建' },
+  'explore.new_name':     { pl:'Nazwa nowego drilla:',        en:'New drill name:',       de:'Neuer Drill-Name:',    fr:'Nom du nouveau drill:', zh:'新训练方案名称:' },
+
   // ── Volume ─────────────────────────────────────────────────────────
   'volume.title': { pl:'Głośność serwera', en:'Server volume', de:'Server-Lautstärke', fr:'Volume serveur', zh:'服务器音量' },
   'volume.test':  { pl:'Test',             en:'Test',          de:'Test',              fr:'Test',           zh:'测试' },
