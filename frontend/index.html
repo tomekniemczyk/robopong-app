@@ -2193,6 +2193,12 @@ const _app = createApp({
         drillMaxRepeat.value = m.max_repeat
       } else if (m.type === 'drill_ended') {
         drillRunning.value = false
+        if (drillIsSolo.value && activeDrill.value && selectedPlayerId.value) {
+          landingDrillId.value = activeDrill.value.id
+          pendingLandings.value = []
+          landingMode.value = true
+        }
+        drillIsSolo.value = false
       } else if (m.type === 'training_info') {
         trainingRunning.value = true
         trainingIsPaused.value = false
@@ -2599,6 +2605,7 @@ const _app = createApp({
       send({ action: 'stop' })
       drillRunning.value = false
       drillPaused.value = false
+      drillIsSolo.value = false
     }
     async function deleteScenario(id) {
       if (!confirm(t('confirm.delete_scenario'))) return

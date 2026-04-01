@@ -98,6 +98,16 @@ def init():
                 duration_ms         INTEGER DEFAULT 0
             )
         """)
+        c.execute("""
+            CREATE TABLE IF NOT EXISTS ball_landings (
+                id          INTEGER PRIMARY KEY AUTOINCREMENT,
+                player_id   INTEGER NOT NULL,
+                drill_id    INTEGER NOT NULL,
+                x           REAL NOT NULL,
+                y           REAL NOT NULL,
+                created_at  TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            )
+        """)
         count = c.execute("SELECT COUNT(*) FROM drill_folders").fetchone()[0]
         if count == 0 and DRILLS_DEFAULT.exists():
             _seed_drills(c)
@@ -672,3 +682,32 @@ def delete_voice_note(nid: int):
 def _voice_note_row(r) -> dict:
     return {"id": r[0], "player_id": r[1], "training_history_id": r[2],
             "step_idx": r[3], "filename": r[4], "started_at": r[5], "duration_ms": r[6]}
+
+
+# ── Ball landings ─────────────────────────────────────────────────────────────
+
+def save_ball_landing(player_id: int, drill_id: int, x: float, y: float) -> int:
+    with sqlite3.connect(DB) as c:
+        cur = c.execute(
+            "INSERT INTO ball_landings (player_id, drill_id, x, y) VALUES (?,?,?,?)",
+            (player_id, drill_id, x, y)
+        )
+        return cur.lastrowid
+
+
+def get_ball_landings(drill_id: int, player_id: int | None = None) -> list:
+    with sqlite3.connect(DB) as c:
+        q = "SELECT id, player_id, drill_id, x, y, created_at FROM ball_landings WHERE drill_id=?"
+        params = [drill_id]
+        if player_id is not None:
+            q += " AND player_id=?"
+            params.append(player_id)
+        q += " ORDER BY created_at DESC"
+        rows = c.execute(q, params).fetchall()
+        return [{"id": r[0], "player_id": r[1], "drill_id": r[2], "x": r[3], "y": r[4], "created_at": r[5]}
+                for r in rows]
+
+
+def delete_ball_landing(lid: int):
+    with sqlite3.connect(DB) as c:
+        c.execute("DELETE FROM ball_landings WHERE id=?", (lid,))

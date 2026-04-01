@@ -987,6 +987,30 @@ def delete_voice_note(nid: int):
     db.delete_voice_note(nid)
 
 
+# ── Ball landings ───────────────────────────────────────────────────────────────
+
+@app.post("/api/ball-landings", status_code=201)
+def add_ball_landing(body: dict):
+    player_id = body.get("player_id")
+    drill_id = body.get("drill_id")
+    x = body.get("x")
+    y = body.get("y")
+    if player_id is None or drill_id is None or x is None or y is None:
+        raise HTTPException(400, "player_id, drill_id, x, y required")
+    lid = db.save_ball_landing(int(player_id), int(drill_id), float(x), float(y))
+    return {"id": lid}
+
+
+@app.get("/api/ball-landings")
+def list_ball_landings(drill_id: int, player_id: int | None = None):
+    return db.get_ball_landings(drill_id, player_id)
+
+
+@app.delete("/api/ball-landings/{lid}", status_code=204)
+def delete_ball_landing_endpoint(lid: int):
+    db.delete_ball_landing(lid)
+
+
 # ── Volume ─────────────────────────────────────────────────────────────────────
 
 @app.get("/api/volume")
