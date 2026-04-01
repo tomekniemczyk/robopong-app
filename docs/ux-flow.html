@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AcePad UX Flow — Robopong 3050XL</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background:#0d0f18; color:#e0e0e0; padding:30px; line-height:1.5; }
+  h1 { text-align:center; font-size:28px; margin-bottom:8px; background:linear-gradient(135deg,#5b7cf7,#8b5cf6); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
+  h2 { font-size:18px; margin:30px 0 12px; color:#8b5cf6; border-bottom:1px solid #222; padding-bottom:6px; }
+  h3 { font-size:14px; color:#5b7cf7; margin:16px 0 8px; }
+  .subtitle { text-align:center; color:#888; font-size:13px; margin-bottom:30px; }
+  .flow { display:flex; flex-direction:column; gap:12px; max-width:900px; margin:0 auto; }
+
+  /* Screen cards */
+  .screen { background:#161825; border:1px solid #2a2d3e; border-radius:12px; padding:16px 20px; position:relative; }
+  .screen-name { font-weight:700; font-size:15px; margin-bottom:6px; }
+  .screen-desc { font-size:12px; color:#999; margin-bottom:8px; }
+  .screen-content { font-size:12px; color:#bbb; }
+  .tag { display:inline-block; padding:2px 8px; border-radius:10px; font-size:10px; font-weight:600; margin-right:4px; }
+  .tag-auto { background:rgba(255,159,10,.15); color:#ff9f0a; }
+  .tag-modal { background:rgba(139,92,246,.15); color:#8b5cf6; }
+  .tag-overlay { background:rgba(239,68,68,.15); color:#ef4444; }
+  .tag-page { background:rgba(91,124,247,.15); color:#5b7cf7; }
+
+  /* Flow arrows */
+  .arrow { text-align:center; font-size:20px; color:#444; line-height:1; }
+  .arrow-label { font-size:10px; color:#666; display:block; }
+
+  /* Feature list */
+  .features { display:grid; grid-template-columns:1fr 1fr; gap:12px; max-width:900px; margin:0 auto; }
+  @media (max-width:600px) { .features { grid-template-columns:1fr; } }
+  .feature { background:#161825; border:1px solid #2a2d3e; border-radius:10px; padding:14px 16px; }
+  .feature-title { font-weight:700; font-size:13px; margin-bottom:4px; }
+  .feature-desc { font-size:11px; color:#999; }
+  .feature-pri { display:inline-block; padding:1px 6px; border-radius:6px; font-size:9px; font-weight:700; margin-left:6px; }
+  .pri-high { background:rgba(239,68,68,.2); color:#ef4444; }
+  .pri-med { background:rgba(255,159,10,.2); color:#ff9f0a; }
+  .pri-low { background:rgba(91,124,247,.2); color:#5b7cf7; }
+
+  /* Mini wireframe */
+  .wire { background:#0d0f18; border:1px solid #333; border-radius:6px; padding:8px 10px; margin:6px 0; font-family:monospace; font-size:10px; color:#666; white-space:pre; overflow-x:auto; }
+
+  .two-col { display:flex; gap:16px; flex-wrap:wrap; }
+  .two-col > * { flex:1; min-width:280px; }
+
+  .legend { display:flex; gap:12px; flex-wrap:wrap; justify-content:center; margin:12px 0 20px; }
+</style>
+</head>
+<body>
+
+<h1>AcePad — UX Flow</h1>
+<p class="subtitle">Sterowanie robotem Donic Robopong 3050XL &middot; Pełny przepływ użytkownika</p>
+
+<div class="legend">
+  <span class="tag tag-page">Strona</span>
+  <span class="tag tag-auto">Auto-akcja</span>
+  <span class="tag tag-modal">Modal</span>
+  <span class="tag tag-overlay">Overlay pełnoekranowy</span>
+</div>
+
+<div class="flow">
+
+<!-- 1. Start -->
+<div class="screen">
+  <div class="screen-name">🚀 Start aplikacji</div>
+  <div class="screen-desc">Użytkownik otwiera przeglądarkę → http://192.168.1.45:8001</div>
+  <div class="screen-content">
+    WebSocket łączy się z serwerem. Stan: <b>offline</b>, brak kalibracji, brak gracza.
+    <div class="wire">┌──────────────────────────────┐
+│ [○ Offline]  AcePad    [⚙]  │
+│                              │
+│  Kliknij status połączenia   │
+│  aby rozpocząć               │
+└──────────────────────────────┘</div>
+  </div>
+</div>
+
+<div class="arrow">↓ <span class="arrow-label">klik na badge połączenia</span></div>
+
+<!-- 2. Connection -->
+<div class="screen">
+  <div class="screen-name">📡 Połączenie <span class="tag tag-page">connect</span></div>
+  <div class="screen-desc">Skanowanie urządzeń BLE / USB</div>
+  <div class="screen-content">
+    <div class="wire">┌──────────────────────────────┐
+│ Bluetooth:                   │
+│  [🔍 Skanuj]                 │
+│  ├─ Robopong 3050XL Garaz   │
+│  └─ FC:0F:E7:6D:01:B9  [▶] │
+│                              │
+│ USB:                         │
+│  ├─ /dev/ttyUSB0       [▶]  │
+│                              │
+│ [💻 Symulacja]               │
+└──────────────────────────────┘</div>
+  </div>
+</div>
+
+<div class="arrow">↓ <span class="arrow-label">połączono z robotem</span></div>
+
+<!-- 3. Auto-calibration redirect -->
+<div class="screen">
+  <div class="screen-name">🎯 Kalibracja <span class="tag tag-page">calibration</span> <span class="tag tag-auto">auto-redirect</span></div>
+  <div class="screen-desc">Automatycznie po połączeniu (jeśli brak kalibracji)</div>
+  <div class="screen-content">
+    Silniki startują automatycznie. Idle 10s → auto-stop. Po rzucie: auto set_ball + 5s rozgrzewka jeśli silniki zgasły.
+    <div class="wire">┌──────────────────────────────┐
+│ Kalibracja                   │
+│ ─────────────────────────── │
+│ Wysokość:    ▼ [193] ▲       │
+│ Oscylacja:   ◀ [146] ▶       │
+│ Top Speed:   − [161] +       │
+│ Bot Speed:   − [  0] +       │
+│ Rotacja:     ◀ [150] ▶       │
+│ Wait:        − [1000ms] +    │
+│                              │
+│ [🔄 Reset] [⚡ Wyślij]       │
+│ [🎯 Rzut]  [⏹ Stop]         │
+│                              │
+│ [✅ Zakończ kalibrację]       │
+└──────────────────────────────┘</div>
+    <b>Logika silników:</b>
+    <br>• Wyślij → silniki start, idle timer 10s
+    <br>• Rzut → jeśli silniki off: set_ball + 5s warmup + throw
+    <br>• 10s bez aktywności → auto-stop
+    <br>• Wyjście z kalibracji → natychmiastowy stop
+  </div>
+</div>
+
+<div class="arrow">↓ <span class="arrow-label">"Zakończ kalibrację" → auto-modal</span></div>
+
+<!-- 4. Player selection -->
+<div class="screen">
+  <div class="screen-name">👤 Wybór gracza <span class="tag tag-modal">modal z-index:500</span> <span class="tag tag-auto">auto po połączeniu</span></div>
+  <div class="screen-desc">Obowiązkowy wybór gracza — nie da się zamknąć bez wyboru</div>
+  <div class="screen-content">
+    <div class="wire">┌──────────────────────────────┐
+│ Wybierz gracza               │
+│                              │
+│ [T] Tomek     15 treningów   │
+│ [A] Anna       8 treningów   │
+│                              │
+│ [+ Dodaj gracza]             │
+└──────────────────────────────┘</div>
+  </div>
+</div>
+
+<div class="arrow">↓ <span class="arrow-label">gracz wybrany → główny ekran</span></div>
+
+<!-- 5. Main app - tabs -->
+<div class="screen" style="border-color:#5b7cf7">
+  <div class="screen-name">🏓 Główny ekran — nawigacja zakładkami</div>
+  <div class="screen-desc">Dolny pasek nawigacji, 7 zakładek</div>
+  <div class="screen-content">
+    <div class="wire">┌──────────────────────────────────────┐
+│ [● Online] AcePad [👤 Tomek] [🎯]   │
+│ ──────────────────────────────────── │
+│                                      │
+│        (zawartość zakładki)          │
+│                                      │
+│ ──────────────────────────────────── │
+│ [🏓 Drille] [🏃 Trening] [🏋 Ćw.]   │
+│ [📷 Kamera] [👤 Gracze] [📋 Logi]   │
+└──────────────────────────────────────┘</div>
+    <b>Dostępność zakładek:</b>
+    <br>• Drille, Trening — wymagają: połączenie + kalibracja
+    <br>• Ćwiczenia, Kamera, Gracze, Logi — zawsze dostępne
+  </div>
+</div>
+
+<h2>📋 Przepływ treningu</h2>
+
+<div class="two-col">
+<div class="screen">
+  <div class="screen-name">🏃 Lista treningów <span class="tag tag-page">training</span></div>
+  <div class="screen-content">
+    <div class="wire">┌──────────────────────────────┐
+│ [+ Nowy trening]             │
+│                              │
+│ 🏆 30-Day Challenge  ▼      │
+│  ├─ Dzień 01: BH Block  [▶] │
+│  ├─ Dzień 02: Backspin  [▶] │
+│  └─ ...                      │
+│                              │
+│ Czas: ~45 min · 36 kroków   │
+│ Ostatni: 2 dni temu ✅       │
+└──────────────────────────────┘</div>
+  </div>
+</div>
+
+<div class="screen">
+  <div class="screen-name">▶ Start treningu <span class="tag tag-modal">modal</span></div>
+  <div class="screen-content">
+    <div class="wire">┌──────────────────────────────┐
+│ ▶ Dzień 01: BH Block         │
+│                              │
+│ 👤 Tomek                     │
+│ [✓] 🎥 Nagrywaj             │
+│                              │
+│ [Anuluj]  [▶ Start]         │
+└──────────────────────────────┘</div>
+    Opcjonalnie: wznowienie od kroku X/Y
+  </div>
+</div>
+</div>
+
+<div class="arrow">↓ <span class="arrow-label">klik "Start" → overlay pełnoekranowy</span></div>
+
+<div class="screen" style="border-color:#ef4444">
+  <div class="screen-name">🏃 Trening w trakcie <span class="tag tag-overlay">runner overlay</span></div>
+  <div class="screen-desc">Pełnoekranowy overlay z fazami: countdown → drill ↔ exercise → pause → repeat</div>
+  <div class="screen-content">
+    <div class="wire">┌──────────────────────────────────────┐
+│ 🔴REC  12/36 ████████░░  ~8 min     │
+│ [⏸ Pauza] [⏭ Skip] [⏹ Stop]        │
+│ ──────────────────────────────────── │
+│                                      │
+│        BH Block Slow                 │
+│                                      │
+│     ┌──────────────┐                 │
+│     │  ROBOT       │                 │
+│     │  ═══════════ │                 │
+│     │  ●     ●     │  ← piłki       │
+│     │  BH      FH  │                 │
+│     │     🏓        │                 │
+│     └──────────────┘                 │
+│                                      │
+│          15/28                        │
+│     ████████████░░░░░                │
+│                                      │
+│ ─── Następne: ──────────────────── │
+│ FH Warmup · 28p · 85%               │
+│                                      │
+│ 💬 [dodaj notatkę...]          [📝]  │
+└──────────────────────────────────────┘</div>
+    <b>Fazy:</b>
+    <br>• <b>Countdown</b> (5s) → odliczanie przed startem
+    <br>• <b>Drill</b> → robot rzuca piłki, SVG stołu, progress bar
+    <br>• <b>Exercise</b> → duży timer 88px, grafika 200px, opis
+    <br>• <b>Pause</b> → odliczanie przerwy, podgląd następnego kroku, regulacja prędkości
+    <br><br>
+    <b>Skip:</b> pomija krok + pauzę, natychmiast następny krok
+    <br><b>Stop:</b> zatrzymuje trening, zapisuje postęp w historii
+    <br><b>Nagrywanie:</b> każdy krok osobno (backend), REC migająca kropka
+  </div>
+</div>
+
+<div class="arrow">↓ <span class="arrow-label">trening zakończony / stop</span></div>
+
+<div class="screen">
+  <div class="screen-name">📊 Historia gracza <span class="tag tag-page">players</span></div>
+  <div class="screen-desc">Auto-odświeżanie po zakończeniu treningu</div>
+  <div class="screen-content">
+    <div class="wire">┌──────────────────────────────────────┐
+│ 👤 Tomek                             │
+│ 30-Day: 12/30 ████████░░░            │
+│                                      │
+│ ⭐ Ulubione: FH Warmup, BH Block     │
+│                                      │
+│ 📊 Historia (24)                     │
+│ ──────────────────────────────────── │
+│ ✅ Dzień 01: BH Block    45:22   ▶  │
+│    31.03.2026 21:15 → 22:00          │
+│    36/36 kroków                      │
+│    ▼ (rozwiń)                        │
+│    ├─ ✓ Wrist Rotations    [🔄]     │
+│    ├─ ✓ Elbow Circles      [🔄]     │
+│    ├─ ✓ BH Warmup   [🔄] [🎥▶] [⬇] │
+│    ├─ ✓ FH Warmup   [🔄] [🎥▶] [⬇] │
+│    └─ ...                            │
+│                                      │
+│ ⏹ Dzień 02: Backspin    12:30   ▶  │
+│    ⏩ Wznów (8/36)                   │
+└──────────────────────────────────────┘</div>
+    <b>Przy każdym kroku:</b>
+    <br>• 🔄 Powtórz krok solo (z pytaniem o nagrywanie)
+    <br>• 🎥▶ Odtwórz nagranie (jeśli dostępne)
+    <br>• ⬇ Pobierz (nazwa: data_trening_s03_krok.mp4)
+    <br>• ✕ Usuń nagranie
+  </div>
+</div>
+
+<h2>🏓 Inne ekrany</h2>
+
+<div class="two-col">
+<div class="screen">
+  <div class="screen-name">🏓 Drille <span class="tag tag-page">drills</span></div>
+  <div class="screen-content">
+    Biblioteka drilli pogrupowana w foldery (Introductory → Advanced).
+    Każdy drill: nazwa, SVG wizualizacja stołu, parametry piłek.
+    <br><b>Akcje:</b> ▶ uruchom, ✏ edytuj, 📋 duplikuj, ★ ulubiony, ↕ reorder
+  </div>
+</div>
+
+<div class="screen">
+  <div class="screen-name">🏋 Ćwiczenia <span class="tag tag-page">exercises</span></div>
+  <div class="screen-content">
+    Kategorie: Warmup, Footwork, Speed, Agility, Strength, Cool-down.
+    Animowane SVG (4 klatki). Edytowalny czas trwania.
+    <br><b>Akcje:</b> ▶ uruchom solo, ★ ulubiony, ⏱ zmień czas
+  </div>
+</div>
+
+<div class="screen">
+  <div class="screen-name">📷 Kamera <span class="tag tag-page">camera</span></div>
+  <div class="screen-content">
+    Stream z kamery motion (port 8081).
+    Widok na stół do podglądu ustawień robota.
+  </div>
+</div>
+
+<div class="screen">
+  <div class="screen-name">📋 Logi <span class="tag tag-page">logs</span></div>
+  <div class="screen-content">
+    Logi w czasie rzeczywistym (WebSocket).
+    Komendy → robot, odpowiedzi ← robot.
+    Raport diagnostyczny z jednym kliknięciem.
+  </div>
+</div>
+</div>
+
+<h2>💡 Propozycje nowych funkcji</h2>
+
+<div class="features">
+
+<div class="feature">
+  <div class="feature-title">🎯 Inteligentna kalibracja <span class="feature-pri pri-high">wysoki</span></div>
+  <div class="feature-desc">Asystent kalibracji krok po kroku: "Rzuć piłkę → Czy trafiła w stół? → Koryguj automatycznie". Zamiast ręcznego szukania wartości, robot sam dostosowuje parametry na podstawie feedbacku (trafiło/za daleko/za krótko).</div>
+</div>
+
+<div class="feature">
+  <div class="feature-title">📊 Statystyki treningu <span class="feature-pri pri-high">wysoki</span></div>
+  <div class="feature-desc">Dashboard z trendami: ile treningów/tydzień, streak dni, czas spędzony na FH vs BH, postęp w 30-Day Challenge. Wykresy sparkline na ekranie gracza. Motywacja i widoczny postęp.</div>
+</div>
+
+<div class="feature">
+  <div class="feature-title">🔊 Trening reakcji na dźwięk <span class="feature-pri pri-high">wysoki</span></div>
+  <div class="feature-desc">Wbudowany generator tonów: losowy niski/wysoki dźwięk → gracz przesuwa się BH/FH. Integracja z ćwiczeniem "Sound Reaction Footwork" — backend generuje tony, frontend odtwarza. Bez potrzeby zewnętrznej aplikacji.</div>
+</div>
+
+<div class="feature">
+  <div class="feature-title">🏆 Tryb wyzwania <span class="feature-pri pri-med">średni</span></div>
+  <div class="feature-desc">Czasowy challenge: "Ile piłek oddasz w 60s?". Robot rzuca, ty odpowiadasz — kamera liczy trafienia (opcjonalnie ręcznie). Ranking wyników per gracz. Gamifikacja treningów.</div>
+</div>
+
+<div class="feature">
+  <div class="feature-title">📱 Pilot zdalny (telefon) <span class="feature-pri pri-med">średni</span></div>
+  <div class="feature-desc">Drugi telefon/zegarek jako pilot: duże przyciski Start/Stop/Skip widoczne z daleka. Obsługa gestami (potrząśnięcie = skip). Nie trzeba podchodzić do tabletu przy stole.</div>
+</div>
+
+<div class="feature">
+  <div class="feature-title">🎬 Porównanie nagrań <span class="feature-pri pri-med">średni</span></div>
+  <div class="feature-desc">Widok side-by-side: nagranie z tygodnia 1 vs tydzień 4 tego samego drilla. Wizualne śledzenie postępu techniki. Możliwość tagowania nagrań jako "referencyjne".</div>
+</div>
+
+<div class="feature">
+  <div class="feature-title">🤖 Auto-progresja drilli <span class="feature-pri pri-med">średni</span></div>
+  <div class="feature-desc">Po ukończeniu 30-Day Challenge: automatyczne generowanie kolejnych dni z wyższą trudnością. Zwiększanie prędkości, oscylacji, mieszanie spinów. Personalizacja na podstawie historii (słabszy BH → więcej BH drilli).</div>
+</div>
+
+<div class="feature">
+  <div class="feature-title">⏱ Timer rozgrzewki fizycznej <span class="feature-pri pri-med">średni</span></div>
+  <div class="feature-desc">Duży widoczny timer na tablecie dla ćwiczeń bez robota (faza 1-3 rozgrzewki). Sygnał dźwiękowy przy zmianie ćwiczenia. Automatyczne przejście do fazy 4 (robot) po zakończeniu rozgrzewki fizycznej.</div>
+</div>
+
+<div class="feature">
+  <div class="feature-title">🌐 Udostępnianie treningów <span class="feature-pri pri-low">niski</span></div>
+  <div class="feature-desc">Eksport/import treningów jako JSON/QR kod. Trener tworzy trening → gracz skanuje QR → ma gotowy plan. Społeczność: publiczna biblioteka treningów.</div>
+</div>
+
+<div class="feature">
+  <div class="feature-title">🎵 Muzyka treningowa <span class="feature-pri pri-low">niski</span></div>
+  <div class="feature-desc">Wbudowany odtwarzacz muzyki/playlist podczas treningu. Automatyczne wyciszanie przy sygnałach dźwiękowych (countdown, beep). Tempo muzyki dopasowane do intensywności drilla.</div>
+</div>
+
+<div class="feature">
+  <div class="feature-title">📐 Wizualizacja uderzeń <span class="feature-pri pri-low">niski</span></div>
+  <div class="feature-desc">Na SVG stołu: heatmapa gdzie piłki lądowały (z kamery lub ręczne oznaczanie). Analiza: "70% piłek trafiasz w lewą połowę" → sugestie treningowe.</div>
+</div>
+
+<div class="feature">
+  <div class="feature-title">💬 Notatki głosowe <span class="feature-pri pri-low">niski</span></div>
+  <div class="feature-desc">Zamiast pisania na klawiaturze podczas treningu — nagrywanie krótkich notatek głosowych. "BH za wysoko, poprawić kąt rakietki". Transkrypcja opcjonalna.</div>
+</div>
+
+</div>
+
+<h2>🔄 Cykl sesji treningowej</h2>
+
+<div class="screen" style="max-width:900px;margin:0 auto">
+  <div class="screen-content" style="text-align:center">
+    <div class="wire" style="text-align:left;font-size:11px">
+Połącz → Kalibruj (jeśli potrzeba) → Wybierz gracza → Wybierz trening
+
+    ┌─────────────────────────────────────────────────────┐
+    │                TRENING W TRAKCIE                    │
+    │                                                     │
+    │  Countdown (5s)                                     │
+    │      ↓                                              │
+    │  ┌→ Faza 1-3: Ćwiczenia fizyczne (rozgrzewka)      │
+    │  │    • Mobilizacja górna (2 min)                   │
+    │  │    • Nogi + stretch (2.5 min)                    │
+    │  │    • Shadow footwork + reakcja (2 min)           │
+    │  │      ↓                                           │
+    │  │  Faza 4: Multi-ball z robotem (4 min)            │
+    │  │    • BH Warmup → FH Warmup → Topspin → Footwork│
+    │  │      ↓                                           │
+    │  │  Main content drills (temat dnia)                │
+    │  │    • Drill → pauza → drill → pauza → ...        │
+    │  │      ↓                                           │
+    │  │  Cool-down                                       │
+    │  │    • Quad Stretch → Shoulder → Deep Breathing    │
+    │  │      ↓                                           │
+    │  └─ Zakończenie → zapis historii + nagrań           │
+    │                                                     │
+    │  W każdym momencie: [⏸ Pauza] [⏭ Skip] [⏹ Stop]   │
+    └─────────────────────────────────────────────────────┘
+
+Po treningu → Historia → 🔄 Powtórz dowolny krok → 🎥 Nagraj
+    </div>
+  </div>
+</div>
+
+<p style="text-align:center;color:#555;font-size:11px;margin-top:30px">
+  AcePad by tthub.pl &middot; Wygenerowano 2026-04-01 &middot; Robopong 3050XL
+</p>
+
+</body>
+</html>

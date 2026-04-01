@@ -731,46 +731,31 @@
   </div>
 
   <!-- ── Runner overlay ──────────────────────────────────────────────────── -->
-  <div class="runner-overlay" v-if="drillRunning">
-    <h2>{{ drillScenario }}</h2>
-    <!-- Wizualizacja live piłki -->
-    <svg v-if="activeDrill && activeDrill.balls.length" viewBox="0 0 300 220" style="width:90%;max-width:260px;margin:0 auto 8px;display:block;border-radius:4px">
-      <rect x="130" y="0" width="40" height="6" rx="2" fill="#3a3d52" stroke="#6b6f8a" stroke-width="0.5"/>
-      <rect x="-2" y="6" width="304" height="4" rx="1" fill="#555"/>
+  <!-- Drill runner popup (przyklejony do dołu) -->
+  <div v-if="drillRunning" style="position:fixed;bottom:0;left:0;right:0;z-index:120;background:rgba(13,15,24,.97);backdrop-filter:blur(20px);border-top:2px solid var(--accent);padding:12px 16px;display:flex;align-items:center;gap:12px;flex-wrap:wrap">
+    <!-- Mini SVG stołu z live piłką -->
+    <svg v-if="activeDrill && activeDrill.balls.length && liveBall" viewBox="0 0 300 220" style="width:80px;height:60px;flex-shrink:0;border-radius:4px">
       <rect x="0" y="10" width="300" height="170" fill="#1a4a8a"/>
-      <rect x="0" y="10" width="300" height="170" fill="none" stroke="#fff" stroke-width="2"/>
-      <line x1="150" y1="10" x2="150" y2="180" stroke="#fff" stroke-width="1" opacity="0.5"/>
-      <g v-if="liveBall">
-        <circle :cx="ballTableX(liveBall)" :cy="10+(ballTableY(liveBall)-30)*170/180" r="12"
-          :fill="liveBall.top_speed > liveBall.bot_speed ? '#ff6b35' : liveBall.top_speed < liveBall.bot_speed ? '#4dabf7' : '#ffd43b'"
-          stroke="#fff" stroke-width="2" opacity="0.9">
-          <animate attributeName="r" values="10;14;10" dur="0.8s" repeatCount="indefinite"/>
-        </circle>
-        <text :x="ballTableX(liveBall)" :y="10+(ballTableY(liveBall)-30)*170/180+4" text-anchor="middle" fill="#fff" font-size="9" font-weight="700">{{ drillBall }}</text>
-      </g>
-      <g transform="translate(150,200)" opacity="0.7">
-        <circle cx="0" cy="-12" r="5" fill="none" stroke="#ccc" stroke-width="1.5"/>
-        <line x1="0" y1="-7" x2="0" y2="5" stroke="#ccc" stroke-width="1.5"/>
-        <line x1="0" y1="5" x2="-5" y2="14" stroke="#ccc" stroke-width="1.5"/>
-        <line x1="0" y1="5" x2="5" y2="14" stroke="#ccc" stroke-width="1.5"/>
-        <line x1="0" y1="-4" x2="-7" y2="2" stroke="#ccc" stroke-width="1.5"/>
-        <line x1="0" y1="-4" x2="8" y2="-1" stroke="#ccc" stroke-width="1.5"/>
-        <ellipse cx="13" cy="-4" rx="4" ry="5.5" fill="none" stroke="#f44" stroke-width="1.2" transform="rotate(-20,13,-4)"/>
-      </g>
-      <text x="15" y="194" fill="#6b8ab5" font-size="8" opacity="0.6">BH</text>
-      <text x="275" y="194" fill="#6b8ab5" font-size="8" opacity="0.6">FH</text>
+      <rect x="0" y="10" width="300" height="170" fill="none" stroke="#fff" stroke-width="3"/>
+      <line x1="150" y1="10" x2="150" y2="180" stroke="#fff" stroke-width="1.5" opacity="0.5"/>
+      <circle :cx="ballTableX(liveBall)" :cy="10+(ballTableY(liveBall)-30)*170/180" r="18"
+        :fill="liveBall.top_speed > liveBall.bot_speed ? '#ff6b35' : liveBall.top_speed < liveBall.bot_speed ? '#4dabf7' : '#ffd43b'"
+        stroke="#fff" stroke-width="3" opacity="0.9">
+        <animate attributeName="r" values="14;20;14" dur="0.8s" repeatCount="indefinite"/>
+      </circle>
     </svg>
-    <div class="ball-counter">{{ drillBall }}</div>
-    <div class="ball-sub">{{ t('drills.ball_counter', {total: drillTotal, run: drillRun, max: drillMaxRepeat === 0 ? '∞' : drillMaxRepeat}) }}</div>
-    <div v-if="drillPaused" style="font-size:14px;color:#ff9f0a;font-weight:700;margin:8px 0">{{ t('drills.paused') }}</div>
-    <div class="progress-bar">
-      <div class="fill" :style="{ width: drillTotal ? (drillBall / drillTotal * 100) + '%' : '0%' }"></div>
+    <!-- Info -->
+    <div style="flex:1;min-width:100px">
+      <div style="font-size:13px;font-weight:700">{{ drillScenario }}</div>
+      <div style="font-size:11px;color:var(--muted)">{{ drillBall }}/{{ drillTotal }} {{ t('tr.balls_label') }}</div>
+      <div class="progress-bar" style="margin-top:4px;height:4px"><div class="fill" :style="{width: drillTotal ? (drillBall/drillTotal*100)+'%' : '0'}"></div></div>
     </div>
-    <div style="display:flex;gap:8px;margin-top:12px">
-      <button class="btn" style="flex:1;background:#ff9f0a;color:#fff" @click="pauseDrill" v-if="!drillPaused">{{ t('drills.pause') }}</button>
-      <button class="btn btn-success" style="flex:1" @click="resumeDrill" v-if="drillPaused">{{ t('drills.resume') }}</button>
-      <button class="btn btn-danger" style="flex:1" @click="stopDrill">{{ t('cal.stop') }}</button>
-    </div>
+    <!-- Paused indicator -->
+    <span v-if="drillPaused" style="color:#ff9f0a;font-weight:700;font-size:12px">⏸</span>
+    <!-- Buttons -->
+    <button class="btn" style="background:#ff9f0a;color:#fff;padding:6px 12px;font-size:12px" @click="pauseDrill" v-if="!drillPaused">⏸</button>
+    <button class="btn btn-success" style="padding:6px 12px;font-size:12px" @click="resumeDrill" v-if="drillPaused">▶</button>
+    <button class="btn btn-danger" style="padding:6px 12px;font-size:12px" @click="stopDrill">⏹</button>
   </div>
 
   <!-- ── Player select modal (required on startup) ──────────────────────── -->
@@ -1870,6 +1855,11 @@ const _app = createApp({
         trainingBallTotal.value = m.total_sec
         trainingExerciseId.value = m.exercise_id || null
         trainingExerciseDesc.value = m.description || ''
+        if (drillRunning.value) {
+          drillScenario.value = m.exercise_name
+          drillBall.value = m.total_sec - m.sec
+          drillTotal.value = m.total_sec
+        }
       } else if (m.type === 'training_pause') {
         trainingPhase.value = 'pause'
         trainingTimer.value = m.sec
@@ -1883,6 +1873,7 @@ const _app = createApp({
       } else if (m.type === 'training_ended') {
         trainingRunning.value = false
         trainingIsPaused.value = false
+        drillRunning.value = false
         showToast(t('toast.training_ended'))
         loadTrainingHistory()
         if (playerDetail.value) openPlayerDetail(playerDetail.value)
@@ -2436,6 +2427,12 @@ const _app = createApp({
       return s > 0 ? m + 'm ' + s + 's' : m + 'm'
     }
     function runExerciseSolo(ex) {
+      drillScenario.value = ex.name
+      drillBall.value = 0
+      drillTotal.value = ex.duration_sec || 60
+      drillRun.value = 0
+      drillMaxRepeat.value = 1
+      drillRunning.value = true
       send({ action: 'run_exercise_solo', exercise_id: ex.id, duration_sec: ex.duration_sec,
              player_id: selectedPlayerId.value, record: recordTraining.value })
     }
