@@ -942,32 +942,45 @@
 
   <!-- ── Runner overlay ──────────────────────────────────────────────────── -->
   <!-- Drill runner popup (przyklejony do dołu) -->
-  <div v-if="drillRunning" style="position:fixed;bottom:0;left:0;right:0;z-index:120;background:rgba(13,15,24,.97);backdrop-filter:blur(20px);border-top:2px solid var(--accent);padding:12px 16px;display:flex;align-items:center;gap:12px;flex-wrap:wrap">
-    <!-- Mini SVG stołu z live piłką -->
-    <svg v-if="activeDrill && activeDrill.balls.length && liveBall" viewBox="0 0 300 220" style="width:80px;height:60px;flex-shrink:0;border-radius:4px">
-      <rect x="0" y="10" width="300" height="170" fill="#1a4a8a"/>
-      <rect x="0" y="10" width="300" height="170" fill="none" stroke="#fff" stroke-width="3"/>
-      <line x1="150" y1="10" x2="150" y2="180" stroke="#fff" stroke-width="1.5" opacity="0.5"/>
-      <circle :cx="ballTableX(liveBall)" :cy="10+(ballTableY(liveBall)-30)*170/180" r="18"
-        :fill="liveBall.top_speed > liveBall.bot_speed ? '#ff6b35' : liveBall.top_speed < liveBall.bot_speed ? '#4dabf7' : '#ffd43b'"
-        stroke="#fff" stroke-width="3" opacity="0.9">
-        <animate attributeName="r" values="14;20;14" dur="0.8s" repeatCount="indefinite"/>
-      </circle>
-    </svg>
-    <!-- Info -->
-    <div style="flex:1;min-width:100px">
-      <div style="font-size:13px;font-weight:700">{{ drillScenario }}</div>
-      <div style="font-size:11px;color:var(--muted)">{{ drillBall }}/{{ drillTotal }} {{ t('tr.balls_label') }}</div>
-      <div class="progress-bar" style="margin-top:4px;height:4px"><div class="fill" :style="{width: drillTotal ? (drillBall/drillTotal*100)+'%' : '0'}"></div></div>
+  <div v-if="drillRunning" style="position:fixed;bottom:0;left:0;right:0;z-index:120;background:rgba(13,15,24,.97);backdrop-filter:blur(20px);border-top:2px solid var(--accent);padding:10px 16px;display:flex;flex-direction:column;gap:8px">
+    <!-- Górny rząd: duże cyfry + przyciski -->
+    <div style="display:flex;align-items:center;gap:12px">
+      <!-- Mini SVG stołu z live piłką -->
+      <svg v-if="activeDrill && activeDrill.balls.length && liveBall" viewBox="0 0 300 220" style="width:70px;height:52px;flex-shrink:0;border-radius:4px">
+        <rect x="0" y="10" width="300" height="170" fill="#1a4a8a"/>
+        <rect x="0" y="10" width="300" height="170" fill="none" stroke="#fff" stroke-width="3"/>
+        <line x1="150" y1="10" x2="150" y2="180" stroke="#fff" stroke-width="1.5" opacity="0.5"/>
+        <circle :cx="ballTableX(liveBall)" :cy="10+(ballTableY(liveBall)-30)*170/180" r="18"
+          :fill="liveBall.top_speed > liveBall.bot_speed ? '#ff6b35' : liveBall.top_speed < liveBall.bot_speed ? '#4dabf7' : '#ffd43b'"
+          stroke="#fff" stroke-width="3" opacity="0.9">
+          <animate attributeName="r" values="14;20;14" dur="0.8s" repeatCount="indefinite"/>
+        </circle>
+      </svg>
+      <!-- Duży counter piłek -->
+      <div style="flex:1;min-width:0">
+        <div style="font-size:36px;font-weight:800;line-height:1;font-variant-numeric:tabular-nums;letter-spacing:-.02em">
+          <span v-if="drillCount">{{ drillThrown }}</span><span v-else>{{ drillBall }}</span><span style="font-size:20px;opacity:.5">/{{ drillCount || drillTotal }}</span>
+        </div>
+      </div>
+      <!-- Czas remaining -->
+      <div v-if="drillRemainSec" style="text-align:right;flex-shrink:0">
+        <div style="font-size:28px;font-weight:700;color:var(--accent);line-height:1;font-variant-numeric:tabular-nums">{{ fmtDur(drillRemainSec) }}</div>
+      </div>
+      <!-- Recording indicator -->
+      <span v-if="recordTraining && selectedPlayerId" style="display:inline-flex;align-items:center;gap:3px;font-size:10px;color:#ff3b30;font-weight:700"><span style="width:7px;height:7px;border-radius:50%;background:#ff3b30;animation:recBlink 1s infinite"></span>REC</span>
+      <!-- Paused indicator -->
+      <span v-if="drillPaused" style="color:#ff9f0a;font-weight:700;font-size:20px">⏸</span>
     </div>
-    <!-- Recording indicator -->
-    <span v-if="recordTraining && selectedPlayerId" style="display:inline-flex;align-items:center;gap:3px;font-size:10px;color:#ff3b30;font-weight:700"><span style="width:7px;height:7px;border-radius:50%;background:#ff3b30;animation:recBlink 1s infinite"></span>REC</span>
-    <!-- Paused indicator -->
-    <span v-if="drillPaused" style="color:#ff9f0a;font-weight:700;font-size:12px">⏸</span>
-    <!-- Buttons -->
-    <button class="btn" style="background:#ff9f0a;color:#fff;padding:6px 12px;font-size:12px" @click="pauseDrill" v-if="!drillPaused">⏸</button>
-    <button class="btn btn-success" style="padding:6px 12px;font-size:12px" @click="resumeDrill" v-if="drillPaused">▶</button>
-    <button class="btn btn-danger" style="padding:6px 12px;font-size:12px" @click="stopDrill">⏹</button>
+    <!-- Dolny rząd: progress bar + przyciski -->
+    <div style="display:flex;align-items:center;gap:8px">
+      <div style="flex:1">
+        <div style="font-size:11px;font-weight:600;margin-bottom:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ drillScenario }}</div>
+        <div class="progress-bar" style="height:5px"><div class="fill" :style="{width: (drillCount ? drillThrown/drillCount : drillTotal ? drillBall/drillTotal : 0)*100+'%'}"></div></div>
+      </div>
+      <button class="btn" style="background:#ff9f0a;color:#fff;padding:8px 14px;font-size:16px" @click="pauseDrill" v-if="!drillPaused">⏸</button>
+      <button class="btn btn-success" style="padding:8px 14px;font-size:16px" @click="resumeDrill" v-if="drillPaused">▶</button>
+      <button class="btn btn-danger" style="padding:8px 14px;font-size:16px" @click="stopDrill">⏹</button>
+    </div>
   </div>
 
   <!-- ── Landing marking overlay ─────────────────────────────────────────── -->
@@ -1101,6 +1114,7 @@
       <!-- Faza: drill -->
       <div v-if="trainingPhase === 'drill'" style="flex-shrink:0">
         <div class="ball-counter">{{ trainingBall }}<span style="font-size:32px;opacity:.5">/{{ trainingBallTotal }}</span></div>
+        <div v-if="trainingEstRemaining" style="font-size:28px;font-weight:700;color:var(--accent);margin-bottom:4px;font-variant-numeric:tabular-nums">⏱ {{ fmtDur(trainingEstRemaining) }}</div>
         <div v-if="trainingBalls.length" style="display:flex;flex-wrap:wrap;gap:4px;justify-content:center;margin:6px 0">
           <span v-for="(b, bi) in trainingBalls" :key="bi" style="font-size:10px;padding:2px 8px;border-radius:10px" :style="{background: b.top_speed > b.bot_speed ? 'rgba(255,107,53,.15)' : b.bot_speed > b.top_speed ? 'rgba(77,171,247,.15)' : 'rgba(255,212,59,.15)'}">
             {{ bi+1 }}. {{ ballSpinLabel(b) }} · {{ ballPlaceLabel(b) }}
@@ -1295,7 +1309,7 @@
               </svg>
             </div>
             <!-- Kontrolki -->
-            <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px">
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px">
               <div class="field" style="margin:0">
                 <label style="font-size:11px">{{ t('drills.balls_count') }} <small>1–999</small></label>
                 <input type="number" v-model.number="drillRunCount" min="1" max="999" style="text-align:center">
@@ -1307,6 +1321,9 @@
                   <span style="font-size:12px;font-weight:600;min-width:36px;text-align:right">{{ drillRunPercent }}%</span>
                 </div>
               </div>
+            </div>
+            <div v-if="drillEstSec" style="text-align:center;font-size:12px;color:var(--muted);margin-bottom:10px">
+              ⏱ ~{{ fmtDur(drillEstSec) }} · {{ drillRunCount }} {{ t('tr.balls_label') }}
             </div>
             <!-- Record toggle + Nawigacja + Start -->
             <label v-if="selectedPlayerId" style="font-size:11px;display:flex;align-items:center;gap:5px;cursor:pointer;margin-bottom:6px;color:var(--text2)">
@@ -1794,10 +1811,10 @@
         </div>
         <!-- Actions: resume + delete -->
         <div style="padding-left:22px;margin-top:4px;display:flex;gap:6px">
-          <button v-if="h.status === 'stopped'" class="btn btn-ghost" style="font-size:10px;padding:2px 8px;background:rgba(255,159,10,.1)" @click.stop="resumeFromHistory(h)">
-            ⏩ {{ t('training.resume') }} ({{ h.steps_completed }}/{{ h.steps_total }})
+          <button v-if="h.status === 'stopped'" class="btn btn-ghost" style="font-size:10px;padding:2px 8px;background:rgba(255,159,10,.1)" @click.stop="resumeFromHistory(h)" :title="t('tooltip.resume')">
+            {{ t('training.resume') }} ({{ h.steps_completed }}/{{ h.steps_total }})
           </button>
-          <button class="btn btn-ghost" style="font-size:10px;padding:2px 8px;color:var(--danger)" @click.stop="deleteHistoryEntry(h.id)">🗑</button>
+          <button class="btn btn-ghost" style="font-size:10px;padding:2px 8px;color:var(--danger)" @click.stop="deleteHistoryEntry(h.id)" :title="t('tooltip.delete_session')">🗑</button>
         </div>
         <!-- Expanded details -->
         <div v-if="expandedHistoryId === h.id" style="margin-top:6px;padding:8px;background:rgba(255,255,255,.03);border-radius:6px;margin-left:22px">
@@ -1819,13 +1836,13 @@
                 </span>
                 <!-- Recording controls for this step -->
                 <template v-if="getStepRecording(h, si)">
-                  <button class="btn btn-ghost" style="font-size:10px;padding:1px 6px;color:#ff3b30"
+                  <button class="btn btn-ghost" style="font-size:10px;padding:1px 6px;color:#ff3b30" :title="t('tooltip.play')"
                     @click.stop="playingRecording = playingRecording === getStepRecording(h, si).filename ? null : getStepRecording(h, si).filename">
                     {{ playingRecording === getStepRecording(h, si)?.filename ? '⏹' : '🎥 ▶' }}
                   </button>
-                  <button class="btn btn-ghost" style="font-size:10px;padding:1px 6px" @click.stop="openVideoCompare(getStepRecording(h, si))">🔀</button>
-                  <a :href="'/api/recordings/' + getStepRecording(h, si).filename" :download="recDownloadName(h, getStepRecording(h, si))" class="btn btn-ghost" style="font-size:10px;padding:1px 6px" @click.stop>⬇</a>
-                  <button class="btn btn-ghost" style="font-size:10px;padding:1px 6px;color:var(--danger)" @click.stop="deleteRecording(getStepRecording(h, si).filename)">✕</button>
+                  <button class="btn btn-ghost" style="font-size:10px;padding:1px 6px" :title="t('tooltip.compare')" @click.stop="openVideoCompare(getStepRecording(h, si))">🔀</button>
+                  <a :href="'/api/recordings/' + getStepRecording(h, si).filename" :download="recDownloadName(h, getStepRecording(h, si))" class="btn btn-ghost" style="font-size:10px;padding:1px 6px" :title="t('tooltip.download')" @click.stop>⬇</a>
+                  <button class="btn btn-ghost" style="font-size:10px;padding:1px 6px;color:var(--danger)" :title="t('tooltip.delete_rec')" @click.stop="deleteRecording(getStepRecording(h, si).filename)">✕</button>
                 </template>
                 <!-- Voice note controls for this step -->
                 <template v-if="getStepVoiceNote(h, si)">
@@ -1852,13 +1869,13 @@
               <span style="width:16px;text-align:center;flex-shrink:0;color:#34c759">{{ h.status === 'completed' ? '✓' : '○' }}</span>
               <span style="flex:1">{{ getHistoryLabel(h) }}</span>
               <template v-if="getStepRecording(h, 0)">
-                <button class="btn btn-ghost" style="font-size:10px;padding:1px 6px;color:#ff3b30"
+                <button class="btn btn-ghost" style="font-size:10px;padding:1px 6px;color:#ff3b30" :title="t('tooltip.play')"
                   @click.stop="playingRecording = playingRecording === getStepRecording(h, 0).filename ? null : getStepRecording(h, 0).filename">
                   {{ playingRecording === getStepRecording(h, 0)?.filename ? '⏹' : '🎥 ▶' }}
                 </button>
-                <button class="btn btn-ghost" style="font-size:10px;padding:1px 6px" @click.stop="openVideoCompare(getStepRecording(h, 0))">🔀</button>
-                <a :href="'/api/recordings/' + getStepRecording(h, 0).filename" :download="recDownloadName(h, getStepRecording(h, 0))" class="btn btn-ghost" style="font-size:10px;padding:1px 6px" @click.stop>⬇</a>
-                <button class="btn btn-ghost" style="font-size:10px;padding:1px 6px;color:var(--danger)" @click.stop="deleteRecording(getStepRecording(h, 0).filename)">✕</button>
+                <button class="btn btn-ghost" style="font-size:10px;padding:1px 6px" :title="t('tooltip.compare')" @click.stop="openVideoCompare(getStepRecording(h, 0))">🔀</button>
+                <a :href="'/api/recordings/' + getStepRecording(h, 0).filename" :download="recDownloadName(h, getStepRecording(h, 0))" class="btn btn-ghost" style="font-size:10px;padding:1px 6px" :title="t('tooltip.download')" @click.stop>⬇</a>
+                <button class="btn btn-ghost" style="font-size:10px;padding:1px 6px;color:var(--danger)" :title="t('tooltip.delete_rec')" @click.stop="deleteRecording(getStepRecording(h, 0).filename)">✕</button>
               </template>
             </div>
             <video v-if="getStepRecording(h, 0) && playingRecording === getStepRecording(h, 0).filename"
@@ -2157,6 +2174,9 @@
       <span class="nav-icon">👤</span>{{ currentPlayerName || t('nav.players') }}
     </button>
     <button v-if="selectedPlayerId" @click="showPlayerSelectModal=true" style="font-size:10px;padding:2px 6px;opacity:0.6" :title="t('players.select')">🔄</button>
+    <button :class="{ active: page === 'history' }" @click="page='history'; loadAllHistory()">
+      <span class="nav-icon">📊</span>{{ t('nav.history') }}
+    </button>
     <button :class="{ active: page === 'logs' }" @click="page='logs'">
       <span class="nav-icon">🖥</span>{{ t('nav.logs') }}
     </button>
@@ -2232,6 +2252,8 @@ const _app = createApp({
     const drillRun       = ref(0)
     const drillMaxRepeat = ref(1)
     const drillPaused    = ref(false)
+    const drillThrown    = ref(0)
+    const drillCount     = ref(0)
 
     // ── Confirm modal ────────────────────────────────────────
     const confirmMsg      = ref('')
@@ -2402,6 +2424,8 @@ const _app = createApp({
         drillTotal.value     = m.total
         drillRun.value       = m.run
         drillMaxRepeat.value = m.max_repeat
+        drillThrown.value    = m.thrown || 0
+        drillCount.value     = m.count || 0
       } else if (m.type === 'drill_ended') {
         drillRunning.value = false
         if (drillIsSolo.value && activeDrill.value && selectedPlayerId.value) {
@@ -2674,6 +2698,42 @@ const _app = createApp({
     const drillRunPercent = ref(100)
     const drillIsSolo    = ref(false)
 
+    // Estimated drill time (seconds) based on ball count, tempo, and drill wait times
+    const drillEstSec = computed(() => {
+      if (!activeDrill.value || !activeDrill.value.balls.length) return 0
+      const balls = activeDrill.value.balls
+      const count = drillRunCount.value || 60
+      const pct = drillRunPercent.value || 100
+      const minWait = balls.length === 1 ? 500 : 750
+      let totalMs = 3200 // warmup ~3.2s
+      for (let i = 0; i < count; i++) {
+        const b = balls[i % balls.length]
+        const raw = b.wait_ms || 1500
+        const adj = Math.max(minWait, Math.round(raw * (100 + (100 - pct)) / 100))
+        totalMs += adj + 150
+      }
+      return Math.ceil(totalMs / 1000)
+    })
+
+    // Remaining time during drill execution
+    const drillRemainSec = computed(() => {
+      if (!activeDrill.value || !activeDrill.value.balls.length || !drillRunning.value) return 0
+      const balls = activeDrill.value.balls
+      const total = drillCount.value || drillRunCount.value || 60
+      const remaining = total - drillThrown.value
+      if (remaining <= 0) return 0
+      const pct = drillRunPercent.value || 100
+      const minWait = balls.length === 1 ? 500 : 750
+      let totalMs = 0
+      for (let i = 0; i < remaining; i++) {
+        const b = balls[(drillThrown.value + i) % balls.length]
+        const raw = b.wait_ms || 1500
+        const adj = Math.max(minWait, Math.round(raw * (100 + (100 - pct)) / 100))
+        totalMs += adj + 150
+      }
+      return Math.ceil(totalMs / 1000)
+    })
+
     // ── Ball landings ─────────────────────────────────────────
     const landingMode    = ref(false)
     const landingDrillId = ref(null)
@@ -2755,6 +2815,8 @@ const _app = createApp({
       drillTotal.value     = drill.balls.length
       drillRun.value       = 0
       drillMaxRepeat.value = drill.repeat
+      drillThrown.value    = 0
+      drillCount.value     = drillRunCount.value
       drillRunning.value   = true
       drillIsSolo.value    = !!selectedPlayerId.value
       if (selectedPlayerId.value) {
@@ -4335,8 +4397,8 @@ const _app = createApp({
       moveFolderUp, moveFolderDown, moveDrillUp, moveDrillDown,
       showMoveModal, moveDrillToFolder, deleteDrillConfirm, runDrill, exportDrills,
       toast, robotLog, logBox, serverLogs, serverLogBox, logLevel, filteredServerLogs, serverVolume, setServerVolume, testVolume,
-      drillRunning, drillScenario, drillBall, drillTotal, drillRun, drillMaxRepeat,
-      activeDrill, drillRunCount, drillRunPercent, liveBall,
+      drillRunning, drillScenario, drillBall, drillTotal, drillRun, drillMaxRepeat, drillThrown, drillCount,
+      activeDrill, drillRunCount, drillRunPercent, liveBall, drillEstSec, drillRemainSec,
       openDrillPanel, prevDrill, nextDrill, startDrill,
       ballTableX, ballTableY,
       confirmMsg, confirmExtra, confirmOkLabel, confirmOkColor, confirmCb, confirmDownloadCb, runConfirm, runDownloadAndDelete,
