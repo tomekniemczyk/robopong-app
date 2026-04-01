@@ -613,11 +613,12 @@
       </div>
 
       <div style="margin-top:16px;padding-top:14px;border-top:1px solid var(--border);display:flex;gap:8px">
-        <button class="btn" style="flex:1;padding:12px;font-size:14px;font-weight:700;background:#6366f1;color:#fff"
-          :disabled="!connected || myRole !== 'controller'" @click="wizStart">
+        <button class="btn btn-ghost" style="flex:0;padding:12px 16px;font-size:13px"
+          @click="wizStart">
           🧙 {{ t('wizard.start') }}
         </button>
-        <button class="btn btn-success" style="flex:1;padding:12px;font-size:14px;font-weight:700"
+        <div style="flex:1"></div>
+        <button class="btn btn-success" style="padding:12px 20px;font-size:14px;font-weight:700"
           :disabled="!connected || myRole !== 'controller'" @click="calDone">
           {{ t('cal.done_save') }}
         </button>
@@ -637,7 +638,7 @@
           {{ wizPhase === 0 ? (t('wizard.phase_height')) : wizPhase === 1 ? (t('wizard.phase_osc')) : (t('wizard.phase_speed')) }}
         </div>
       </div>
-      <button class="btn btn-ghost" style="font-size:18px;padding:4px 10px" @click="wizCancel">✕</button>
+      <button class="btn btn-ghost" style="font-size:11px;padding:4px 10px" @click="wizCancel">🔧 {{ t('wizard.manual') }}</button>
     </div>
     <!-- Progress bar 3-segment -->
     <div style="display:flex;gap:4px;margin-bottom:16px">
@@ -4296,7 +4297,7 @@ const _app = createApp({
       { key: 'oscillation', step0: 6, minStep: 2, min: 127, max: 173 },
       { key: 'top_speed', step0: 10, minStep: 2, min: 40, max: 249 },
     ]
-    const wizActive = ref(false)
+    const wizActive = ref(true)
     const wizPhase = ref(0)
     const wizState = ref('idle') // idle|warmup|ready|waiting|phase_done|complete
     const wizStep = ref(16)

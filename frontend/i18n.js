@@ -566,6 +566,7 @@ window.I18N = {
 
   // ── Wizard kalibracji ─────────────────────────────────────────────
   'wizard.start':        { pl:'Asystent kalibracji',  en:'Calibration Wizard',   de:'Kalibrierungsassistent',  fr:'Assistant de calibrage',   zh:'校准向导' },
+  'wizard.manual':       { pl:'Tryb ręczny',          en:'Manual mode',          de:'Manueller Modus',         fr:'Mode manuel',              zh:'手动模式' },
   'wizard.title':        { pl:'Kalibracja',           en:'Calibration',          de:'Kalibrierung',            fr:'Calibrage',                zh:'校准' },
   'wizard.step':         { pl:'Krok',                 en:'Step',                 de:'Schritt',                 fr:'Étape',                    zh:'步骤' },
   'wizard.phase_height': { pl:'Wysokość (blisko/daleko)', en:'Height (near/far)',  de:'Höhe (nah/fern)',       fr:'Hauteur (proche/loin)',    zh:'高度（远近）' },
