@@ -84,10 +84,10 @@ def record_run(training_id, player_id: int | None, elapsed_sec: int,
                steps_skipped: list[int] | None = None,
                step_notes: list[dict] | None = None,
                solo_drill_id: int | None = None,
-               solo_exercise_id: int | None = None):
-    db.record_training_run(training_id, player_id, elapsed_sec, status,
-                           steps_completed, steps_total, steps_skipped, step_notes,
-                           solo_drill_id=solo_drill_id, solo_exercise_id=solo_exercise_id)
+               solo_exercise_id: int | None = None) -> int:
+    return db.record_training_run(training_id, player_id, elapsed_sec, status,
+                                  steps_completed, steps_total, steps_skipped, step_notes,
+                                  solo_drill_id=solo_drill_id, solo_exercise_id=solo_exercise_id)
 
 
 def get_history(training_id: int | None = None, player_id: int | None = None,
@@ -346,23 +346,23 @@ class TrainingRunner:
             # ── Done ─────────────────────────────────────────────
             elapsed_sec = int(time.monotonic() - start_time)
             audio.play("training_complete")
-            broadcast("training_ended", {"elapsed_sec": elapsed_sec})
-
-            record_run(
+            history_id = record_run(
                 scenario.get("id"), self._player_id, elapsed_sec,
                 "completed", self._steps_completed, total_steps,
                 self._steps_skipped, self._step_notes,
                 solo_drill_id=self._solo_drill_id, solo_exercise_id=self._solo_exercise_id,
             )
+            broadcast("training_ended", {"elapsed_sec": elapsed_sec, "history_id": history_id})
 
         except asyncio.CancelledError:
             elapsed_sec = int(time.monotonic() - start_time)
-            record_run(
+            history_id = record_run(
                 scenario.get("id"), self._player_id, elapsed_sec,
                 "stopped", self._steps_completed, total_steps,
                 self._steps_skipped, self._step_notes,
                 solo_drill_id=self._solo_drill_id, solo_exercise_id=self._solo_exercise_id,
             )
+            broadcast("training_ended", {"elapsed_sec": elapsed_sec, "history_id": history_id, "status": "stopped"})
         except Exception as e:
             logger.error("Training runner error: %s", e)
             elapsed_sec = int(time.monotonic() - start_time)

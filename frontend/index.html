@@ -1439,11 +1439,23 @@
                   <a :href="'/api/recordings/' + getStepRecording(h, si).filename" :download="recDownloadName(h, getStepRecording(h, si))" class="btn btn-ghost" style="font-size:10px;padding:1px 6px" @click.stop>⬇</a>
                   <button class="btn btn-ghost" style="font-size:10px;padding:1px 6px;color:var(--danger)" @click.stop="deleteRecording(getStepRecording(h, si).filename)">✕</button>
                 </template>
+                <!-- Voice note controls for this step -->
+                <template v-if="getStepVoiceNote(h, si)">
+                  <button class="btn btn-ghost" style="font-size:10px;padding:1px 6px;color:#30d158"
+                    @click.stop="playingVoice = playingVoice === getStepVoiceNote(h, si).id ? null : getStepVoiceNote(h, si).id">
+                    {{ playingVoice === getStepVoiceNote(h, si).id ? '⏹' : '🎙 ▶' }}
+                  </button>
+                  <button class="btn btn-ghost" style="font-size:10px;padding:1px 6px;color:var(--danger)" @click.stop="deleteVoiceNote(getStepVoiceNote(h, si).id)">✕</button>
+                </template>
               </div>
               <!-- Inline video player -->
               <video v-if="getStepRecording(h, si) && playingRecording === getStepRecording(h, si).filename"
                 :src="'/api/recordings/' + getStepRecording(h, si).filename" controls autoplay
                 style="width:100%;margin:4px 0 6px;border-radius:6px;max-height:250px"></video>
+              <!-- Inline audio player -->
+              <audio v-if="getStepVoiceNote(h, si) && playingVoice === getStepVoiceNote(h, si).id"
+                :src="'/api/voice-notes/' + getStepVoiceNote(h, si).id + '/audio'" controls autoplay
+                style="width:100%;margin:2px 0 4px"></audio>
             </div>
           </template>
           <!-- Solo run (no training) -->
@@ -1970,6 +1982,7 @@ const _app = createApp({
         trainingRunning.value = false
         trainingIsPaused.value = false
         drillRunning.value = false
+        if (m.history_id) currentHistoryId.value = m.history_id
         showToast(t('toast.training_ended'))
         loadTrainingHistory()
         if (playerDetail.value) openPlayerDetail(playerDetail.value)
@@ -2401,6 +2414,10 @@ const _app = createApp({
     const playerHistory = ref([])
     const playerRecordings = ref([])
     const playingRecording = ref(null)
+    const playerVoiceNotes = ref([])
+    const playingVoice = ref(null)
+    const voiceRecording = ref(false)
+    const currentHistoryId = ref(null)
     const expandedHistoryId = ref(null)
     const playerHistoryTotal = ref(0)
     const playerStats = ref(null)
@@ -2697,6 +2714,68 @@ const _app = createApp({
         return r.step_idx === stepIdx && rStart >= hStart && rStart <= hEnd
       })
     }
+
+    function getStepVoiceNote(h, stepIdx) {
+      const hStart = new Date(h.started_at).getTime()
+      const hEnd = hStart + (h.elapsed_sec + 120) * 1000
+      return playerVoiceNotes.value.find(n => {
+        const nStart = new Date(n.started_at).getTime()
+        return n.step_idx === stepIdx && nStart >= hStart && nStart <= hEnd
+      })
+    }
+
+    async function deleteVoiceNote(nid) {
+      await fetch(`/api/voice-notes/${nid}`, { method: 'DELETE' })
+      playerVoiceNotes.value = playerVoiceNotes.value.filter(n => n.id !== nid)
+      if (playingVoice.value === nid) playingVoice.value = null
+    }
+
+    let _mediaRecorder = null
+    let _audioChunks = []
+    let _voiceAutoStop = null
+
+    async function toggleVoiceRecord() {
+      if (voiceRecording.value) {
+        if (_voiceAutoStop) { clearTimeout(_voiceAutoStop); _voiceAutoStop = null }
+        _mediaRecorder?.stop()
+        return
+      }
+      let stream
+      try {
+        stream = await navigator.mediaDevices.getUserMedia({ audio: true })
+      } catch (e) {
+        showToast('🎙 Brak dostępu do mikrofonu')
+        return
+      }
+      _audioChunks = []
+      _mediaRecorder = new MediaRecorder(stream)
+      _mediaRecorder.ondataavailable = e => { if (e.data.size > 0) _audioChunks.push(e.data) }
+      _mediaRecorder.onstop = async () => {
+        stream.getTracks().forEach(t => t.stop())
+        voiceRecording.value = false
+        await uploadVoiceNote()
+      }
+      _mediaRecorder.start(100)
+      voiceRecording.value = true
+      _voiceAutoStop = setTimeout(() => { if (voiceRecording.value) _mediaRecorder?.stop() }, 15000)
+    }
+
+    async function uploadVoiceNote() {
+      if (!_audioChunks.length || !selectedPlayerId.value) return
+      const blob = new Blob(_audioChunks, { type: 'audio/webm' })
+      const fd = new FormData()
+      fd.append('file', blob, 'note.webm')
+      fd.append('player_id', selectedPlayerId.value)
+      fd.append('step_idx', trainingStep.value)
+      if (currentHistoryId.value) fd.append('training_history_id', currentHistoryId.value)
+      try {
+        await fetch('/api/voice-notes', { method: 'POST', body: fd })
+        await loadPlayerVoiceNotes(selectedPlayerId.value)
+        showToast('🎙 ' + t('training.voice_saved'))
+      } catch (e) {
+        showToast('🎙 Błąd zapisu notatki głosowej')
+      }
+    }
     function rerunStep(h, step) {
       const stepName = step.drill_name || step.exercise_name || 'Step'
       const trainingName = getTrainingName(h.training_id) || 'Solo'
@@ -2886,6 +2965,11 @@ const _app = createApp({
       })
     }
 
+    async function loadPlayerVoiceNotes(pid) {
+      const r = await fetch(`/api/voice-notes?player_id=${pid}`)
+      playerVoiceNotes.value = await r.json()
+    }
+
     async function openPlayerDetail(p) {
       playerDetail.value = p
       expandedHistoryId.value = null
@@ -2902,6 +2986,7 @@ const _app = createApp({
       playerFavorites.value = await fRes.json()
       playerStats.value = await sRes.json()
       playerHistoryTotal.value = playerHistory.value.length
+      await loadPlayerVoiceNotes(p.id)
     }
 
     const statsMaxWeek = computed(() => {
@@ -3395,11 +3480,13 @@ const _app = createApp({
       historyModal, historyEntries, showTrainingHistory, getPlayerName, getTrainingName, saveSessionComment,
       editingCommentId, editingCommentText, sessionNotes,
       playersList, playerDetail, playerHistory, playerRecordings, playingRecording,
+      playerVoiceNotes, playingVoice, voiceRecording, currentHistoryId,
       expandedHistoryId, playerHistoryTotal, playerFavorites, playerStats, showActivity, statsMaxWeek,
       showCompareModal, compareIdA, compareIdB, compareStatsA, compareStatsB,
       compareMetrics, compareNameA, compareNameB, compare30A, compare30B, openCompare, loadCompareStats,
       favTrainings, favDrills, favExercises,
       getTrainingSteps, getStepRecording, getDrillName, getExerciseName, getHistoryLabel,
+      getStepVoiceNote, deleteVoiceNote, toggleVoiceRecord, loadPlayerVoiceNotes,
       loadPlayerFavorites, isFavorite, toggleFavorite,
       resumeFromHistory,
       addPlayer, renamePlayer, deletePlayer, openPlayerDetail, playerRunCount, playerProgram30,
