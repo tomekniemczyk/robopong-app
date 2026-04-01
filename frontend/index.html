@@ -3577,6 +3577,7 @@ const _app = createApp({
       cal.rotation = 150
       cal.wait_ms = 3000
       wizState.value = 'warmup'
+      clearTimeout(_calIdleTimer)
       send({ action: 'begin_calibration' })
       await new Promise(r => setTimeout(r, 500))
       send({ action: 'set_ball', ball: { ...cal } })
@@ -3586,25 +3587,28 @@ const _app = createApp({
         wizWarmup.value--
         if (wizWarmup.value <= 0) { clearInterval(iv); wizState.value = 'ready' }
       }, 1000)
+      clearInterval(_wizKeepAlive)
       _wizKeepAlive = setInterval(() => {
-        if (wizActive.value && _calMotorsRunning) {
+        if (wizActive.value) {
+          clearTimeout(_calIdleTimer)
           send({ action: 'set_ball', ball: { ...cal } })
+          _calMotorsRunning = true
         }
-      }, 8000)
+      }, 6000)
     }
 
     async function wizThrow() {
       wizState.value = 'waiting'
-      if (!_calMotorsRunning) {
-        send({ action: 'set_ball', ball: { ...cal } })
-        _calMotorsRunning = true
-        await new Promise(r => setTimeout(r, 5000))
-      }
+      clearTimeout(_calIdleTimer)
+      send({ action: 'set_ball', ball: { ...cal } })
+      _calMotorsRunning = true
+      await new Promise(r => setTimeout(r, 300))
       send({ action: 'throw' })
       wizThrows.value++
     }
 
     function wizFeedback(dir) {
+      clearTimeout(_calIdleTimer)
       const ph = WIZARD_PHASES[wizPhase.value]
       if (dir === 0) {
         if (wizStep.value <= ph.minStep) {
@@ -3613,6 +3617,7 @@ const _app = createApp({
         }
         wizStep.value = Math.max(Math.floor(wizStep.value / 2), ph.minStep)
         send({ action: 'set_ball', ball: { ...cal } })
+        _calMotorsRunning = true
         wizState.value = 'ready'
         return
       }
@@ -3630,6 +3635,7 @@ const _app = createApp({
       wizTrail.value.push({ oscillation: cal.oscillation, height: cal.height })
       if (wizTrail.value.length > 5) wizTrail.value.shift()
       send({ action: 'set_ball', ball: { ...cal } })
+      _calMotorsRunning = true
       wizState.value = 'ready'
     }
 
