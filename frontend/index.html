@@ -1850,104 +1850,136 @@
         </div>
       </div>
 
-      <!-- History -->
+      <!-- History (tree structure, same as full history page) -->
       <div style="font-size:13px;font-weight:600;margin-bottom:6px">{{ t('training.history') }} <span style="font-weight:400;color:var(--muted)">({{ playerHistoryTotal }})</span></div>
       <div v-if="!playerHistory.length" style="color:var(--muted);font-size:12px;margin-bottom:10px">{{ t('training.not_started') }}</div>
-      <div v-for="h in playerHistory" :key="h.id" style="border-bottom:1px solid var(--border);padding:8px 0;font-size:12px">
-        <div style="display:flex;align-items:center;gap:6px;cursor:pointer" @click="expandedHistoryId = expandedHistoryId === h.id ? null : h.id">
-          <span>{{ h.status === 'completed' ? '✅' : h.status === 'stopped' ? '⏹' : '❌' }}</span>
-          <span style="flex:1;font-weight:500">{{ getHistoryLabel(h) }}</span>
-          <span class="chip" style="font-size:10px">{{ fmtDur(h.elapsed_sec) }}</span>
-          <span style="font-size:10px;color:var(--muted)">{{ expandedHistoryId === h.id ? '▼' : '▶' }}</span>
+
+      <!-- Tree: Trainings -->
+      <div v-if="profileTree.trainings.length" style="margin-bottom:8px">
+        <div style="font-size:12px;font-weight:600;padding:5px 0;cursor:pointer;display:flex;align-items:center;gap:6px" @click="toggleHistNode('pt')">
+          <span style="font-size:10px">{{ historyExpanded.has('pt') ? '▼' : '▶' }}</span>
+          {{ t('history.trainings') }} <span style="font-weight:400;color:var(--muted);font-size:10px">({{ profileTree.trainingCount }})</span>
         </div>
-        <!-- Date/time line -->
-        <div style="font-size:11px;color:var(--muted);margin-top:2px;padding-left:22px">
-          {{ new Date(h.started_at).toLocaleDateString() }} {{ new Date(h.started_at).toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'}) }}
-          → {{ historyEndTime(h) }}
-          · {{ t('training.steps_done', {done: h.steps_completed, total: h.steps_total}) }}
-          <span v-if="h.steps_skipped?.length"> · {{ h.steps_skipped.length }} skipped</span>
-          <span v-if="h.step_notes?.length"> · 💬 {{ h.step_notes.length }}</span>
-        </div>
-        <!-- Session comment -->
-        <div v-if="h.session_comment" style="font-size:11px;color:var(--text2);margin-top:3px;padding-left:22px;font-style:italic">
-          📝 {{ h.session_comment }}
-        </div>
-        <!-- Actions: resume + delete -->
-        <div style="padding-left:22px;margin-top:4px;display:flex;gap:6px">
-          <button v-if="h.status === 'stopped'" class="btn btn-ghost" style="font-size:10px;padding:2px 8px;background:rgba(255,159,10,.1)" @click.stop="resumeFromHistory(h)" :title="t('tooltip.resume')">
-            {{ t('training.resume') }} ({{ h.steps_completed }}/{{ h.steps_total }})
-          </button>
-          <button class="btn btn-ghost" style="font-size:10px;padding:2px 8px;color:var(--danger)" @click.stop="deleteHistoryEntry(h.id)" :title="t('tooltip.delete_session')">🗑</button>
-        </div>
-        <!-- Expanded details -->
-        <div v-if="expandedHistoryId === h.id" style="margin-top:6px;padding:8px;background:rgba(255,255,255,.03);border-radius:6px;margin-left:22px">
-          <!-- Step list from the training definition -->
-          <template v-if="h.training_id && getTrainingSteps(h.training_id)">
-            <div v-for="(step, si) in getTrainingSteps(h.training_id)" :key="si">
-              <div style="display:flex;align-items:center;gap:6px;padding:3px 0;font-size:11px;border-bottom:1px solid rgba(255,255,255,.03)">
-                <span style="width:16px;text-align:center;flex-shrink:0" :style="{color: si < h.steps_completed ? '#34c759' : si === h.steps_completed && h.status === 'stopped' ? '#ff9f0a' : 'var(--muted)'}">
-                  {{ si < h.steps_completed ? '✓' : si === h.steps_completed && h.status === 'stopped' ? '▶' : '○' }}
-                </span>
-                <span style="flex:1">
-                  {{ step.exercise_id ? '🏋 ' + (step.exercise_name || '') : (step.drill_name || 'Drill') }}
-                  <span v-if="!step.exercise_id" style="color:var(--muted)">({{ step.count }}p · {{ step.percent }}%)</span>
-                  <span v-if="step.exercise_id" style="color:var(--muted)">({{ fmtDur(step.duration_sec) }})</span>
-                </span>
-                <!-- Notes for this step -->
-                <span v-for="n in (h.step_notes || []).filter(n => n.step === si+1)" :key="n.note" style="font-size:10px;color:var(--text2)">
-                  💬 {{ n.note }}
-                </span>
-                <!-- Recording controls for this step -->
-                <template v-if="getStepRecording(h, si)">
-                  <button class="btn btn-ghost" style="font-size:10px;padding:1px 6px;color:#ff3b30" :title="t('tooltip.play')"
-                    @click.stop="playingRecording = playingRecording === getStepRecording(h, si).filename ? null : getStepRecording(h, si).filename">
-                    {{ playingRecording === getStepRecording(h, si)?.filename ? '⏹' : '🎥 ▶' }}
-                  </button>
-                  <button class="btn btn-ghost" style="font-size:10px;padding:1px 6px" :title="t('tooltip.compare')" @click.stop="openVideoCompare(getStepRecording(h, si))">🔀</button>
-                  <a :href="'/api/recordings/' + getStepRecording(h, si).filename" :download="recDownloadName(h, getStepRecording(h, si))" class="btn btn-ghost" style="font-size:10px;padding:1px 6px" :title="t('tooltip.download')" @click.stop>⬇</a>
-                  <button class="btn btn-ghost" style="font-size:10px;padding:1px 6px;color:var(--danger)" :title="t('tooltip.delete_rec')" @click.stop="deleteRecording(getStepRecording(h, si).filename)">✕</button>
-                </template>
-                <!-- Voice note controls for this step -->
-                <template v-if="getStepVoiceNote(h, si)">
-                  <button class="btn btn-ghost" style="font-size:10px;padding:1px 6px;color:#30d158"
-                    @click.stop="playingVoice = playingVoice === getStepVoiceNote(h, si).id ? null : getStepVoiceNote(h, si).id">
-                    {{ playingVoice === getStepVoiceNote(h, si).id ? '⏹' : '🎙 ▶' }}
-                  </button>
-                  <button class="btn btn-ghost" style="font-size:10px;padding:1px 6px;color:var(--danger)" @click.stop="deleteVoiceNote(getStepVoiceNote(h, si).id)">✕</button>
-                </template>
+        <div v-if="historyExpanded.has('pt')" style="padding-left:10px">
+          <div v-for="folder in profileTree.trainings" :key="'pf-'+folder.name">
+            <div style="font-size:11px;padding:3px 0;cursor:pointer;display:flex;align-items:center;gap:5px" @click="toggleHistNode('pf-'+folder.name)">
+              <span style="font-size:9px">{{ historyExpanded.has('pf-'+folder.name) ? '▼' : '▶' }}</span>
+              📁 {{ folder.name }} <span style="color:var(--muted);font-size:10px">({{ folder.count }})</span>
+            </div>
+            <div v-if="historyExpanded.has('pf-'+folder.name)" style="padding-left:12px">
+              <div v-for="tr in folder.trainings" :key="'ptr-'+tr.id">
+                <div style="font-size:11px;padding:3px 0;cursor:pointer;display:flex;align-items:center;gap:5px" @click="toggleHistNode('ptr-'+tr.id)">
+                  <span style="font-size:9px">{{ historyExpanded.has('ptr-'+tr.id) ? '▼' : '▶' }}</span>
+                  {{ tr.name }} <span style="color:var(--muted);font-size:10px">({{ tr.entries.length }})</span>
+                </div>
+                <div v-if="historyExpanded.has('ptr-'+tr.id)" style="padding-left:12px">
+                  <div v-for="e in tr.entries" :key="e.id" style="margin-bottom:2px">
+                    <div style="font-size:11px;padding:3px 0;display:flex;align-items:center;gap:4px;flex-wrap:wrap;border-bottom:1px solid rgba(255,255,255,.03)" @click="toggleHistNode('pe-'+e.id)">
+                      <span style="font-size:9px;cursor:pointer">{{ historyExpanded.has('pe-'+e.id) ? '▼' : '▶' }}</span>
+                      <span style="color:var(--muted);font-size:10px">{{ histDateRange(e) }}</span>
+                      <span v-if="profileHasRec(e)" style="display:inline-flex;align-items:center;gap:2px;font-size:9px;color:#ff3b30;font-weight:700"><span style="width:5px;height:5px;border-radius:50%;background:#ff3b30"></span>REC</span>
+                      <span>{{ e.status === 'completed' ? '✅' : e.status === 'stopped' ? '⏹' : '❌' }}</span>
+                      <span style="font-size:10px">⏱{{ fmtDur(e.elapsed_sec) }}</span>
+                      <span v-if="e.total_balls" style="font-size:10px">🏓{{ e.total_balls }}</span>
+                      <button v-if="e.status === 'stopped'" class="btn btn-ghost" style="font-size:9px;padding:1px 5px;background:rgba(255,159,10,.15)" @click.stop="resumeFromHistory(e)">⏩</button>
+                      <button class="btn btn-ghost" style="font-size:9px;padding:1px 5px;color:var(--danger)" @click.stop="deleteHistoryEntry(e.id)">🗑</button>
+                    </div>
+                    <div v-if="historyExpanded.has('pe-'+e.id) && getTrainingSteps(e.training_id)" style="padding:4px 0 4px 18px;background:rgba(255,255,255,.02);border-radius:6px;margin:2px 0">
+                      <div v-for="(step, si) in getTrainingSteps(e.training_id)" :key="si" style="display:flex;align-items:center;gap:5px;padding:2px 0;font-size:10px;border-bottom:1px solid rgba(255,255,255,.02)">
+                        <span style="width:14px;text-align:center;flex-shrink:0" :style="{color: si < e.steps_completed ? '#34c759' : 'var(--muted)'}">{{ si < e.steps_completed ? '✓' : '○' }}</span>
+                        <span style="flex:1">{{ step.exercise_id ? '🏋 ' + (step.exercise_name || '') : (step.drill_name || 'Drill') }}
+                          <span v-if="!step.exercise_id" style="color:var(--muted)">({{ step.count }}p)</span>
+                          <span v-if="step.exercise_id" style="color:var(--muted)">({{ fmtDur(step.duration_sec) }})</span>
+                        </span>
+                        <template v-if="profileGetStepRec(e, si)">
+                          <button class="btn btn-ghost" style="font-size:9px;padding:1px 4px;color:#ff3b30" @click.stop="histPlayRec = histPlayRec === profileGetStepRec(e, si).filename ? null : profileGetStepRec(e, si).filename">{{ histPlayRec === profileGetStepRec(e, si)?.filename ? '⏹' : '🎥▶' }}</button>
+                          <button class="btn btn-ghost" style="font-size:9px;padding:1px 4px" @click.stop="openVideoCompare(profileGetStepRec(e, si))">🔀</button>
+                          <a :href="'/api/recordings/' + profileGetStepRec(e, si).filename" :download="profileGetStepRec(e, si).filename.replace('/', '_')" class="btn btn-ghost" style="font-size:9px;padding:1px 4px" @click.stop>⬇</a>
+                        </template>
+                      </div>
+                      <video v-if="histPlayRec" :src="'/api/recordings/' + histPlayRec" controls autoplay style="width:100%;margin:4px 0;border-radius:6px;max-height:200px"></video>
+                    </div>
+                  </div>
+                </div>
               </div>
-              <!-- Inline video player -->
-              <video v-if="getStepRecording(h, si) && playingRecording === getStepRecording(h, si).filename"
-                :src="'/api/recordings/' + getStepRecording(h, si).filename" controls autoplay
-                style="width:100%;margin:4px 0 6px;border-radius:6px;max-height:250px"></video>
-              <!-- Inline audio player -->
-              <audio v-if="getStepVoiceNote(h, si) && playingVoice === getStepVoiceNote(h, si).id"
-                :src="'/api/voice-notes/' + getStepVoiceNote(h, si).id + '/audio'" controls autoplay
-                style="width:100%;margin:2px 0 4px"></audio>
             </div>
-          </template>
-          <!-- Solo run (no training) -->
-          <div v-if="!h.training_id">
-            <div style="display:flex;align-items:center;gap:6px;padding:3px 0;font-size:11px;border-bottom:1px solid rgba(255,255,255,.03)">
-              <span style="width:16px;text-align:center;flex-shrink:0;color:#34c759">{{ h.status === 'completed' ? '✓' : '○' }}</span>
-              <span style="flex:1">{{ getHistoryLabel(h) }}</span>
-              <template v-if="getStepRecording(h, 0)">
-                <button class="btn btn-ghost" style="font-size:10px;padding:1px 6px;color:#ff3b30" :title="t('tooltip.play')"
-                  @click.stop="playingRecording = playingRecording === getStepRecording(h, 0).filename ? null : getStepRecording(h, 0).filename">
-                  {{ playingRecording === getStepRecording(h, 0)?.filename ? '⏹' : '🎥 ▶' }}
-                </button>
-                <button class="btn btn-ghost" style="font-size:10px;padding:1px 6px" :title="t('tooltip.compare')" @click.stop="openVideoCompare(getStepRecording(h, 0))">🔀</button>
-                <a :href="'/api/recordings/' + getStepRecording(h, 0).filename" :download="recDownloadName(h, getStepRecording(h, 0))" class="btn btn-ghost" style="font-size:10px;padding:1px 6px" :title="t('tooltip.download')" @click.stop>⬇</a>
-                <button class="btn btn-ghost" style="font-size:10px;padding:1px 6px;color:var(--danger)" :title="t('tooltip.delete_rec')" @click.stop="deleteRecording(getStepRecording(h, 0).filename)">✕</button>
-              </template>
-            </div>
-            <video v-if="getStepRecording(h, 0) && playingRecording === getStepRecording(h, 0).filename"
-              :src="'/api/recordings/' + getStepRecording(h, 0).filename" controls autoplay
-              style="width:100%;margin:4px 0 6px;border-radius:6px;max-height:250px"></video>
           </div>
-          <!-- No training found -->
-          <div v-else-if="!getTrainingSteps(h.training_id)" style="color:var(--muted);font-size:11px">
-            {{ t('training.steps_done', {done: h.steps_completed, total: h.steps_total}) }}
+        </div>
+      </div>
+
+      <!-- Tree: Drills -->
+      <div v-if="profileTree.drills.length" style="margin-bottom:8px">
+        <div style="font-size:12px;font-weight:600;padding:5px 0;cursor:pointer;display:flex;align-items:center;gap:6px" @click="toggleHistNode('pd')">
+          <span style="font-size:10px">{{ historyExpanded.has('pd') ? '▼' : '▶' }}</span>
+          {{ t('history.drills') }} <span style="font-weight:400;color:var(--muted);font-size:10px">({{ profileTree.drillCount }})</span>
+        </div>
+        <div v-if="historyExpanded.has('pd')" style="padding-left:10px">
+          <div v-for="folder in profileTree.drills" :key="'pdf-'+folder.name">
+            <div style="font-size:11px;padding:3px 0;cursor:pointer;display:flex;align-items:center;gap:5px" @click="toggleHistNode('pdf-'+folder.name)">
+              <span style="font-size:9px">{{ historyExpanded.has('pdf-'+folder.name) ? '▼' : '▶' }}</span>
+              📁 {{ folder.name }} <span style="color:var(--muted);font-size:10px">({{ folder.count }})</span>
+            </div>
+            <div v-if="historyExpanded.has('pdf-'+folder.name)" style="padding-left:12px">
+              <div v-for="dr in folder.drills" :key="'pdd-'+dr.id">
+                <div style="font-size:11px;padding:3px 0;cursor:pointer;display:flex;align-items:center;gap:5px" @click="toggleHistNode('pdd-'+dr.id)">
+                  <span style="font-size:9px">{{ historyExpanded.has('pdd-'+dr.id) ? '▼' : '▶' }}</span>
+                  {{ dr.name }} <span style="color:var(--muted);font-size:10px">({{ dr.entries.length }})</span>
+                </div>
+                <div v-if="historyExpanded.has('pdd-'+dr.id)" style="padding-left:12px">
+                  <div v-for="e in dr.entries" :key="e.id" style="font-size:11px;padding:3px 0;border-bottom:1px solid rgba(255,255,255,.02);display:flex;align-items:center;gap:4px;flex-wrap:wrap">
+                    <span style="color:var(--muted);font-size:10px">{{ histDateRange(e) }}</span>
+                    <span>{{ e.status === 'completed' ? '✅' : '⏹' }}</span>
+                    <span style="font-size:10px">⏱{{ fmtDur(e.elapsed_sec) }}</span>
+                    <span v-if="e.total_balls" style="font-size:10px">🏓{{ e.total_balls }}</span>
+                    <template v-if="profileGetStepRec(e, 0)">
+                      <button class="btn btn-ghost" style="font-size:9px;padding:1px 4px;color:#ff3b30" @click.stop="histPlayRec = histPlayRec === profileGetStepRec(e, 0).filename ? null : profileGetStepRec(e, 0).filename">{{ histPlayRec === profileGetStepRec(e, 0)?.filename ? '⏹' : '🎥▶' }}</button>
+                      <button class="btn btn-ghost" style="font-size:9px;padding:1px 4px" @click.stop="openVideoCompare(profileGetStepRec(e, 0))">🔀</button>
+                      <a :href="'/api/recordings/' + profileGetStepRec(e, 0).filename" :download="profileGetStepRec(e, 0).filename.replace('/', '_')" class="btn btn-ghost" style="font-size:9px;padding:1px 4px" @click.stop>⬇</a>
+                    </template>
+                    <button class="btn btn-ghost" style="font-size:9px;padding:1px 4px;color:var(--danger)" @click.stop="deleteHistoryEntry(e.id)">🗑</button>
+                  </div>
+                  <video v-if="histPlayRec" :src="'/api/recordings/' + histPlayRec" controls autoplay style="width:100%;margin:2px 0 4px;border-radius:6px;max-height:200px"></video>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tree: Exercises -->
+      <div v-if="profileTree.exercises.length" style="margin-bottom:8px">
+        <div style="font-size:12px;font-weight:600;padding:5px 0;cursor:pointer;display:flex;align-items:center;gap:6px" @click="toggleHistNode('pe')">
+          <span style="font-size:10px">{{ historyExpanded.has('pe') ? '▼' : '▶' }}</span>
+          {{ t('history.exercises') }} <span style="font-weight:400;color:var(--muted);font-size:10px">({{ profileTree.exerciseCount }})</span>
+        </div>
+        <div v-if="historyExpanded.has('pe')" style="padding-left:10px">
+          <div v-for="cat in profileTree.exercises" :key="'pec-'+cat.name">
+            <div style="font-size:11px;padding:3px 0;cursor:pointer;display:flex;align-items:center;gap:5px" @click="toggleHistNode('pec-'+cat.name)">
+              <span style="font-size:9px">{{ historyExpanded.has('pec-'+cat.name) ? '▼' : '▶' }}</span>
+              {{ cat.icon }} {{ cat.name }} <span style="color:var(--muted);font-size:10px">({{ cat.count }})</span>
+            </div>
+            <div v-if="historyExpanded.has('pec-'+cat.name)" style="padding-left:12px">
+              <div v-for="ex in cat.exercises" :key="'pee-'+ex.id">
+                <div style="font-size:11px;padding:3px 0;cursor:pointer;display:flex;align-items:center;gap:5px" @click="toggleHistNode('pee-'+ex.id)">
+                  <span style="font-size:9px">{{ historyExpanded.has('pee-'+ex.id) ? '▼' : '▶' }}</span>
+                  🏋 {{ ex.name }} <span style="color:var(--muted);font-size:10px">({{ ex.entries.length }})</span>
+                </div>
+                <div v-if="historyExpanded.has('pee-'+ex.id)" style="padding-left:12px">
+                  <div v-for="e in ex.entries" :key="e.id" style="font-size:11px;padding:3px 0;border-bottom:1px solid rgba(255,255,255,.02);display:flex;align-items:center;gap:4px;flex-wrap:wrap">
+                    <span style="color:var(--muted);font-size:10px">{{ histDateRange(e) }}</span>
+                    <span>{{ e.status === 'completed' ? '✅' : '⏹' }}</span>
+                    <span style="font-size:10px">⏱{{ fmtDur(e.elapsed_sec) }}</span>
+                    <template v-if="profileGetStepRec(e, 0)">
+                      <button class="btn btn-ghost" style="font-size:9px;padding:1px 4px;color:#ff3b30" @click.stop="histPlayRec = histPlayRec === profileGetStepRec(e, 0).filename ? null : profileGetStepRec(e, 0).filename">{{ histPlayRec === profileGetStepRec(e, 0)?.filename ? '⏹' : '🎥▶' }}</button>
+                      <button class="btn btn-ghost" style="font-size:9px;padding:1px 4px" @click.stop="openVideoCompare(profileGetStepRec(e, 0))">🔀</button>
+                      <a :href="'/api/recordings/' + profileGetStepRec(e, 0).filename" :download="profileGetStepRec(e, 0).filename.replace('/', '_')" class="btn btn-ghost" style="font-size:9px;padding:1px 4px" @click.stop>⬇</a>
+                    </template>
+                    <button class="btn btn-ghost" style="font-size:9px;padding:1px 4px;color:var(--danger)" @click.stop="deleteHistoryEntry(e.id)">🗑</button>
+                  </div>
+                  <video v-if="histPlayRec" :src="'/api/recordings/' + histPlayRec" controls autoplay style="width:100%;margin:2px 0 4px;border-radius:6px;max-height:200px"></video>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -4074,9 +4106,8 @@ const _app = createApp({
       })
     }
 
-    const historyTree = computed(() => {
-      const hist = allHistory.value
-      // === TRENINGI: group by folder → training ===
+    // Shared tree builder for both full history page and player profile
+    function buildHistTree(hist) {
       const trainingEntries = hist.filter(h => h.training_id && !h.solo_drill_id && !h.solo_exercise_id)
       const trainingFolderMap = {}
       for (const tr of trainings.value) {
@@ -4088,8 +4119,6 @@ const _app = createApp({
       const trainingFolders = Object.entries(trainingFolderMap).map(([name, trs]) => ({
         name, trainings: trs, count: trs.reduce((s, t) => s + t.entries.length, 0)
       })).filter(f => f.count > 0)
-
-      // === DRILLE: group by folder → drill ===
       const drillEntries = hist.filter(h => h.solo_drill_id)
       const drillFolderArr = []
       for (const folder of (drillTree.folders || [])) {
@@ -4100,8 +4129,6 @@ const _app = createApp({
         }
         if (drillArr.length) drillFolderArr.push({ name: folder.name, drills: drillArr, count: drillArr.reduce((s, d) => s + d.entries.length, 0) })
       }
-
-      // === CWICZENIA: group by category → exercise ===
       const exEntries = hist.filter(h => h.solo_exercise_id)
       const exCatArr = []
       for (const cat of (exerciseCategories.value || [])) {
@@ -4112,16 +4139,33 @@ const _app = createApp({
         }
         if (exArr.length) exCatArr.push({ name: cat.name, icon: cat.icon || '', exercises: exArr, count: exArr.reduce((s, e) => s + e.entries.length, 0) })
       }
-
       return {
-        trainings: trainingFolders,
-        trainingCount: trainingEntries.length,
-        drills: drillFolderArr,
-        drillCount: drillEntries.length,
-        exercises: exCatArr,
-        exerciseCount: exEntries.length,
+        trainings: trainingFolders, trainingCount: trainingEntries.length,
+        drills: drillFolderArr, drillCount: drillEntries.length,
+        exercises: exCatArr, exerciseCount: exEntries.length,
       }
-    })
+    }
+
+    const profileTree = computed(() => buildHistTree(playerHistory.value))
+
+    function profileGetStepRec(h, stepIdx) {
+      const hStart = new Date(h.started_at).getTime()
+      const hEnd = hStart + (h.elapsed_sec + 60) * 1000
+      return playerRecordings.value.find(r => {
+        const rStart = new Date(r.started_at).getTime()
+        return r.step_idx === stepIdx && rStart >= hStart && rStart <= hEnd
+      })
+    }
+    function profileHasRec(h) {
+      const hStart = new Date(h.started_at).getTime()
+      const hEnd = hStart + (h.elapsed_sec + 60) * 1000
+      return playerRecordings.value.some(r => {
+        const rStart = new Date(r.started_at).getTime()
+        return rStart >= hStart && rStart <= hEnd
+      })
+    }
+
+    const historyTree = computed(() => buildHistTree(allHistory.value))
 
     const leaderboard = computed(() => {
       const rows = playersList.value.map(p => {
@@ -4829,7 +4873,7 @@ const _app = createApp({
       stepNote, nextPercentAdjust, nextPercentDisplay, adjustNextPercent, sendStepNote,
       historyModal, historyEntries, showTrainingHistory, getPlayerName, getTrainingName, saveSessionComment,
       editingCommentId, editingCommentText, sessionNotes,
-      playersList, playerDetail, playerHistory, playerRecordings, playingRecording,
+      playersList, playerDetail, playerHistory, playerRecordings, playingRecording, profileTree, profileGetStepRec, profileHasRec,
       playerVoiceNotes, playingVoice, voiceRecording, currentHistoryId,
       expandedHistoryId, playerHistoryTotal, playerFavorites, playerStats, showActivity, statsMaxWeek,
       showCompareModal, compareIdA, compareIdB, compareStatsA, compareStatsB,
