@@ -2397,7 +2397,9 @@ const _app = createApp({
     // Height 75-210 → Y: 75=blisko siatki=30, 210=blisko gracza=210
     function ballTableX(b) {
       const osc = Math.max(127, Math.min(173, b.oscillation))
-      return 20 + (osc - 127) / (173 - 127) * 260
+      // osc 173 = "full left" (RE docs: 0% slider) = piłka na lewo gracza = BH
+      // osc 127 = "full right" (RE docs: 100% slider) = piłka na prawo gracza = FH
+      return 20 + (173 - osc) / (173 - 127) * 260
     }
     function ballTableY(b) {
       const h = Math.max(75, Math.min(210, b.height))
@@ -3104,8 +3106,8 @@ const _app = createApp({
 
     function ballPlaceLabel(b) {
       const osc = b.oscillation || 150
-      if (osc >= 158) return 'FH ➡'
-      if (osc <= 142) return '⬅ BH'
+      if (osc <= 142) return 'FH ➡'  // niskie osc = prawo gracza = FH
+      if (osc >= 158) return '⬅ BH'  // wysokie osc = lewo gracza = BH
       return '⬆ center'
     }
 

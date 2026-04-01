@@ -15,7 +15,7 @@
             {
               "top_speed": 120,
               "bot_speed": 0,
-              "oscillation": 164,
+              "oscillation": 136,
               "height": 116,
               "rotation": 150,
               "wait_ms": 2100
@@ -34,7 +34,7 @@
             {
               "top_speed": 120,
               "bot_speed": 0,
-              "oscillation": 136,
+              "oscillation": 164,
               "height": 116,
               "rotation": 150,
               "wait_ms": 2100
@@ -61,7 +61,7 @@
             {
               "top_speed": 120,
               "bot_speed": 0,
-              "oscillation": 164,
+              "oscillation": 136,
               "height": 116,
               "rotation": 150,
               "wait_ms": 2050
@@ -80,7 +80,7 @@
             {
               "top_speed": 120,
               "bot_speed": 0,
-              "oscillation": 141,
+              "oscillation": 159,
               "height": 116,
               "rotation": 150,
               "wait_ms": 2050
@@ -88,7 +88,7 @@
             {
               "top_speed": 120,
               "bot_speed": 0,
-              "oscillation": 129,
+              "oscillation": 171,
               "height": 116,
               "rotation": 150,
               "wait_ms": 2050
@@ -107,7 +107,7 @@
             {
               "top_speed": -20,
               "bot_speed": 100,
-              "oscillation": 164,
+              "oscillation": 136,
               "height": 116,
               "rotation": 150,
               "wait_ms": 2050
@@ -126,7 +126,7 @@
             {
               "top_speed": -20,
               "bot_speed": 100,
-              "oscillation": 134,
+              "oscillation": 166,
               "height": 116,
               "rotation": 150,
               "wait_ms": 2050
@@ -153,7 +153,7 @@
             {
               "top_speed": -12,
               "bot_speed": 100,
-              "oscillation": 164,
+              "oscillation": 136,
               "height": 116,
               "rotation": 150,
               "wait_ms": 2100
@@ -172,7 +172,7 @@
             {
               "top_speed": -12,
               "bot_speed": 100,
-              "oscillation": 143,
+              "oscillation": 157,
               "height": 116,
               "rotation": 150,
               "wait_ms": 2100
@@ -180,7 +180,7 @@
             {
               "top_speed": -12,
               "bot_speed": 100,
-              "oscillation": 129,
+              "oscillation": 171,
               "height": 116,
               "rotation": 150,
               "wait_ms": 2100
@@ -199,7 +199,7 @@
             {
               "top_speed": 149,
               "bot_speed": -12,
-              "oscillation": 164,
+              "oscillation": 136,
               "height": 188,
               "rotation": 150,
               "wait_ms": 2100
@@ -218,7 +218,7 @@
             {
               "top_speed": 149,
               "bot_speed": -12,
-              "oscillation": 134,
+              "oscillation": 166,
               "height": 188,
               "rotation": 150,
               "wait_ms": 2050
@@ -245,7 +245,7 @@
             {
               "top_speed": 149,
               "bot_speed": -12,
-              "oscillation": 166,
+              "oscillation": 134,
               "height": 188,
               "rotation": 150,
               "wait_ms": 2000
@@ -264,7 +264,7 @@
             {
               "top_speed": 144,
               "bot_speed": -25,
-              "oscillation": 141,
+              "oscillation": 159,
               "height": 188,
               "rotation": 150,
               "wait_ms": 2050
@@ -272,7 +272,7 @@
             {
               "top_speed": 144,
               "bot_speed": -25,
-              "oscillation": 129,
+              "oscillation": 171,
               "height": 188,
               "rotation": 150,
               "wait_ms": 2050
@@ -291,7 +291,7 @@
             {
               "top_speed": 37,
               "bot_speed": 75,
-              "oscillation": 164,
+              "oscillation": 136,
               "height": 176,
               "rotation": 150,
               "wait_ms": 2100
@@ -310,7 +310,7 @@
             {
               "top_speed": 37,
               "bot_speed": 75,
-              "oscillation": 134,
+              "oscillation": 166,
               "height": 176,
               "rotation": 150,
               "wait_ms": 2100
@@ -337,7 +337,7 @@
             {
               "top_speed": 37,
               "bot_speed": 75,
-              "oscillation": 166,
+              "oscillation": 134,
               "height": 176,
               "rotation": 150,
               "wait_ms": 2100
@@ -356,7 +356,7 @@
             {
               "top_speed": 37,
               "bot_speed": 75,
-              "oscillation": 143,
+              "oscillation": 157,
               "height": 176,
               "rotation": 150,
               "wait_ms": 2100
@@ -364,7 +364,7 @@
             {
               "top_speed": 37,
               "bot_speed": 75,
-              "oscillation": 132,
+              "oscillation": 168,
               "height": 176,
               "rotation": 150,
               "wait_ms": 2100
@@ -383,7 +383,7 @@
             {
               "top_speed": 100,
               "bot_speed": 0,
-              "oscillation": 162,
+              "oscillation": 138,
               "height": 122,
               "rotation": 150,
               "wait_ms": 2150
@@ -391,7 +391,7 @@
             {
               "top_speed": 50,
               "bot_speed": 50,
-              "oscillation": 162,
+              "oscillation": 138,
               "height": 116,
               "rotation": 150,
               "wait_ms": 2150
@@ -399,7 +399,7 @@
             {
               "top_speed": 12,
               "bot_speed": 87,
-              "oscillation": 162,
+              "oscillation": 138,
               "height": 116,
               "rotation": 150,
               "wait_ms": 2150
@@ -418,7 +418,7 @@
             {
               "top_speed": 125,
               "bot_speed": 12,
-              "oscillation": 164,
+              "oscillation": 136,
               "height": 183,
               "rotation": 150,
               "wait_ms": 2100
@@ -426,7 +426,7 @@
             {
               "top_speed": 62,
               "bot_speed": 62,
-              "oscillation": 164,
+              "oscillation": 136,
               "height": 180,
               "rotation": 150,
               "wait_ms": 2100
@@ -434,7 +434,7 @@
             {
               "top_speed": 5,
               "bot_speed": 100,
-              "oscillation": 164,
+              "oscillation": 136,
               "height": 187,
               "rotation": 150,
               "wait_ms": 2100
@@ -453,7 +453,7 @@
             {
               "top_speed": 50,
               "bot_speed": 50,
-              "oscillation": 164,
+              "oscillation": 136,
               "height": 183,
               "rotation": 150,
               "wait_ms": 2100
@@ -472,7 +472,7 @@
             {
               "top_speed": 62,
               "bot_speed": 62,
-              "oscillation": 132,
+              "oscillation": 168,
               "height": 186,
               "rotation": 150,
               "wait_ms": 2100
@@ -499,7 +499,7 @@
             {
               "top_speed": 75,
               "bot_speed": 50,
-              "oscillation": 159,
+              "oscillation": 141,
               "height": 118,
               "rotation": 150,
               "wait_ms": 1300
@@ -518,7 +518,7 @@
             {
               "top_speed": 75,
               "bot_speed": 50,
-              "oscillation": 138,
+              "oscillation": 162,
               "height": 122,
               "rotation": 150,
               "wait_ms": 1500
@@ -537,7 +537,7 @@
             {
               "top_speed": 62,
               "bot_speed": 50,
-              "oscillation": 162,
+              "oscillation": 138,
               "height": 113,
               "rotation": 150,
               "wait_ms": 1400
@@ -545,7 +545,7 @@
             {
               "top_speed": 62,
               "bot_speed": 50,
-              "oscillation": 136,
+              "oscillation": 164,
               "height": 113,
               "rotation": 150,
               "wait_ms": 1400
@@ -564,7 +564,7 @@
             {
               "top_speed": 62,
               "bot_speed": 50,
-              "oscillation": 158,
+              "oscillation": 142,
               "height": 116,
               "rotation": 150,
               "wait_ms": 1400
@@ -583,7 +583,7 @@
             {
               "top_speed": 62,
               "bot_speed": 50,
-              "oscillation": 141,
+              "oscillation": 159,
               "height": 116,
               "rotation": 150,
               "wait_ms": 1400
@@ -602,7 +602,7 @@
             {
               "top_speed": 62,
               "bot_speed": 50,
-              "oscillation": 149,
+              "oscillation": 151,
               "height": 116,
               "rotation": 150,
               "wait_ms": 1200
@@ -656,7 +656,7 @@
             {
               "top_speed": 50,
               "bot_speed": 45,
-              "oscillation": 162,
+              "oscillation": 138,
               "height": 120,
               "rotation": 150,
               "wait_ms": 1200
@@ -664,7 +664,7 @@
             {
               "top_speed": 75,
               "bot_speed": 62,
-              "oscillation": 162,
+              "oscillation": 138,
               "height": 120,
               "rotation": 150,
               "wait_ms": 1200
@@ -672,7 +672,7 @@
             {
               "top_speed": 50,
               "bot_speed": 45,
-              "oscillation": 138,
+              "oscillation": 162,
               "height": 120,
               "rotation": 150,
               "wait_ms": 1200
@@ -680,7 +680,7 @@
             {
               "top_speed": 75,
               "bot_speed": 62,
-              "oscillation": 138,
+              "oscillation": 162,
               "height": 120,
               "rotation": 150,
               "wait_ms": 1200
@@ -726,7 +726,7 @@
             {
               "top_speed": 77,
               "bot_speed": 50,
-              "oscillation": 158,
+              "oscillation": 142,
               "height": 116,
               "rotation": 150,
               "wait_ms": 1250
@@ -745,7 +745,7 @@
             {
               "top_speed": 77,
               "bot_speed": 50,
-              "oscillation": 142,
+              "oscillation": 158,
               "height": 116,
               "rotation": 150,
               "wait_ms": 1150
@@ -783,7 +783,7 @@
             {
               "top_speed": 62,
               "bot_speed": 25,
-              "oscillation": 164,
+              "oscillation": 136,
               "height": 116,
               "rotation": 150,
               "wait_ms": 1300
@@ -791,7 +791,7 @@
             {
               "top_speed": 105,
               "bot_speed": 45,
-              "oscillation": 136,
+              "oscillation": 164,
               "height": 183,
               "rotation": 150,
               "wait_ms": 1550
@@ -810,7 +810,7 @@
             {
               "top_speed": 62,
               "bot_speed": 25,
-              "oscillation": 136,
+              "oscillation": 164,
               "height": 116,
               "rotation": 150,
               "wait_ms": 1300
@@ -818,7 +818,7 @@
             {
               "top_speed": 105,
               "bot_speed": 45,
-              "oscillation": 164,
+              "oscillation": 136,
               "height": 180,
               "rotation": 150,
               "wait_ms": 1550
@@ -837,7 +837,7 @@
             {
               "top_speed": 60,
               "bot_speed": 25,
-              "oscillation": 157,
+              "oscillation": 143,
               "height": 116,
               "rotation": 150,
               "wait_ms": 1450
@@ -845,7 +845,7 @@
             {
               "top_speed": 129,
               "bot_speed": 37,
-              "oscillation": 136,
+              "oscillation": 164,
               "height": 176,
               "rotation": 150,
               "wait_ms": 1300
@@ -853,7 +853,7 @@
             {
               "top_speed": 139,
               "bot_speed": 37,
-              "oscillation": 162,
+              "oscillation": 138,
               "height": 176,
               "rotation": 150,
               "wait_ms": 1100
@@ -872,7 +872,7 @@
             {
               "top_speed": 50,
               "bot_speed": 50,
-              "oscillation": 149,
+              "oscillation": 151,
               "height": 120,
               "rotation": 150,
               "wait_ms": 1200
@@ -934,7 +934,7 @@
             {
               "top_speed": 125,
               "bot_speed": -7,
-              "oscillation": 160,
+              "oscillation": 140,
               "height": 210,
               "rotation": 150,
               "wait_ms": 1150
@@ -942,7 +942,7 @@
             {
               "top_speed": 125,
               "bot_speed": -7,
-              "oscillation": 138,
+              "oscillation": 162,
               "height": 210,
               "rotation": 150,
               "wait_ms": 1150
@@ -969,7 +969,7 @@
             {
               "top_speed": 207,
               "bot_speed": 0,
-              "oscillation": 162,
+              "oscillation": 138,
               "height": 176,
               "rotation": 150,
               "wait_ms": 1100
@@ -985,7 +985,7 @@
             {
               "top_speed": 207,
               "bot_speed": 0,
-              "oscillation": 140,
+              "oscillation": 160,
               "height": 176,
               "rotation": 150,
               "wait_ms": 1000
@@ -1004,7 +1004,7 @@
             {
               "top_speed": 12,
               "bot_speed": 62,
-              "oscillation": 160,
+              "oscillation": 140,
               "height": 114,
               "rotation": 150,
               "wait_ms": 1350
@@ -1012,7 +1012,7 @@
             {
               "top_speed": 12,
               "bot_speed": 87,
-              "oscillation": 160,
+              "oscillation": 140,
               "height": 179,
               "rotation": 150,
               "wait_ms": 1350
@@ -1020,7 +1020,7 @@
             {
               "top_speed": 125,
               "bot_speed": 25,
-              "oscillation": 160,
+              "oscillation": 140,
               "height": 179,
               "rotation": 150,
               "wait_ms": 1250
@@ -1039,7 +1039,7 @@
             {
               "top_speed": 12,
               "bot_speed": 62,
-              "oscillation": 136,
+              "oscillation": 164,
               "height": 114,
               "rotation": 150,
               "wait_ms": 1350
@@ -1047,7 +1047,7 @@
             {
               "top_speed": 12,
               "bot_speed": 87,
-              "oscillation": 140,
+              "oscillation": 160,
               "height": 179,
               "rotation": 150,
               "wait_ms": 1350
@@ -1055,7 +1055,7 @@
             {
               "top_speed": 125,
               "bot_speed": 25,
-              "oscillation": 140,
+              "oscillation": 160,
               "height": 179,
               "rotation": 150,
               "wait_ms": 1250
@@ -1128,7 +1128,7 @@
             {
               "top_speed": 122,
               "bot_speed": -134,
-              "oscillation": 153,
+              "oscillation": 147,
               "height": 141,
               "rotation": 97,
               "wait_ms": 1650
@@ -1147,7 +1147,7 @@
             {
               "top_speed": 122,
               "bot_speed": -134,
-              "oscillation": 147,
+              "oscillation": 153,
               "height": 145,
               "rotation": 203,
               "wait_ms": 1650
@@ -1315,7 +1315,7 @@
             {
               "top_speed": 174,
               "bot_speed": 0,
-              "oscillation": 159,
+              "oscillation": 141,
               "height": 180,
               "rotation": 150,
               "wait_ms": 950
@@ -1334,7 +1334,7 @@
             {
               "top_speed": 174,
               "bot_speed": 0,
-              "oscillation": 137,
+              "oscillation": 163,
               "height": 180,
               "rotation": 150,
               "wait_ms": 930
@@ -1353,7 +1353,7 @@
             {
               "top_speed": 162,
               "bot_speed": 0,
-              "oscillation": 138,
+              "oscillation": 162,
               "height": 180,
               "rotation": 150,
               "wait_ms": 980
@@ -1361,7 +1361,7 @@
             {
               "top_speed": 162,
               "bot_speed": 0,
-              "oscillation": 162,
+              "oscillation": 138,
               "height": 180,
               "rotation": 150,
               "wait_ms": 980
@@ -1380,7 +1380,7 @@
             {
               "top_speed": 162,
               "bot_speed": 0,
-              "oscillation": 162,
+              "oscillation": 138,
               "height": 183,
               "rotation": 150,
               "wait_ms": 980
@@ -1407,7 +1407,7 @@
             {
               "top_speed": 162,
               "bot_speed": 0,
-              "oscillation": 136,
+              "oscillation": 164,
               "height": 183,
               "rotation": 150,
               "wait_ms": 980
@@ -1434,7 +1434,7 @@
             {
               "top_speed": 162,
               "bot_speed": 0,
-              "oscillation": 136,
+              "oscillation": 164,
               "height": 183,
               "rotation": 150,
               "wait_ms": 980
@@ -1450,7 +1450,7 @@
             {
               "top_speed": 162,
               "bot_speed": 0,
-              "oscillation": 136,
+              "oscillation": 164,
               "height": 183,
               "rotation": 150,
               "wait_ms": 980
@@ -1458,7 +1458,7 @@
             {
               "top_speed": 162,
               "bot_speed": 0,
-              "oscillation": 162,
+              "oscillation": 138,
               "height": 183,
               "rotation": 150,
               "wait_ms": 980
@@ -1477,7 +1477,7 @@
             {
               "top_speed": 162,
               "bot_speed": 0,
-              "oscillation": 136,
+              "oscillation": 164,
               "height": 183,
               "rotation": 150,
               "wait_ms": 980
@@ -1531,7 +1531,7 @@
             {
               "top_speed": 137,
               "bot_speed": 5,
-              "oscillation": 137,
+              "oscillation": 163,
               "height": 180,
               "rotation": 150,
               "wait_ms": 1400
@@ -1539,7 +1539,7 @@
             {
               "top_speed": 137,
               "bot_speed": 5,
-              "oscillation": 138,
+              "oscillation": 162,
               "height": 180,
               "rotation": 150,
               "wait_ms": 1000
@@ -1547,7 +1547,7 @@
             {
               "top_speed": 137,
               "bot_speed": 5,
-              "oscillation": 162,
+              "oscillation": 138,
               "height": 180,
               "rotation": 150,
               "wait_ms": 1050
@@ -1566,7 +1566,7 @@
             {
               "top_speed": 174,
               "bot_speed": 0,
-              "oscillation": 158,
+              "oscillation": 142,
               "height": 180,
               "rotation": 150,
               "wait_ms": 950
@@ -1585,7 +1585,7 @@
             {
               "top_speed": 174,
               "bot_speed": 0,
-              "oscillation": 141,
+              "oscillation": 159,
               "height": 180,
               "rotation": 150,
               "wait_ms": 950
@@ -1604,7 +1604,7 @@
             {
               "top_speed": 174,
               "bot_speed": 0,
-              "oscillation": 149,
+              "oscillation": 151,
               "height": 183,
               "rotation": 150,
               "wait_ms": 930
@@ -1623,7 +1623,7 @@
             {
               "top_speed": 0,
               "bot_speed": 100,
-              "oscillation": 163,
+              "oscillation": 137,
               "height": 113,
               "rotation": 150,
               "wait_ms": 1400
@@ -1631,7 +1631,7 @@
             {
               "top_speed": 169,
               "bot_speed": 0,
-              "oscillation": 136,
+              "oscillation": 164,
               "height": 183,
               "rotation": 150,
               "wait_ms": 1200
@@ -1650,7 +1650,7 @@
             {
               "top_speed": 0,
               "bot_speed": 105,
-              "oscillation": 136,
+              "oscillation": 164,
               "height": 113,
               "rotation": 150,
               "wait_ms": 1450
@@ -1658,7 +1658,7 @@
             {
               "top_speed": 157,
               "bot_speed": 0,
-              "oscillation": 162,
+              "oscillation": 138,
               "height": 183,
               "rotation": 150,
               "wait_ms": 1310
@@ -1674,7 +1674,7 @@
             {
               "top_speed": 157,
               "bot_speed": 0,
-              "oscillation": 136,
+              "oscillation": 164,
               "height": 183,
               "rotation": 150,
               "wait_ms": 1150
@@ -1814,7 +1814,7 @@
             {
               "top_speed": 149,
               "bot_speed": 0,
-              "oscillation": 162,
+              "oscillation": 138,
               "height": 210,
               "rotation": 150,
               "wait_ms": 950
@@ -1868,7 +1868,7 @@
             {
               "top_speed": 199,
               "bot_speed": 0,
-              "oscillation": 143,
+              "oscillation": 157,
               "height": 180,
               "rotation": 150,
               "wait_ms": 1040
@@ -1965,7 +1965,7 @@
             {
               "top_speed": 125,
               "bot_speed": 2,
-              "oscillation": 141,
+              "oscillation": 159,
               "height": 210,
               "rotation": 150,
               "wait_ms": 1310
@@ -1973,7 +1973,7 @@
             {
               "top_speed": 125,
               "bot_speed": 2,
-              "oscillation": 159,
+              "oscillation": 141,
               "height": 210,
               "rotation": 150,
               "wait_ms": 1310
@@ -1992,7 +1992,7 @@
             {
               "top_speed": 125,
               "bot_speed": -12,
-              "oscillation": 159,
+              "oscillation": 141,
               "height": 210,
               "rotation": 150,
               "wait_ms": 1410
@@ -2000,7 +2000,7 @@
             {
               "top_speed": -12,
               "bot_speed": 95,
-              "oscillation": 159,
+              "oscillation": 141,
               "height": 210,
               "rotation": 150,
               "wait_ms": 1410
@@ -2019,7 +2019,7 @@
             {
               "top_speed": 249,
               "bot_speed": 0,
-              "oscillation": 157,
+              "oscillation": 143,
               "height": 167,
               "rotation": 150,
               "wait_ms": 750
@@ -2038,7 +2038,7 @@
             {
               "top_speed": 249,
               "bot_speed": 0,
-              "oscillation": 139,
+              "oscillation": 161,
               "height": 167,
               "rotation": 150,
               "wait_ms": 750
@@ -2133,7 +2133,7 @@
             {
               "top_speed": 237,
               "bot_speed": 37,
-              "oscillation": 160,
+              "oscillation": 140,
               "height": 159,
               "rotation": 150,
               "wait_ms": 1320
@@ -2141,7 +2141,7 @@
             {
               "top_speed": 212,
               "bot_speed": -125,
-              "oscillation": 160,
+              "oscillation": 140,
               "height": 176,
               "rotation": 150,
               "wait_ms": 1320
@@ -2149,7 +2149,7 @@
             {
               "top_speed": 100,
               "bot_speed": 25,
-              "oscillation": 160,
+              "oscillation": 140,
               "height": 210,
               "rotation": 150,
               "wait_ms": 1320
@@ -2195,7 +2195,7 @@
             {
               "top_speed": 183,
               "bot_speed": 0,
-              "oscillation": 161,
+              "oscillation": 139,
               "height": 180,
               "rotation": 150,
               "wait_ms": 780
@@ -2214,7 +2214,7 @@
             {
               "top_speed": 183,
               "bot_speed": 0,
-              "oscillation": 136,
+              "oscillation": 164,
               "height": 177,
               "rotation": 150,
               "wait_ms": 780
@@ -2233,7 +2233,7 @@
             {
               "top_speed": 183,
               "bot_speed": 0,
-              "oscillation": 163,
+              "oscillation": 137,
               "height": 179,
               "rotation": 150,
               "wait_ms": 800
@@ -2249,7 +2249,7 @@
             {
               "top_speed": 183,
               "bot_speed": 0,
-              "oscillation": 135,
+              "oscillation": 165,
               "height": 179,
               "rotation": 150,
               "wait_ms": 800
@@ -2268,7 +2268,7 @@
             {
               "top_speed": 187,
               "bot_speed": 0,
-              "oscillation": 162,
+              "oscillation": 138,
               "height": 175,
               "rotation": 150,
               "wait_ms": 870
@@ -2276,7 +2276,7 @@
             {
               "top_speed": 187,
               "bot_speed": 0,
-              "oscillation": 141,
+              "oscillation": 159,
               "height": 175,
               "rotation": 150,
               "wait_ms": 870
@@ -2295,7 +2295,7 @@
             {
               "top_speed": 187,
               "bot_speed": 0,
-              "oscillation": 134,
+              "oscillation": 166,
               "height": 175,
               "rotation": 150,
               "wait_ms": 870
@@ -2349,7 +2349,7 @@
             {
               "top_speed": 174,
               "bot_speed": 0,
-              "oscillation": 163,
+              "oscillation": 137,
               "height": 175,
               "rotation": 150,
               "wait_ms": 870
@@ -2357,7 +2357,7 @@
             {
               "top_speed": 174,
               "bot_speed": 0,
-              "oscillation": 136,
+              "oscillation": 164,
               "height": 175,
               "rotation": 150,
               "wait_ms": 890
@@ -2384,7 +2384,7 @@
             {
               "top_speed": 174,
               "bot_speed": 0,
-              "oscillation": 136,
+              "oscillation": 164,
               "height": 176,
               "rotation": 150,
               "wait_ms": 1000
@@ -2400,7 +2400,7 @@
             {
               "top_speed": 174,
               "bot_speed": 0,
-              "oscillation": 162,
+              "oscillation": 138,
               "height": 176,
               "rotation": 150,
               "wait_ms": 870
@@ -2427,7 +2427,7 @@
             {
               "top_speed": 179,
               "bot_speed": 0,
-              "oscillation": 136,
+              "oscillation": 164,
               "height": 175,
               "rotation": 150,
               "wait_ms": 940
@@ -2454,7 +2454,7 @@
             {
               "top_speed": 164,
               "bot_speed": 0,
-              "oscillation": 137,
+              "oscillation": 163,
               "height": 176,
               "rotation": 150,
               "wait_ms": 870
@@ -2462,7 +2462,7 @@
             {
               "top_speed": 164,
               "bot_speed": 0,
-              "oscillation": 163,
+              "oscillation": 137,
               "height": 176,
               "rotation": 150,
               "wait_ms": 870
@@ -2570,7 +2570,7 @@
             {
               "top_speed": 202,
               "bot_speed": 0,
-              "oscillation": 158,
+              "oscillation": 142,
               "height": 171,
               "rotation": 150,
               "wait_ms": 1110
@@ -2578,7 +2578,7 @@
             {
               "top_speed": 202,
               "bot_speed": 0,
-              "oscillation": 141,
+              "oscillation": 159,
               "height": 171,
               "rotation": 150,
               "wait_ms": 860
@@ -2605,7 +2605,7 @@
             {
               "top_speed": 202,
               "bot_speed": 0,
-              "oscillation": 140,
+              "oscillation": 160,
               "height": 172,
               "rotation": 150,
               "wait_ms": 1140
@@ -2613,7 +2613,7 @@
             {
               "top_speed": 199,
               "bot_speed": 0,
-              "oscillation": 164,
+              "oscillation": 136,
               "height": 172,
               "rotation": 150,
               "wait_ms": 860
@@ -2726,7 +2726,7 @@
             {
               "top_speed": -199,
               "bot_speed": 120,
-              "oscillation": 149,
+              "oscillation": 151,
               "height": 113,
               "rotation": 150,
               "wait_ms": 1300
@@ -2877,7 +2877,7 @@
             {
               "top_speed": 237,
               "bot_speed": 55,
-              "oscillation": 156,
+              "oscillation": 144,
               "height": 160,
               "rotation": 150,
               "wait_ms": 900
@@ -2885,7 +2885,7 @@
             {
               "top_speed": 237,
               "bot_speed": 55,
-              "oscillation": 141,
+              "oscillation": 159,
               "height": 160,
               "rotation": 150,
               "wait_ms": 900
@@ -2904,7 +2904,7 @@
             {
               "top_speed": 237,
               "bot_speed": 55,
-              "oscillation": 149,
+              "oscillation": 151,
               "height": 160,
               "rotation": 150,
               "wait_ms": 700
@@ -3012,7 +3012,7 @@
             {
               "top_speed": 162,
               "bot_speed": 0,
-              "oscillation": 138,
+              "oscillation": 162,
               "height": 178,
               "rotation": 150,
               "wait_ms": 1000
@@ -3020,7 +3020,7 @@
             {
               "top_speed": 199,
               "bot_speed": 0,
-              "oscillation": 163,
+              "oscillation": 137,
               "height": 175,
               "rotation": 150,
               "wait_ms": 800
@@ -3101,7 +3101,7 @@
             {
               "top_speed": 237,
               "bot_speed": -219,
-              "oscillation": 162,
+              "oscillation": 138,
               "height": 171,
               "rotation": 150,
               "wait_ms": 800
@@ -3163,7 +3163,7 @@
             {
               "top_speed": 187,
               "bot_speed": -12,
-              "oscillation": 149,
+              "oscillation": 151,
               "height": 176,
               "rotation": 150,
               "wait_ms": 950
@@ -3182,7 +3182,7 @@
             {
               "top_speed": 164,
               "bot_speed": 0,
-              "oscillation": 138,
+              "oscillation": 162,
               "height": 179,
               "rotation": 150,
               "wait_ms": 780
@@ -3190,7 +3190,7 @@
             {
               "top_speed": 164,
               "bot_speed": 0,
-              "oscillation": 157,
+              "oscillation": 143,
               "height": 179,
               "rotation": 150,
               "wait_ms": 780
@@ -3206,54 +3206,6 @@
           "youtube_id": "",
           "delay_s": 0.0,
           "balls": [
-            {
-              "top_speed": 164,
-              "bot_speed": 0,
-              "oscillation": 138,
-              "height": 176,
-              "rotation": 150,
-              "wait_ms": 840
-            },
-            {
-              "top_speed": 164,
-              "bot_speed": 0,
-              "oscillation": 142,
-              "height": 176,
-              "rotation": 150,
-              "wait_ms": 840
-            },
-            {
-              "top_speed": 164,
-              "bot_speed": 0,
-              "oscillation": 146,
-              "height": 176,
-              "rotation": 150,
-              "wait_ms": 840
-            },
-            {
-              "top_speed": 164,
-              "bot_speed": 0,
-              "oscillation": 150,
-              "height": 176,
-              "rotation": 150,
-              "wait_ms": 840
-            },
-            {
-              "top_speed": 164,
-              "bot_speed": 0,
-              "oscillation": 154,
-              "height": 176,
-              "rotation": 150,
-              "wait_ms": 840
-            },
-            {
-              "top_speed": 164,
-              "bot_speed": 0,
-              "oscillation": 158,
-              "height": 176,
-              "rotation": 150,
-              "wait_ms": 840
-            },
             {
               "top_speed": 164,
               "bot_speed": 0,
@@ -3301,6 +3253,54 @@
               "height": 176,
               "rotation": 150,
               "wait_ms": 840
+            },
+            {
+              "top_speed": 164,
+              "bot_speed": 0,
+              "oscillation": 138,
+              "height": 176,
+              "rotation": 150,
+              "wait_ms": 840
+            },
+            {
+              "top_speed": 164,
+              "bot_speed": 0,
+              "oscillation": 142,
+              "height": 176,
+              "rotation": 150,
+              "wait_ms": 840
+            },
+            {
+              "top_speed": 164,
+              "bot_speed": 0,
+              "oscillation": 146,
+              "height": 176,
+              "rotation": 150,
+              "wait_ms": 840
+            },
+            {
+              "top_speed": 164,
+              "bot_speed": 0,
+              "oscillation": 150,
+              "height": 176,
+              "rotation": 150,
+              "wait_ms": 840
+            },
+            {
+              "top_speed": 164,
+              "bot_speed": 0,
+              "oscillation": 154,
+              "height": 176,
+              "rotation": 150,
+              "wait_ms": 840
+            },
+            {
+              "top_speed": 164,
+              "bot_speed": 0,
+              "oscillation": 158,
+              "height": 176,
+              "rotation": 150,
+              "wait_ms": 840
             }
           ],
           "repeat": 0,
@@ -3316,16 +3316,8 @@
             {
               "top_speed": 164,
               "bot_speed": 0,
-              "oscillation": 159,
+              "oscillation": 141,
               "height": 180,
-              "rotation": 150,
-              "wait_ms": 940
-            },
-            {
-              "top_speed": 164,
-              "bot_speed": 0,
-              "oscillation": 153,
-              "height": 176,
               "rotation": 150,
               "wait_ms": 940
             },
@@ -3340,7 +3332,15 @@
             {
               "top_speed": 164,
               "bot_speed": 0,
-              "oscillation": 142,
+              "oscillation": 153,
+              "height": 176,
+              "rotation": 150,
+              "wait_ms": 940
+            },
+            {
+              "top_speed": 164,
+              "bot_speed": 0,
+              "oscillation": 158,
               "height": 176,
               "rotation": 150,
               "wait_ms": 940
@@ -3502,9 +3502,18 @@
           "youtube_id": "",
           "delay_s": 0.0,
           "balls": [
-            {"top_speed": 140, "bot_speed": 0, "oscillation": 136, "height": 180, "rotation": 150, "wait_ms": 1500}
+            {
+              "top_speed": 140,
+              "bot_speed": 0,
+              "oscillation": 164,
+              "height": 180,
+              "rotation": 150,
+              "wait_ms": 1500
+            }
           ],
-          "repeat": 0, "sort_order": 0, "readonly": true
+          "repeat": 0,
+          "sort_order": 0,
+          "readonly": true
         },
         {
           "name": "BH Block Medium",
@@ -3512,9 +3521,18 @@
           "youtube_id": "",
           "delay_s": 0.0,
           "balls": [
-            {"top_speed": 170, "bot_speed": 0, "oscillation": 136, "height": 180, "rotation": 150, "wait_ms": 1100}
+            {
+              "top_speed": 170,
+              "bot_speed": 0,
+              "oscillation": 164,
+              "height": 180,
+              "rotation": 150,
+              "wait_ms": 1100
+            }
           ],
-          "repeat": 0, "sort_order": 1, "readonly": true
+          "repeat": 0,
+          "sort_order": 1,
+          "readonly": true
         },
         {
           "name": "BH Block Fast",
@@ -3522,9 +3540,18 @@
           "youtube_id": "",
           "delay_s": 0.0,
           "balls": [
-            {"top_speed": 200, "bot_speed": 0, "oscillation": 136, "height": 175, "rotation": 150, "wait_ms": 850}
+            {
+              "top_speed": 200,
+              "bot_speed": 0,
+              "oscillation": 164,
+              "height": 175,
+              "rotation": 150,
+              "wait_ms": 850
+            }
           ],
-          "repeat": 0, "sort_order": 2, "readonly": true
+          "repeat": 0,
+          "sort_order": 2,
+          "readonly": true
         },
         {
           "name": "FH-BH Block",
@@ -3532,10 +3559,26 @@
           "youtube_id": "",
           "delay_s": 0.0,
           "balls": [
-            {"top_speed": 170, "bot_speed": 0, "oscillation": 160, "height": 180, "rotation": 150, "wait_ms": 1200},
-            {"top_speed": 170, "bot_speed": 0, "oscillation": 138, "height": 180, "rotation": 150, "wait_ms": 1200}
+            {
+              "top_speed": 170,
+              "bot_speed": 0,
+              "oscillation": 140,
+              "height": 180,
+              "rotation": 150,
+              "wait_ms": 1200
+            },
+            {
+              "top_speed": 170,
+              "bot_speed": 0,
+              "oscillation": 162,
+              "height": 180,
+              "rotation": 150,
+              "wait_ms": 1200
+            }
           ],
-          "repeat": 0, "sort_order": 3, "readonly": true
+          "repeat": 0,
+          "sort_order": 3,
+          "readonly": true
         },
         {
           "name": "Short Backspin FH Flick",
@@ -3543,9 +3586,18 @@
           "youtube_id": "",
           "delay_s": 0.0,
           "balls": [
-            {"top_speed": -15, "bot_speed": 80, "oscillation": 160, "height": 113, "rotation": 150, "wait_ms": 2500}
+            {
+              "top_speed": -15,
+              "bot_speed": 80,
+              "oscillation": 140,
+              "height": 113,
+              "rotation": 150,
+              "wait_ms": 2500
+            }
           ],
-          "repeat": 0, "sort_order": 4, "readonly": true
+          "repeat": 0,
+          "sort_order": 4,
+          "readonly": true
         },
         {
           "name": "Short Backspin BH Flick",
@@ -3553,9 +3605,18 @@
           "youtube_id": "",
           "delay_s": 0.0,
           "balls": [
-            {"top_speed": -15, "bot_speed": 80, "oscillation": 138, "height": 113, "rotation": 150, "wait_ms": 2500}
+            {
+              "top_speed": -15,
+              "bot_speed": 80,
+              "oscillation": 162,
+              "height": 113,
+              "rotation": 150,
+              "wait_ms": 2500
+            }
           ],
-          "repeat": 0, "sort_order": 5, "readonly": true
+          "repeat": 0,
+          "sort_order": 5,
+          "readonly": true
         },
         {
           "name": "Short No-Spin FH",
@@ -3563,9 +3624,18 @@
           "youtube_id": "",
           "delay_s": 0.0,
           "balls": [
-            {"top_speed": 45, "bot_speed": 45, "oscillation": 160, "height": 116, "rotation": 150, "wait_ms": 2500}
+            {
+              "top_speed": 45,
+              "bot_speed": 45,
+              "oscillation": 140,
+              "height": 116,
+              "rotation": 150,
+              "wait_ms": 2500
+            }
           ],
-          "repeat": 0, "sort_order": 6, "readonly": true
+          "repeat": 0,
+          "sort_order": 6,
+          "readonly": true
         },
         {
           "name": "Short No-Spin BH",
@@ -3573,9 +3643,18 @@
           "youtube_id": "",
           "delay_s": 0.0,
           "balls": [
-            {"top_speed": 45, "bot_speed": 45, "oscillation": 138, "height": 116, "rotation": 150, "wait_ms": 2500}
+            {
+              "top_speed": 45,
+              "bot_speed": 45,
+              "oscillation": 162,
+              "height": 116,
+              "rotation": 150,
+              "wait_ms": 2500
+            }
           ],
-          "repeat": 0, "sort_order": 7, "readonly": true
+          "repeat": 0,
+          "sort_order": 7,
+          "readonly": true
         },
         {
           "name": "Short Sidespin L BH",
@@ -3583,9 +3662,18 @@
           "youtube_id": "",
           "delay_s": 0.0,
           "balls": [
-            {"top_speed": -10, "bot_speed": 80, "oscillation": 140, "height": 116, "rotation": 195, "wait_ms": 2500}
+            {
+              "top_speed": -10,
+              "bot_speed": 80,
+              "oscillation": 160,
+              "height": 116,
+              "rotation": 195,
+              "wait_ms": 2500
+            }
           ],
-          "repeat": 0, "sort_order": 8, "readonly": true
+          "repeat": 0,
+          "sort_order": 8,
+          "readonly": true
         },
         {
           "name": "Short Sidespin R FH",
@@ -3593,9 +3681,18 @@
           "youtube_id": "",
           "delay_s": 0.0,
           "balls": [
-            {"top_speed": -10, "bot_speed": 80, "oscillation": 158, "height": 116, "rotation": 105, "wait_ms": 2500}
+            {
+              "top_speed": -10,
+              "bot_speed": 80,
+              "oscillation": 142,
+              "height": 116,
+              "rotation": 105,
+              "wait_ms": 2500
+            }
           ],
-          "repeat": 0, "sort_order": 9, "readonly": true
+          "repeat": 0,
+          "sort_order": 9,
+          "readonly": true
         },
         {
           "name": "Mixed Short Serves",
@@ -3603,10 +3700,26 @@
           "youtube_id": "",
           "delay_s": 0.0,
           "balls": [
-            {"top_speed": -15, "bot_speed": 80, "oscillation": 150, "height": 113, "rotation": 150, "wait_ms": 2200},
-            {"top_speed": 45, "bot_speed": 45, "oscillation": 150, "height": 116, "rotation": 150, "wait_ms": 2200}
+            {
+              "top_speed": -15,
+              "bot_speed": 80,
+              "oscillation": 150,
+              "height": 113,
+              "rotation": 150,
+              "wait_ms": 2200
+            },
+            {
+              "top_speed": 45,
+              "bot_speed": 45,
+              "oscillation": 150,
+              "height": 116,
+              "rotation": 150,
+              "wait_ms": 2200
+            }
           ],
-          "repeat": 0, "sort_order": 10, "readonly": true
+          "repeat": 0,
+          "sort_order": 10,
+          "readonly": true
         },
         {
           "name": "BH Topspin Consistency",
@@ -3614,9 +3727,18 @@
           "youtube_id": "",
           "delay_s": 0.0,
           "balls": [
-            {"top_speed": 130, "bot_speed": -10, "oscillation": 136, "height": 180, "rotation": 150, "wait_ms": 1400}
+            {
+              "top_speed": 130,
+              "bot_speed": -10,
+              "oscillation": 164,
+              "height": 180,
+              "rotation": 150,
+              "wait_ms": 1400
+            }
           ],
-          "repeat": 0, "sort_order": 11, "readonly": true
+          "repeat": 0,
+          "sort_order": 11,
+          "readonly": true
         },
         {
           "name": "Backspin Open Attack",
@@ -3624,9 +3746,18 @@
           "youtube_id": "",
           "delay_s": 0.0,
           "balls": [
-            {"top_speed": -50, "bot_speed": 110, "oscillation": 150, "height": 175, "rotation": 150, "wait_ms": 2000}
+            {
+              "top_speed": -50,
+              "bot_speed": 110,
+              "oscillation": 150,
+              "height": 175,
+              "rotation": 150,
+              "wait_ms": 2000
+            }
           ],
-          "repeat": 0, "sort_order": 12, "readonly": true
+          "repeat": 0,
+          "sort_order": 12,
+          "readonly": true
         },
         {
           "name": "BH Flick Then Rally",
@@ -3634,10 +3765,26 @@
           "youtube_id": "",
           "delay_s": 0.0,
           "balls": [
-            {"top_speed": -15, "bot_speed": 80, "oscillation": 140, "height": 113, "rotation": 150, "wait_ms": 2000},
-            {"top_speed": 165, "bot_speed": 0, "oscillation": 140, "height": 180, "rotation": 150, "wait_ms": 1200}
+            {
+              "top_speed": -15,
+              "bot_speed": 80,
+              "oscillation": 160,
+              "height": 113,
+              "rotation": 150,
+              "wait_ms": 2000
+            },
+            {
+              "top_speed": 165,
+              "bot_speed": 0,
+              "oscillation": 160,
+              "height": 180,
+              "rotation": 150,
+              "wait_ms": 1200
+            }
           ],
-          "repeat": 0, "sort_order": 13, "readonly": true
+          "repeat": 0,
+          "sort_order": 13,
+          "readonly": true
         },
         {
           "name": "FH Flick Then Rally",
@@ -3645,10 +3792,26 @@
           "youtube_id": "",
           "delay_s": 0.0,
           "balls": [
-            {"top_speed": -15, "bot_speed": 80, "oscillation": 160, "height": 113, "rotation": 150, "wait_ms": 2000},
-            {"top_speed": 165, "bot_speed": 0, "oscillation": 160, "height": 180, "rotation": 150, "wait_ms": 1200}
+            {
+              "top_speed": -15,
+              "bot_speed": 80,
+              "oscillation": 140,
+              "height": 113,
+              "rotation": 150,
+              "wait_ms": 2000
+            },
+            {
+              "top_speed": 165,
+              "bot_speed": 0,
+              "oscillation": 140,
+              "height": 180,
+              "rotation": 150,
+              "wait_ms": 1200
+            }
           ],
-          "repeat": 0, "sort_order": 14, "readonly": true
+          "repeat": 0,
+          "sort_order": 14,
+          "readonly": true
         },
         {
           "name": "Quick Reaction Random",
@@ -3656,9 +3819,18 @@
           "youtube_id": "",
           "delay_s": 0.0,
           "balls": [
-            {"top_speed": 190, "bot_speed": 0, "oscillation": 150, "height": 175, "rotation": 150, "wait_ms": 750}
+            {
+              "top_speed": 190,
+              "bot_speed": 0,
+              "oscillation": 150,
+              "height": 175,
+              "rotation": 150,
+              "wait_ms": 750
+            }
           ],
-          "repeat": 0, "sort_order": 15, "readonly": true
+          "repeat": 0,
+          "sort_order": 15,
+          "readonly": true
         },
         {
           "name": "Sidespin Serve Rally",
@@ -3666,11 +3838,34 @@
           "youtube_id": "",
           "delay_s": 0.0,
           "balls": [
-            {"top_speed": -20, "bot_speed": 100, "oscillation": 150, "height": 118, "rotation": 195, "wait_ms": 1600},
-            {"top_speed": 170, "bot_speed": 0, "oscillation": 150, "height": 180, "rotation": 150, "wait_ms": 1100},
-            {"top_speed": 175, "bot_speed": 0, "oscillation": 150, "height": 178, "rotation": 150, "wait_ms": 1000}
+            {
+              "top_speed": -20,
+              "bot_speed": 100,
+              "oscillation": 150,
+              "height": 118,
+              "rotation": 195,
+              "wait_ms": 1600
+            },
+            {
+              "top_speed": 170,
+              "bot_speed": 0,
+              "oscillation": 150,
+              "height": 180,
+              "rotation": 150,
+              "wait_ms": 1100
+            },
+            {
+              "top_speed": 175,
+              "bot_speed": 0,
+              "oscillation": 150,
+              "height": 178,
+              "rotation": 150,
+              "wait_ms": 1000
+            }
           ],
-          "repeat": 0, "sort_order": 16, "readonly": true
+          "repeat": 0,
+          "sort_order": 16,
+          "readonly": true
         },
         {
           "name": "Mixed Spin Serves",
@@ -3678,11 +3873,34 @@
           "youtube_id": "",
           "delay_s": 0.0,
           "balls": [
-            {"top_speed": -20, "bot_speed": 90, "oscillation": 150, "height": 113, "rotation": 150, "wait_ms": 2000},
-            {"top_speed": 45, "bot_speed": 45, "oscillation": 150, "height": 116, "rotation": 150, "wait_ms": 2000},
-            {"top_speed": 100, "bot_speed": -100, "oscillation": 150, "height": 118, "rotation": 150, "wait_ms": 1800}
+            {
+              "top_speed": -20,
+              "bot_speed": 90,
+              "oscillation": 150,
+              "height": 113,
+              "rotation": 150,
+              "wait_ms": 2000
+            },
+            {
+              "top_speed": 45,
+              "bot_speed": 45,
+              "oscillation": 150,
+              "height": 116,
+              "rotation": 150,
+              "wait_ms": 2000
+            },
+            {
+              "top_speed": 100,
+              "bot_speed": -100,
+              "oscillation": 150,
+              "height": 118,
+              "rotation": 150,
+              "wait_ms": 1800
+            }
           ],
-          "repeat": 0, "sort_order": 17, "readonly": true
+          "repeat": 0,
+          "sort_order": 17,
+          "readonly": true
         },
         {
           "name": "Game Pattern Serve-Flick-Rally",
@@ -3690,12 +3908,42 @@
           "youtube_id": "",
           "delay_s": 0.0,
           "balls": [
-            {"top_speed": -15, "bot_speed": 80, "oscillation": 150, "height": 113, "rotation": 150, "wait_ms": 1800},
-            {"top_speed": 160, "bot_speed": 0, "oscillation": 155, "height": 178, "rotation": 150, "wait_ms": 1300},
-            {"top_speed": 170, "bot_speed": 0, "oscillation": 145, "height": 178, "rotation": 150, "wait_ms": 1100},
-            {"top_speed": 180, "bot_speed": 0, "oscillation": 150, "height": 175, "rotation": 150, "wait_ms": 1000}
+            {
+              "top_speed": -15,
+              "bot_speed": 80,
+              "oscillation": 150,
+              "height": 113,
+              "rotation": 150,
+              "wait_ms": 1800
+            },
+            {
+              "top_speed": 160,
+              "bot_speed": 0,
+              "oscillation": 145,
+              "height": 178,
+              "rotation": 150,
+              "wait_ms": 1300
+            },
+            {
+              "top_speed": 170,
+              "bot_speed": 0,
+              "oscillation": 155,
+              "height": 178,
+              "rotation": 150,
+              "wait_ms": 1100
+            },
+            {
+              "top_speed": 180,
+              "bot_speed": 0,
+              "oscillation": 150,
+              "height": 175,
+              "rotation": 150,
+              "wait_ms": 1000
+            }
           ],
-          "repeat": 0, "sort_order": 18, "readonly": true
+          "repeat": 0,
+          "sort_order": 18,
+          "readonly": true
         },
         {
           "name": "Sidespin Mixed LR",
@@ -3703,10 +3951,26 @@
           "youtube_id": "",
           "delay_s": 0.0,
           "balls": [
-            {"top_speed": -10, "bot_speed": 80, "oscillation": 150, "height": 116, "rotation": 195, "wait_ms": 2200},
-            {"top_speed": -10, "bot_speed": 80, "oscillation": 150, "height": 116, "rotation": 105, "wait_ms": 2200}
+            {
+              "top_speed": -10,
+              "bot_speed": 80,
+              "oscillation": 150,
+              "height": 116,
+              "rotation": 195,
+              "wait_ms": 2200
+            },
+            {
+              "top_speed": -10,
+              "bot_speed": 80,
+              "oscillation": 150,
+              "height": 116,
+              "rotation": 105,
+              "wait_ms": 2200
+            }
           ],
-          "repeat": 0, "sort_order": 19, "readonly": true
+          "repeat": 0,
+          "sort_order": 19,
+          "readonly": true
         },
         {
           "name": "FH Topspin vs No-Spin",
@@ -3714,9 +3978,18 @@
           "youtube_id": "",
           "delay_s": 0.0,
           "balls": [
-            {"top_speed": 50, "bot_speed": 50, "oscillation": 160, "height": 183, "rotation": 150, "wait_ms": 1800}
+            {
+              "top_speed": 50,
+              "bot_speed": 50,
+              "oscillation": 140,
+              "height": 183,
+              "rotation": 150,
+              "wait_ms": 1800
+            }
           ],
-          "repeat": 0, "sort_order": 20, "readonly": true
+          "repeat": 0,
+          "sort_order": 20,
+          "readonly": true
         },
         {
           "name": "BH Topspin vs No-Spin",
@@ -3724,9 +3997,18 @@
           "youtube_id": "",
           "delay_s": 0.0,
           "balls": [
-            {"top_speed": 50, "bot_speed": 50, "oscillation": 138, "height": 183, "rotation": 150, "wait_ms": 1800}
+            {
+              "top_speed": 50,
+              "bot_speed": 50,
+              "oscillation": 162,
+              "height": 183,
+              "rotation": 150,
+              "wait_ms": 1800
+            }
           ],
-          "repeat": 0, "sort_order": 21, "readonly": true
+          "repeat": 0,
+          "sort_order": 21,
+          "readonly": true
         },
         {
           "name": "FH Topspin vs Backspin",
@@ -3734,9 +4016,18 @@
           "youtube_id": "",
           "delay_s": 0.0,
           "balls": [
-            {"top_speed": -30, "bot_speed": 100, "oscillation": 160, "height": 175, "rotation": 150, "wait_ms": 2000}
+            {
+              "top_speed": -30,
+              "bot_speed": 100,
+              "oscillation": 140,
+              "height": 175,
+              "rotation": 150,
+              "wait_ms": 2000
+            }
           ],
-          "repeat": 0, "sort_order": 22, "readonly": true
+          "repeat": 0,
+          "sort_order": 22,
+          "readonly": true
         },
         {
           "name": "BH Topspin vs Backspin",
@@ -3744,9 +4035,18 @@
           "youtube_id": "",
           "delay_s": 0.0,
           "balls": [
-            {"top_speed": -30, "bot_speed": 100, "oscillation": 138, "height": 175, "rotation": 150, "wait_ms": 2000}
+            {
+              "top_speed": -30,
+              "bot_speed": 100,
+              "oscillation": 162,
+              "height": 175,
+              "rotation": 150,
+              "wait_ms": 2000
+            }
           ],
-          "repeat": 0, "sort_order": 23, "readonly": true
+          "repeat": 0,
+          "sort_order": 23,
+          "readonly": true
         },
         {
           "name": "FH Counter-Topspin",
@@ -3754,9 +4054,18 @@
           "youtube_id": "",
           "delay_s": 0.0,
           "balls": [
-            {"top_speed": 160, "bot_speed": -15, "oscillation": 160, "height": 185, "rotation": 150, "wait_ms": 1400}
+            {
+              "top_speed": 160,
+              "bot_speed": -15,
+              "oscillation": 140,
+              "height": 185,
+              "rotation": 150,
+              "wait_ms": 1400
+            }
           ],
-          "repeat": 0, "sort_order": 24, "readonly": true
+          "repeat": 0,
+          "sort_order": 24,
+          "readonly": true
         },
         {
           "name": "BH Counter-Topspin",
@@ -3764,9 +4073,18 @@
           "youtube_id": "",
           "delay_s": 0.0,
           "balls": [
-            {"top_speed": 160, "bot_speed": -15, "oscillation": 138, "height": 185, "rotation": 150, "wait_ms": 1400}
+            {
+              "top_speed": 160,
+              "bot_speed": -15,
+              "oscillation": 162,
+              "height": 185,
+              "rotation": 150,
+              "wait_ms": 1400
+            }
           ],
-          "repeat": 0, "sort_order": 25, "readonly": true
+          "repeat": 0,
+          "sort_order": 25,
+          "readonly": true
         },
         {
           "name": "FH-BH Topspin Alternating",
@@ -3774,10 +4092,26 @@
           "youtube_id": "",
           "delay_s": 0.0,
           "balls": [
-            {"top_speed": 155, "bot_speed": -10, "oscillation": 160, "height": 183, "rotation": 150, "wait_ms": 1500},
-            {"top_speed": 155, "bot_speed": -10, "oscillation": 138, "height": 183, "rotation": 150, "wait_ms": 1500}
+            {
+              "top_speed": 155,
+              "bot_speed": -10,
+              "oscillation": 140,
+              "height": 183,
+              "rotation": 150,
+              "wait_ms": 1500
+            },
+            {
+              "top_speed": 155,
+              "bot_speed": -10,
+              "oscillation": 162,
+              "height": 183,
+              "rotation": 150,
+              "wait_ms": 1500
+            }
           ],
-          "repeat": 0, "sort_order": 26, "readonly": true
+          "repeat": 0,
+          "sort_order": 26,
+          "readonly": true
         },
         {
           "name": "Mixed Spin FH Open",
@@ -3785,11 +4119,34 @@
           "youtube_id": "",
           "delay_s": 0.0,
           "balls": [
-            {"top_speed": 50, "bot_speed": 50, "oscillation": 160, "height": 183, "rotation": 150, "wait_ms": 2000},
-            {"top_speed": -30, "bot_speed": 100, "oscillation": 160, "height": 175, "rotation": 150, "wait_ms": 2000},
-            {"top_speed": 160, "bot_speed": -15, "oscillation": 160, "height": 185, "rotation": 150, "wait_ms": 1400}
+            {
+              "top_speed": 50,
+              "bot_speed": 50,
+              "oscillation": 140,
+              "height": 183,
+              "rotation": 150,
+              "wait_ms": 2000
+            },
+            {
+              "top_speed": -30,
+              "bot_speed": 100,
+              "oscillation": 140,
+              "height": 175,
+              "rotation": 150,
+              "wait_ms": 2000
+            },
+            {
+              "top_speed": 160,
+              "bot_speed": -15,
+              "oscillation": 140,
+              "height": 185,
+              "rotation": 150,
+              "wait_ms": 1400
+            }
           ],
-          "repeat": 0, "sort_order": 27, "readonly": true
+          "repeat": 0,
+          "sort_order": 27,
+          "readonly": true
         },
         {
           "name": "In-Out FH Attack",
@@ -3797,10 +4154,26 @@
           "youtube_id": "",
           "delay_s": 0.0,
           "balls": [
-            {"top_speed": -12, "bot_speed": 80, "oscillation": 160, "height": 113, "rotation": 150, "wait_ms": 1800},
-            {"top_speed": 170, "bot_speed": 0, "oscillation": 160, "height": 180, "rotation": 150, "wait_ms": 1200}
+            {
+              "top_speed": -12,
+              "bot_speed": 80,
+              "oscillation": 140,
+              "height": 113,
+              "rotation": 150,
+              "wait_ms": 1800
+            },
+            {
+              "top_speed": 170,
+              "bot_speed": 0,
+              "oscillation": 140,
+              "height": 180,
+              "rotation": 150,
+              "wait_ms": 1200
+            }
           ],
-          "repeat": 0, "sort_order": 28, "readonly": true
+          "repeat": 0,
+          "sort_order": 28,
+          "readonly": true
         },
         {
           "name": "In-Out BH Attack",
@@ -3808,10 +4181,26 @@
           "youtube_id": "",
           "delay_s": 0.0,
           "balls": [
-            {"top_speed": -12, "bot_speed": 80, "oscillation": 138, "height": 113, "rotation": 150, "wait_ms": 1800},
-            {"top_speed": 170, "bot_speed": 0, "oscillation": 138, "height": 180, "rotation": 150, "wait_ms": 1200}
+            {
+              "top_speed": -12,
+              "bot_speed": 80,
+              "oscillation": 162,
+              "height": 113,
+              "rotation": 150,
+              "wait_ms": 1800
+            },
+            {
+              "top_speed": 170,
+              "bot_speed": 0,
+              "oscillation": 162,
+              "height": 180,
+              "rotation": 150,
+              "wait_ms": 1200
+            }
           ],
-          "repeat": 0, "sort_order": 29, "readonly": true
+          "repeat": 0,
+          "sort_order": 29,
+          "readonly": true
         },
         {
           "name": "3rd Ball FH",
@@ -3819,11 +4208,34 @@
           "youtube_id": "",
           "delay_s": 0.0,
           "balls": [
-            {"top_speed": -20, "bot_speed": 90, "oscillation": 150, "height": 113, "rotation": 150, "wait_ms": 1800},
-            {"top_speed": -15, "bot_speed": 85, "oscillation": 160, "height": 170, "rotation": 150, "wait_ms": 1500},
-            {"top_speed": 180, "bot_speed": 0, "oscillation": 160, "height": 178, "rotation": 150, "wait_ms": 1200}
+            {
+              "top_speed": -20,
+              "bot_speed": 90,
+              "oscillation": 150,
+              "height": 113,
+              "rotation": 150,
+              "wait_ms": 1800
+            },
+            {
+              "top_speed": -15,
+              "bot_speed": 85,
+              "oscillation": 140,
+              "height": 170,
+              "rotation": 150,
+              "wait_ms": 1500
+            },
+            {
+              "top_speed": 180,
+              "bot_speed": 0,
+              "oscillation": 140,
+              "height": 178,
+              "rotation": 150,
+              "wait_ms": 1200
+            }
           ],
-          "repeat": 0, "sort_order": 30, "readonly": true
+          "repeat": 0,
+          "sort_order": 30,
+          "readonly": true
         },
         {
           "name": "3rd Ball BH",
@@ -3831,11 +4243,34 @@
           "youtube_id": "",
           "delay_s": 0.0,
           "balls": [
-            {"top_speed": -20, "bot_speed": 90, "oscillation": 150, "height": 113, "rotation": 150, "wait_ms": 1800},
-            {"top_speed": -15, "bot_speed": 85, "oscillation": 138, "height": 170, "rotation": 150, "wait_ms": 1500},
-            {"top_speed": 180, "bot_speed": 0, "oscillation": 138, "height": 178, "rotation": 150, "wait_ms": 1200}
+            {
+              "top_speed": -20,
+              "bot_speed": 90,
+              "oscillation": 150,
+              "height": 113,
+              "rotation": 150,
+              "wait_ms": 1800
+            },
+            {
+              "top_speed": -15,
+              "bot_speed": 85,
+              "oscillation": 162,
+              "height": 170,
+              "rotation": 150,
+              "wait_ms": 1500
+            },
+            {
+              "top_speed": 180,
+              "bot_speed": 0,
+              "oscillation": 162,
+              "height": 178,
+              "rotation": 150,
+              "wait_ms": 1200
+            }
           ],
-          "repeat": 0, "sort_order": 31, "readonly": true
+          "repeat": 0,
+          "sort_order": 31,
+          "readonly": true
         },
         {
           "name": "4th Ball Counter FH",
@@ -3843,12 +4278,42 @@
           "youtube_id": "",
           "delay_s": 0.0,
           "balls": [
-            {"top_speed": -12, "bot_speed": 80, "oscillation": 150, "height": 113, "rotation": 150, "wait_ms": 1500},
-            {"top_speed": 160, "bot_speed": 0, "oscillation": 150, "height": 178, "rotation": 150, "wait_ms": 1300},
-            {"top_speed": 170, "bot_speed": -10, "oscillation": 160, "height": 180, "rotation": 150, "wait_ms": 1100},
-            {"top_speed": 185, "bot_speed": 0, "oscillation": 160, "height": 178, "rotation": 150, "wait_ms": 1000}
+            {
+              "top_speed": -12,
+              "bot_speed": 80,
+              "oscillation": 150,
+              "height": 113,
+              "rotation": 150,
+              "wait_ms": 1500
+            },
+            {
+              "top_speed": 160,
+              "bot_speed": 0,
+              "oscillation": 150,
+              "height": 178,
+              "rotation": 150,
+              "wait_ms": 1300
+            },
+            {
+              "top_speed": 170,
+              "bot_speed": -10,
+              "oscillation": 140,
+              "height": 180,
+              "rotation": 150,
+              "wait_ms": 1100
+            },
+            {
+              "top_speed": 185,
+              "bot_speed": 0,
+              "oscillation": 140,
+              "height": 178,
+              "rotation": 150,
+              "wait_ms": 1000
+            }
           ],
-          "repeat": 0, "sort_order": 32, "readonly": true
+          "repeat": 0,
+          "sort_order": 32,
+          "readonly": true
         },
         {
           "name": "4th Ball Counter BH",
@@ -3856,12 +4321,42 @@
           "youtube_id": "",
           "delay_s": 0.0,
           "balls": [
-            {"top_speed": -12, "bot_speed": 80, "oscillation": 150, "height": 113, "rotation": 150, "wait_ms": 1500},
-            {"top_speed": 160, "bot_speed": 0, "oscillation": 150, "height": 178, "rotation": 150, "wait_ms": 1300},
-            {"top_speed": 170, "bot_speed": -10, "oscillation": 138, "height": 180, "rotation": 150, "wait_ms": 1100},
-            {"top_speed": 185, "bot_speed": 0, "oscillation": 138, "height": 178, "rotation": 150, "wait_ms": 1000}
+            {
+              "top_speed": -12,
+              "bot_speed": 80,
+              "oscillation": 150,
+              "height": 113,
+              "rotation": 150,
+              "wait_ms": 1500
+            },
+            {
+              "top_speed": 160,
+              "bot_speed": 0,
+              "oscillation": 150,
+              "height": 178,
+              "rotation": 150,
+              "wait_ms": 1300
+            },
+            {
+              "top_speed": 170,
+              "bot_speed": -10,
+              "oscillation": 162,
+              "height": 180,
+              "rotation": 150,
+              "wait_ms": 1100
+            },
+            {
+              "top_speed": 185,
+              "bot_speed": 0,
+              "oscillation": 162,
+              "height": 178,
+              "rotation": 150,
+              "wait_ms": 1000
+            }
           ],
-          "repeat": 0, "sort_order": 33, "readonly": true
+          "repeat": 0,
+          "sort_order": 33,
+          "readonly": true
         },
         {
           "name": "FH Topspin Everywhere",
@@ -3869,9 +4364,18 @@
           "youtube_id": "",
           "delay_s": 0.0,
           "balls": [
-            {"top_speed": 170, "bot_speed": -10, "oscillation": 150, "height": 180, "rotation": 150, "wait_ms": 1100}
+            {
+              "top_speed": 170,
+              "bot_speed": -10,
+              "oscillation": 150,
+              "height": 180,
+              "rotation": 150,
+              "wait_ms": 1100
+            }
           ],
-          "repeat": 0, "sort_order": 34, "readonly": true
+          "repeat": 0,
+          "sort_order": 34,
+          "readonly": true
         },
         {
           "name": "Serve-Flick-Counter",
@@ -3879,11 +4383,34 @@
           "youtube_id": "",
           "delay_s": 0.0,
           "balls": [
-            {"top_speed": -15, "bot_speed": 80, "oscillation": 150, "height": 113, "rotation": 150, "wait_ms": 1800},
-            {"top_speed": 155, "bot_speed": 0, "oscillation": 150, "height": 178, "rotation": 150, "wait_ms": 1300},
-            {"top_speed": 185, "bot_speed": 0, "oscillation": 150, "height": 175, "rotation": 150, "wait_ms": 1000}
+            {
+              "top_speed": -15,
+              "bot_speed": 80,
+              "oscillation": 150,
+              "height": 113,
+              "rotation": 150,
+              "wait_ms": 1800
+            },
+            {
+              "top_speed": 155,
+              "bot_speed": 0,
+              "oscillation": 150,
+              "height": 178,
+              "rotation": 150,
+              "wait_ms": 1300
+            },
+            {
+              "top_speed": 185,
+              "bot_speed": 0,
+              "oscillation": 150,
+              "height": 175,
+              "rotation": 150,
+              "wait_ms": 1000
+            }
           ],
-          "repeat": 0, "sort_order": 35, "readonly": true
+          "repeat": 0,
+          "sort_order": 35,
+          "readonly": true
         }
       ]
     }
