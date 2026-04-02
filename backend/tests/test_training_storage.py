@@ -32,7 +32,8 @@ def test_save_training_create(tmp_training_files):
     assert tid >= 1
     t = training.get_training(tid)
     assert t["name"] == "New"
-    assert t["steps"] == [{"drill_id": 1}]
+    assert t["steps"][0]["drill_id"] == 1
+    assert "drill_name" in t["steps"][0]
 
 
 def test_save_training_update(tmp_training_files):
@@ -40,7 +41,8 @@ def test_save_training_update(tmp_training_files):
     training.save_training({"id": tid, "name": "V2", "steps": [{"drill_id": 5}]})
     t = training.get_training(tid)
     assert t["name"] == "V2"
-    assert t["steps"] == [{"drill_id": 5}]
+    assert t["steps"][0]["drill_id"] == 5
+    assert "drill_name" in t["steps"][0]
 
 
 def test_save_training_update_does_not_duplicate(tmp_training_files):

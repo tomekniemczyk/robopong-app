@@ -95,7 +95,7 @@ class Recorder:
             logger.error("Failed to start recording: %s", e)
             self._proc = None
 
-    def stop(self) -> dict | None:
+    def stop(self, skipped: bool = False) -> dict | None:
         if not self._proc:
             return None
 
@@ -114,8 +114,10 @@ class Recorder:
 
         if self._current_file and self._current_file.exists():
             duration = (datetime.now() - self._start_time).total_seconds() if self._start_time else 0
-            if duration < 3:
-                logger.info("Recording discarded (%.1fs < 3s): %s", duration, self._current_file)
+            min_duration = 30 if skipped else 3
+            if duration < min_duration:
+                logger.info("Recording discarded (%.1fs < %ds%s): %s",
+                            duration, min_duration, ", skipped" if skipped else "", self._current_file)
                 self._current_file.unlink(missing_ok=True)
                 log = self._current_file.with_suffix(".log")
                 log.unlink(missing_ok=True)

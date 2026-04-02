@@ -38,12 +38,24 @@ def _load_defaults() -> list:
 
 # ── Training CRUD (defaults + user) ──────────────────────────────────────────
 
+def _enrich_step_names(training: dict) -> dict:
+    """Resolve drill_name/exercise_name from source data so names are always current."""
+    for step in training.get("steps", []):
+        if step.get("drill_id"):
+            drill = drills.get_drill(step["drill_id"])
+            step["drill_name"] = drill["name"] if drill else f"Drill #{step['drill_id']}"
+        if step.get("exercise_id"):
+            ex = exercises.get_exercise(step["exercise_id"])
+            step["exercise_name"] = ex["name"] if ex else f"Exercise #{step['exercise_id']}"
+    return training
+
+
 def get_trainings() -> list:
     defaults = _load_defaults()
     user = db.get_user_trainings()
     for t in user:
         t.setdefault("readonly", False)
-    return defaults + user
+    return [_enrich_step_names(t) for t in defaults + user]
 
 
 def get_training(training_id: int) -> dict | None:
@@ -218,9 +230,9 @@ class TrainingRunner:
                 training_history_id=self._history_id,
             )
 
-    def _stop_recording(self):
+    def _stop_recording(self, skipped: bool = False):
         if self._recorder.recording:
-            self._recorder.stop()
+            self._recorder.stop(skipped=skipped)
 
     async def _run(self, scenario: dict, robot, broadcast: Callable):
         steps = scenario.get("steps", [])
@@ -282,7 +294,7 @@ class TrainingRunner:
                     logger.warning("Drill %s not found, skipping", step.get("drill_id"))
                     continue
 
-                drill_name = step.get("drill_name") or drill.get("name", "?")
+                drill_name = drill.get("name", "?")
                 count = step.get("count", 60)
                 percent = self._percent_override or step.get("percent", 100)
                 self._percent_override = None
@@ -342,7 +354,7 @@ class TrainingRunner:
                     self._steps_skipped.append(step_idx)
 
                 robot._emit = original_emit
-                self._stop_recording()
+                self._stop_recording(skipped=skipped)
 
                 if self._stopped: return
 
@@ -358,7 +370,13 @@ class TrainingRunner:
                 if step_idx < total_steps - 1 and pause_sec > 0 and not skipped:
                     next_step = steps[step_idx + 1]
                     next_drill = self._resolve_drill(next_step)
-                    next_name = next_step.get("drill_name") or next_step.get("exercise_name") or (next_drill.get("name", "?") if next_drill else "?")
+                    if next_step.get("exercise_id"):
+                        next_ex = exercises.get_exercise(next_step["exercise_id"])
+                        next_name = next_ex["name"] if next_ex else "?"
+                    elif next_drill:
+                        next_name = next_drill.get("name", "?")
+                    else:
+                        next_name = "?"
 
                     for sec in range(pause_sec, 0, -1):
                         if self._stopped: return
@@ -412,7 +430,7 @@ class TrainingRunner:
         if not ex:
             logger.warning("Exercise %s not found, skipping", step.get("exercise_id"))
             return
-        name = step.get("exercise_name") or ex.get("name", "?")
+        name = ex.get("name", "?")
         duration = step.get("duration_sec") or ex.get("duration_sec", 60)
         pause_sec = step.get("pause_after_sec", 30)
 
@@ -445,7 +463,7 @@ class TrainingRunner:
                 audio.play("beep_high")
             await asyncio.sleep(1)
 
-        self._stop_recording()
+        self._stop_recording(skipped=skipped)
 
         audio.play("drill_finished")
         broadcast("training_step_done", {
@@ -461,7 +479,7 @@ class TrainingRunner:
                 broadcast("training_pause", {
                     "sec": sec, "total": pause_sec,
                     "step": step_idx + 1, "total_steps": total_steps,
-                    "next_drill": steps[step_idx + 1].get("drill_name") or steps[step_idx + 1].get("exercise_name", ""),
+                    "next_drill": self._resolve_step_name(steps[step_idx + 1]),
                 })
                 if sec <= 3:
                     audio.play("beep_high")
@@ -477,6 +495,15 @@ class TrainingRunner:
             if not step.get("exercise_id"):
                 total += step.get("count", 60)
         return total
+
+    def _resolve_step_name(self, step: dict) -> str:
+        if step.get("exercise_id"):
+            ex = exercises.get_exercise(step["exercise_id"])
+            return ex["name"] if ex else "?"
+        if step.get("drill_id"):
+            drill = drills.get_drill(step["drill_id"])
+            return drill["name"] if drill else "?"
+        return "?"
 
     def _resolve_drill(self, step: dict) -> dict | None:
         drill_id = step.get("drill_id")
