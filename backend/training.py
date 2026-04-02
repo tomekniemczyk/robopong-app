@@ -102,6 +102,13 @@ def record_run(training_id, player_id: int | None, elapsed_sec: int,
                                   total_balls=total_balls)
 
 
+def update_run(history_id: int, elapsed_sec: int, status: str,
+               steps_completed: int, steps_skipped: list | None = None,
+               step_notes: list | None = None, total_balls: int | None = None):
+    db.update_training_run(history_id, elapsed_sec, status,
+                           steps_completed, steps_skipped, step_notes, total_balls)
+
+
 def get_history(training_id: int | None = None, player_id: int | None = None,
                 limit: int | None = None, offset: int = 0) -> list:
     return db.get_training_history(training_id=training_id, player_id=player_id,
@@ -149,6 +156,7 @@ class TrainingRunner:
         self._percent_override = None
         self._start_from_step = start_from_step
         self._scenario = scenario
+        self._history_id = None
         self._solo_drill_id = solo_drill_id
         self._solo_exercise_id = solo_exercise_id
         self._task = asyncio.create_task(self._run(scenario, robot, broadcast))
@@ -207,6 +215,7 @@ class TrainingRunner:
                 step_name,
                 drill_id=drill_id,
                 exercise_id=exercise_id,
+                training_history_id=self._history_id,
             )
 
     def _stop_recording(self):
@@ -219,6 +228,13 @@ class TrainingRunner:
         total_steps = len(steps)
         start_time = time.monotonic()
         ball_preloaded = False
+
+        # Create history entry at start (status='running') so recordings can reference it
+        self._history_id = record_run(
+            scenario.get("id"), self._player_id, 0, "running",
+            0, total_steps, solo_drill_id=self._solo_drill_id,
+            solo_exercise_id=self._solo_exercise_id,
+        )
 
         try:
             # ── Countdown ────────────────────────────────────────
@@ -367,38 +383,23 @@ class TrainingRunner:
             elapsed_sec = int(time.monotonic() - start_time)
             audio.play("training_complete")
             total_balls = self._count_balls(steps)
-            history_id = record_run(
-                scenario.get("id"), self._player_id, elapsed_sec,
-                "completed", self._steps_completed, total_steps,
-                self._steps_skipped, self._step_notes,
-                solo_drill_id=self._solo_drill_id, solo_exercise_id=self._solo_exercise_id,
-                total_balls=total_balls,
-            )
-            broadcast("training_ended", {"elapsed_sec": elapsed_sec, "history_id": history_id})
+            update_run(self._history_id, elapsed_sec, "completed",
+                       self._steps_completed, self._steps_skipped, self._step_notes, total_balls)
+            broadcast("training_ended", {"elapsed_sec": elapsed_sec, "history_id": self._history_id})
 
         except asyncio.CancelledError:
             elapsed_sec = int(time.monotonic() - start_time)
             total_balls = self._count_balls(steps)
-            history_id = record_run(
-                scenario.get("id"), self._player_id, elapsed_sec,
-                "stopped", self._steps_completed, total_steps,
-                self._steps_skipped, self._step_notes,
-                solo_drill_id=self._solo_drill_id, solo_exercise_id=self._solo_exercise_id,
-                total_balls=total_balls,
-            )
-            broadcast("training_ended", {"elapsed_sec": elapsed_sec, "history_id": history_id, "status": "stopped"})
+            update_run(self._history_id, elapsed_sec, "stopped",
+                       self._steps_completed, self._steps_skipped, self._step_notes, total_balls)
+            broadcast("training_ended", {"elapsed_sec": elapsed_sec, "history_id": self._history_id, "status": "stopped"})
         except Exception as e:
             logger.error("Training runner error: %s", e)
             elapsed_sec = int(time.monotonic() - start_time)
-            broadcast("training_ended", {"error": str(e)})
             total_balls = self._count_balls(steps)
-            record_run(
-                scenario.get("id"), self._player_id, elapsed_sec,
-                "error", self._steps_completed, total_steps,
-                self._steps_skipped, self._step_notes,
-                solo_drill_id=self._solo_drill_id, solo_exercise_id=self._solo_exercise_id,
-                total_balls=total_balls,
-            )
+            update_run(self._history_id, elapsed_sec, "error",
+                       self._steps_completed, self._steps_skipped, self._step_notes, total_balls)
+            broadcast("training_ended", {"error": str(e)})
         finally:
             self._stop_recording()
             try:

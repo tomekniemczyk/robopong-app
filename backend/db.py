@@ -175,6 +175,8 @@ def _migrate(c):
         c.execute("ALTER TABLE recordings_meta ADD COLUMN drill_id INTEGER")
     if "exercise_id" not in rec_cols:
         c.execute("ALTER TABLE recordings_meta ADD COLUMN exercise_id INTEGER")
+    if "training_history_id" not in rec_cols:
+        c.execute("ALTER TABLE recordings_meta ADD COLUMN training_history_id INTEGER")
 
 
 def _seed_drills(c):
@@ -480,11 +482,24 @@ def record_training_run(training_id, player_id, elapsed_sec, status,
         return cur.lastrowid
 
 
+def update_training_run(history_id: int, elapsed_sec: int, status: str,
+                        steps_completed: int, steps_skipped: list | None = None,
+                        step_notes: list | None = None, total_balls: int | None = None):
+    with sqlite3.connect(DB) as c:
+        c.execute(
+            "UPDATE training_history SET elapsed_sec=?, status=?, steps_completed=?, "
+            "steps_skipped=?, step_notes=?, total_balls=? WHERE id=?",
+            (elapsed_sec, status, steps_completed,
+             json.dumps(steps_skipped or []), json.dumps(step_notes or []),
+             total_balls, history_id)
+        )
+
+
 def get_training_history(training_id=None, player_id=None, limit=None, offset=0, solo_only=False):
     with sqlite3.connect(DB) as c:
         q = ("SELECT id, training_id, player_id, started_at, elapsed_sec, status, "
              "steps_completed, steps_total, steps_skipped, step_notes, session_comment, "
-             "solo_drill_id, solo_exercise_id, total_balls FROM training_history WHERE 1=1")
+             "solo_drill_id, solo_exercise_id, total_balls FROM training_history WHERE status != 'running'")
         params = []
         if training_id is not None:
             q += " AND training_id=?"; params.append(training_id)
@@ -665,30 +680,37 @@ def remove_favorite(player_id: int, item_type: str, item_id: int):
 
 def save_recording_meta(player_id, training_id, training_name, step_idx,
                         step_name, filename, duration_sec, size_bytes,
-                        drill_id=None, exercise_id=None):
+                        drill_id=None, exercise_id=None, training_history_id=None):
     with sqlite3.connect(DB) as c:
         c.execute(
             "INSERT INTO recordings_meta (player_id, training_id, training_name, step_idx, "
-            "step_name, filename, duration_sec, size_bytes, drill_id, exercise_id) VALUES (?,?,?,?,?,?,?,?,?,?)",
+            "step_name, filename, duration_sec, size_bytes, drill_id, exercise_id, training_history_id) "
+            "VALUES (?,?,?,?,?,?,?,?,?,?,?)",
             (player_id, training_id, training_name, step_idx, step_name,
-             filename, duration_sec, size_bytes, drill_id, exercise_id)
+             filename, duration_sec, size_bytes, drill_id, exercise_id, training_history_id)
         )
+
+
+def _rec_row(r):
+    return {"id": r[0], "player_id": r[1], "training_id": r[2], "training_name": r[3],
+            "step_idx": r[4], "step_name": r[5], "filename": r[6], "started_at": r[7],
+            "duration_sec": r[8], "size_bytes": r[9], "drill_id": r[10], "exercise_id": r[11],
+            "training_history_id": r[12] if len(r) > 12 else None}
+
+_REC_COLS = ("id, player_id, training_id, training_name, step_idx, step_name,"
+             " filename, started_at, duration_sec, size_bytes, drill_id, exercise_id,"
+             " training_history_id")
 
 
 def get_recordings_meta(player_id=None):
     with sqlite3.connect(DB) as c:
-        q = ("SELECT id, player_id, training_id, training_name, step_idx, step_name,"
-             " filename, started_at, duration_sec, size_bytes, drill_id, exercise_id"
-             " FROM recordings_meta")
+        q = f"SELECT {_REC_COLS} FROM recordings_meta"
         params = []
         if player_id is not None:
             q += " WHERE player_id=?"; params.append(player_id)
         q += " ORDER BY started_at DESC"
         rows = c.execute(q, params).fetchall()
-        return [{"id": r[0], "player_id": r[1], "training_id": r[2], "training_name": r[3],
-                 "step_idx": r[4], "step_name": r[5], "filename": r[6], "started_at": r[7],
-                 "duration_sec": r[8], "size_bytes": r[9], "drill_id": r[10], "exercise_id": r[11]}
-                for r in rows]
+        return [_rec_row(r) for r in rows]
 
 
 def get_comparable_recordings(training_id: int | None = None, step_idx: int | None = None,
@@ -696,9 +718,7 @@ def get_comparable_recordings(training_id: int | None = None, step_idx: int | No
                               exclude_filename: str | None = None):
     """Get comparable recordings — by drill_id/exercise_id or fallback to training_id+step_idx."""
     with sqlite3.connect(DB) as c:
-        q = ("SELECT id, player_id, training_id, training_name, step_idx, step_name,"
-             " filename, started_at, duration_sec, size_bytes, drill_id, exercise_id"
-             " FROM recordings_meta WHERE 1=1")
+        q = f"SELECT {_REC_COLS} FROM recordings_meta WHERE 1=1"
         params = []
         if drill_id is not None:
             q += " AND drill_id=?"; params.append(drill_id)
@@ -710,9 +730,7 @@ def get_comparable_recordings(training_id: int | None = None, step_idx: int | No
             q += " AND filename != ?"; params.append(exclude_filename)
         q += " ORDER BY started_at DESC"
         rows = c.execute(q, params).fetchall()
-        return [{"id": r[0], "player_id": r[1], "training_id": r[2], "training_name": r[3],
-                 "step_idx": r[4], "step_name": r[5], "filename": r[6], "started_at": r[7],
-                 "duration_sec": r[8], "size_bytes": r[9], "drill_id": r[10], "exercise_id": r[11]}
+        return [_rec_row(r)
                 for r in rows]
 
 

@@ -44,7 +44,8 @@ class Recorder:
 
     def start(self, player_id: int, training_id: int, training_name: str,
               step_idx: int, step_name: str,
-              drill_id: int | None = None, exercise_id: int | None = None):
+              drill_id: int | None = None, exercise_id: int | None = None,
+              training_history_id: int | None = None):
         if self.recording:
             self.stop()
 
@@ -84,6 +85,7 @@ class Recorder:
                 "started_at": self._start_time.isoformat(),
                 "drill_id": drill_id,
                 "exercise_id": exercise_id,
+                "training_history_id": training_history_id,
             }
             logger.info("Recording started: %s", filepath)
         except FileNotFoundError:
@@ -127,6 +129,7 @@ class Recorder:
                     meta["step_idx"], meta["step_name"], meta["filename"],
                     meta["duration_sec"], meta["size_bytes"],
                     drill_id=meta.get("drill_id"), exercise_id=meta.get("exercise_id"),
+                    training_history_id=meta.get("training_history_id"),
                 )
                 logger.info("Recording saved: %s (%.0fs)", self._current_file, duration)
         else:

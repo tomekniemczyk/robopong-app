@@ -3629,6 +3629,8 @@ const _app = createApp({
     }
 
     function getStepRecording(h, stepIdx) {
+      const byId = h.id ? playerRecordings.value.find(r => r.training_history_id === h.id && r.step_idx === stepIdx) : null
+      if (byId) return byId
       const hStart = new Date(h.started_at).getTime() - 30000
       const hEnd = hStart + (h.elapsed_sec + 90) * 1000
       return playerRecordings.value.find(r => {
@@ -4162,6 +4164,8 @@ const _app = createApp({
     }
 
     function histGetStepRec(h, stepIdx) {
+      const byId = h.id ? allRecordings.value.find(r => r.training_history_id === h.id && r.step_idx === stepIdx) : null
+      if (byId) return byId
       const hStart = new Date(h.started_at).getTime() - 30000
       const hEnd = hStart + (h.elapsed_sec + 90) * 1000
       return allRecordings.value.find(r => {
@@ -4171,6 +4175,7 @@ const _app = createApp({
     }
 
     function histHasRec(h) {
+      if (h.id && allRecordings.value.some(r => r.training_history_id === h.id)) return true
       const hStart = new Date(h.started_at).getTime() - 30000
       const hEnd = hStart + (h.elapsed_sec + 90) * 1000
       return allRecordings.value.some(r => {
@@ -4222,6 +4227,9 @@ const _app = createApp({
     const profileTree = computed(() => buildHistTree(playerHistory.value))
 
     function profileGetStepRec(h, stepIdx) {
+      // Direct match by training_history_id (new), fallback to time window (legacy)
+      const byId = h.id ? playerRecordings.value.find(r => r.training_history_id === h.id && r.step_idx === stepIdx) : null
+      if (byId) return byId
       const hStart = new Date(h.started_at).getTime() - 30000
       const hEnd = hStart + (h.elapsed_sec + 90) * 1000
       return playerRecordings.value.find(r => {
@@ -4230,6 +4238,7 @@ const _app = createApp({
       })
     }
     function profileHasRec(h) {
+      if (h.id && playerRecordings.value.some(r => r.training_history_id === h.id)) return true
       const hStart = new Date(h.started_at).getTime() - 30000
       const hEnd = hStart + (h.elapsed_sec + 90) * 1000
       return playerRecordings.value.some(r => {
