@@ -3629,8 +3629,8 @@ const _app = createApp({
     }
 
     function getStepRecording(h, stepIdx) {
-      const hStart = new Date(h.started_at).getTime()
-      const hEnd = hStart + (h.elapsed_sec + 60) * 1000
+      const hStart = new Date(h.started_at).getTime() - 30000
+      const hEnd = hStart + (h.elapsed_sec + 90) * 1000
       return playerRecordings.value.find(r => {
         const rStart = new Date(r.started_at).getTime()
         return r.step_idx === stepIdx && rStart >= hStart && rStart <= hEnd
@@ -4162,8 +4162,8 @@ const _app = createApp({
     }
 
     function histGetStepRec(h, stepIdx) {
-      const hStart = new Date(h.started_at).getTime()
-      const hEnd = hStart + (h.elapsed_sec + 60) * 1000
+      const hStart = new Date(h.started_at).getTime() - 30000
+      const hEnd = hStart + (h.elapsed_sec + 90) * 1000
       return allRecordings.value.find(r => {
         const rStart = new Date(r.started_at).getTime()
         return r.player_id === h.player_id && r.step_idx === stepIdx && rStart >= hStart && rStart <= hEnd
@@ -4171,8 +4171,8 @@ const _app = createApp({
     }
 
     function histHasRec(h) {
-      const hStart = new Date(h.started_at).getTime()
-      const hEnd = hStart + (h.elapsed_sec + 60) * 1000
+      const hStart = new Date(h.started_at).getTime() - 30000
+      const hEnd = hStart + (h.elapsed_sec + 90) * 1000
       return allRecordings.value.some(r => {
         const rStart = new Date(r.started_at).getTime()
         return r.player_id === h.player_id && rStart >= hStart && rStart <= hEnd
@@ -4222,16 +4222,16 @@ const _app = createApp({
     const profileTree = computed(() => buildHistTree(playerHistory.value))
 
     function profileGetStepRec(h, stepIdx) {
-      const hStart = new Date(h.started_at).getTime()
-      const hEnd = hStart + (h.elapsed_sec + 60) * 1000
+      const hStart = new Date(h.started_at).getTime() - 30000
+      const hEnd = hStart + (h.elapsed_sec + 90) * 1000
       return playerRecordings.value.find(r => {
         const rStart = new Date(r.started_at).getTime()
         return r.step_idx === stepIdx && rStart >= hStart && rStart <= hEnd
       })
     }
     function profileHasRec(h) {
-      const hStart = new Date(h.started_at).getTime()
-      const hEnd = hStart + (h.elapsed_sec + 60) * 1000
+      const hStart = new Date(h.started_at).getTime() - 30000
+      const hEnd = hStart + (h.elapsed_sec + 90) * 1000
       return playerRecordings.value.some(r => {
         const rStart = new Date(r.started_at).getTime()
         return rStart >= hStart && rStart <= hEnd
