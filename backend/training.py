@@ -229,10 +229,24 @@ class TrainingRunner:
                 exercise_id=exercise_id,
                 training_history_id=self._history_id,
             )
+            if self._broadcast:
+                self._broadcast("recording_started", {
+                    "step_idx": step_idx, "step_name": step_name,
+                    "training_history_id": self._history_id,
+                })
 
     def _stop_recording(self, skipped: bool = False):
         if self._recorder.recording:
-            self._recorder.stop(skipped=skipped)
+            meta = self._recorder.stop(skipped=skipped)
+            if meta and self._broadcast:
+                self._broadcast("recording_saved", {
+                    "filename": meta["filename"],
+                    "step_idx": meta["step_idx"],
+                    "step_name": meta["step_name"],
+                    "duration_sec": meta.get("duration_sec", 0),
+                    "training_history_id": meta.get("training_history_id"),
+                    "player_id": meta["player_id"],
+                })
 
     async def _run(self, scenario: dict, robot, broadcast: Callable):
         steps = scenario.get("steps", [])
@@ -247,6 +261,10 @@ class TrainingRunner:
             0, total_steps, solo_drill_id=self._solo_drill_id,
             solo_exercise_id=self._solo_exercise_id,
         )
+        broadcast("history_created", {
+            "history_id": self._history_id, "training_id": scenario.get("id"),
+            "player_id": self._player_id,
+        })
 
         try:
             # ── Countdown ────────────────────────────────────────
@@ -404,6 +422,8 @@ class TrainingRunner:
             update_run(self._history_id, elapsed_sec, "completed",
                        self._steps_completed, self._steps_skipped, self._step_notes, total_balls)
             broadcast("training_ended", {"elapsed_sec": elapsed_sec, "history_id": self._history_id})
+            broadcast("history_updated", {"history_id": self._history_id, "status": "completed",
+                       "elapsed_sec": elapsed_sec, "total_balls": total_balls, "player_id": self._player_id})
 
         except asyncio.CancelledError:
             elapsed_sec = int(time.monotonic() - start_time)
@@ -411,6 +431,8 @@ class TrainingRunner:
             update_run(self._history_id, elapsed_sec, "stopped",
                        self._steps_completed, self._steps_skipped, self._step_notes, total_balls)
             broadcast("training_ended", {"elapsed_sec": elapsed_sec, "history_id": self._history_id, "status": "stopped"})
+            broadcast("history_updated", {"history_id": self._history_id, "status": "stopped",
+                       "elapsed_sec": elapsed_sec, "total_balls": total_balls, "player_id": self._player_id})
         except Exception as e:
             logger.error("Training runner error: %s", e)
             elapsed_sec = int(time.monotonic() - start_time)
@@ -418,6 +440,8 @@ class TrainingRunner:
             update_run(self._history_id, elapsed_sec, "error",
                        self._steps_completed, self._steps_skipped, self._step_notes, total_balls)
             broadcast("training_ended", {"error": str(e)})
+            broadcast("history_updated", {"history_id": self._history_id, "status": "error",
+                       "elapsed_sec": elapsed_sec, "player_id": self._player_id})
         finally:
             self._stop_recording()
             try:
