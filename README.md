@@ -15,7 +15,7 @@ Aplikacja do sterowania robotami pingpongowymi, by **[tthub.pl](https://tthub.pl
 
 - **Backend:** FastAPI + Bleak (BLE) + pyserial (USB), port 8000 (dev) / 8001 (prod)
 - **Frontend:** Vue 3 CDN, `frontend/index.html`
-- **Serwer produkcyjny:** `192.168.1.45`
+- **Serwer produkcyjny:** `192.168.1.73`
 
 ## Jak uruchomić
 
