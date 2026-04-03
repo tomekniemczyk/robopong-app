@@ -32,6 +32,9 @@ class RobotTransport(ABC):
     def set_on_data(self, callback: Callable[[str], None]) -> None:
         pass  # default no-op, BLE overrides
 
+    def set_on_disconnect(self, callback: Callable[[], None]) -> None:
+        pass  # default no-op, BLE overrides
+
     @property
     @abstractmethod
     def is_connected(self) -> bool: ...

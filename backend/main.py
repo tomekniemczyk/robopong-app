@@ -306,11 +306,10 @@ async def ws_endpoint(ws: WebSocket):
         _broadcast_sessions()
 
 
-ROBOT_ACTIONS  = {"set_ball", "throw", "throw_ball", "run_scenario", "run_drill", "run_training", "begin_calibration", "run_drill_solo", "run_exercise_solo", "run_step_solo"}
+ROBOT_ACTIONS  = {"set_ball", "throw", "throw_ball", "run_scenario", "run_drill", "run_training", "begin_calibration", "run_drill_solo", "run_exercise_solo", "run_step_solo", "stop_training", "pause_training", "resume_training", "skip_training"}
 STANDBY_SECS   = 5 * 60
 _last_activity: float = 0.0
 _training_runner = training.TrainingRunner()
-_robot_queue: asyncio.Queue | None = None  # Command queue — set per active WS session
 
 
 async def _handle(msg: dict, ws: WebSocket):
@@ -408,9 +407,9 @@ async def _handle(msg: dict, ws: WebSocket):
 
     elif action == "begin_calibration":
         _log("Begin calibration — V (reset head)")
-        await robot.write_raw("V")
+        await robot.reset_head()
         await asyncio.sleep(0.5)
-        await robot.write_raw("V")
+        await robot.reset_head()
 
     elif action == "run_scenario":
         s = db.get_scenario(msg["id"])
@@ -544,6 +543,10 @@ async def _handle(msg: dict, ws: WebSocket):
 
     elif action == "set_simulation":
         enabled = msg.get("enabled", False)
+        ctrl = _get_controller()
+        if enabled and ctrl and ctrl is not sess:
+            await _send(ws, "error", {"message": "Inny użytkownik kontroluje robota"})
+            return
         if enabled:
             robot.enable_simulation()
         else:

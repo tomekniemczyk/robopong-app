@@ -23,8 +23,25 @@ class Robot:
         self._health_task: Optional[asyncio.Task] = None
         self._awaiting_version: bool = False
         self._fw_buffer:   str = ""
-        self._emit = on_event or (lambda *_: None)
+        self._on_event = on_event or (lambda *_: None)
+        self._listeners: List[Callable] = []
         self.left_handed: bool = False
+
+    # ── listener API ──────────────────────────────────────────────────────────
+
+    def _emit(self, event_type: str, data: dict):
+        self._on_event(event_type, data)
+        for cb in self._listeners:
+            cb(event_type, data)
+
+    def add_listener(self, callback: Callable):
+        self._listeners.append(callback)
+
+    def remove_listener(self, callback: Callable):
+        try:
+            self._listeners.remove(callback)
+        except ValueError:
+            pass
 
     # ── discovery ─────────────────────────────────────────────────────────────
 
@@ -162,9 +179,9 @@ class Robot:
         if self.is_simulation:
             audio.play("sim_motor_stop")
 
-    async def write_raw(self, cmd: str):
-        """Public method for sending raw commands (replaces _write in callers)."""
-        await self._write(cmd)
+    async def reset_head(self):
+        """Send head reset command (V) for calibration."""
+        await self._write("V")
 
     async def apply_calibration(self, cal: dict):
         top = cal.get("top_speed", 161)

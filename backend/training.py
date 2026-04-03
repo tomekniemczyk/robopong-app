@@ -339,21 +339,17 @@ class TrainingRunner:
                 if self._stopped: return
 
                 drill_done = asyncio.Event()
-                original_emit = robot._emit
 
-                def _make_interceptor(si, dn):
-                    def _intercept(event_type, data):
-                        original_emit(event_type, data)
-                        if event_type == "drill_progress":
-                            broadcast("training_drill_progress", {
-                                **data, "step": si + 1, "total_steps": total_steps,
-                                "drill_name": dn, "est_remaining_sec": est_remaining,
-                            })
-                        elif event_type == "drill_ended":
-                            drill_done.set()
-                    return _intercept
+                def _on_drill_event(event_type, data):
+                    if event_type == "drill_progress":
+                        broadcast("training_drill_progress", {
+                            **data, "step": step_idx + 1, "total_steps": total_steps,
+                            "drill_name": drill_name, "est_remaining_sec": est_remaining,
+                        })
+                    elif event_type == "drill_ended":
+                        drill_done.set()
 
-                robot._emit = _make_interceptor(step_idx, drill_name)
+                robot.add_listener(_on_drill_event)
                 await robot.run_drill(drill["balls"], repeat=0, count=count, percent=percent, skip_warmup=ball_preloaded)
                 ball_preloaded = False
 
@@ -371,7 +367,7 @@ class TrainingRunner:
                     await robot.stop()
                     self._steps_skipped.append(step_idx)
 
-                robot._emit = original_emit
+                robot.remove_listener(_on_drill_event)
                 self._stop_recording(skipped=skipped)
 
                 if self._stopped: return
