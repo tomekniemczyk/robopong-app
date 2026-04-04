@@ -680,140 +680,121 @@
     </div>
   </div>
 
-  <!-- ── Wizard kalibracji ────────────────────────────────────────────── -->
+  <!-- ── Wizard kalibracji (tap-on-table) ──────────────────────────────── -->
   <div v-if="wizActive" class="wizard-overlay">
-    <!-- Header + progress -->
-    <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
+    <!-- Header -->
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
       <div style="flex:1">
         <div style="font-size:16px;font-weight:700">🧙 {{ t('wizard.title') }}</div>
         <div style="font-size:12px;color:var(--muted)">
-          {{ t('wizard.step') }} {{ wizPhase + 1 }}/3:
-          {{ wizPhase === 0 ? (t('wizard.phase_height')) : wizPhase === 1 ? (t('wizard.phase_osc')) : (t('wizard.phase_speed')) }}
+          {{ t('wizard.throw_n') }} #{{ wizThrows }} · H={{ cal.height }} · Osc={{ cal.oscillation }} · Spd={{ cal.top_speed }}
         </div>
       </div>
-      <button class="btn btn-ghost" style="font-size:11px;padding:4px 10px" @click="wizCancel">🔧 {{ t('wizard.manual') }}</button>
-    </div>
-    <!-- Progress bar 3-segment -->
-    <div style="display:flex;gap:4px;margin-bottom:16px">
-      <div v-for="i in 3" :key="i" style="flex:1;height:6px;border-radius:3px" :style="{background: i-1 < wizPhase ? 'var(--accent)' : i-1 === wizPhase ? '#ff9f0a' : 'var(--border)'}"></div>
-    </div>
-
-    <!-- SVG stołu z trail -->
-    <svg viewBox="0 0 300 280" style="width:100%;max-width:320px;margin:0 auto 12px;display:block">
-      <!-- Robot -->
-      <rect x="120" y="2" width="60" height="8" rx="3" fill="#3a3d52" stroke="#6b6f8a" stroke-width="0.5"/>
-      <text x="150" y="8" text-anchor="middle" fill="#6b6f8a" font-size="5">ROBOT</text>
-      <!-- Siatka -->
-      <rect x="0" y="12" width="300" height="5" rx="1.5" fill="#555"/>
-      <!-- Stół -->
-      <rect x="0" y="17" width="300" height="210" fill="#1a4a8a"/>
-      <rect x="0" y="17" width="300" height="210" fill="none" stroke="#fff" stroke-width="2"/>
-      <line x1="150" y1="17" x2="150" y2="227" stroke="#fff" stroke-width="1" opacity="0.4"/>
-      <!-- Linia środkowa (siatka na stole) -->
-      <line x1="0" y1="122" x2="300" y2="122" stroke="#fff" stroke-width="1" opacity="0.3"/>
-      <!-- Strefa celowa: koniec stołu po stronie gracza -->
-      <rect x="20" y="190" width="260" height="30" rx="4" fill="none" stroke="#34c759" stroke-width="1.5" stroke-dasharray="6,3" opacity="0.5"/>
-      <text x="150" y="208" text-anchor="middle" fill="#34c759" font-size="7" opacity="0.6">{{ t('wizard.target_zone') }}</text>
-      <!-- Trail (zanikające) -->
-      <circle v-for="(t, ti) in wizTrail" :key="ti"
-        :cx="20 + (173 - Math.max(127, Math.min(173, t.oscillation))) / 46 * 260"
-        :cy="17 + (Math.max(75, Math.min(210, t.height)) - 75) / 135 * 210"
-        r="8" fill="none" stroke="#fff" :stroke-width="1"
-        :opacity="0.15 + ti * 0.1"/>
-      <!-- Aktualna pozycja -->
-      <circle
-        :cx="20 + (173 - Math.max(127, Math.min(173, cal.oscillation))) / 46 * 260"
-        :cy="17 + (Math.max(75, Math.min(210, cal.height)) - 75) / 135 * 210"
-        r="12" fill="#ff9f0a" stroke="#fff" stroke-width="2" opacity="0.9">
-        <animate attributeName="r" values="10;14;10" dur="1s" repeatCount="indefinite"/>
-      </circle>
-      <!-- Oś kalibracji -->
-      <line v-if="wizPhase === 0" x1="0" y1="122" x2="300" y2="122" stroke="#ff9f0a" stroke-width="1.5" stroke-dasharray="6,4" opacity="0.5"/>
-      <line v-if="wizPhase === 1" x1="150" y1="17" x2="150" y2="227" stroke="#ff9f0a" stroke-width="1.5" stroke-dasharray="6,4" opacity="0.5"/>
-      <!-- Etykiety -->
-      <text x="15" y="240" fill="#6b8ab5" font-size="9" opacity="0.6">{{ isLeftHanded ? 'FH' : 'BH' }}</text>
-      <text x="275" y="240" fill="#6b8ab5" font-size="9" opacity="0.6">{{ isLeftHanded ? 'BH' : 'FH' }}</text>
-      <!-- Gracz -->
-      <g transform="translate(150,258)" opacity="0.5">
-        <circle cx="0" cy="-8" r="4" fill="none" stroke="#ccc" stroke-width="1.2"/>
-        <line x1="0" y1="-4" x2="0" y2="4" stroke="#ccc" stroke-width="1.2"/>
-        <line x1="0" y1="4" x2="-4" y2="10" stroke="#ccc" stroke-width="1.2"/>
-        <line x1="0" y1="4" x2="4" y2="10" stroke="#ccc" stroke-width="1.2"/>
-      </g>
-    </svg>
-
-    <!-- Status -->
-    <div style="font-size:11px;color:var(--muted);text-align:center;margin-bottom:12px">
-      {{ t('wizard.throw_n') }} #{{ wizThrows }} ·
-      {{ wizPhase === 0 ? 'H' : wizPhase === 1 ? 'Osc' : 'Speed' }}={{ cal[WIZARD_PHASES[wizPhase].key] }} ·
-      {{ t('wizard.step_size') }}: {{ wizStep }}
+      <button class="btn btn-ghost" style="font-size:11px;padding:4px 10px" @click="wizCancel">{{ t('wizard.manual') }}</button>
     </div>
 
     <!-- Warmup countdown -->
-    <div v-if="wizState === 'warmup'" style="text-align:center;padding:20px 0">
-      <div style="font-size:48px;font-weight:800;color:#ff9f0a">{{ wizWarmup }}</div>
+    <div v-if="wizState === 'warmup'" style="text-align:center;padding:40px 0">
+      <div style="font-size:64px;font-weight:800;color:#ff9f0a">{{ wizWarmup }}</div>
       <div style="font-size:14px;color:var(--muted)">{{ t('wizard.warmup') }}</div>
     </div>
 
-    <!-- Throw button -->
+    <!-- SVG stołu — klikalny -->
+    <svg v-if="wizState !== 'warmup' && wizState !== 'complete'"
+      viewBox="0 0 300 360" style="width:100%;max-width:340px;margin:0 auto 8px;display:block;cursor:crosshair"
+      @click="wizTableClick($event)">
+
+      <!-- Robot -->
+      <rect x="115" y="2" width="70" height="10" rx="4" fill="#3a3d52" stroke="#6b6f8a" stroke-width="0.5"/>
+      <text x="150" y="9" text-anchor="middle" fill="#6b6f8a" font-size="5.5">ROBOT</text>
+
+      <!-- Strefa "SIATKA" (dotknięcie = trafił w siatkę) -->
+      <rect x="0" y="14" width="300" height="8" rx="2" fill="#555" opacity="0.8"/>
+      <text x="150" y="20" text-anchor="middle" fill="#aaa" font-size="5">NET</text>
+
+      <!-- Stół — główna powierzchnia -->
+      <rect x="0" y="22" width="300" height="260" fill="#1a4a8a"/>
+      <rect x="0" y="22" width="300" height="260" fill="none" stroke="#fff" stroke-width="2"/>
+      <!-- Linia środkowa (siatka) -->
+      <line x1="0" y1="152" x2="300" y2="152" stroke="#fff" stroke-width="1" opacity="0.25"/>
+      <!-- Linia pionowa -->
+      <line x1="150" y1="22" x2="150" y2="282" stroke="#fff" stroke-width="0.5" opacity="0.2"/>
+
+      <!-- Strefa celowa: ~85% w dół stołu (10-15cm od końca) -->
+      <ellipse cx="150" cy="243" rx="40" ry="16" fill="none" stroke="#34c759" stroke-width="1.5" stroke-dasharray="5,3" opacity="0.5">
+        <animate attributeName="rx" values="38;42;38" dur="2s" repeatCount="indefinite"/>
+      </ellipse>
+      <text x="150" y="247" text-anchor="middle" fill="#34c759" font-size="7" opacity="0.5">{{ t('wizard.target_zone') }}</text>
+
+      <!-- Trail (zanikające, ostatnie 8) -->
+      <circle v-for="(pt, i) in wizTrail" :key="i"
+        :cx="pt.svgX" :cy="pt.svgY"
+        r="5" fill="none" :stroke="pt.good ? '#34c759' : '#ff453a'" stroke-width="1"
+        :opacity="0.15 + i * 0.08"/>
+
+      <!-- Ostatni tap — wyraźny -->
+      <g v-if="wizLastTap">
+        <circle :cx="wizLastTap.svgX" :cy="wizLastTap.svgY" r="8" fill="#ff9f0a" opacity="0.7">
+          <animate attributeName="r" values="6;10;6" dur="0.8s" repeatCount="indefinite"/>
+        </circle>
+        <line :x1="wizLastTap.svgX - 12" :y1="wizLastTap.svgY" :x2="wizLastTap.svgX + 12" :y2="wizLastTap.svgY" stroke="#fff" stroke-width="0.8" opacity="0.5"/>
+        <line :x1="wizLastTap.svgX" :y1="wizLastTap.svgY - 12" :x2="wizLastTap.svgX" :y2="wizLastTap.svgY + 12" stroke="#fff" stroke-width="0.8" opacity="0.5"/>
+      </g>
+
+      <!-- Etykiety FH/BH -->
+      <text x="15" y="296" fill="#6b8ab5" font-size="9" opacity="0.6">{{ isLeftHanded ? 'FH' : 'BH' }}</text>
+      <text x="275" y="296" fill="#6b8ab5" font-size="9" opacity="0.6">{{ isLeftHanded ? 'BH' : 'FH' }}</text>
+
+      <!-- Strefa "ZA STOŁEM" -->
+      <rect x="0" y="284" width="300" height="30" fill="rgba(255,69,58,0.08)"/>
+      <text x="150" y="303" text-anchor="middle" fill="#ff453a" font-size="7" opacity="0.4">{{ t('wizard.too_far') }}</text>
+
+      <!-- Gracz -->
+      <g transform="translate(150,340)" opacity="0.4">
+        <circle cx="0" cy="-8" r="4.5" fill="none" stroke="#ccc" stroke-width="1.2"/>
+        <line x1="0" y1="-3" x2="0" y2="5" stroke="#ccc" stroke-width="1.2"/>
+        <line x1="0" y1="5" x2="-5" y2="12" stroke="#ccc" stroke-width="1.2"/>
+        <line x1="0" y1="5" x2="5" y2="12" stroke="#ccc" stroke-width="1.2"/>
+      </g>
+    </svg>
+
+    <!-- Prompt / instrukcja -->
     <div v-if="wizState === 'ready'" style="text-align:center">
       <button class="btn btn-success" style="width:100%;padding:18px;font-size:18px;font-weight:700" @click="wizThrow">
         🎯 {{ t('wizard.throw_btn') }}
       </button>
     </div>
-
-    <!-- Feedback buttons -->
-    <div v-if="wizState === 'waiting'" style="text-align:center">
-      <div style="font-size:14px;font-weight:600;margin-bottom:10px">{{ t('wizard.where') }}</div>
-
-      <!-- Phase 1: Height -->
-      <div v-if="wizPhase === 0" style="display:flex;flex-direction:column;gap:8px">
-        <button class="btn" style="padding:16px;font-size:15px;background:#34c759;color:#fff" @click="wizFeedback(1)">↑ {{ t('wizard.too_short') }}</button>
-        <button class="btn" style="padding:16px;font-size:15px;background:var(--accent);color:#fff" @click="wizFeedback(0)">✓ {{ t('wizard.on_table') }}</button>
-        <button class="btn" style="padding:16px;font-size:15px;background:#ef4444;color:#fff" @click="wizFeedback(-1)">↓ {{ t('wizard.too_far') }}</button>
-        <button class="btn btn-ghost" style="padding:10px;font-size:12px;color:var(--muted)" @click="wizFeedback('miss')">{{ t('wizard.missed') }}</button>
-      </div>
-
-      <!-- Phase 2: Oscillation -->
-      <div v-if="wizPhase === 1" style="display:flex;flex-direction:column;gap:8px">
-        <button class="btn" style="padding:16px;font-size:15px;background:#4dabf7;color:#fff" @click="wizFeedback(-1)">← {{ t('wizard.too_left') }}</button>
-        <button class="btn" style="padding:16px;font-size:15px;background:var(--accent);color:#fff" @click="wizFeedback(0)">✓ {{ t('wizard.centered') }}</button>
-        <button class="btn" style="padding:16px;font-size:15px;background:#ff6b35;color:#fff" @click="wizFeedback(1)">→ {{ t('wizard.too_right') }}</button>
-        <button class="btn btn-ghost" style="padding:10px;font-size:12px;color:var(--muted)" @click="wizFeedback('miss')">{{ t('wizard.missed') }}</button>
-      </div>
-
-      <!-- Phase 3: Speed -->
-      <div v-if="wizPhase === 2" style="display:flex;flex-direction:column;gap:8px">
-        <button class="btn" style="padding:16px;font-size:15px;background:#ef4444;color:#fff" @click="wizFeedback(-1)">↑ {{ t('wizard.too_fast') }}</button>
-        <button class="btn" style="padding:16px;font-size:15px;background:var(--accent);color:#fff" @click="wizFeedback(0)">✓ {{ t('wizard.good_speed') }}</button>
-        <button class="btn" style="padding:16px;font-size:15px;background:#34c759;color:#fff" @click="wizFeedback(1)">↓ {{ t('wizard.too_slow') }}</button>
-        <button class="btn btn-ghost" style="padding:10px;font-size:12px;color:var(--muted)" @click="wizFeedback('miss')">{{ t('wizard.missed') }}</button>
-      </div>
+    <div v-if="wizState === 'tap_table'" style="text-align:center">
+      <div style="font-size:15px;font-weight:600;color:#ff9f0a;margin-bottom:8px">{{ t('wizard.tap_prompt') }}</div>
+      <button class="btn btn-ghost" style="font-size:12px;padding:6px 14px;color:var(--muted)" @click="wizMissed">{{ t('wizard.missed') }}</button>
+    </div>
+    <div v-if="wizState === 'throwing'" style="text-align:center;padding:12px 0">
+      <div style="font-size:14px;color:var(--muted)">{{ t('wizard.observe') }}…</div>
     </div>
 
-    <!-- Phase done -->
-    <div v-if="wizState === 'phase_done'" style="text-align:center;padding:16px 0">
-      <div style="font-size:32px;margin-bottom:8px">✅</div>
-      <div style="font-size:16px;font-weight:700;margin-bottom:4px">
-        {{ wizPhase === 0 ? (t('wizard.phase_height')) : wizPhase === 1 ? (t('wizard.phase_osc')) : (t('wizard.phase_speed')) }}
-        {{ t('wizard.calibrated') }}
-      </div>
-      <div style="font-size:13px;color:var(--muted);margin-bottom:16px">{{ cal[WIZARD_PHASES[wizPhase].key] }}</div>
-      <button class="btn btn-success" style="width:100%;padding:14px;font-size:15px" @click="wizNextPhase">
-        {{ wizPhase < 2 ? (t('wizard.next_phase')) : (t('wizard.finish')) }}
+    <!-- Finish -->
+    <div style="margin-top:12px;display:flex;gap:8px" v-if="wizState === 'ready' || wizState === 'tap_table'">
+      <button class="btn btn-ghost" style="flex:1;padding:10px;font-size:12px" @click="wizCancel">{{ t('btn.cancel') }}</button>
+      <button class="btn btn-success" style="flex:1;padding:10px;font-size:13px;font-weight:700" @click="wizFinishPrompt">
+        {{ t('wizard.finish') }}
       </button>
     </div>
 
-    <!-- All complete -->
+    <!-- Save dialog -->
     <div v-if="wizState === 'complete'" style="text-align:center;padding:16px 0">
       <div style="font-size:48px;margin-bottom:8px">🎉</div>
-      <div style="font-size:18px;font-weight:700;margin-bottom:8px">{{ t('wizard.done') }}</div>
-      <div style="font-size:12px;color:var(--muted);margin-bottom:16px">
-        H={{ cal.height }} · Osc={{ cal.oscillation }} · Speed={{ cal.top_speed }} · {{ wizThrows }} {{ t('wizard.throws') }}
+      <div style="font-size:18px;font-weight:700;margin-bottom:4px">{{ t('wizard.done') }}</div>
+      <div style="font-size:12px;color:var(--muted);margin-bottom:12px">
+        H={{ cal.height }} · Osc={{ cal.oscillation }} · Spd={{ cal.top_speed }} · {{ wizThrows }} {{ t('wizard.throws') }}
       </div>
-      <button class="btn btn-success" style="width:100%;padding:14px;font-size:15px" @click="wizFinish">
-        💾 {{ t('wizard.save') }}
-      </button>
+      <div style="margin-bottom:12px">
+        <div style="font-size:12px;color:var(--muted);margin-bottom:4px">{{ t('wizard.preset_label') }}</div>
+        <input v-model="wizPresetName" style="width:100%;padding:10px;border-radius:8px;border:1px solid var(--border);background:var(--surface);color:var(--text);font-size:13px" />
+      </div>
+      <div style="display:flex;gap:8px">
+        <button class="btn btn-ghost" style="flex:1;padding:12px" @click="wizFinishDefault">{{ t('wizard.save_default') }}</button>
+        <button class="btn btn-success" style="flex:1;padding:12px;font-weight:700" @click="wizFinishNamed">{{ t('wizard.save_named') }}</button>
+      </div>
     </div>
   </div>
 
@@ -4695,42 +4676,44 @@ const _app = createApp({
         }
       }, 10000)
     }
-    // ── Calibration Wizard ──────────────────────────────────
-    const WIZARD_PHASES = [
-      { key: 'height', step0: 12, minStep: 2, min: 75, max: 210 },
-      { key: 'oscillation', step0: 6, minStep: 2, min: 127, max: 173 },
-      { key: 'top_speed', step0: 10, minStep: 2, min: 40, max: 249 },
-    ]
+    // ── Calibration Wizard (tap-on-table) ─────────────────────
+    // SVG: table area y=22..282 (260px for 274cm), x=0..300 (300px for 152.5cm)
+    // Target: center (x=0.5), ~85% down table (10-15cm from player end)
+    const WIZ_TARGET_Y = 0.85
+    const WIZ_TABLE_Y0 = 22, WIZ_TABLE_H = 260, WIZ_NET_Y = 14, WIZ_SVG_W = 300
+
     const wizActive = ref(false)
-    const wizPhase = ref(0)
-    const wizState = ref('idle') // idle|warmup|ready|waiting|phase_done|complete
-    const wizStep = ref(16)
-    const wizLastDir = ref(0)
+    const wizState = ref('idle') // idle|warmup|ready|throwing|tap_table|complete
     const wizThrows = ref(0)
-    const wizTrail = ref([])
+    const wizTrail = ref([])     // [{svgX, svgY, good}]
+    const wizLastTap = ref(null) // {svgX, svgY}
     const wizWarmup = ref(0)
+    const wizPresetName = ref('')
     let _wizKeepAlive = null
+
+    function _wizNormToSvg(nx, ny) {
+      return { svgX: nx * WIZ_SVG_W, svgY: WIZ_TABLE_Y0 + ny * WIZ_TABLE_H }
+    }
 
     async function wizStart() {
       wizActive.value = true
-      wizPhase.value = 0
       wizThrows.value = 0
       wizTrail.value = []
-      wizLastDir.value = 0
-      wizStep.value = WIZARD_PHASES[0].step0
+      wizLastTap.value = null
       cal.top_speed = 120
       cal.bot_speed = 0
       cal.oscillation = 150
       cal.height = 190
       cal.rotation = 150
       cal.wait_ms = 3000
+      wizPresetName.value = ''
       wizState.value = 'warmup'
       clearTimeout(_calIdleTimer)
       send({ action: 'begin_calibration' })
       await new Promise(r => setTimeout(r, 500))
       send({ action: 'set_ball', ball: { ...cal } })
       _calMotorsRunning = true
-      wizWarmup.value = 5
+      wizWarmup.value = 2
       const iv = setInterval(() => {
         wizWarmup.value--
         if (wizWarmup.value <= 0) { clearInterval(iv); wizState.value = 'ready' }
@@ -4749,63 +4732,117 @@ const _app = createApp({
     async function wizThrow() {
       if (_wizBusy) return
       _wizBusy = true
-      wizState.value = 'waiting'
+      wizState.value = 'throwing'
       clearTimeout(_calIdleTimer)
       send({ action: 'throw_ball', ball: { ...cal } })
       _calMotorsRunning = true
       wizThrows.value++
-      await new Promise(r => setTimeout(r, 2000))
+      await new Promise(r => setTimeout(r, 1500))
+      wizState.value = 'tap_table'
       _wizBusy = false
     }
 
-    function wizFeedback(dir) {
-      clearTimeout(_calIdleTimer)
-      const ph = WIZARD_PHASES[wizPhase.value]
-      if (dir === 0) {
-        if (wizStep.value <= ph.minStep) {
-          wizState.value = 'phase_done'
-          return
-        }
-        wizStep.value = Math.max(Math.floor(wizStep.value / 2), ph.minStep)
-        send({ action: 'set_ball', ball: { ...cal } })
-        _calMotorsRunning = true
-        wizState.value = 'ready'
-        return
-      }
-      if (dir === 'miss') {
-        const d = wizLastDir.value || 1
-        cal[ph.key] += d * wizStep.value * 2
-      } else {
-        if (wizLastDir.value !== 0 && dir !== wizLastDir.value) {
-          wizStep.value = Math.max(Math.floor(wizStep.value / 2), ph.minStep)
-        }
-        cal[ph.key] += dir * wizStep.value
-        wizLastDir.value = dir
-      }
-      cal[ph.key] = Math.max(ph.min, Math.min(ph.max, cal[ph.key]))
-      wizTrail.value.push({ oscillation: cal.oscillation, height: cal.height })
-      if (wizTrail.value.length > 5) wizTrail.value.shift()
+    function wizTableClick(evt) {
+      if (wizState.value !== 'tap_table') return
+      const svg = evt.currentTarget
+      const rect = svg.getBoundingClientRect()
+      const svgX = (evt.clientX - rect.left) / rect.width * 300
+      const svgY = (evt.clientY - rect.top) / rect.height * 360
+
+      // Normalize to table surface: ny=0 at net, ny=1 at player end
+      let nx = svgX / WIZ_SVG_W
+      let ny = (svgY - WIZ_TABLE_Y0) / WIZ_TABLE_H
+
+      // Allow slightly beyond table for "off-table" taps
+      nx = Math.max(-0.05, Math.min(1.05, nx))
+      // ny < 0 = net zone, ny > 1 = past table
+      ny = Math.max(-0.15, Math.min(1.15, ny))
+
+      // Apply auto-correction
+      _wizAutoCorrect(nx, ny)
+
+      // Record tap
+      const tapSvg = { svgX: Math.max(0, Math.min(300, svgX)), svgY: Math.max(14, Math.min(320, svgY)) }
+      const deltaX = Math.abs(nx - 0.5)
+      const deltaY = Math.abs(ny - WIZ_TARGET_Y)
+      const good = deltaX < 0.08 && deltaY < 0.08
+      wizLastTap.value = tapSvg
+      wizTrail.value.push({ ...tapSvg, good })
+      if (wizTrail.value.length > 8) wizTrail.value.shift()
+
+      // Send updated ball params
       send({ action: 'set_ball', ball: { ...cal } })
       _calMotorsRunning = true
       wizState.value = 'ready'
     }
 
-    function wizNextPhase() {
-      const next = wizPhase.value + 1
-      if (next >= WIZARD_PHASES.length) {
-        wizState.value = 'complete'
-        return
+    function _wizAutoCorrect(nx, ny) {
+      const deltaX = nx - 0.5           // >0 = ball right, <0 = ball left
+      const deltaY = ny - WIZ_TARGET_Y  // >0 = too long, <0 = too short
+
+      const CLOSE_X = 0.07   // ~10cm of 152.5cm
+      const CLOSE_Y = 0.06   // ~16cm of 274cm
+      const DEAD = 0.025     // dead zone — no correction
+
+      // Lateral: oscillation (higher osc = more left from robot POV)
+      // If ball lands right of center, we need less oscillation
+      if (Math.abs(deltaX) > DEAD) {
+        const step = Math.abs(deltaX) > CLOSE_X ? 5 : 1
+        const dir = isLeftHanded.value ? 1 : -1  // mirror for lefties
+        cal.oscillation += Math.sign(deltaX) * step * dir
+        cal.oscillation = Math.max(127, Math.min(173, cal.oscillation))
       }
-      wizPhase.value = next
-      wizStep.value = WIZARD_PHASES[next].step0
-      wizLastDir.value = 0
+
+      // Depth: height (higher = ball goes further)
+      // Too short (ny < target) → increase height; too long → decrease
+      if (Math.abs(deltaY) > DEAD) {
+        const step = Math.abs(deltaY) > CLOSE_Y ? 5 : 1
+        if (ny < -0.05) {
+          // Hit the net — big correction
+          cal.height = Math.min(210, cal.height + 8)
+        } else {
+          cal.height += Math.sign(-deltaY) * step  // short → increase, long → decrease
+        }
+        cal.height = Math.max(75, Math.min(210, cal.height))
+      }
+    }
+
+    function wizMissed() {
+      // Ball completely missed — big height increase
+      cal.height = Math.min(210, cal.height + 8)
+      send({ action: 'set_ball', ball: { ...cal } })
+      _calMotorsRunning = true
       wizState.value = 'ready'
     }
 
-    async function wizFinish() {
+    function wizFinishPrompt() {
       send({ action: 'stop' })
       _calMotorsRunning = false
+      const mac = lastAddr.value || device.value || ''
+      const base = robotName.value || 'Robopong 3050XL'
+      wizPresetName.value = mac ? `${base} (${mac.slice(-5)})` : base
+      wizState.value = 'complete'
+    }
+
+    async function wizFinishDefault() {
       clearInterval(_wizKeepAlive)
+      await calDone()
+      wizActive.value = false
+      wizState.value = 'idle'
+      showToast(t('toast.cal_saved'))
+    }
+
+    async function wizFinishNamed() {
+      clearInterval(_wizKeepAlive)
+      const name = wizPresetName.value.trim()
+      if (name) {
+        await fetch('/api/presets', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ name, ...cal, is_default: false }),
+        })
+        await loadPresets()
+      }
       await calDone()
       wizActive.value = false
       wizState.value = 'idle'
@@ -5136,8 +5173,8 @@ const _app = createApp({
       deleteScenario, openEditor, addBall, removeBall, saveScenario,
       clamp, clampCal,
       calStep, calSend, calThrow, calStop, calSetup, calReset, loadCal,
-      wizActive, wizPhase, wizState, wizStep, wizThrows, wizTrail, wizWarmup, WIZARD_PHASES,
-      wizStart, wizThrow, wizFeedback, wizNextPhase, wizFinish, wizCancel,
+      wizActive, wizState, wizThrows, wizTrail, wizLastTap, wizWarmup, wizPresetName,
+      wizStart, wizThrow, wizTableClick, wizMissed, wizFinishPrompt, wizFinishDefault, wizFinishNamed, wizCancel,
       presets, savePreset, updatePreset, loadPreset, setDefaultPreset, deletePreset,
       calDone, importCalRef, exportCalibration, importCalibration, showToast,
       expParams, expCount, expInterval, expBounce1, expBounce2, expClickPhase, expSpin, expArc, expSpd, expUseful, expRating, expComment, expHistory,
