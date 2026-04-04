@@ -208,8 +208,9 @@ class Robot:
         min_wait_ms = 500 if len(balls) == 1 else 750
 
         async def _loop():
+            first_ball_ready = False
             if not skip_warmup:
-                # Spin up motors immediately, 2-second countdown while warming up
+                # Spin up motors with first ball params, countdown while warming up
                 b0 = balls[0]
                 await self._write("H")
                 await asyncio.sleep(0.1)
@@ -218,6 +219,7 @@ class Robot:
                     if emit_countdown:
                         self._emit("drill_countdown", {"sec": sec})
                     await asyncio.sleep(1.0)
+                first_ball_ready = True
 
             run = 0
             thrown = 0
@@ -228,8 +230,11 @@ class Robot:
                             return
                         raw_wait = b.get("wait_ms", 1500)
                         adj_wait = max(min_wait_ms, int(raw_wait * (100 + (100 - percent)) / 100))
-                        await self.set_ball(b["top_speed"], b["bot_speed"], b["oscillation"], b["height"], b["rotation"], adj_wait)
-                        await asyncio.sleep(0.15)
+                        if first_ball_ready:
+                            first_ball_ready = False
+                        else:
+                            await self.set_ball(b["top_speed"], b["bot_speed"], b["oscillation"], b["height"], b["rotation"], adj_wait)
+                            await asyncio.sleep(0.15)
                         await self.throw()
                         thrown += 1
                         self._emit("drill_progress", {
