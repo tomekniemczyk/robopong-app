@@ -513,6 +513,8 @@ window.I18N = {
   'tooltip.delete_rec':  { pl:'Usuń nagranie',     en:'Delete recording',   de:'Aufnahme löschen',      fr:'Supprimer l\'enregistrement', zh:'删除录像' },
   'tooltip.delete_session':{ pl:'Usuń sesję',      en:'Delete session',     de:'Sitzung löschen',       fr:'Supprimer la session',    zh:'删除会话' },
   'tooltip.resume':      { pl:'Wznów trening',     en:'Resume training',    de:'Training fortsetzen',   fr:'Reprendre',               zh:'恢复训练' },
+  'tooltip.go_to_drill':    { pl:'Przejdź do drilla',    en:'Go to drill',    de:'Zum Drill',    fr:'Aller au drill',    zh:'前往训练' },
+  'tooltip.go_to_exercise': { pl:'Przejdź do ćwiczenia', en:'Go to exercise', de:'Zur Übung',    fr:'Aller à l\'exercice', zh:'前往练习' },
 
   // ── History tab ───────────────────────────────────────────────────
   'nav.history':         { pl:'Historia',           en:'History',            de:'Verlauf',               fr:'Historique',              zh:'历史' },
