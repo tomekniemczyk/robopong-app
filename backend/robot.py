@@ -281,21 +281,28 @@ class Robot:
     # ── internal ──────────────────────────────────────────────────────────────
 
     async def _handshake(self):
+        # Phase 1: Init — Z×3 + H (like original apps)
         for _ in range(3):
             await self._write("Z")
             await asyncio.sleep(0.12)
         await self._write("H")
-        await asyncio.sleep(0.4)
-
-        await self._write("F")
         await asyncio.sleep(0.5)
 
+        # Phase 2: Firmware — enable buffering BEFORE sending F
         self._fw_buffer = ""
         self._awaiting_version = True
+        await self._write("F")
+        # Original app waits 2s; BLE may deliver "701" as "7"+"01" fragments
+        for _ in range(20):
+            await asyncio.sleep(0.1)
+            if self.firmware > 0:
+                break
+
+        # Phase 3: Robot version — send I only after firmware detected
         await self._write("I")
         for _ in range(10):
             await asyncio.sleep(0.1)
-            if not self._awaiting_version:
+            if self.robot_version >= 0:
                 break
         self._awaiting_version = False
         self._fw_buffer = ""
@@ -306,6 +313,7 @@ class Robot:
             self.robot_version = 2
             await asyncio.sleep(0.2)
 
+        # Phase 4: Final reset
         await self._write("H")
         await asyncio.sleep(0.1)
         await self._write("W000")
