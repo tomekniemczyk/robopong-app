@@ -159,6 +159,8 @@ class BLETransport(RobotTransport):
                 return False
             self._client = BleakClient(dev, disconnected_callback=self._on_disconnect_raw)
             await self._client.connect(timeout=15.0)
+            if not self._client or not self._client.is_connected:
+                return False
             await self._client.start_notify(MLDP_DATA_CHAR, self._on_notify_raw)
             self.last_notify = asyncio.get_event_loop().time()
             return True
