@@ -157,12 +157,10 @@ class Robot:
         spd_b = min(999, int(abs(bot) * 4.016))
         leds  = self._spin_leds(top, bot)
 
-        if self.firmware >= 701:
-            await self._write(f"wTA{wait_ms // 10:03d}")
-            await asyncio.sleep(0.08)
-            cmd = f"A{dir_t}{spd_t:03d}{dir_b}{spd_b:03d}{osc:03d}{height:03d}{rotation:03d}{leds}"
-        else:
-            cmd = f"B{dir_t}{spd_t:03d}{dir_b}{spd_b:03d}{osc:03d}{height:03d}{rotation:03d}{leds}"
+        # Always use B command — starts motors immediately.
+        # A command (fw >= 701) requires END protocol which we don't use yet;
+        # without END, A sets params but may not spin motors → balls drop.
+        cmd = f"B{dir_t}{spd_t:03d}{dir_b}{spd_b:03d}{osc:03d}{height:03d}{rotation:03d}{leds}"
 
         logger.debug("→ %s top=%d bot=%d osc=%d h=%d rot=%d", cmd[:1], top, bot, osc, height, rotation)
         await self._write(cmd)
