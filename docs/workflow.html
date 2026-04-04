@@ -1,0 +1,693 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RoboPong — Workflow & Protocol Diagram</title>
+<style>
+  :root {
+    --bg: #0d0f18; --surface: #161825; --border: #2a2d3a;
+    --text: #e4e4e7; --muted: #8e8e93; --accent: #5e9eff;
+    --green: #34c759; --red: #ff453a; --orange: #ff9f0a; --purple: #bf5af2;
+    --yellow: #ffd60a; --pink: #ff375f; --cyan: #64d2ff;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: var(--bg); color: var(--text); font-family: -apple-system, 'Segoe UI', sans-serif; line-height: 1.6; }
+
+  /* NAV */
+  nav { position: sticky; top: 0; z-index: 100; background: var(--surface); border-bottom: 1px solid var(--border); padding: 10px 20px; display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+  nav .title { font-weight: 700; font-size: 15px; margin-right: 12px; color: var(--accent); }
+  nav button { background: none; border: 1px solid var(--border); color: var(--muted); padding: 5px 12px; border-radius: 8px; cursor: pointer; font-size: 12px; transition: all .2s; }
+  nav button:hover, nav button.active { background: var(--accent); color: #000; border-color: var(--accent); }
+
+  /* SECTIONS */
+  .section { display: none; padding: 20px; max-width: 1200px; margin: 0 auto; }
+  .section.active { display: block; }
+  h2 { color: var(--accent); font-size: 20px; margin: 20px 0 12px; border-bottom: 1px solid var(--border); padding-bottom: 6px; }
+  h3 { color: var(--cyan); font-size: 15px; margin: 16px 0 8px; }
+
+  /* DIAGRAM */
+  .diagram { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 20px; margin: 12px 0; overflow-x: auto; }
+  .seq { font-family: 'JetBrains Mono', 'Fira Code', monospace; font-size: 12px; line-height: 1.8; white-space: pre; }
+  .seq .actor { color: var(--accent); font-weight: 700; }
+  .seq .cmd { color: var(--green); }
+  .seq .resp { color: var(--orange); }
+  .seq .timing { color: var(--muted); font-style: italic; }
+  .seq .sound { color: var(--pink); }
+  .seq .note { color: var(--yellow); }
+  .seq .err { color: var(--red); }
+  .seq .ws { color: var(--purple); }
+  .seq .arrow { color: var(--muted); }
+
+  /* FLOW CARDS */
+  .flow { display: flex; flex-direction: column; gap: 6px; margin: 12px 0; }
+  .flow-step { display: flex; align-items: flex-start; gap: 12px; }
+  .flow-num { min-width: 28px; height: 28px; background: var(--accent); color: #000; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; flex-shrink: 0; margin-top: 2px; }
+  .flow-body { flex: 1; }
+  .flow-body .label { font-weight: 600; font-size: 13px; }
+  .flow-body .detail { color: var(--muted); font-size: 12px; }
+  .flow-body code { background: rgba(94,158,255,.12); color: var(--green); padding: 1px 5px; border-radius: 4px; font-size: 11px; }
+  .flow-connector { width: 28px; display: flex; justify-content: center; }
+  .flow-connector .line { width: 2px; height: 16px; background: var(--border); }
+
+  /* TIMELINE */
+  .timeline { position: relative; margin: 16px 0 16px 20px; padding-left: 24px; border-left: 2px solid var(--border); }
+  .tl-item { position: relative; padding: 8px 0 16px; }
+  .tl-item::before { content: ''; position: absolute; left: -29px; top: 12px; width: 10px; height: 10px; border-radius: 50%; border: 2px solid var(--accent); background: var(--bg); }
+  .tl-item.sound::before { background: var(--pink); border-color: var(--pink); }
+  .tl-item.cmd::before { background: var(--green); border-color: var(--green); }
+  .tl-item.ws-evt::before { background: var(--purple); border-color: var(--purple); }
+  .tl-item.rec::before { background: var(--red); border-color: var(--red); }
+  .tl-time { font-family: monospace; font-size: 11px; color: var(--muted); }
+  .tl-label { font-size: 13px; }
+  .tl-detail { font-size: 11px; color: var(--muted); }
+
+  /* TABLE */
+  table { width: 100%; border-collapse: collapse; margin: 10px 0; font-size: 12px; }
+  th { background: var(--surface); color: var(--accent); text-align: left; padding: 8px 10px; border-bottom: 2px solid var(--border); }
+  td { padding: 6px 10px; border-bottom: 1px solid var(--border); vertical-align: top; }
+  td code { background: rgba(94,158,255,.12); color: var(--green); padding: 1px 4px; border-radius: 3px; font-size: 11px; }
+
+  /* LEGEND */
+  .legend { display: flex; gap: 16px; flex-wrap: wrap; margin: 12px 0; font-size: 11px; }
+  .legend-item { display: flex; align-items: center; gap: 5px; }
+  .legend-dot { width: 10px; height: 10px; border-radius: 50%; }
+
+  /* ARCH DIAGRAM */
+  .arch { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; margin: 12px 0; }
+  .arch-box { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 14px; }
+  .arch-box h4 { font-size: 13px; margin-bottom: 6px; }
+  .arch-box ul { list-style: none; font-size: 11px; color: var(--muted); }
+  .arch-box ul li { padding: 2px 0; }
+  .arch-box ul li::before { content: ''; display: inline-block; width: 6px; height: 6px; border-radius: 50%; margin-right: 6px; }
+  .arch-box.ble h4 { color: var(--accent); }
+  .arch-box.ble ul li::before { background: var(--accent); }
+  .arch-box.robot h4 { color: var(--green); }
+  .arch-box.robot ul li::before { background: var(--green); }
+  .arch-box.ui h4 { color: var(--purple); }
+  .arch-box.ui ul li::before { background: var(--purple); }
+  .arch-box.media h4 { color: var(--red); }
+  .arch-box.media ul li::before { background: var(--red); }
+  .arch-box.data h4 { color: var(--orange); }
+  .arch-box.data ul li::before { background: var(--orange); }
+
+  .proto-grid { display: grid; grid-template-columns: auto 1fr 1fr; gap: 0; margin: 12px 0; font-size: 12px; }
+  .proto-grid .ph { background: var(--surface); padding: 6px 10px; border: 1px solid var(--border); font-weight: 700; color: var(--accent); }
+  .proto-grid .pc { padding: 6px 10px; border: 1px solid var(--border); }
+  .proto-grid .pc code { background: rgba(94,158,255,.12); color: var(--green); padding: 1px 4px; border-radius: 3px; }
+
+  .badge { display: inline-block; padding: 2px 6px; border-radius: 4px; font-size: 10px; font-weight: 700; }
+  .badge.ble { background: rgba(94,158,255,.15); color: var(--accent); }
+  .badge.ws { background: rgba(191,90,242,.15); color: var(--purple); }
+  .badge.http { background: rgba(255,159,10,.15); color: var(--orange); }
+  .badge.sound { background: rgba(255,55,95,.15); color: var(--pink); }
+  .badge.rec { background: rgba(255,69,58,.15); color: var(--red); }
+
+  @media (max-width: 600px) {
+    .arch { grid-template-columns: 1fr; }
+    .seq { font-size: 10px; }
+    nav button { font-size: 11px; padding: 4px 8px; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <span class="title">RoboPong Workflow</span>
+  <button class="active" onclick="show('overview')">Architektura</button>
+  <button onclick="show('connect')">Polaczenie</button>
+  <button onclick="show('handshake')">Handshake</button>
+  <button onclick="show('calibration')">Kalibracja</button>
+  <button onclick="show('drill')">Drill / Rzut</button>
+  <button onclick="show('training')">Trening</button>
+  <button onclick="show('recording')">Nagrywanie</button>
+  <button onclick="show('audio')">Dzwiek</button>
+  <button onclick="show('protocol')">Protokol</button>
+  <button onclick="show('sessions')">Sesje</button>
+</nav>
+
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<!-- OVERVIEW -->
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<div id="overview" class="section active">
+  <h2>Architektura systemu</h2>
+
+  <div class="arch">
+    <div class="arch-box ui">
+      <h4>Frontend (Vue 3 CDN)</h4>
+      <ul>
+        <li>Single-file SPA (index.html)</li>
+        <li>WebSocket /ws (real-time)</li>
+        <li>REST API (CRUD)</li>
+        <li>Tab-based navigation (v-show)</li>
+        <li>i18n: PL/EN/DE/FR/ZH</li>
+      </ul>
+    </div>
+    <div class="arch-box robot">
+      <h4>Backend (FastAPI)</h4>
+      <ul>
+        <li>main.py — REST + WS router</li>
+        <li>robot.py — orkiestracja</li>
+        <li>training.py — state machine</li>
+        <li>transport.py — BLE/USB/SIM</li>
+        <li>recordings.py — ffmpeg</li>
+        <li>audio.py — WAV playback</li>
+      </ul>
+    </div>
+    <div class="arch-box ble">
+      <h4>Transport BLE</h4>
+      <ul>
+        <li>Bleak (BleakClient)</li>
+        <li>MLDP protocol (Microchip)</li>
+        <li>D-Bus agent (pairing)</li>
+        <li>bluetoothctl (scan/pair)</li>
+        <li>Terminator: \r</li>
+      </ul>
+    </div>
+    <div class="arch-box media">
+      <h4>Kamera / Nagrywanie</h4>
+      <ul>
+        <li>motion (MJPEG, port 8081)</li>
+        <li>ffmpeg (MJPEG &rarr; H.264 MP4)</li>
+        <li>15 fps, CRF 18, ultrafast</li>
+        <li>Auto-delete &lt;30s (skip) / &lt;3s</li>
+        <li>Voice notes (WebM upload)</li>
+      </ul>
+    </div>
+    <div class="arch-box data">
+      <h4>Storage</h4>
+      <ul>
+        <li>SQLite: robopong.db (11 tabel)</li>
+        <li>SQLite: presets.db</li>
+        <li>JSON: drills, exercises, trainings</li>
+        <li>.calibration.json (per-device)</li>
+        <li>recordings/&lt;player_id&gt;/*.mp4</li>
+      </ul>
+    </div>
+  </div>
+
+  <h2>Schemat komunikacji</h2>
+  <div class="diagram"><div class="seq"><span class="actor">  Browser</span> <span class="arrow">&lt;──WebSocket──&gt;</span> <span class="actor">FastAPI</span> <span class="arrow">&lt;──BLE/USB──&gt;</span> <span class="actor">Robot 3050XL</span>
+<span class="actor">         </span> <span class="arrow">&lt;──REST/HTTP──&gt;</span> <span class="actor">      </span> <span class="arrow">&lt;──ffmpeg───&gt;</span> <span class="actor">Kamera (motion)</span>
+<span class="actor">         </span>                  <span class="actor">      </span> <span class="arrow">&lt;──aplay────&gt;</span> <span class="actor">Speaker (WAV)</span>
+<span class="actor">         </span>                  <span class="actor">      </span> <span class="arrow">&lt;──SQLite───&gt;</span> <span class="actor">robopong.db</span>
+
+<span class="note">Protokol:</span>
+  <span class="ws">WebSocket</span>  Client&rarr;Server: JSON <span class="cmd">{action, ...params}</span>
+               Server&rarr;Client: JSON <span class="resp">{type, ...data}</span>
+  <span class="cmd">BLE/USB</span>    ASCII komendy (<span class="cmd">Z H F I A B T V W wTA J</span>) + \r terminator
+  <span class="resp">Robot</span>      Odpowiedzi: <span class="resp">K N M</span> (ping), <span class="resp">701</span> (firmware), <span class="resp">0/1/2</span> (wersja)</div></div>
+
+  <div class="legend">
+    <div class="legend-item"><div class="legend-dot" style="background:var(--green)"></div> Komenda BLE</div>
+    <div class="legend-item"><div class="legend-dot" style="background:var(--orange)"></div> Odpowiedz robota</div>
+    <div class="legend-item"><div class="legend-dot" style="background:var(--purple)"></div> Event WS</div>
+    <div class="legend-item"><div class="legend-dot" style="background:var(--pink)"></div> Dzwiek</div>
+    <div class="legend-item"><div class="legend-dot" style="background:var(--red)"></div> Nagrywanie</div>
+    <div class="legend-item"><div class="legend-dot" style="background:var(--muted)"></div> Timing / sleep</div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<!-- CONNECTION -->
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<div id="connect" class="section">
+  <h2>Polaczenie BLE — pelny flow</h2>
+
+  <div class="diagram"><div class="seq"><span class="actor">Browser</span>              <span class="actor">main.py</span>             <span class="actor">Robot</span>              <span class="actor">BLETransport</span>           <span class="actor">BlueZ/D-Bus</span>
+<span class="arrow">  │</span>                      <span class="arrow">│</span>                    <span class="arrow">│</span>                    <span class="arrow">│</span>                      <span class="arrow">│</span>
+<span class="arrow">  │</span><span class="ws">──{connect,addr}──&gt;</span><span class="arrow">│</span>                    <span class="arrow">│</span>                    <span class="arrow">│</span>                      <span class="arrow">│</span>
+<span class="arrow">  │</span>                      <span class="arrow">│</span><span class="cmd">──robot.connect()─&gt;</span><span class="arrow">│</span>                    <span class="arrow">│</span>                      <span class="arrow">│</span>
+<span class="arrow">  │</span>                      <span class="arrow">│</span>                    <span class="arrow">│</span><span class="cmd">──BLE.connect()───&gt;</span><span class="arrow">│</span>                      <span class="arrow">│</span>
+<span class="arrow">  │</span>                      <span class="arrow">│</span>                    <span class="arrow">│</span>                    <span class="arrow">│</span><span class="cmd">──bt disconnect────&gt;</span><span class="arrow">│</span>
+<span class="arrow">  │</span>                      <span class="arrow">│</span>                    <span class="arrow">│</span>                    <span class="arrow">│</span>  <span class="timing">sleep(1s)</span>            <span class="arrow">│</span>
+<span class="arrow">  │</span>                      <span class="arrow">│</span>                    <span class="arrow">│</span>                    <span class="arrow">│</span><span class="cmd">──bt info (paired?)─&gt;</span><span class="arrow">│</span>
+<span class="arrow">  │</span>                      <span class="arrow">│</span>                    <span class="arrow">│</span>                    <span class="arrow">│</span>                      <span class="arrow">│</span>
+<span class="arrow">  │</span>                      <span class="arrow">│</span>                    <span class="arrow">│</span>                 <span class="note">[ jesli NIE sparowany ]</span>  <span class="arrow">│</span>
+<span class="arrow">  │</span>                      <span class="arrow">│</span>                    <span class="arrow">│</span>                    <span class="arrow">│</span><span class="cmd">──BleakScanner(10s)─&gt;</span><span class="arrow">│</span>
+<span class="arrow">  │</span>                      <span class="arrow">│</span>                    <span class="arrow">│</span>                    <span class="arrow">│</span><span class="cmd">──D-Bus Agent───────&gt;</span><span class="arrow">│</span>
+<span class="arrow">  │</span>                      <span class="arrow">│</span>                    <span class="arrow">│</span>                    <span class="arrow">│</span>  RegisterAgent        <span class="arrow">│</span>
+<span class="arrow">  │</span>                      <span class="arrow">│</span>                    <span class="arrow">│</span>                    <span class="arrow">│</span>  Trusted=True         <span class="arrow">│</span>
+<span class="arrow">  │</span>                      <span class="arrow">│</span>                    <span class="arrow">│</span>                    <span class="arrow">│</span>  Device1.Pair()       <span class="arrow">│</span>
+<span class="arrow">  │</span>                      <span class="arrow">│</span>                    <span class="arrow">│</span>                    <span class="arrow">│</span><span class="cmd">──bt disconnect──────&gt;</span><span class="arrow">│</span>
+<span class="arrow">  │</span>                      <span class="arrow">│</span>                    <span class="arrow">│</span>                    <span class="arrow">│</span>  <span class="timing">sleep(2s)</span>            <span class="arrow">│</span>
+<span class="arrow">  │</span>                      <span class="arrow">│</span>                    <span class="arrow">│</span>                 <span class="note">[ /jesli ]</span>              <span class="arrow">│</span>
+<span class="arrow">  │</span>                      <span class="arrow">│</span>                    <span class="arrow">│</span>                    <span class="arrow">│</span>                      <span class="arrow">│</span>
+<span class="arrow">  │</span>                      <span class="arrow">│</span>                    <span class="arrow">│</span>                    <span class="arrow">│</span><span class="cmd">──BleakScanner(12s)──&gt;</span><span class="arrow">│</span>
+<span class="arrow">  │</span>                      <span class="arrow">│</span>                    <span class="arrow">│</span>                    <span class="arrow">│</span><span class="cmd">──BleakClient.connect(15s)</span>
+<span class="arrow">  │</span>                      <span class="arrow">│</span>                    <span class="arrow">│</span>                    <span class="arrow">│</span><span class="cmd">──start_notify(MLDP)─&gt;</span><span class="arrow">│</span>
+<span class="arrow">  │</span>                      <span class="arrow">│</span>                    <span class="arrow">│</span><span class="resp">&lt;──True────────────</span><span class="arrow">│</span>                      <span class="arrow">│</span>
+<span class="arrow">  │</span>                      <span class="arrow">│</span>                    <span class="arrow">│</span>                    <span class="arrow">│</span>                      <span class="arrow">│</span>
+<span class="arrow">  │</span>                      <span class="arrow">│</span>                    <span class="arrow">│</span><span class="cmd">──_handshake()─────&gt;</span>  <span class="note">(patrz: Handshake)</span>
+<span class="arrow">  │</span>                      <span class="arrow">│</span>                    <span class="arrow">│</span><span class="cmd">──health_monitor()──&gt;</span>  <span class="note">(co 10s: Z ping)</span>
+<span class="arrow">  │</span>                      <span class="arrow">│</span><span class="resp">&lt;──True──────────</span><span class="arrow">│</span>                    <span class="arrow">│</span>                      <span class="arrow">│</span>
+<span class="arrow">  │</span>                      <span class="arrow">│</span><span class="cmd">──_load_cal(addr)───</span>  <span class="note">.calibration.json</span>
+<span class="arrow">  │</span><span class="ws">&lt;─calibration_loaded─</span><span class="arrow">│</span>                    <span class="arrow">│</span>
+<span class="arrow">  │</span><span class="ws">&lt;─status{connected}──</span><span class="arrow">│</span>                    <span class="arrow">│</span>
+</div></div>
+
+  <h3>Czasy (best / worst case)</h3>
+  <table>
+    <tr><th>Scenariusz</th><th>Czas</th><th>Detale</th></tr>
+    <tr><td>Juz sparowany</td><td>~5-6s</td><td>disconnect(1s) + scan(1-3s) + connect(1-2s) + handshake(~2s)</td></tr>
+    <tr><td>Niesparowany</td><td>~20-25s</td><td>+ scan(10s) + pair + disconnect(2s)</td></tr>
+    <tr><td>Robot nieosiagalny</td><td>~37s timeout</td><td>scan(12s) timeout + handshake timeout</td></tr>
+  </table>
+
+  <h3>Auto-reconnect (po utracie polaczenia)</h3>
+  <table>
+    <tr><th>Zrodlo</th><th>Delays</th><th>Max prob</th></tr>
+    <tr><td><code>robot.py _reconnect_loop</code></td><td>2, 3, 5, 10, 15, 30, 30, 60s</td><td>8</td></tr>
+    <tr><td><code>main.py _reconnect_loop</code></td><td>co 15s</td><td>5</td></tr>
+    <tr><td><code>health_monitor</code> reset_ble</td><td>5s gap</td><td>2</td></tr>
+  </table>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<!-- HANDSHAKE -->
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<div id="handshake" class="section">
+  <h2>Handshake — inicjalizacja robota</h2>
+  <p style="color:var(--muted);font-size:13px;margin-bottom:12px">Po nawiazaniu polaczenia BLE, robot.py wykonuje sekwencje inicjalizacyjna.</p>
+
+  <div class="diagram"><div class="seq"><span class="actor">Robot.py</span>                          <span class="actor">Robopong 3050XL</span>
+<span class="arrow">  │</span>                                    <span class="arrow">│</span>
+<span class="arrow">  │</span><span class="cmd">────── Z ──────────────────────&gt;</span><span class="arrow">│</span>  <span class="timing">ping #1</span>
+<span class="arrow">  │</span>  <span class="timing">sleep(120ms)</span>                      <span class="arrow">│</span>
+<span class="arrow">  │</span><span class="cmd">────── Z ──────────────────────&gt;</span><span class="arrow">│</span>  <span class="timing">ping #2</span>
+<span class="arrow">  │</span>  <span class="timing">sleep(120ms)</span>                      <span class="arrow">│</span>
+<span class="arrow">  │</span><span class="cmd">────── Z ──────────────────────&gt;</span><span class="arrow">│</span>  <span class="timing">ping #3</span>
+<span class="arrow">  │</span><span class="resp">&lt;───── K/N/M ──────────────────</span><span class="arrow">│</span>  <span class="timing">ack (ignorowane)</span>
+<span class="arrow">  │</span>                                    <span class="arrow">│</span>
+<span class="arrow">  │</span><span class="cmd">────── H ──────────────────────&gt;</span><span class="arrow">│</span>  <span class="note">HALT — stop silnikow</span>
+<span class="arrow">  │</span>  <span class="timing">sleep(500ms)</span>                      <span class="arrow">│</span>
+<span class="arrow">  │</span>                                    <span class="arrow">│</span>
+<span class="arrow">  │</span><span class="cmd">────── F ──────────────────────&gt;</span><span class="arrow">│</span>  <span class="note">FIRMWARE query</span>
+<span class="arrow">  │</span><span class="resp">&lt;───── "701" ──────────────────</span><span class="arrow">│</span>  <span class="timing">(poll do 2s, moze byc fragmentowane: "7"+"01")</span>
+<span class="arrow">  │</span>                                    <span class="arrow">│</span>
+<span class="arrow">  │</span><span class="cmd">────── I ──────────────────────&gt;</span><span class="arrow">│</span>  <span class="note">VERSION query</span>
+<span class="arrow">  │</span><span class="resp">&lt;───── "2" ────────────────────</span><span class="arrow">│</span>  <span class="timing">(poll do 1s) 0=NewFW, 1=Original, 2=Gen2</span>
+<span class="arrow">  │</span>                                    <span class="arrow">│</span>
+<span class="arrow">  │</span><span class="cmd">────── J02 ────────────────────&gt;</span><span class="arrow">│</span>  <span class="note">Force Gen2 (jesli fw&ge;220 i wersja nieznana)</span>
+<span class="arrow">  │</span>                                    <span class="arrow">│</span>
+<span class="arrow">  │</span><span class="cmd">────── H ──────────────────────&gt;</span><span class="arrow">│</span>  <span class="note">HALT finalny</span>
+<span class="arrow">  │</span>  <span class="timing">sleep(100ms)</span>                      <span class="arrow">│</span>
+<span class="arrow">  │</span><span class="cmd">────── W000 ───────────────────&gt;</span><span class="arrow">│</span>  <span class="note">Reset LED/display</span>
+<span class="arrow">  │</span>  <span class="timing">sleep(200ms)</span>                      <span class="arrow">│</span>
+<span class="arrow">  │</span>                                    <span class="arrow">│</span>
+<span class="arrow">  │</span><span class="note">  ┌─ Health Monitor (loop) ─────────────────┐</span>
+<span class="arrow">  │</span><span class="note">  │ co 10s: wyslij Z                         │</span>
+<span class="arrow">  │</span><span class="note">  │ po 3s: sprawdz last_notify               │</span>
+<span class="arrow">  │</span><span class="note">  │ brak odpowiedzi 30s → reset_ble (2 proby)│</span>
+<span class="arrow">  │</span><span class="note">  └──────────────────────────────────────────┘</span>
+</div></div>
+
+  <h3>Parsowanie odpowiedzi robota</h3>
+  <table>
+    <tr><th>Odpowiedz</th><th>Znaczenie</th><th>Kiedy</th></tr>
+    <tr><td><code>K</code> <code>N</code> <code>M</code></td><td>Ack na ping Z</td><td>Podczas handshake (ignorowane) i health monitor</td></tr>
+    <tr><td><code>100-9999</code></td><td>Numer firmware</td><td>Po komendzie F (moze byc fragmentowany przez BLE)</td></tr>
+    <tr><td><code>0</code> <code>1</code> <code>2</code></td><td>Wersja robota</td><td>Po komendzie I (single digit)</td></tr>
+  </table>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<!-- CALIBRATION -->
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<div id="calibration" class="section">
+  <h2>Kalibracja</h2>
+
+  <div class="diagram"><div class="seq"><span class="actor">UI</span>                     <span class="actor">main.py</span>          <span class="actor">Robot</span>            <span class="actor">3050XL</span>
+<span class="arrow">│</span>                         <span class="arrow">│</span>                  <span class="arrow">│</span>                  <span class="arrow">│</span>
+<span class="arrow">│</span><span class="ws">─{begin_calibration}──&gt;</span><span class="arrow">│</span>                  <span class="arrow">│</span>                  <span class="arrow">│</span>
+<span class="arrow">│</span>                         <span class="arrow">│</span><span class="cmd">─reset_head()───&gt;</span><span class="arrow">│</span><span class="cmd">───── V ─────────&gt;</span><span class="arrow">│</span>  <span class="note">reset glowicy</span>
+<span class="arrow">│</span>                         <span class="arrow">│</span>  <span class="timing">sleep(500ms)</span>    <span class="arrow">│</span>                  <span class="arrow">│</span>
+<span class="arrow">│</span>                         <span class="arrow">│</span><span class="cmd">─reset_head()───&gt;</span><span class="arrow">│</span><span class="cmd">───── V ─────────&gt;</span><span class="arrow">│</span>  <span class="note">x2 dla pewnosci</span>
+<span class="arrow">│</span>                         <span class="arrow">│</span>                  <span class="arrow">│</span>                  <span class="arrow">│</span>
+<span class="note">  ── Uzytkownik ustawia parametry i klika "Wyslij" ──</span>
+<span class="arrow">│</span>                         <span class="arrow">│</span>                  <span class="arrow">│</span>                  <span class="arrow">│</span>
+<span class="arrow">│</span><span class="ws">─{set_ball, ball}─────&gt;</span><span class="arrow">│</span>                  <span class="arrow">│</span>                  <span class="arrow">│</span>
+<span class="arrow">│</span>                         <span class="arrow">│</span><span class="cmd">─set_ball()─────&gt;</span><span class="arrow">│</span><span class="cmd">── wTA100 ───────&gt;</span><span class="arrow">│</span>  <span class="note">wait=1000ms</span>
+<span class="arrow">│</span>                         <span class="arrow">│</span>                  <span class="arrow">│</span>  <span class="timing">sleep(80ms)</span>      <span class="arrow">│</span>
+<span class="arrow">│</span>                         <span class="arrow">│</span>                  <span class="arrow">│</span><span class="cmd">── A048000801501501500</span><span class="arrow">│</span>  <span class="note">SILNIKI START</span>
+<span class="arrow">│</span>                         <span class="arrow">│</span>                  <span class="arrow">│</span>                  <span class="arrow">│</span>
+<span class="note">  ── Silniki kreca, user klika "Rzut" ──</span>
+<span class="arrow">│</span>                         <span class="arrow">│</span>                  <span class="arrow">│</span>                  <span class="arrow">│</span>
+<span class="arrow">│</span><span class="ws">─{throw}──────────────&gt;</span><span class="arrow">│</span>                  <span class="arrow">│</span>                  <span class="arrow">│</span>
+<span class="arrow">│</span>                         <span class="arrow">│</span><span class="cmd">─throw()────────&gt;</span><span class="arrow">│</span><span class="cmd">───── T ─────────&gt;</span><span class="arrow">│</span>  <span class="note">PILKA LECI</span>
+<span class="arrow">│</span>                         <span class="arrow">│</span>                  <span class="arrow">│</span>                  <span class="arrow">│</span>
+<span class="note">  ── User klika "Stop" ──</span>
+<span class="arrow">│</span>                         <span class="arrow">│</span>                  <span class="arrow">│</span>                  <span class="arrow">│</span>
+<span class="arrow">│</span><span class="ws">─{stop}───────────────&gt;</span><span class="arrow">│</span>                  <span class="arrow">│</span>                  <span class="arrow">│</span>
+<span class="arrow">│</span>                         <span class="arrow">│</span><span class="cmd">─stop()─────────&gt;</span><span class="arrow">│</span><span class="cmd">───── H ─────────&gt;</span><span class="arrow">│</span>  <span class="note">SILNIKI STOP</span>
+<span class="arrow">│</span>                         <span class="arrow">│</span>                  <span class="arrow">│</span>                  <span class="arrow">│</span>
+<span class="note">  ── User zapisuje kalibracje ──</span>
+<span class="arrow">│</span>                         <span class="arrow">│</span>                  <span class="arrow">│</span>
+<span class="arrow">│</span><span class="ws">─PUT /api/calibration──&gt;</span><span class="arrow">│</span><span class="cmd">──.calibration.json (per-device key)──&gt;</span></div></div>
+
+  <h3>Wartosci domyslne kalibracji</h3>
+  <table>
+    <tr><th>Parametr</th><th>Wartosc</th><th>Zakres</th><th>Centrum</th></tr>
+    <tr><td>top_speed</td><td>161</td><td>0-999 (raw * 4.016 = PWM)</td><td>-</td></tr>
+    <tr><td>bot_speed</td><td>0</td><td>0-999</td><td>-</td></tr>
+    <tr><td>oscillation</td><td>150</td><td>127-173</td><td>150</td></tr>
+    <tr><td>height</td><td>183</td><td>75-210</td><td>-</td></tr>
+    <tr><td>rotation</td><td>150</td><td>90-210</td><td>150</td></tr>
+    <tr><td>wait_ms</td><td>1000</td><td>500+</td><td>-</td></tr>
+  </table>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<!-- DRILL -->
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<div id="drill" class="section">
+  <h2>Drill / Rzut pilki — timing silnikow</h2>
+
+  <h3>Pojedynczy rzut (throw_ball, count=1)</h3>
+  <div class="timeline">
+    <div class="tl-item cmd"><div class="tl-time">0ms</div><div class="tl-label"><code>set_ball()</code> &rarr; <code>wTA</code> + <code>A</code></div><div class="tl-detail">Silniki START (predkosc + oscylacja + wysokosc + rotacja)</div></div>
+    <div class="tl-item"><div class="tl-time">+300ms</div><div class="tl-label">sleep(300ms) — warm-up silnikow</div></div>
+    <div class="tl-item cmd"><div class="tl-time">300ms</div><div class="tl-label"><code>throw()</code> &rarr; <code>T</code></div><div class="tl-detail">Pilka leci</div></div>
+  </div>
+
+  <h3>Drill (sekwencja pilek, skip_warmup=False)</h3>
+  <div class="timeline">
+    <div class="tl-item cmd"><div class="tl-time">0ms</div><div class="tl-label"><code>H</code> — halt</div><div class="tl-detail">Czysty stan przed startem</div></div>
+    <div class="tl-item"><div class="tl-time">+100ms</div><div class="tl-label">sleep(100ms)</div></div>
+    <div class="tl-item cmd"><div class="tl-time">100ms</div><div class="tl-label"><code>set_ball(balls[0])</code> &rarr; <code>wTA</code> + <code>A</code></div><div class="tl-detail">SILNIKI START — kreca od teraz</div></div>
+    <div class="tl-item ws-evt"><div class="tl-time">100ms</div><div class="tl-label">emit <code>drill_countdown {sec:2}</code></div></div>
+    <div class="tl-item"><div class="tl-time">+1000ms</div><div class="tl-label">sleep(1s)</div></div>
+    <div class="tl-item ws-evt"><div class="tl-time">1100ms</div><div class="tl-label">emit <code>drill_countdown {sec:1}</code></div></div>
+    <div class="tl-item"><div class="tl-time">+1000ms</div><div class="tl-label">sleep(1s)</div></div>
+    <div class="tl-item cmd"><div class="tl-time">~2100ms</div><div class="tl-label"><code>set_ball(balls[0])</code> (ponowne ustawienie)</div></div>
+    <div class="tl-item"><div class="tl-time">+150ms</div><div class="tl-label">sleep(150ms) — settle</div></div>
+    <div class="tl-item cmd"><div class="tl-time">~2250ms</div><div class="tl-label"><code>T</code> — PIERWSZY RZUT</div><div class="tl-detail">~2s od startu silnikow</div></div>
+    <div class="tl-item ws-evt"><div class="tl-time"></div><div class="tl-label">emit <code>drill_progress {thrown, total}</code></div></div>
+    <div class="tl-item"><div class="tl-time">+wait</div><div class="tl-label">sleep(adj_wait - 150ms) — przerwa miedzy pilkami</div></div>
+    <div class="tl-item cmd"><div class="tl-time">~3750ms</div><div class="tl-label"><code>set_ball(balls[1])</code> + 150ms + <code>T</code></div><div class="tl-detail">DRUGI RZUT (nastepna pilka z sekwencji)</div></div>
+    <div class="tl-item"><div class="tl-time">...</div><div class="tl-label">powtarza * repeat</div></div>
+    <div class="tl-item cmd"><div class="tl-time">END</div><div class="tl-label"><code>H</code> — SILNIKI STOP</div></div>
+    <div class="tl-item ws-evt"><div class="tl-time">END</div><div class="tl-label">emit <code>drill_ended</code></div></div>
+  </div>
+
+  <h3>Timing kluczowe</h3>
+  <table>
+    <tr><th>Parametr</th><th>Wartosc</th><th>Zrodlo</th></tr>
+    <tr><td>Motor warm-up (drill)</td><td>~2s</td><td>2x sleep(1s) countdown</td></tr>
+    <tr><td>Motor warm-up (throw_ball)</td><td>300ms</td><td>sleep(0.3)</td></tr>
+    <tr><td>set_ball &rarr; T (w loopie)</td><td>150ms</td><td>sleep(0.15)</td></tr>
+    <tr><td>wTA &rarr; A command gap</td><td>80ms</td><td>sleep(0.08)</td></tr>
+    <tr><td>Min wait (1 pilka)</td><td>500ms</td><td>MIN_WAIT single</td></tr>
+    <tr><td>Min wait (multi pilka)</td><td>750ms</td><td>MIN_WAIT multi</td></tr>
+    <tr><td>BLE chunk gap (&gt;20 bytes)</td><td>200ms</td><td>transport.py</td></tr>
+  </table>
+
+  <h3>Komenda A — format</h3>
+  <div class="diagram"><div class="seq"><span class="cmd">wTA</span><span class="resp">100</span>                         <span class="note">wait_ms/10 (np. 1000ms = 100)</span>
+  <span class="timing">sleep(80ms)</span>
+<span class="cmd">A</span><span class="resp">0</span><span class="resp">48</span><span class="resp">0</span><span class="resp">008</span><span class="resp">150</span><span class="resp">150</span><span class="resp">150</span><span class="resp">0</span>       <span class="note">A{dir_t}{spd_t}{dir_b}{spd_b}{osc}{h}{rot}{leds}</span>
+ <span class="arrow">│</span> <span class="arrow">│</span>  <span class="arrow">│</span> <span class="arrow">│</span>   <span class="arrow">│</span>   <span class="arrow">│</span>   <span class="arrow">│</span>  <span class="arrow">│</span>
+ <span class="arrow">│</span> <span class="arrow">│</span>  <span class="arrow">│</span> <span class="arrow">│</span>   <span class="arrow">│</span>   <span class="arrow">│</span>   <span class="arrow">│</span>  <span class="note">└ LEDs 0-8</span>
+ <span class="arrow">│</span> <span class="arrow">│</span>  <span class="arrow">│</span> <span class="arrow">│</span>   <span class="arrow">│</span>   <span class="arrow">│</span>   <span class="note">└ rotation (90-210, centrum=150)</span>
+ <span class="arrow">│</span> <span class="arrow">│</span>  <span class="arrow">│</span> <span class="arrow">│</span>   <span class="arrow">│</span>   <span class="note">└ height (75-210)</span>
+ <span class="arrow">│</span> <span class="arrow">│</span>  <span class="arrow">│</span> <span class="arrow">│</span>   <span class="note">└ oscillation (127-173, centrum=150)</span>
+ <span class="arrow">│</span> <span class="arrow">│</span>  <span class="arrow">│</span> <span class="note">└ bot_speed (abs*4.016, 3 digits)</span>
+ <span class="arrow">│</span> <span class="arrow">│</span>  <span class="note">└ bot_dir (0=fwd, 1=rev)</span>
+ <span class="arrow">│</span> <span class="note">└ top_speed (abs*4.016, 3 digits)</span>
+ <span class="note">└ top_dir (0=fwd, 1=rev)</span></div></div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<!-- TRAINING -->
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<div id="training" class="section">
+  <h2>Trening — pelny flow z nagrywaniem</h2>
+
+  <div class="diagram"><div class="seq"><span class="actor">UI</span>          <span class="actor">main.py</span>      <span class="actor">TrainingRunner</span>    <span class="actor">Robot</span>      <span class="actor">Recorder</span>     <span class="actor">Speaker</span>
+<span class="arrow">│</span>              <span class="arrow">│</span>              <span class="arrow">│</span>                  <span class="arrow">│</span>              <span class="arrow">│</span>              <span class="arrow">│</span>
+<span class="arrow">│</span><span class="ws">─run_training─&gt;</span><span class="arrow">│</span>              <span class="arrow">│</span>                  <span class="arrow">│</span>              <span class="arrow">│</span>              <span class="arrow">│</span>
+<span class="arrow">│</span>              <span class="arrow">│</span><span class="cmd">──start()────&gt;</span><span class="arrow">│</span>                  <span class="arrow">│</span>              <span class="arrow">│</span>              <span class="arrow">│</span>
+<span class="arrow">│</span>              <span class="arrow">│</span>              <span class="arrow">│</span><span class="cmd">──db.create_history()</span>            <span class="arrow">│</span>              <span class="arrow">│</span>
+<span class="arrow">│</span><span class="ws">&lt;─training_info</span><span class="arrow">│</span>              <span class="arrow">│</span>                  <span class="arrow">│</span>              <span class="arrow">│</span>              <span class="arrow">│</span>
+<span class="arrow">│</span>              <span class="arrow">│</span>              <span class="arrow">│</span>                  <span class="arrow">│</span>              <span class="arrow">│</span><span class="sound">──training_starting.wav</span>
+<span class="arrow">│</span>              <span class="arrow">│</span>              <span class="arrow">│</span>  <span class="timing">sleep(2s)</span>       <span class="arrow">│</span>              <span class="arrow">│</span>              <span class="arrow">│</span>
+<span class="arrow">│</span>              <span class="arrow">│</span>              <span class="arrow">│</span>                  <span class="arrow">│</span>              <span class="arrow">│</span>              <span class="arrow">│</span>
+<span class="note">  ── COUNTDOWN (5s domyslnie) ──</span>
+<span class="arrow">│</span>              <span class="arrow">│</span>              <span class="arrow">│</span>                  <span class="arrow">│</span>              <span class="arrow">│</span>              <span class="arrow">│</span>
+<span class="arrow">│</span><span class="ws">&lt;─countdown{5}</span><span class="arrow">│</span>              <span class="arrow">│</span>                  <span class="arrow">│</span>              <span class="arrow">│</span><span class="sound">──beep.wav</span>
+<span class="arrow">│</span>              <span class="arrow">│</span>              <span class="arrow">│</span><span class="cmd">─set_ball(b[0])───&gt;</span><span class="arrow">│</span><span class="cmd">──wTA+A──&gt;</span>     <span class="arrow">│</span>  <span class="note">PRELOAD sec=5</span>
+<span class="arrow">│</span><span class="ws">&lt;─countdown{4}</span><span class="arrow">│</span>              <span class="arrow">│</span>                  <span class="arrow">│</span>              <span class="arrow">│</span><span class="sound">──beep.wav</span>
+<span class="arrow">│</span><span class="ws">&lt;─countdown{3}</span><span class="arrow">│</span>              <span class="arrow">│</span>                  <span class="arrow">│</span>              <span class="arrow">│</span><span class="sound">──beep_high.wav</span>
+<span class="arrow">│</span><span class="ws">&lt;─countdown{2}</span><span class="arrow">│</span>              <span class="arrow">│</span>                  <span class="arrow">│</span>              <span class="arrow">│</span><span class="sound">──beep_high.wav</span>
+<span class="arrow">│</span><span class="ws">&lt;─countdown{1}</span><span class="arrow">│</span>              <span class="arrow">│</span>                  <span class="arrow">│</span>              <span class="arrow">│</span><span class="sound">──beep_high.wav</span>
+<span class="arrow">│</span>              <span class="arrow">│</span>              <span class="arrow">│</span>                  <span class="arrow">│</span>              <span class="arrow">│</span>              <span class="arrow">│</span>
+<span class="note">  ── STEP: DRILL (powtarza dla kazdego stepu) ──</span>
+<span class="arrow">│</span>              <span class="arrow">│</span>              <span class="arrow">│</span>                  <span class="arrow">│</span>              <span class="arrow">│</span>              <span class="arrow">│</span>
+<span class="arrow">│</span>              <span class="arrow">│</span>              <span class="arrow">│</span><span class="cmd">──start_recording()──────────&gt;</span><span class="arrow">│</span><span class="cmd">──ffmpeg──&gt;</span>    <span class="arrow">│</span>
+<span class="arrow">│</span><span class="ws">&lt;─recording_started</span>           <span class="arrow">│</span>                  <span class="arrow">│</span>              <span class="arrow">│</span>              <span class="arrow">│</span>
+<span class="arrow">│</span>              <span class="arrow">│</span>              <span class="arrow">│</span>                  <span class="arrow">│</span>              <span class="arrow">│</span><span class="sound">──drill_starting.wav</span>
+<span class="arrow">│</span><span class="ws">&lt;─training_step</span><span class="arrow">│</span>              <span class="arrow">│</span>  <span class="timing">sleep(1.5s)</span>  <span class="arrow">│</span>              <span class="arrow">│</span>              <span class="arrow">│</span>
+<span class="arrow">│</span>              <span class="arrow">│</span>              <span class="arrow">│</span><span class="cmd">──run_drill()─────&gt;</span><span class="arrow">│</span><span class="cmd">──A+T──&gt;</span>       <span class="arrow">│</span>  <span class="note">skip_warmup jesli preloaded</span>
+<span class="arrow">│</span><span class="ws">&lt;─drill_progress</span>              <span class="arrow">│</span>   <span class="note">... pilki ...</span> <span class="arrow">│</span>              <span class="arrow">│</span>              <span class="arrow">│</span>
+<span class="arrow">│</span><span class="ws">&lt;─drill_progress</span>              <span class="arrow">│</span>                  <span class="arrow">│</span>              <span class="arrow">│</span>              <span class="arrow">│</span>
+<span class="arrow">│</span>              <span class="arrow">│</span>              <span class="arrow">│</span>                  <span class="arrow">│</span><span class="cmd">──H──&gt;</span>         <span class="arrow">│</span>  <span class="note">STOP silnikow</span>
+<span class="arrow">│</span>              <span class="arrow">│</span>              <span class="arrow">│</span>                  <span class="arrow">│</span>              <span class="arrow">│</span><span class="sound">──drill_finished.wav</span>
+<span class="arrow">│</span>              <span class="arrow">│</span>              <span class="arrow">│</span><span class="cmd">──stop_recording()───────────&gt;</span><span class="arrow">│</span><span class="cmd">──ffmpeg q──&gt;</span>  <span class="arrow">│</span>
+<span class="arrow">│</span><span class="ws">&lt;─recording_saved</span>             <span class="arrow">│</span>                  <span class="arrow">│</span>  <span class="note">(jesli &gt;3s)</span>  <span class="arrow">│</span>              <span class="arrow">│</span>
+<span class="arrow">│</span><span class="ws">&lt;─training_step_done</span>          <span class="arrow">│</span>                  <span class="arrow">│</span>              <span class="arrow">│</span>              <span class="arrow">│</span>
+<span class="arrow">│</span>              <span class="arrow">│</span>              <span class="arrow">│</span>                  <span class="arrow">│</span>              <span class="arrow">│</span>              <span class="arrow">│</span>
+<span class="note">  ── PAUZA MIEDZY STEPAMI (pause_after_sec) ──</span>
+<span class="arrow">│</span>              <span class="arrow">│</span>              <span class="arrow">│</span>                  <span class="arrow">│</span>              <span class="arrow">│</span>              <span class="arrow">│</span>
+<span class="arrow">│</span><span class="ws">&lt;─training_pause{sec}</span>         <span class="arrow">│</span>                  <span class="arrow">│</span>              <span class="arrow">│</span>              <span class="arrow">│</span>
+<span class="arrow">│</span>              <span class="arrow">│</span>           <span class="note">sec=5:</span><span class="arrow">│</span><span class="cmd">─set_ball(next)─&gt;</span><span class="arrow">│</span><span class="cmd">──wTA+A──&gt;</span>     <span class="arrow">│</span>  <span class="note">PRELOAD</span>
+<span class="arrow">│</span>              <span class="arrow">│</span>           <span class="note">sec=3:</span><span class="arrow">│</span>                  <span class="arrow">│</span>              <span class="arrow">│</span><span class="sound">──beep_high.wav</span>
+<span class="arrow">│</span>              <span class="arrow">│</span>           <span class="note">sec=2:</span><span class="arrow">│</span>                  <span class="arrow">│</span>              <span class="arrow">│</span><span class="sound">──beep_high.wav</span>
+<span class="arrow">│</span>              <span class="arrow">│</span>           <span class="note">sec=1:</span><span class="arrow">│</span>                  <span class="arrow">│</span>              <span class="arrow">│</span><span class="sound">──beep_high.wav</span>
+<span class="arrow">│</span>              <span class="arrow">│</span>              <span class="arrow">│</span>                  <span class="arrow">│</span>              <span class="arrow">│</span>              <span class="arrow">│</span>
+<span class="note">  ── NASTEPNY STEP (powtarza) ... ──</span>
+<span class="arrow">│</span>              <span class="arrow">│</span>              <span class="arrow">│</span>                  <span class="arrow">│</span>              <span class="arrow">│</span>              <span class="arrow">│</span>
+<span class="note">  ── KONIEC TRENINGU ──</span>
+<span class="arrow">│</span>              <span class="arrow">│</span>              <span class="arrow">│</span>                  <span class="arrow">│</span>              <span class="arrow">│</span><span class="sound">──training_complete.wav</span>
+<span class="arrow">│</span><span class="ws">&lt;─training_ended</span>              <span class="arrow">│</span><span class="cmd">──db.update_history("completed")</span>     <span class="arrow">│</span>              <span class="arrow">│</span>
+</div></div>
+
+  <h3>Akcje uzytkownika podczas treningu</h3>
+  <table>
+    <tr><th>WS Action</th><th>Efekt</th><th>Dzwiek</th></tr>
+    <tr><td><code>pause_training</code></td><td>TrainingRunner.pause() + robot.stop()</td><td>training_paused.wav</td></tr>
+    <tr><td><code>resume_training</code></td><td>TrainingRunner.resume()</td><td>training_resumed.wav</td></tr>
+    <tr><td><code>skip_training</code></td><td>TrainingRunner.skip() &rarr; nastepny step</td><td>-</td></tr>
+    <tr><td><code>stop_training</code></td><td>TrainingRunner.stop() + recorder.stop()</td><td>training_stopped.wav</td></tr>
+    <tr><td><code>training_note</code></td><td>Dodaje notatke do biezacego stepu</td><td>-</td></tr>
+    <tr><td><code>set_next_percent</code></td><td>Zmienia % predkosci nastepnego stepu</td><td>-</td></tr>
+  </table>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<!-- RECORDING -->
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<div id="recording" class="section">
+  <h2>Nagrywanie — flow kamery</h2>
+
+  <h3>Architektura nagrywania</h3>
+  <div class="diagram"><div class="seq"><span class="actor">motion</span>             <span class="actor">ffmpeg</span>                  <span class="actor">SQLite</span>           <span class="actor">Filesystem</span>
+<span class="arrow">  │</span>                    <span class="arrow">│</span>                        <span class="arrow">│</span>                  <span class="arrow">│</span>
+<span class="arrow">  │</span><span class="cmd">──MJPEG stream───&gt;</span><span class="arrow">│</span>                        <span class="arrow">│</span>                  <span class="arrow">│</span>
+<span class="arrow">  │</span>  http://localhost:8081     <span class="arrow">│</span>                        <span class="arrow">│</span>                  <span class="arrow">│</span>
+<span class="arrow">  │</span>                    <span class="arrow">│</span><span class="cmd">──H.264 MP4─────────────────────────&gt;</span><span class="arrow">│</span>
+<span class="arrow">  │</span>                    <span class="arrow">│</span>  setpts + fps=15        <span class="arrow">│</span>   recordings/&lt;pid&gt;/
+<span class="arrow">  │</span>                    <span class="arrow">│</span>  libx264 ultrafast CRF18<span class="arrow">│</span>   YYYYMMDD_HHMMSS_sNN_Name.mp4
+<span class="arrow">  │</span>                    <span class="arrow">│</span>                        <span class="arrow">│</span>                  <span class="arrow">│</span>
+<span class="arrow">  │</span>                    <span class="arrow">│</span><span class="cmd">──stop ("q")────&gt;</span>      <span class="arrow">│</span>                  <span class="arrow">│</span>
+<span class="arrow">  │</span>                    <span class="arrow">│</span>                        <span class="arrow">│</span>                  <span class="arrow">│</span>
+<span class="arrow">  │</span>                    <span class="arrow">│</span>  <span class="note">duration &gt; min?</span>       <span class="arrow">│</span>                  <span class="arrow">│</span>
+<span class="arrow">  │</span>                    <span class="arrow">│</span>  <span class="err">  &lt;3s: DELETE</span>          <span class="arrow">│</span>                  <span class="arrow">│</span>
+<span class="arrow">  │</span>                    <span class="arrow">│</span>  <span class="err">  &lt;30s (skip): DELETE</span>  <span class="arrow">│</span>                  <span class="arrow">│</span>
+<span class="arrow">  │</span>                    <span class="arrow">│</span>  <span class="cmd">  OK: SAVE ────────&gt;</span><span class="arrow">│</span><span class="cmd">──recordings_meta─&gt;</span><span class="arrow">│</span>
+</div></div>
+
+  <h3>Kiedy nagrywanie startuje / stopuje</h3>
+  <table>
+    <tr><th>Zdarzenie</th><th>Akcja</th><th>Warunek</th></tr>
+    <tr><td>Poczatek stepu drill</td><td><code>_start_recording()</code></td><td>record=True + player_id set</td></tr>
+    <tr><td>Poczatek stepu exercise</td><td><code>_start_recording()</code></td><td>record=True + player_id set</td></tr>
+    <tr><td>Drill zakonczony</td><td><code>_stop_recording(skipped=False)</code></td><td></td></tr>
+    <tr><td>Step skipniety</td><td><code>_stop_recording(skipped=True)</code></td><td>Plik usuniety jesli &lt;30s</td></tr>
+    <tr><td>User klika Stop</td><td><code>recorder.stop()</code></td><td></td></tr>
+    <tr><td>finally (safety)</td><td><code>_stop_recording()</code></td><td>CancelledError, exception</td></tr>
+  </table>
+
+  <h3>Auto-delete</h3>
+  <table>
+    <tr><th>Scenariusz</th><th>Min. czas</th><th>Akcja</th></tr>
+    <tr><td>Step zakonczony normalnie</td><td>3s</td><td>&lt;3s &rarr; usun .mp4 + .log, brak wpisu DB</td></tr>
+    <tr><td>Step skipniety</td><td>30s</td><td>&lt;30s &rarr; usun, &ge;30s &rarr; zachowaj</td></tr>
+  </table>
+
+  <h3>ffmpeg komenda</h3>
+  <div class="diagram"><div class="seq">ffmpeg -y \
+  -i <span class="cmd">http://localhost:8081</span>          <span class="note"># motion MJPEG stream</span>
+  -vf <span class="cmd">"setpts=N/15/TB,fps=15"</span>       <span class="note"># normalize to 15 fps</span>
+  -c:v <span class="cmd">libx264</span>                       <span class="note"># H.264 codec</span>
+  -preset <span class="cmd">ultrafast</span>                  <span class="note"># szybkie kodowanie (RPi)</span>
+  -crf <span class="cmd">18</span>                            <span class="note"># wysoka jakosc</span>
+  -t <span class="cmd">600</span>                             <span class="note"># max 10 min safety cap</span>
+  <span class="resp">recordings/3/20260404_143022_s01_Topspin.mp4</span>
+
+<span class="note">Stop: stdin "q" → wait 5s → SIGTERM 3s → SIGKILL</span></div></div>
+
+  <h3>Voice Notes (niezalezne od Recorder)</h3>
+  <div class="flow">
+    <div class="flow-step"><div class="flow-num">1</div><div class="flow-body"><div class="label">Upload <span class="badge http">POST /api/voice-notes</span></div><div class="detail">Multipart: file (WebM), player_id, step_idx, training_history_id, duration_ms</div></div></div>
+    <div class="flow-step"><div class="flow-num">2</div><div class="flow-body"><div class="label">Zapis na dysk</div><div class="detail"><code>recordings/&lt;pid&gt;/voice_s&lt;NN&gt;_YYYYMMDD_HHMMSS.webm</code></div></div></div>
+    <div class="flow-step"><div class="flow-num">3</div><div class="flow-body"><div class="label">Zapis do SQLite</div><div class="detail"><code>voice_notes</code> tabela: player_id, history_id, step_idx, filename, duration_ms</div></div></div>
+    <div class="flow-step"><div class="flow-num">4</div><div class="flow-body"><div class="label">Odtwarzanie <span class="badge http">GET /api/voice-notes/{id}/audio</span></div><div class="detail">Streaming audio/webm</div></div></div>
+  </div>
+
+  <h3>Cascade delete</h3>
+  <table>
+    <tr><th>Akcja</th><th>Kasuje</th></tr>
+    <tr><td><code>DELETE /api/training-history/{id}</code></td><td>Historia + recordings + voice notes (DB + pliki)</td></tr>
+    <tr><td><code>DELETE /api/players/{id}</code></td><td>Gracz + cala historia + recordings + voice notes</td></tr>
+  </table>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<!-- AUDIO -->
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<div id="audio" class="section">
+  <h2>System dzwiekowy — mapa audio</h2>
+
+  <h3>Pliki dzwiekowe</h3>
+  <table>
+    <tr><th>Plik</th><th>Uzywany</th><th>Kiedy grany</th></tr>
+    <tr><td><code>training_starting.wav</code></td><td style="color:var(--green)">Tak</td><td>Poczatek treningu (przed countdown)</td></tr>
+    <tr><td><code>training_complete.wav</code></td><td style="color:var(--green)">Tak</td><td>Koniec treningu (wszystkie stepy OK)</td></tr>
+    <tr><td><code>training_paused.wav</code></td><td style="color:var(--green)">Tak</td><td>User pauzuje trening</td></tr>
+    <tr><td><code>training_resumed.wav</code></td><td style="color:var(--green)">Tak</td><td>User wznawia trening</td></tr>
+    <tr><td><code>training_stopped.wav</code></td><td style="color:var(--green)">Tak</td><td>User stopuje trening</td></tr>
+    <tr><td><code>drill_starting.wav</code></td><td style="color:var(--green)">Tak</td><td>Start kazdego stepu drill</td></tr>
+    <tr><td><code>drill_finished.wav</code></td><td style="color:var(--green)">Tak</td><td>Koniec stepu drill/exercise</td></tr>
+    <tr><td><code>beep.wav</code></td><td style="color:var(--green)">Tak</td><td>Countdown sec&gt;3 + exercise start</td></tr>
+    <tr><td><code>beep_high.wav</code></td><td style="color:var(--green)">Tak</td><td>Countdown sec&le;3 + volume test</td></tr>
+    <tr><td><code>sim_motor_start.wav</code></td><td style="color:var(--green)">Tak</td><td>Symulacja: set_ball()</td></tr>
+    <tr><td><code>sim_throw.wav</code></td><td style="color:var(--green)">Tak</td><td>Symulacja: throw()</td></tr>
+    <tr><td><code>sim_motor_stop.wav</code></td><td style="color:var(--green)">Tak</td><td>Symulacja: stop()</td></tr>
+    <tr><td><code>countdown_beeps.wav</code></td><td style="color:var(--red)">NIE</td><td style="color:var(--muted)">Nieuzywany (martwy plik)</td></tr>
+    <tr><td><code>tick.wav</code></td><td style="color:var(--red)">NIE</td><td style="color:var(--muted)">Nieuzywany (martwy plik)</td></tr>
+    <tr><td><code>sim_motor_loop.wav</code></td><td style="color:var(--red)">NIE</td><td style="color:var(--muted)">Nieuzywany (martwy plik)</td></tr>
+  </table>
+
+  <h3>Timeline dzwiekowy — pelny trening</h3>
+  <div class="timeline">
+    <div class="tl-item sound"><div class="tl-time">T+0s</div><div class="tl-label">training_starting.wav</div><div class="tl-detail">Poczatek sesji treningowej</div></div>
+    <div class="tl-item"><div class="tl-time">+2s</div><div class="tl-label">sleep(2s)</div></div>
+    <div class="tl-item sound"><div class="tl-time">sec=5</div><div class="tl-label">beep.wav + PRELOAD silnikow</div><div class="tl-detail">Countdown startuje, motors spin up na 5s przed rzutem</div></div>
+    <div class="tl-item sound"><div class="tl-time">sec=4</div><div class="tl-label">beep.wav</div></div>
+    <div class="tl-item sound"><div class="tl-time">sec=3</div><div class="tl-label">beep_high.wav</div><div class="tl-detail">Przejscie na wysoki ton</div></div>
+    <div class="tl-item sound"><div class="tl-time">sec=2</div><div class="tl-label">beep_high.wav</div></div>
+    <div class="tl-item sound"><div class="tl-time">sec=1</div><div class="tl-label">beep_high.wav</div></div>
+    <div class="tl-item rec"><div class="tl-time">STEP</div><div class="tl-label">ffmpeg START (recording)</div><div class="tl-detail">Nagrywanie startuje PRZED drill_starting</div></div>
+    <div class="tl-item sound"><div class="tl-time"></div><div class="tl-label">drill_starting.wav</div><div class="tl-detail">+ sleep(1.5s)</div></div>
+    <div class="tl-item cmd"><div class="tl-time"></div><div class="tl-label">run_drill() — pilki leca</div><div class="tl-detail">skip_warmup=True (preloaded), piłki co wait_ms</div></div>
+    <div class="tl-item sound"><div class="tl-time">END</div><div class="tl-label">drill_finished.wav</div></div>
+    <div class="tl-item rec"><div class="tl-time"></div><div class="tl-label">ffmpeg STOP + save metadata</div><div class="tl-detail">Auto-delete jesli &lt;3s (lub &lt;30s gdy skip)</div></div>
+    <div class="tl-item sound"><div class="tl-time">PAUZA sec=5</div><div class="tl-label">PRELOAD silnikow nastepnego stepu</div></div>
+    <div class="tl-item sound"><div class="tl-time">sec=3,2,1</div><div class="tl-label">beep_high.wav x3</div></div>
+    <div class="tl-item"><div class="tl-time">...</div><div class="tl-label">nastepny step (powtarza)</div></div>
+    <div class="tl-item sound"><div class="tl-time">FINAL</div><div class="tl-label">training_complete.wav</div></div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<!-- PROTOCOL -->
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<div id="protocol" class="section">
+  <h2>Protokol robota — kompletna mapa komend</h2>
+
+  <h3>Komendy App &rarr; Robot</h3>
+  <table>
+    <tr><th>Komenda</th><th>Opis</th><th>Kiedy</th><th>Terminator</th></tr>
+    <tr><td><code>Z</code></td><td>Ping / wake-up</td><td>Handshake (x3), health monitor (co 10s)</td><td>\r</td></tr>
+    <tr><td><code>H</code></td><td>Halt — stop wszystkich silnikow</td><td>Handshake, stop, drill end, kalibracja</td><td>\r</td></tr>
+    <tr><td><code>F</code></td><td>Firmware query</td><td>Handshake</td><td>\r</td></tr>
+    <tr><td><code>I</code></td><td>Version query</td><td>Handshake</td><td>\r</td></tr>
+    <tr><td><code>J02</code></td><td>Force Gen2 mode</td><td>Handshake (jesli fw&ge;220)</td><td>\r</td></tr>
+    <tr><td><code>V</code></td><td>Reset glowicy (center position)</td><td>begin_calibration (x2)</td><td>\r</td></tr>
+    <tr><td><code>W000</code></td><td>Reset LED/display</td><td>Handshake (koniec)</td><td>\r</td></tr>
+    <tr><td><code>T</code></td><td>Throw — rzuc 1 pilke</td><td>throw, drill loop</td><td>\r</td></tr>
+    <tr><td><code>wTA{nnn}</code></td><td>Wait time hint (n*10ms)</td><td>Przed komenda A (fw&ge;701)</td><td>\r</td></tr>
+    <tr><td><code>A{19 znakow}</code></td><td>Set ball (silniki + oscyl + wys + rot + LED)</td><td>set_ball (fw&ge;701)</td><td>\r</td></tr>
+    <tr><td><code>B{19 znakow}</code></td><td>Set ball (legacy)</td><td>set_ball (fw&lt;701)</td><td>\r</td></tr>
+  </table>
+
+  <h3>Odpowiedzi Robot &rarr; App</h3>
+  <table>
+    <tr><th>Odpowiedz</th><th>Opis</th><th>Kontekst</th></tr>
+    <tr><td><code>K</code> / <code>N</code> / <code>M</code></td><td>Ack na ping</td><td>Po Z (ignorowane w handshake)</td></tr>
+    <tr><td><code>100-9999</code></td><td>Numer firmware</td><td>Po F (moze byc fragmentowane)</td></tr>
+    <tr><td><code>0</code> / <code>1</code> / <code>2</code></td><td>Wersja robota</td><td>Po I</td></tr>
+  </table>
+
+  <h3>Roznice BLE vs USB</h3>
+  <table>
+    <tr><th></th><th>BLE (MLDP)</th><th>USB (FTDI)</th></tr>
+    <tr><td>Terminator</td><td><code>\r</code></td><td><code>\r\n</code></td></tr>
+    <tr><td>Init</td><td>BleakClient + MLDP notify</td><td>bajt <code>0x5A</code> x2 na 9600 baud</td></tr>
+    <tr><td>Max chunk</td><td>20 bajtow (200ms gap)</td><td>bez limitu</td></tr>
+    <tr><td>Parowanie</td><td>D-Bus agent (auto-pair)</td><td>N/A</td></tr>
+    <tr><td>Reconnect</td><td>Tak (backoff 2-60s)</td><td>Nie</td></tr>
+  </table>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<!-- SESSIONS -->
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<div id="sessions" class="section">
+  <h2>Sesje / role</h2>
+
+  <h3>Role</h3>
+  <table>
+    <tr><th>Rola</th><th>Opis</th><th>Dostep</th></tr>
+    <tr><td style="color:var(--green)">CONTROLLER</td><td>Pierwszy polaczony klient</td><td>Pelny: sterowanie robotem, trening, kalibracja</td></tr>
+    <tr><td style="color:var(--muted)">OBSERVER</td><td>Kolejni klienci</td><td>Tylko odczyt: status, logi, eventy</td></tr>
+    <tr><td style="color:var(--orange)">PENDING</td><td>Czeka na takeover</td><td>Jak OBSERVER, request wyslany</td></tr>
+  </table>
+
+  <h3>Takeover flow</h3>
+  <div class="diagram"><div class="seq"><span class="actor">Observer (B)</span>         <span class="actor">Server</span>           <span class="actor">Controller (A)</span>
+<span class="arrow">    │</span>                      <span class="arrow">│</span>                      <span class="arrow">│</span>
+<span class="arrow">    │</span><span class="ws">──request_takeover──&gt;</span><span class="arrow">│</span>                      <span class="arrow">│</span>
+<span class="arrow">    │</span>                      <span class="arrow">│</span><span class="ws">──takeover_request──&gt;</span><span class="arrow">│</span>
+<span class="arrow">    │</span>  <span class="note">B = PENDING</span>         <span class="arrow">│</span>                      <span class="arrow">│</span>
+<span class="arrow">    │</span>                      <span class="arrow">│</span>                      <span class="arrow">│</span>
+<span class="arrow">    │</span>                      <span class="arrow">│</span><span class="ws">&lt;─respond_takeover───</span><span class="arrow">│</span>  <span class="note">(accepted: true)</span>
+<span class="arrow">    │</span>                      <span class="arrow">│</span>                      <span class="arrow">│</span>
+<span class="arrow">    │</span><span class="ws">&lt;─session_role:CTRL──</span><span class="arrow">│</span>                      <span class="arrow">│</span>
+<span class="arrow">    │</span>                      <span class="arrow">│</span><span class="ws">──session_role:OBS──&gt;</span><span class="arrow">│</span>
+<span class="arrow">    │</span>  <span class="note">B = CONTROLLER</span>     <span class="arrow">│</span>  <span class="note">A = OBSERVER</span>        <span class="arrow">│</span>
+
+<span class="note">Gdy CONTROLLER rozlacza sie:</span>
+  <span class="arrow">→</span> robot.stop(), training.stop()
+  <span class="arrow">→</span> pierwszy OBSERVER/PENDING awansuje na CONTROLLER
+</div></div>
+
+  <h3>Blokowane akcje (tylko CONTROLLER)</h3>
+  <div style="font-size:12px;color:var(--muted);columns:3;column-gap:20px;margin:10px 0">
+    set_ball, throw, throw_ball, stop, begin_calibration,
+    run_scenario, run_drill, run_drill_solo, run_exercise_solo, run_step_solo,
+    run_training, stop_training, pause_training, resume_training, skip_training,
+    training_note, set_next_percent
+  </div>
+</div>
+
+<script>
+function show(id) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  event.target.classList.add('active');
+}
+</script>
+</body>
+</html>
