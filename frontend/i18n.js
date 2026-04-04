@@ -515,6 +515,7 @@ window.I18N = {
   'tooltip.resume':      { pl:'Wznów trening',     en:'Resume training',    de:'Training fortsetzen',   fr:'Reprendre',               zh:'恢复训练' },
   'tooltip.go_to_drill':    { pl:'Przejdź do drilla',    en:'Go to drill',    de:'Zum Drill',    fr:'Aller au drill',    zh:'前往训练' },
   'tooltip.go_to_exercise': { pl:'Przejdź do ćwiczenia', en:'Go to exercise', de:'Zur Übung',    fr:'Aller à l\'exercice', zh:'前往练习' },
+  'search.placeholder':     { pl:'Szukaj...',             en:'Search...',      de:'Suchen...',    fr:'Rechercher...',       zh:'搜索...' },
 
   // ── History tab ───────────────────────────────────────────────────
   'nav.history':         { pl:'Historia',           en:'History',            de:'Verlauf',               fr:'Historique',              zh:'历史' },

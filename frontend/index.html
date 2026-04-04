@@ -1230,19 +1230,22 @@
 
   <!-- ── Drille ──────────────────────────────────────────────────────────── -->
   <div class="page" v-show="page === 'drills'">
-    <div class="row" style="margin-bottom:14px">
+    <div class="row" style="margin-bottom:8px">
       <span class="section-title" style="margin-bottom:0">{{ t('drills.title') }}</span>
       <div class="spacer"></div>
       <button class="btn btn-ghost" style="padding:8px 12px;font-size:12px" @click="exportDrills">{{ t('drills.export') }}</button>
       <button class="btn btn-primary" style="padding:8px 12px;font-size:12px" @click="addFolder">{{ t('drills.add_folder') }}</button>
     </div>
+    <div style="margin-bottom:10px">
+      <input v-model="drillSearch" type="search" :placeholder="t('search.placeholder')" style="width:100%;background:var(--surface);color:var(--text);border:1px solid var(--border);border-radius:8px;padding:7px 10px;font-size:13px;box-sizing:border-box">
+    </div>
 
-    <div v-if="drillTree.folders.length === 0 && (!drillTree.unfiled || drillTree.unfiled.length === 0)" class="empty">
+    <div v-if="filteredDrillTree.folders.length === 0 && (!filteredDrillTree.unfiled || filteredDrillTree.unfiled.length === 0)" class="empty">
       <div class="empty-icon">📚</div>
       <p>{{ t('drills.empty') }}</p>
     </div>
 
-    <div v-for="folder in drillTree.folders" :key="folder.id" class="drill-folder">
+    <div v-for="folder in filteredDrillTree.folders" :key="folder.id" class="drill-folder">
       <div class="drill-folder-header" @click="toggleFolder(folder.id)">
         <span class="drill-folder-arrow">{{ openFolders.has(folder.id) ? '▼' : '▶' }}</span>
         <span class="drill-folder-name">{{ folder.readonly ? tc('folders', folder.name) : folder.name }}</span>
@@ -1256,7 +1259,7 @@
           <button v-if="!folder.readonly" class="btn-xs" @click="deleteFolderConfirm(folder.id)" :title="t('drills.delete_folder')">🗑</button>
         </div>
       </div>
-      <div v-if="openFolders.has(folder.id)" class="drill-list">
+      <div v-if="drillSearch || openFolders.has(folder.id)" class="drill-list">
         <div v-if="folder.drills.length === 0" style="padding:8px 6px;font-size:12px;color:var(--muted)">{{ t('drills.no_drills') }}</div>
         <div v-for="(drill, idx) in folder.drills" :key="drill.id">
           <div class="drill-row" @click="openDrillPanel(drill, folder)" style="cursor:pointer">
@@ -1369,14 +1372,14 @@
       </div>
     </div>
 
-    <div v-if="drillTree.unfiled && drillTree.unfiled.length > 0" class="drill-folder" style="margin-top:8px">
+    <div v-if="filteredDrillTree.unfiled && filteredDrillTree.unfiled.length > 0" class="drill-folder" style="margin-top:8px">
       <div class="drill-folder-header" @click="toggleFolder('unfiled')">
         <span class="drill-folder-arrow">{{ openFolders.has('unfiled') ? '▼' : '▶' }}</span>
         <span class="drill-folder-name" style="color:var(--muted)">{{ t('drills.unfiled') }}</span>
-        <span class="chip" style="margin-left:4px;font-size:10px">{{ drillTree.unfiled.length }}</span>
+        <span class="chip" style="margin-left:4px;font-size:10px">{{ filteredDrillTree.unfiled.length }}</span>
       </div>
-      <div v-if="openFolders.has('unfiled')" class="drill-list">
-        <div v-for="drill in drillTree.unfiled" :key="drill.id" class="drill-row">
+      <div v-if="drillSearch || openFolders.has('unfiled')" class="drill-list">
+        <div v-for="drill in filteredDrillTree.unfiled" :key="drill.id" class="drill-row">
           <span class="drill-name">{{ drill.name }}</span>
           <div class="drill-actions">
             <button class="btn-xs" @click="showMoveModal(drill)" :title="t('drills.move_to')">→</button>
@@ -1547,13 +1550,16 @@
     <div class="row" style="margin-bottom:8px">
       <span class="section-title" style="margin-bottom:0">{{ t('ex.title') }}</span>
     </div>
-    <div v-for="cat in exerciseCategories" :key="cat.id" class="drill-folder">
+    <div style="margin-bottom:10px">
+      <input v-model="exSearch" type="search" :placeholder="t('search.placeholder')" style="width:100%;background:var(--surface);color:var(--text);border:1px solid var(--border);border-radius:8px;padding:7px 10px;font-size:13px;box-sizing:border-box">
+    </div>
+    <div v-for="cat in filteredExCategories" :key="cat.id" class="drill-folder">
       <div class="drill-folder-header" @click="toggleExCat(cat.id)">
         <span class="drill-folder-arrow">{{ openExCats.has(cat.id) ? '▼' : '▶' }}</span>
         <span class="drill-folder-name">{{ cat.icon }} {{ tc('categories', cat.name) }}</span>
         <span class="chip">{{ cat.exercises.length }}</span>
       </div>
-      <div v-if="openExCats.has(cat.id)" class="drill-list">
+      <div v-if="exSearch || openExCats.has(cat.id)" class="drill-list">
         <div v-for="ex in cat.exercises" :key="ex.id" class="drill-row" @click="selectedExercise = selectedExercise?.id === ex.id ? null : ex" style="cursor:pointer">
           <span v-if="selectedPlayerId" style="cursor:pointer;margin-right:4px" @click.stop="toggleFavorite('exercise', ex.id)">{{ isFavorite('exercise', ex.id) ? '★' : '☆' }}</span>
           <span class="drill-name">{{ tc('exercises', ex.name) }}</span>
@@ -2027,11 +2033,14 @@
         <h2 style="flex:1">📊 {{ t('nav.history') }}</h2>
       </div>
       <!-- Player selector -->
-      <div style="display:flex;gap:8px;margin-bottom:12px;align-items:center">
+      <div style="display:flex;gap:8px;margin-bottom:8px;align-items:center">
         <select v-model="historyPlayerId" @change="loadAllHistory()" style="flex:1;background:var(--surface);color:var(--text);border:1px solid var(--border);border-radius:8px;padding:6px 8px;font-size:12px">
           <option :value="null">{{ t('history.all_players') }}</option>
           <option v-for="p in playersList" :key="p.id" :value="p.id">{{ p.name }}</option>
         </select>
+      </div>
+      <div style="margin-bottom:12px">
+        <input v-model="histSearch" type="search" :placeholder="t('search.placeholder')" style="width:100%;background:var(--surface);color:var(--text);border:1px solid var(--border);border-radius:8px;padding:7px 10px;font-size:13px;box-sizing:border-box">
       </div>
 
       <!-- Leaderboard (when all players) -->
@@ -2060,24 +2069,24 @@
       </div>
 
       <!-- Tree: Treningi -->
-      <div v-if="historyTree.trainings.length" style="margin-bottom:8px">
+      <div v-if="filteredHistoryTree.trainings.length" style="margin-bottom:8px">
         <div style="font-size:13px;font-weight:600;padding:6px 0;cursor:pointer;display:flex;align-items:center;gap:6px" @click="toggleHistNode('t')">
-          <span style="font-size:10px">{{ historyExpanded.has('t') ? '▼' : '▶' }}</span>
-          {{ t('history.trainings') }} <span style="font-weight:400;color:var(--muted);font-size:11px">({{ historyTree.trainingCount }})</span>
+          <span style="font-size:10px">{{ histSearch || historyExpanded.has('t') ? '▼' : '▶' }}</span>
+          {{ t('history.trainings') }} <span style="font-weight:400;color:var(--muted);font-size:11px">({{ filteredHistoryTree.trainingCount }})</span>
         </div>
-        <div v-if="historyExpanded.has('t')" style="padding-left:12px">
-          <div v-for="folder in historyTree.trainings" :key="'tf-'+folder.name">
+        <div v-if="histSearch || historyExpanded.has('t')" style="padding-left:12px">
+          <div v-for="folder in filteredHistoryTree.trainings" :key="'tf-'+folder.name">
             <div style="font-size:12px;padding:4px 0;cursor:pointer;display:flex;align-items:center;gap:5px" @click="toggleHistNode('tf-'+folder.name)">
-              <span style="font-size:9px">{{ historyExpanded.has('tf-'+folder.name) ? '▼' : '▶' }}</span>
+              <span style="font-size:9px">{{ histSearch || historyExpanded.has('tf-'+folder.name) ? '▼' : '▶' }}</span>
               📁 {{ folder.name }} <span style="color:var(--muted);font-size:10px">({{ folder.count }})</span>
             </div>
-            <div v-if="historyExpanded.has('tf-'+folder.name)" style="padding-left:14px">
+            <div v-if="histSearch || historyExpanded.has('tf-'+folder.name)" style="padding-left:14px">
               <div v-for="tr in folder.trainings" :key="'tt-'+tr.id">
                 <div style="font-size:11px;padding:3px 0;cursor:pointer;display:flex;align-items:center;gap:5px" @click="toggleHistNode('tt-'+tr.id)">
-                  <span style="font-size:9px">{{ historyExpanded.has('tt-'+tr.id) ? '▼' : '▶' }}</span>
+                  <span style="font-size:9px">{{ histSearch || historyExpanded.has('tt-'+tr.id) ? '▼' : '▶' }}</span>
                   {{ tr.name }} <span style="color:var(--muted);font-size:10px">({{ tr.entries.length }})</span>
                 </div>
-                <div v-if="historyExpanded.has('tt-'+tr.id)" style="padding-left:14px">
+                <div v-if="histSearch || historyExpanded.has('tt-'+tr.id)" style="padding-left:14px">
                   <div v-for="e in tr.entries" :key="e.id" style="margin-bottom:2px">
                     <!-- Entry header: Player (date range) REC status time balls -->
                     <div style="font-size:11px;padding:4px 0;cursor:pointer;display:flex;align-items:center;gap:5px;flex-wrap:wrap" @click="toggleHistNode('he-'+e.id)">
@@ -2115,24 +2124,24 @@
       </div>
 
       <!-- Tree: Drille -->
-      <div v-if="historyTree.drills.length" style="margin-bottom:8px">
+      <div v-if="filteredHistoryTree.drills.length" style="margin-bottom:8px">
         <div style="font-size:13px;font-weight:600;padding:6px 0;cursor:pointer;display:flex;align-items:center;gap:6px" @click="toggleHistNode('d')">
-          <span style="font-size:10px">{{ historyExpanded.has('d') ? '▼' : '▶' }}</span>
-          {{ t('history.drills') }} <span style="font-weight:400;color:var(--muted);font-size:11px">({{ historyTree.drillCount }})</span>
+          <span style="font-size:10px">{{ histSearch || historyExpanded.has('d') ? '▼' : '▶' }}</span>
+          {{ t('history.drills') }} <span style="font-weight:400;color:var(--muted);font-size:11px">({{ filteredHistoryTree.drillCount }})</span>
         </div>
-        <div v-if="historyExpanded.has('d')" style="padding-left:12px">
-          <div v-for="folder in historyTree.drills" :key="'df-'+folder.name">
+        <div v-if="histSearch || historyExpanded.has('d')" style="padding-left:12px">
+          <div v-for="folder in filteredHistoryTree.drills" :key="'df-'+folder.name">
             <div style="font-size:12px;padding:4px 0;cursor:pointer;display:flex;align-items:center;gap:5px" @click="toggleHistNode('df-'+folder.name)">
-              <span style="font-size:9px">{{ historyExpanded.has('df-'+folder.name) ? '▼' : '▶' }}</span>
+              <span style="font-size:9px">{{ histSearch || historyExpanded.has('df-'+folder.name) ? '▼' : '▶' }}</span>
               📁 {{ folder.name }} <span style="color:var(--muted);font-size:10px">({{ folder.count }})</span>
             </div>
-            <div v-if="historyExpanded.has('df-'+folder.name)" style="padding-left:14px">
+            <div v-if="histSearch || historyExpanded.has('df-'+folder.name)" style="padding-left:14px">
               <div v-for="dr in folder.drills" :key="'dd-'+dr.id">
                 <div style="font-size:11px;padding:3px 0;cursor:pointer;display:flex;align-items:center;gap:5px" @click="toggleHistNode('dd-'+dr.id)">
-                  <span style="font-size:9px">{{ historyExpanded.has('dd-'+dr.id) ? '▼' : '▶' }}</span>
+                  <span style="font-size:9px">{{ histSearch || historyExpanded.has('dd-'+dr.id) ? '▼' : '▶' }}</span>
                   {{ dr.name }} <span style="color:var(--muted);font-size:10px">({{ dr.entries.length }})</span>
                 </div>
-                <div v-if="historyExpanded.has('dd-'+dr.id)" style="padding-left:14px">
+                <div v-if="histSearch || historyExpanded.has('dd-'+dr.id)" style="padding-left:14px">
                   <div v-for="e in dr.entries" :key="e.id" style="font-size:11px;padding:4px 0;border-bottom:1px solid rgba(255,255,255,.02);display:flex;align-items:center;gap:5px;flex-wrap:wrap">
                     <span v-if="historyPlayerId === null" style="font-weight:500">{{ getPlayerName(e.player_id) }}</span>
                     <span style="color:var(--muted);font-size:10px">({{ histDateRange(e) }})</span>
@@ -2155,24 +2164,24 @@
       </div>
 
       <!-- Tree: Cwiczenia -->
-      <div v-if="historyTree.exercises.length" style="margin-bottom:8px">
+      <div v-if="filteredHistoryTree.exercises.length" style="margin-bottom:8px">
         <div style="font-size:13px;font-weight:600;padding:6px 0;cursor:pointer;display:flex;align-items:center;gap:6px" @click="toggleHistNode('e')">
-          <span style="font-size:10px">{{ historyExpanded.has('e') ? '▼' : '▶' }}</span>
-          {{ t('history.exercises') }} <span style="font-weight:400;color:var(--muted);font-size:11px">({{ historyTree.exerciseCount }})</span>
+          <span style="font-size:10px">{{ histSearch || historyExpanded.has('e') ? '▼' : '▶' }}</span>
+          {{ t('history.exercises') }} <span style="font-weight:400;color:var(--muted);font-size:11px">({{ filteredHistoryTree.exerciseCount }})</span>
         </div>
-        <div v-if="historyExpanded.has('e')" style="padding-left:12px">
-          <div v-for="cat in historyTree.exercises" :key="'ec-'+cat.name">
+        <div v-if="histSearch || historyExpanded.has('e')" style="padding-left:12px">
+          <div v-for="cat in filteredHistoryTree.exercises" :key="'ec-'+cat.name">
             <div style="font-size:12px;padding:4px 0;cursor:pointer;display:flex;align-items:center;gap:5px" @click="toggleHistNode('ec-'+cat.name)">
-              <span style="font-size:9px">{{ historyExpanded.has('ec-'+cat.name) ? '▼' : '▶' }}</span>
+              <span style="font-size:9px">{{ histSearch || historyExpanded.has('ec-'+cat.name) ? '▼' : '▶' }}</span>
               {{ cat.icon }} {{ cat.name }} <span style="color:var(--muted);font-size:10px">({{ cat.count }})</span>
             </div>
-            <div v-if="historyExpanded.has('ec-'+cat.name)" style="padding-left:14px">
+            <div v-if="histSearch || historyExpanded.has('ec-'+cat.name)" style="padding-left:14px">
               <div v-for="ex in cat.exercises" :key="'ee-'+ex.id">
                 <div style="font-size:11px;padding:3px 0;cursor:pointer;display:flex;align-items:center;gap:5px" @click="toggleHistNode('ee-'+ex.id)">
-                  <span style="font-size:9px">{{ historyExpanded.has('ee-'+ex.id) ? '▼' : '▶' }}</span>
+                  <span style="font-size:9px">{{ histSearch || historyExpanded.has('ee-'+ex.id) ? '▼' : '▶' }}</span>
                   🏋 {{ ex.name }} <span style="color:var(--muted);font-size:10px">({{ ex.entries.length }})</span>
                 </div>
-                <div v-if="historyExpanded.has('ee-'+ex.id)" style="padding-left:14px">
+                <div v-if="histSearch || historyExpanded.has('ee-'+ex.id)" style="padding-left:14px">
                   <div v-for="e in ex.entries" :key="e.id" style="font-size:11px;padding:4px 0;border-bottom:1px solid rgba(255,255,255,.02);display:flex;align-items:center;gap:5px;flex-wrap:wrap">
                     <span v-if="historyPlayerId === null" style="font-weight:500">{{ getPlayerName(e.player_id) }}</span>
                     <span style="color:var(--muted);font-size:10px">({{ histDateRange(e) }})</span>
@@ -2896,11 +2905,33 @@ const _app = createApp({
     const drillTree    = reactive({ folders: [], unfiled: [] })
     const openFolders  = reactive(new Set())
     const moveModalDrill = ref(null)
+    const drillSearch  = ref('')
+
+    const filteredDrillTree = computed(() => {
+      const q = drillSearch.value.trim().toLowerCase()
+      if (!q) return drillTree
+      const folders = drillTree.folders.map(f => ({
+        ...f,
+        drills: f.drills.filter(d => (d.readonly ? tc('drills', d.name) : d.name).toLowerCase().includes(q))
+      })).filter(f => f.drills.length)
+      const unfiled = (drillTree.unfiled || []).filter(d => d.name.toLowerCase().includes(q))
+      return { folders, unfiled }
+    })
 
     // ── Exercises ──────────────────────────────────────────────
     const exerciseCategories = ref([])
     const openExCats = reactive(new Set())
     const selectedExercise = ref(null)
+    const exSearch = ref('')
+
+    const filteredExCategories = computed(() => {
+      const q = exSearch.value.trim().toLowerCase()
+      if (!q) return exerciseCategories.value
+      return exerciseCategories.value.map(cat => ({
+        ...cat,
+        exercises: cat.exercises.filter(ex => tc('exercises', ex.name).toLowerCase().includes(q))
+      })).filter(cat => cat.exercises.length)
+    })
 
     function toggleExCat(id) {
       openExCats.has(id) ? openExCats.delete(id) : openExCats.add(id)
@@ -4300,6 +4331,40 @@ const _app = createApp({
     }
 
     const historyTree = computed(() => buildHistTree(allHistory.value))
+    const histSearch = ref('')
+
+    const filteredHistoryTree = computed(() => {
+      const q = histSearch.value.trim().toLowerCase()
+      if (!q) return historyTree.value
+      const ht = historyTree.value
+      // filter trainings
+      const trainings = ht.trainings.map(folder => ({
+        ...folder,
+        trainings: folder.trainings.map(tr => ({
+          ...tr,
+          entries: tr.entries.filter(e => {
+            const steps = getTrainingSteps(e.training_id) || []
+            return tr.name.toLowerCase().includes(q) || steps.some(s => (s.drill_name||'').toLowerCase().includes(q) || (s.exercise_name||'').toLowerCase().includes(q))
+          })
+        })).filter(tr => tr.name.toLowerCase().includes(q) || tr.entries.length)
+      })).filter(f => f.trainings.length)
+      // filter drills
+      const drills = ht.drills.map(folder => ({
+        ...folder,
+        drills: folder.drills.filter(d => d.name.toLowerCase().includes(q))
+      })).filter(f => f.drills.length)
+      // filter exercises
+      const exercises = ht.exercises.map(cat => ({
+        ...cat,
+        exercises: cat.exercises.filter(ex => ex.name.toLowerCase().includes(q))
+      })).filter(cat => cat.exercises.length)
+      return {
+        ...ht,
+        trainings, drills, exercises,
+        drillCount: drills.reduce((n, f) => n + f.drills.length, 0),
+        exerciseCount: exercises.reduce((n, c) => n + c.exercises.length, 0),
+      }
+    })
 
     const leaderboard = computed(() => {
       const rows = playersList.value.map(p => {
