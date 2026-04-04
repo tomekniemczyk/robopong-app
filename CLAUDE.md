@@ -384,13 +384,21 @@ Zasady:
 
 ### Git workflow (OBOWIĄZKOWE)
 - **Commituj prosto na `main`** — bez feature branchy, bez PRów
-- **Zawsze pracuj w worktree** (`git worktree add /tmp/robopong-work HEAD`) — nie edytuj plików bezpośrednio w głównym katalogu roboczym
+- **ZAWSZE pracuj w worktree** (`git worktree add /tmp/robopong-work HEAD`) — **NIGDY nie edytuj plików bezpośrednio w głównym katalogu roboczym** (`/home/robopong/robopong-app`)
 - Przy każdym nowym zadaniu — twórz **nowy worktree od aktualnego main** (`git pull` + `git worktree add`), nigdy nie reużywaj starego
 - **Przed pushem ZAWSZE rebase na main**: `git pull --rebase origin main`
 - **Konflikty przy rebase: ZAWSZE rozwiązuj logicznie** — przeczytaj obie strony konfliktu, zrozum intencję obu zmian, scal je zachowując funkcjonalność obu. NIGDY nie wybieraj ślepo "ours" ani "theirs". Po rozwiązaniu: `git add` + `git rebase --continue`
 - **Push z `--force-with-lease`**: `git push --force-with-lease origin main` — bezpieczny force push, chroni przed nadpisaniem cudzych commitów
 - Pełna sekwencja po pracy w worktree: commit → `git checkout main` → `git pull --rebase origin main` → rozwiąż konflikty → `git push --force-with-lease origin main` → `git worktree remove`
 - Nie używaj `/commit-push-pr` — tylko `/commit` + push na main
+
+> ⚠️ **KRYTYCZNE — równoległe sesje Claude:**
+> Projekt jest rozwijany równolegle w wielu sesjach Claude jednocześnie. Każda sesja może wprowadzać zmiany do tych samych plików (zwłaszcza `frontend/index.html`). Przy rebase **OBOWIĄZKOWO**:
+> 1. Uruchom `git diff HEAD origin/main` przed rebase — sprawdź co zmieniły inne sesje
+> 2. Przy każdym konflikcie otwórz **oba** pliki (ours i theirs) i ręcznie zweryfikuj że żadna funkcja, przycisk ani fragment kodu nie zniknął
+> 3. Po rebase uruchom `git diff HEAD~N HEAD` i przejrzyj **cały diff** — upewnij się że własne zmiany są obecne i nie nadpisały cudzych
+> 4. Jeśli nie ma konfliktu ale plik był dotknięty przez obie strony — mimo to sprawdź wynik wizualnie
+> Przykład błędu: commit `ba059c7` nadpisał nawigację (`navigateToDrill`) bo rebase nie wykrył konfliktu w dużym pliku HTML
 
 ### Zarządzanie zadaniami (OBOWIĄZKOWE)
 - Gdy użytkownik mówi "dodaj zadanie", "nowe zadanie", "task:", "TODO:" — **zawsze** twórz GitHub Issue
