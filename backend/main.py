@@ -158,8 +158,9 @@ def _load_cal(addr: str = "") -> tuple:
             return specific, True
         fallback = raw.get("_default_")
         if fallback:
-            logger.debug("CAL _load_cal(%s): brak wpisu dla urządzenia, fallback _default_ → was_saved=False", addr)
-            return fallback, False
+            # _default_ istnieje = użytkownik zapisał kalibrację (nawet bez adresu) → was_saved=True
+            logger.debug("CAL _load_cal(%s): brak wpisu per-device, fallback _default_ → was_saved=True", addr)
+            return fallback, True
         logger.debug("CAL _load_cal(%s): plik istnieje ale brak danych → DEFAULT_CAL, was_saved=False", addr)
         return DEFAULT_CAL.copy(), False
     except Exception as ex:
