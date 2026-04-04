@@ -27,6 +27,8 @@ venv/bin/pytest tests/test_api.py::nazwa_testu
 ./deploy.sh
 ```
 
+> `deploy.sh` śledzi SHA ostatnio zdelpoyowanego commita (`/tmp/robopong-deployed-sha`). Wykrywa zarówno zmiany z remote, jak i lokalne commity pushowane z serwera — nie trzeba ręcznie restartować.
+
 ### Testy backend (196 testów)
 - `test_api.py` — integracja: scenariusze, kalibracja, presety
 - `test_api_drills.py` — integracja: CRUD foldery, drille, override, reorder

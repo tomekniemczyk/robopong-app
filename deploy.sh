@@ -7,6 +7,7 @@ BACKEND="$APP_DIR/backend"
 PORT=8001
 LOCKFILE="/tmp/robopong-deploy.lock"
 LOGFILE="/tmp/robopong-deploy.log"
+DEPLOYED_SHA_FILE="/tmp/robopong-deployed-sha"
 
 log() { echo "[$(date '+%H:%M:%S')] $*" >> "$LOGFILE"; }
 
@@ -52,20 +53,38 @@ ci_passed() {
 }
 
 pgrep -f "uvicorn main:app.*$PORT" >/dev/null 2>&1 || restart_server
+
+# Initialize deployed SHA with current running version
+CURRENT_HEAD=$(cd "$APP_DIR" && git rev-parse HEAD)
+[ -f "$DEPLOYED_SHA_FILE" ] || echo "$CURRENT_HEAD" > "$DEPLOYED_SHA_FILE"
+
 log "Auto-deploy start (co 15s, wymaga CI pass)"
 
 while true; do
     cd "$APP_DIR"
     git fetch origin main 2>>"$LOGFILE" || { sleep 15; continue; }
 
-    LOCAL_HEAD=$(git rev-parse HEAD)
     REMOTE_HEAD=$(git rev-parse origin/main)
+    LOCAL_HEAD=$(git rev-parse HEAD)
+    DEPLOYED_SHA=$(cat "$DEPLOYED_SHA_FILE" 2>/dev/null || echo "")
 
+    # Pull remote changes if any
     if [ "$LOCAL_HEAD" != "$REMOTE_HEAD" ]; then
         if ci_passed "$REMOTE_HEAD"; then
-            log "CI PASSED — deploying $REMOTE_HEAD"
+            log "Pulling remote changes: $REMOTE_HEAD"
             git pull --ff-only origin main 2>>"$LOGFILE" || { sleep 15; continue; }
+            LOCAL_HEAD=$(git rev-parse HEAD)
+        else
+            sleep 15; continue
+        fi
+    fi
+
+    # Deploy if HEAD differs from last deployed version
+    if [ "$LOCAL_HEAD" != "$DEPLOYED_SHA" ]; then
+        if ci_passed "$LOCAL_HEAD"; then
+            log "CI PASSED — deploying $LOCAL_HEAD"
             restart_server
+            echo "$LOCAL_HEAD" > "$DEPLOYED_SHA_FILE"
         fi
     fi
 
