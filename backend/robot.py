@@ -63,9 +63,9 @@ class Robot:
         await self._disconnect_transport()
         transport = BLETransport()
         transport.set_on_data(self._on_data)
-        transport.set_on_disconnect(self._on_ble_disconnect)
         ok = await transport.connect(address)
         if ok:
+            transport.set_on_disconnect(self._on_ble_disconnect)
             self._transport = transport
             self.device = address
             self._push_status()
@@ -136,12 +136,15 @@ class Robot:
         self._push_status()
 
     async def _disconnect_transport(self):
-        if self._transport and self._transport.is_connected:
-            try:
-                await self._transport.disconnect()
-            except Exception:
-                pass
+        transport = self._transport
         self._transport = None
+        if transport:
+            transport.set_on_disconnect(None)
+            if transport.is_connected:
+                try:
+                    await transport.disconnect()
+                except Exception:
+                    pass
 
     # ── robot control ─────────────────────────────────────────────────────────
 
@@ -361,6 +364,8 @@ class Robot:
         self._stop_health_monitor()
         self._push_status()
         if self._auto_reconnect and self._last_addr:
+            if self._reconnect and not self._reconnect.done():
+                self._reconnect.cancel()
             logger.info("BLE disconnected — reconnecting to %s", self._last_addr)
             self._reconnect = asyncio.create_task(self._reconnect_loop())
 

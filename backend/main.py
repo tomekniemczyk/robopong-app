@@ -218,7 +218,7 @@ async def _do_connect(addr: str) -> bool:
 async def _reconnect_loop():
     while True:
         await asyncio.sleep(15)
-        if sessions and not robot.is_connected:
+        if sessions and not robot.is_connected and not (robot._reconnect and not robot._reconnect.done()):
             last = _load_last_addr()
             if last:
                 logger.info("CAL _reconnect_loop: robot rozłączony, próba reconnect → %s", last)
