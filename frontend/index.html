@@ -2713,6 +2713,12 @@ const _app = createApp({
         transport.value = m.transport || 'ble'
         if (m.session_id) mySessionId.value = m.session_id
         if (m.role)       myRole.value = m.role
+        // Jeśli lastAddr pusty a serwer zna adres (auto-connect) — uzupełnij
+        if (m.connected && m.device && !lastAddr.value) {
+          console.debug('[CAL] status: lastAddr pusty, uzupełniam z device=%s', m.device)
+          lastAddr.value = m.device
+          localStorage.setItem('lastAddr', m.device)
+        }
 
       } else if (m.type === 'session_role') {
         myRole.value = m.role
@@ -2853,6 +2859,11 @@ const _app = createApp({
         console.debug('[CAL] calibration_loaded — addr=%s calibrated=%s top=%s bot=%s osc=%s h=%s rot=%s | isCalibrated_before=%s localStorage=%s',
           addr, m.calibrated, m.cal?.top_speed, m.cal?.bot_speed, m.cal?.oscillation, m.cal?.height, m.cal?.rotation,
           isCalibrated.value, localStorage.getItem(`cal_done:${addr}`))
+        if (m.addr && !lastAddr.value) {
+          lastAddr.value = m.addr
+          localStorage.setItem('lastAddr', m.addr)
+          console.debug('[CAL] calibration_loaded: lastAddr pusty, uzupełniam z addr=%s', m.addr)
+        }
         if (m.calibrated && addr) {
           localStorage.setItem(`cal_done:${addr}`, '1')
           isCalibrated.value = true
@@ -2968,7 +2979,7 @@ const _app = createApp({
     async function loadDrillTree() {
       const r = await fetch('/api/drills/tree')
       const data = await r.json()
-      drillTree.folders = data.folders
+      drillTree.folders = data.folders || []
       drillTree.unfiled = data.unfiled || []
     }
 
@@ -4624,7 +4635,7 @@ const _app = createApp({
       { key: 'oscillation', step0: 6, minStep: 2, min: 127, max: 173 },
       { key: 'top_speed', step0: 10, minStep: 2, min: 40, max: 249 },
     ]
-    const wizActive = ref(true)
+    const wizActive = ref(false)
     const wizPhase = ref(0)
     const wizState = ref('idle') // idle|warmup|ready|waiting|phase_done|complete
     const wizStep = ref(16)

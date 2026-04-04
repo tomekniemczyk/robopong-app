@@ -282,6 +282,15 @@ async def ws_endpoint(ws: WebSocket):
     _broadcast_sessions()
 
     transport = robot.transport_type or "ble"
+    # Wyślij calibration_loaded PRZED status — żeby frontend wiedział o kalibracji
+    # zanim watcher watch(connected) sprawdzi isCalibrated i ewentualnie zrobi redirect
+    if robot.is_connected and robot.device:
+        cal, was_saved = _load_cal(robot.device)
+        _log("WS init: wysyłam calibration_loaded przed status — addr=%s was_saved=%s", robot.device, was_saved)
+        await ws.send_text(json.dumps({
+            "type": "calibration_loaded",
+            "cal": cal, "calibrated": was_saved, "addr": robot.device,
+        }))
     await ws.send_text(json.dumps({
         "type":       "status",
         "connected":  robot.is_connected,
