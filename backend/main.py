@@ -144,15 +144,27 @@ CAL_FILE       = Path(__file__).parent / ".calibration.json"
 DEFAULT_CAL = {"top_speed": 161, "bot_speed": 0, "oscillation": 150, "height": 183, "rotation": 150, "wait_ms": 1000}
 
 
-def _load_cal(addr: str = "") -> dict:
+def _load_cal(addr: str = "") -> tuple:
+    """Zwraca (cal_dict, was_saved) — was_saved=True jeśli użytkownik zapisał kalibrację dla tego urządzenia."""
     try:
         raw = json.loads(CAL_FILE.read_text())
         # Stary format płaski → automatyczna migracja
         if "top_speed" in raw:
-            return raw
-        return raw.get(addr) or raw.get("_default_") or DEFAULT_CAL.copy()
-    except Exception:
-        return DEFAULT_CAL.copy()
+            logger.debug("CAL _load_cal(%s): stary format płaski → was_saved=True", addr)
+            return raw, True
+        specific = raw.get(addr)
+        if specific:
+            logger.debug("CAL _load_cal(%s): znaleziono wpis specyficzny dla urządzenia → was_saved=True", addr)
+            return specific, True
+        fallback = raw.get("_default_")
+        if fallback:
+            logger.debug("CAL _load_cal(%s): brak wpisu dla urządzenia, fallback _default_ → was_saved=False", addr)
+            return fallback, False
+        logger.debug("CAL _load_cal(%s): plik istnieje ale brak danych → DEFAULT_CAL, was_saved=False", addr)
+        return DEFAULT_CAL.copy(), False
+    except Exception as ex:
+        logger.debug("CAL _load_cal(%s): brak pliku lub błąd (%s) → DEFAULT_CAL, was_saved=False", addr, ex)
+        return DEFAULT_CAL.copy(), False
 
 
 def _save_cal(data: dict, addr: str = ""):
@@ -186,10 +198,19 @@ def _save_last_addr(addr: str):
 
 
 async def _do_connect(addr: str) -> bool:
+    """Łączy z robotem i broadcastuje calibration_loaded po udanym połączeniu."""
     if addr.startswith("USB:"):
         ok = await robot.connect_usb(addr[4:])
     else:
         ok = await robot.connect(addr)
+    if ok:
+        cal, was_saved = _load_cal(addr)
+        logger.info("CAL _do_connect(%s): połączono — was_saved=%s, top=%s bot=%s osc=%s h=%s rot=%s",
+                    addr, was_saved, cal.get("top_speed"), cal.get("bot_speed"),
+                    cal.get("oscillation"), cal.get("height"), cal.get("rotation"))
+        broadcast("calibration_loaded", {"cal": cal, "calibrated": was_saved, "addr": addr})
+    else:
+        logger.warning("CAL _do_connect(%s): połączenie nieudane", addr)
     return ok
 
 
@@ -199,7 +220,7 @@ async def _reconnect_loop():
         if sessions and not robot.is_connected:
             last = _load_last_addr()
             if last:
-                logger.info("Reconnecting to %s...", last)
+                logger.info("CAL _reconnect_loop: robot rozłączony, próba reconnect → %s", last)
                 await _do_connect(last)
 
 
@@ -340,9 +361,11 @@ async def _handle(msg: dict, ws: WebSocket):
             _log("Connected to %s (firmware: %d)", addr, robot.firmware)
             _save_last_addr(addr)
             _last_activity = time.monotonic()
-            cal = _load_cal(addr)
-            _log("Calibration loaded for %s: %s", addr, cal)
-            broadcast("calibration_loaded", {"cal": cal})
+            cal, was_saved = _load_cal(addr)
+            _log("CAL connect BLE %s: was_saved=%s top=%s bot=%s osc=%s h=%s rot=%s",
+                 addr, was_saved, cal.get("top_speed"), cal.get("bot_speed"),
+                 cal.get("oscillation"), cal.get("height"), cal.get("rotation"))
+            broadcast("calibration_loaded", {"cal": cal, "calibrated": was_saved, "addr": addr})
         else:
             _log("Connection failed for %s", addr)
             await _send(ws, "error", {"message": "Nie można połączyć z robotem"})
@@ -363,9 +386,11 @@ async def _handle(msg: dict, ws: WebSocket):
             _log("Connected USB: %s", addr)
             _save_last_addr(addr)
             _last_activity = time.monotonic()
-            cal = _load_cal(addr)
-            _log("Calibration loaded for %s: %s", addr, cal)
-            broadcast("calibration_loaded", {"cal": cal})
+            cal, was_saved = _load_cal(addr)
+            _log("CAL connect USB %s: was_saved=%s top=%s bot=%s osc=%s h=%s rot=%s",
+                 addr, was_saved, cal.get("top_speed"), cal.get("bot_speed"),
+                 cal.get("oscillation"), cal.get("height"), cal.get("rotation"))
+            broadcast("calibration_loaded", {"cal": cal, "calibrated": was_saved, "addr": addr})
 
     elif action == "usb_disconnect":
         _save_last_addr("")
@@ -610,7 +635,8 @@ async def _handle(msg: dict, ws: WebSocket):
 @app.get("/api/calibration")
 def get_calibration():
     addr = _load_last_addr() if robot.is_connected else ""
-    return _load_cal(addr)
+    cal, _ = _load_cal(addr)
+    return cal
 
 
 @app.put("/api/calibration")

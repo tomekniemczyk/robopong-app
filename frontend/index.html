@@ -1442,8 +1442,6 @@
                 <span v-if="!step.exercise_id" style="color:var(--muted);font-size:10px">{{ step.count }}p · {{ step.percent }}%</span>
                 <span v-if="step.exercise_id" style="color:var(--muted);font-size:10px">{{ fmtDur(step.duration_sec) }}</span>
                 <span v-if="step.pause_after_sec" style="color:var(--muted);font-size:10px">⏸{{ step.pause_after_sec }}s</span>
-                <button v-if="step.drill_id" class="btn btn-ghost" style="font-size:9px;padding:1px 5px;flex-shrink:0" :title="t('tooltip.go_to_drill')" @click.stop="navigateToDrill(step.drill_id)">→</button>
-                <button v-if="step.exercise_id" class="btn btn-ghost" style="font-size:9px;padding:1px 5px;flex-shrink:0" :title="t('tooltip.go_to_exercise')" @click.stop="navigateToExercise(step.exercise_id)">→</button>
               </div>
             </div>
           </li>
@@ -1930,8 +1928,6 @@
                           <span v-if="!step.exercise_id" style="color:var(--muted)">({{ step.count }}p)</span>
                           <span v-if="step.exercise_id" style="color:var(--muted)">({{ fmtDur(step.duration_sec) }})</span>
                         </span>
-                        <button v-if="step.drill_id" class="btn btn-ghost" style="font-size:9px;padding:1px 5px" :title="t('tooltip.go_to_drill')" @click.stop="navigateToDrill(step.drill_id)">→</button>
-                        <button v-if="step.exercise_id" class="btn btn-ghost" style="font-size:9px;padding:1px 5px" :title="t('tooltip.go_to_exercise')" @click.stop="navigateToExercise(step.exercise_id)">→</button>
                         <template v-if="profileGetStepRec(e, si)">
                           <button class="btn btn-ghost" style="font-size:9px;padding:1px 4px;color:#ff3b30" @click.stop="openVideoPlay(profileGetStepRec(e, si))">🎥▶</button>
                           <button class="btn btn-ghost" style="font-size:9px;padding:1px 4px" @click.stop="openVideoCompare(profileGetStepRec(e, si))">🔀</button>
@@ -2102,8 +2098,6 @@
                           <span v-if="!step.exercise_id" style="color:var(--muted)">({{ step.count }}p)</span>
                           <span v-if="step.exercise_id" style="color:var(--muted)">({{ fmtDur(step.duration_sec) }})</span>
                         </span>
-                        <button v-if="step.drill_id" class="btn btn-ghost" style="font-size:9px;padding:1px 5px" :title="t('tooltip.go_to_drill')" @click.stop="navigateToDrill(step.drill_id)">→</button>
-                        <button v-if="step.exercise_id" class="btn btn-ghost" style="font-size:9px;padding:1px 5px" :title="t('tooltip.go_to_exercise')" @click.stop="navigateToExercise(step.exercise_id)">→</button>
                         <template v-if="histGetStepRec(e, si)">
                           <button class="btn btn-ghost" style="font-size:9px;padding:1px 4px;color:#ff3b30" :title="t('tooltip.play')"
                             @click.stop="openVideoPlay(histGetStepRec(e, si))">🎥▶</button>
@@ -2137,7 +2131,6 @@
                 <div style="font-size:11px;padding:3px 0;cursor:pointer;display:flex;align-items:center;gap:5px" @click="toggleHistNode('dd-'+dr.id)">
                   <span style="font-size:9px">{{ historyExpanded.has('dd-'+dr.id) ? '▼' : '▶' }}</span>
                   {{ dr.name }} <span style="color:var(--muted);font-size:10px">({{ dr.entries.length }})</span>
-                  <button class="btn btn-ghost" style="font-size:9px;padding:1px 5px;margin-left:auto" :title="t('tooltip.go_to_drill')" @click.stop="navigateToDrill(dr.id)">→</button>
                 </div>
                 <div v-if="historyExpanded.has('dd-'+dr.id)" style="padding-left:14px">
                   <div v-for="e in dr.entries" :key="e.id" style="font-size:11px;padding:4px 0;border-bottom:1px solid rgba(255,255,255,.02);display:flex;align-items:center;gap:5px;flex-wrap:wrap">
@@ -2178,7 +2171,6 @@
                 <div style="font-size:11px;padding:3px 0;cursor:pointer;display:flex;align-items:center;gap:5px" @click="toggleHistNode('ee-'+ex.id)">
                   <span style="font-size:9px">{{ historyExpanded.has('ee-'+ex.id) ? '▼' : '▶' }}</span>
                   🏋 {{ ex.name }} <span style="color:var(--muted);font-size:10px">({{ ex.entries.length }})</span>
-                  <button class="btn btn-ghost" style="font-size:9px;padding:1px 5px;margin-left:auto" :title="t('tooltip.go_to_exercise')" @click.stop="navigateToExercise(ex.id)">→</button>
                 </div>
                 <div v-if="historyExpanded.has('ee-'+ex.id)" style="padding-left:14px">
                   <div v-for="e in ex.entries" :key="e.id" style="font-size:11px;padding:4px 0;border-bottom:1px solid rgba(255,255,255,.02);display:flex;align-items:center;gap:5px;flex-wrap:wrap">
@@ -2440,7 +2432,7 @@
 
   <!-- ── Bottom nav ───────────────────────────────────────────────────────── -->
   <nav class="nav">
-    <button :class="{ active: page === 'drills' }" :style="connected && !isCalibrated ? 'opacity:0.4' : ''" @click="connected && !isCalibrated ? (showToast(t('toast.cal_required')), page='calibration') : page='drills'" :title="connected && !isCalibrated ? t('toast.cal_required') : ''">
+    <button :class="{ active: page === 'drills' }" :style="connected && !isCalibrated ? 'opacity:0.4' : ''" @click="connected && !isCalibrated ? (console.warn('[CAL] DRILLS ZABLOKOWANE: connected=%s isCalibrated=%s lastAddr=%s localStorage=%s', connected, isCalibrated, lastAddr, localStorage.getItem('cal_done:'+lastAddr)), showToast(t('toast.cal_required')), page='calibration') : page='drills'" :title="connected && !isCalibrated ? t('toast.cal_required') : ''">
       <span class="nav-icon">
         <svg width="22" height="18" viewBox="0 0 22 18" fill="none" xmlns="http://www.w3.org/2000/svg">
           <!-- stół — niebieski -->
@@ -2848,6 +2840,15 @@ const _app = createApp({
       } else if (m.type === 'calibration_loaded') {
         Object.assign(cal, m.cal)
         calDirty.value = false
+        const addr = m.addr || lastAddr.value
+        console.debug('[CAL] calibration_loaded — addr=%s calibrated=%s top=%s bot=%s osc=%s h=%s rot=%s | isCalibrated_before=%s localStorage=%s',
+          addr, m.calibrated, m.cal?.top_speed, m.cal?.bot_speed, m.cal?.oscillation, m.cal?.height, m.cal?.rotation,
+          isCalibrated.value, localStorage.getItem(`cal_done:${addr}`))
+        if (m.calibrated && addr) {
+          localStorage.setItem(`cal_done:${addr}`, '1')
+          isCalibrated.value = true
+          console.debug('[CAL] calibration_loaded: isCalibrated ustawiony na true z serwera (was_saved=true)')
+        }
       } else if (m.type === 'info') {
         showToast(m.message)
       } else if (m.type === 'server_log') {
@@ -3142,41 +3143,6 @@ const _app = createApp({
     function ballTableY(b) {
       const h = Math.max(75, Math.min(210, b.height))
       return 30 + (h - 75) / (210 - 75) * 180
-    }
-
-    function navigateToDrill(drillId) {
-      let found = null, foundFolder = null
-      for (const folder of drillTree.folders) {
-        const d = folder.drills.find(d => d.id === drillId)
-        if (d) { found = d; foundFolder = folder; break }
-      }
-      if (!found && drillTree.unfiled) {
-        const d = drillTree.unfiled.find(d => d.id === drillId)
-        if (d) { found = d; foundFolder = { id: 'unfiled', drills: drillTree.unfiled } }
-      }
-      if (!found) return
-      page.value = 'drills'
-      openFolders.add(foundFolder.id)
-      activeDrill.value = found
-      drillRunCount.value = found.user_count || 60
-      drillRunPercent.value = 100
-      if (selectedPlayerId.value) loadDrillLandings(found.id)
-      nextTick(() => {
-        const el = document.querySelector(`[data-drill-id="${drillId}"]`)
-        if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' })
-      })
-    }
-
-    function navigateToExercise(exerciseId) {
-      let found = null, foundCat = null
-      for (const cat of exerciseCategories.value) {
-        const ex = cat.exercises.find(e => e.id === exerciseId)
-        if (ex) { found = ex; foundCat = cat; break }
-      }
-      if (!found) return
-      page.value = 'exercises'
-      openExCats.add(foundCat.id)
-      selectedExercise.value = found
     }
 
     function openDrillPanel(drill, folder) {
@@ -4876,10 +4842,16 @@ const _app = createApp({
       }
     })
     watch(connected, (val, old) => {
+      console.debug('[CAL] watch(connected): val=%s old=%s | isCalibrated=%s lastAddr=%s localStorage_cal_done=%s',
+        val, old, isCalibrated.value, lastAddr.value, localStorage.getItem(`cal_done:${lastAddr.value}`))
       if (val && !old) {
         if (!isCalibrated.value) {
+          console.warn('[CAL] connected→true ale isCalibrated=false → redirect do kalibracji! lastAddr=%s localStorage_cal_done=%s',
+            lastAddr.value, localStorage.getItem(`cal_done:${lastAddr.value}`))
           page.value = 'calibration'
           showToast(t('toast.not_calibrated'))
+        } else {
+          console.debug('[CAL] connected→true, isCalibrated=true → OK, brak redirect')
         }
         // After connection (+ optional calibration), show player select if needed
         nextTick(() => {
@@ -4890,7 +4862,11 @@ const _app = createApp({
       }
     })
     watch(lastAddr, addr => {
-      isCalibrated.value = !!addr && localStorage.getItem(`cal_done:${addr}`) === '1'
+      const calDone = localStorage.getItem(`cal_done:${addr}`)
+      const prev = isCalibrated.value
+      isCalibrated.value = !!addr && calDone === '1'
+      console.debug('[CAL] watch(lastAddr): addr=%s localStorage_cal_done=%s | isCalibrated: %s → %s',
+        addr, calDone, prev, isCalibrated.value)
     })
     watch(selectedExercise, (ex) => {
       if (ex?.id) startExAnim(ex.id)
