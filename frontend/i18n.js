@@ -469,6 +469,8 @@ window.I18N = {
   'training.steps_done':   { pl:'{done}/{total} kroków', en:'{done}/{total} steps', de:'{done}/{total} Schritte', fr:'{done}/{total} étapes', zh:'{done}/{total} 步' },
   'training.resume_from':  { pl:'Wznowienie od kroku', en:'Resume from step', de:'Fortsetzen ab Schritt', fr:'Reprendre à l\'étape', zh:'从步骤恢复' },
   'training.resume':       { pl:'⏩ Wznów',       en:'⏩ Resume',        de:'⏩ Fortsetzen',    fr:'⏩ Reprendre',     zh:'⏩ 恢复' },
+  'training.skip_warmup':  { pl:'Pomiń rozgrzewkę', en:'Skip warmup',     de:'Aufwärmen überspringen', fr:'Passer l\'échauffement', zh:'跳过热身' },
+  'training.skip_cooldown':{ pl:'Pomiń schładzanie', en:'Skip cooldown',   de:'Abkühlen überspringen', fr:'Passer le retour au calme', zh:'跳过放松' },
   'tr.balls_label':        { pl:'piłek',           en:'balls',            de:'Bälle',            fr:'balles',           zh:'球' },
   'training.speed':        { pl:'Tempo',           en:'Speed',            de:'Tempo',            fr:'Vitesse',          zh:'速度' },
   'training.add_note':     { pl:'Dodaj komentarz...', en:'Add note...',   de:'Notiz hinzufügen...', fr:'Ajouter un commentaire...', zh:'添加备注...' },

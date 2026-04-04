@@ -1488,6 +1488,16 @@
           </label>
         </div>
       </div>
+      <div style="margin-bottom:16px;display:flex;flex-direction:column;gap:6px">
+        <label style="font-size:12px;display:flex;align-items:center;gap:6px;cursor:pointer">
+          <input type="checkbox" v-model="skipWarmup">
+          {{ t('training.skip_warmup') }}
+        </label>
+        <label style="font-size:12px;display:flex;align-items:center;gap:6px;cursor:pointer">
+          <input type="checkbox" v-model="skipCooldown">
+          {{ t('training.skip_cooldown') }}
+        </label>
+      </div>
       <div style="display:flex;gap:10px">
         <button class="btn btn-ghost" style="flex:1" @click="trainingStartModal=null">{{ t('btn.cancel') }}</button>
         <button class="btn btn-success" style="flex:1" @click="startTrainingConfirmed()">▶ Start</button>
@@ -3445,6 +3455,8 @@ const _app = createApp({
     const newPlayerLang = ref('pl')
     const recordTraining = ref(false)
     const recordType = ref('drills')
+    const skipWarmup = ref(false)
+    const skipCooldown = ref(false)
     const historyModal = ref(null)
     const historyEntries = ref([])
     const editingCommentId = ref(null)
@@ -3695,7 +3707,7 @@ const _app = createApp({
       trainingStepsList.value = (tr.steps || []).map(s => ({...s}))
       trainingStep.value = 0
       sessionNotes.value = []
-      send({ action: 'run_training', id: tr.id, player_id: selectedPlayerId.value, record: recordTraining.value, record_type: recordType.value, start_from_step: resumeFromStep.value || 0 })
+      send({ action: 'run_training', id: tr.id, player_id: selectedPlayerId.value, record: recordTraining.value, record_type: recordType.value, start_from_step: resumeFromStep.value || 0, skip_warmup: skipWarmup.value, skip_cooldown: skipCooldown.value })
       trainingStartModal.value = null
     }
 
@@ -5141,7 +5153,7 @@ const _app = createApp({
       pauseTraining, resumeTraining, skipTraining, runExerciseSolo, fmtDur,
       saveTraining, deleteTraining, stopTraining, totalTrainingTime,
       trainingGroups, openTrainingFolders, toggleTrainingFolder, trainingFolderProgress, trainingFolderPct,
-      trainingStatusIcon, lastRunDate, trainingStartModal, selectedPlayerId, recordTraining, recordType, showPlayerSelectModal,
+      trainingStatusIcon, lastRunDate, trainingStartModal, selectedPlayerId, recordTraining, recordType, skipWarmup, skipCooldown, showPlayerSelectModal,
       currentPlayerName, selectPlayer, createAndSelectPlayer, deleteHistoryEntry, historyEndTime, recDownloadName, rerunStep,
       openTrainingStartModal, startTrainingConfirmed, duplicateTraining,
       resumeFromStep, getResumeStep, expandedTraining,

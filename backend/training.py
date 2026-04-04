@@ -151,7 +151,9 @@ class TrainingRunner:
               record_type: str = "all",
               start_from_step: int = 0,
               solo_drill_id: int | None = None,
-              solo_exercise_id: int | None = None):
+              solo_exercise_id: int | None = None,
+              skip_warmup: bool = False,
+              skip_cooldown: bool = False):
         if self.running:
             self.stop()
         self._stopped = False
@@ -171,6 +173,8 @@ class TrainingRunner:
         self._history_id = None
         self._solo_drill_id = solo_drill_id
         self._solo_exercise_id = solo_exercise_id
+        self._skip_warmup = skip_warmup
+        self._skip_cooldown = skip_cooldown
         self._task = asyncio.create_task(self._run(scenario, robot, broadcast))
 
     def stop(self):
@@ -248,8 +252,29 @@ class TrainingRunner:
                     "player_id": meta["player_id"],
                 })
 
+    @staticmethod
+    def _filter_steps(steps: list, skip_warmup: bool, skip_cooldown: bool) -> tuple:
+        """Return (filtered_steps, skipped_indices) with warmup/cooldown exercises removed."""
+        if not steps or (not skip_warmup and not skip_cooldown):
+            return steps, set()
+        skipped = set()
+        if skip_warmup:
+            for i, s in enumerate(steps):
+                if s.get("exercise_id"):
+                    skipped.add(i)
+                else:
+                    break
+        if skip_cooldown:
+            for i in range(len(steps) - 1, -1, -1):
+                if steps[i].get("exercise_id"):
+                    skipped.add(i)
+                else:
+                    break
+        return [s for i, s in enumerate(steps) if i not in skipped], skipped
+
     async def _run(self, scenario: dict, robot, broadcast: Callable):
-        steps = scenario.get("steps", [])
+        raw_steps = scenario.get("steps", [])
+        steps, skipped_indices = self._filter_steps(raw_steps, self._skip_warmup, self._skip_cooldown)
         countdown_sec = scenario.get("countdown_sec", 5)
         total_steps = len(steps)
         start_time = time.monotonic()
