@@ -65,6 +65,9 @@ class BLETransport(RobotTransport):
     def _bt_is_paired(address: str) -> bool:
         return "Paired: yes" in BLETransport._bt_cmd("info", address)
 
+    _dbus_agent = None
+    _dbus_bus = None
+
     @staticmethod
     def _bt_pair_dbus(address: str) -> bool:
         try:
@@ -75,28 +78,35 @@ class BLETransport(RobotTransport):
             dbus.mainloop.glib.DBusGMainLoop(set_as_default=True)
             bus = dbus.SystemBus()
 
-            class Agent(dbus.service.Object):
-                @dbus.service.method(AGENT_IF, in_signature="", out_signature="")
-                def Release(self): pass
-                @dbus.service.method(AGENT_IF, in_signature="os", out_signature="")
-                def AuthorizeService(self, device, uuid): pass
-                @dbus.service.method(AGENT_IF, in_signature="o", out_signature="s")
-                def RequestPinCode(self, device): return "0000"
-                @dbus.service.method(AGENT_IF, in_signature="o", out_signature="u")
-                def RequestPasskey(self, device): return dbus.UInt32(0)
-                @dbus.service.method(AGENT_IF, in_signature="ouq", out_signature="")
-                def DisplayPasskey(self, device, passkey, entered): pass
-                @dbus.service.method(AGENT_IF, in_signature="ou", out_signature="")
-                def RequestConfirmation(self, device, passkey): pass
-                @dbus.service.method(AGENT_IF, in_signature="o", out_signature="")
-                def RequestAuthorization(self, device): pass
-                @dbus.service.method(AGENT_IF, in_signature="", out_signature="")
-                def Cancel(self): pass
+            if BLETransport._dbus_agent is None:
+                class Agent(dbus.service.Object):
+                    @dbus.service.method(AGENT_IF, in_signature="", out_signature="")
+                    def Release(self): pass
+                    @dbus.service.method(AGENT_IF, in_signature="os", out_signature="")
+                    def AuthorizeService(self, device, uuid): pass
+                    @dbus.service.method(AGENT_IF, in_signature="o", out_signature="s")
+                    def RequestPinCode(self, device): return "0000"
+                    @dbus.service.method(AGENT_IF, in_signature="o", out_signature="u")
+                    def RequestPasskey(self, device): return dbus.UInt32(0)
+                    @dbus.service.method(AGENT_IF, in_signature="ouq", out_signature="")
+                    def DisplayPasskey(self, device, passkey, entered): pass
+                    @dbus.service.method(AGENT_IF, in_signature="ou", out_signature="")
+                    def RequestConfirmation(self, device, passkey): pass
+                    @dbus.service.method(AGENT_IF, in_signature="o", out_signature="")
+                    def RequestAuthorization(self, device): pass
+                    @dbus.service.method(AGENT_IF, in_signature="", out_signature="")
+                    def Cancel(self): pass
 
-            agent = Agent(bus, OBJ_PATH)
+                BLETransport._dbus_agent = Agent(bus, OBJ_PATH)
+                BLETransport._dbus_bus = bus
+
             mgr = dbus.Interface(bus.get_object("org.bluez", "/org/bluez"), "org.bluez.AgentManager1")
-            mgr.RegisterAgent(OBJ_PATH, "NoInputNoOutput")
-            mgr.RequestDefaultAgent(OBJ_PATH)
+            try:
+                mgr.RegisterAgent(OBJ_PATH, "NoInputNoOutput")
+                mgr.RequestDefaultAgent(OBJ_PATH)
+            except dbus.exceptions.DBusException as e:
+                if "AlreadyExists" not in str(e):
+                    raise
 
             result = {"ok": False}
             mainloop = GLib.MainLoop()
@@ -114,8 +124,6 @@ class BLETransport(RobotTransport):
 
             threading.Thread(target=do_pair, daemon=True).start()
             mainloop.run()
-            try: mgr.UnregisterAgent(OBJ_PATH)
-            except Exception: pass
             return result["ok"]
         except Exception as e:
             logger.error("Pairing system error: %s", e)

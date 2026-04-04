@@ -216,13 +216,23 @@ async def _do_connect(addr: str) -> bool:
 
 
 async def _reconnect_loop():
+    fail_count = 0
+    MAX_FAILS = 5
     while True:
         await asyncio.sleep(15)
         if sessions and not robot.is_connected and not (robot._reconnect and not robot._reconnect.done()):
             last = _load_last_addr()
-            if last:
-                logger.info("CAL _reconnect_loop: robot rozłączony, próba reconnect → %s", last)
-                await _do_connect(last)
+            if last and fail_count < MAX_FAILS:
+                logger.info("CAL _reconnect_loop: robot rozłączony, próba reconnect %d/%d → %s", fail_count + 1, MAX_FAILS, last)
+                ok = await _do_connect(last)
+                if ok:
+                    fail_count = 0
+                else:
+                    fail_count += 1
+                    if fail_count >= MAX_FAILS:
+                        logger.warning("CAL _reconnect_loop: %d prób nieudanych, rezygnuję", MAX_FAILS)
+        elif robot.is_connected:
+            fail_count = 0
 
 
 async def _standby_loop():
