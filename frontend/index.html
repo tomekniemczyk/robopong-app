@@ -1929,12 +1929,11 @@
                           <span v-if="step.exercise_id" style="color:var(--muted)">({{ fmtDur(step.duration_sec) }})</span>
                         </span>
                         <template v-if="profileGetStepRec(e, si)">
-                          <button class="btn btn-ghost" style="font-size:9px;padding:1px 4px;color:#ff3b30" @click.stop="histPlayRec = histPlayRec === profileGetStepRec(e, si).filename ? null : profileGetStepRec(e, si).filename">{{ histPlayRec === profileGetStepRec(e, si)?.filename ? '⏹' : '🎥▶' }}</button>
+                          <button class="btn btn-ghost" style="font-size:9px;padding:1px 4px;color:#ff3b30" @click.stop="openVideoPlay(profileGetStepRec(e, si))">🎥▶</button>
                           <button class="btn btn-ghost" style="font-size:9px;padding:1px 4px" @click.stop="openVideoCompare(profileGetStepRec(e, si))">🔀</button>
                           <a :href="'/api/recordings/' + profileGetStepRec(e, si).filename" :download="profileGetStepRec(e, si).filename.replace('/', '_')" class="btn btn-ghost" style="font-size:9px;padding:1px 4px" @click.stop>⬇</a>
                         </template>
                       </div>
-                      <video v-if="histPlayRec" :src="'/api/recordings/' + histPlayRec" controls autoplay style="width:100%;margin:4px 0;border-radius:6px;max-height:200px"></video>
                     </div>
                   </div>
                 </div>
@@ -1969,13 +1968,12 @@
                     <span style="font-size:10px">⏱{{ fmtDur(e.elapsed_sec) }}</span>
                     <span v-if="e.total_balls" style="font-size:10px">🏓{{ e.total_balls }}</span>
                     <template v-if="profileGetStepRec(e, 0)">
-                      <button class="btn btn-ghost" style="font-size:9px;padding:1px 4px;color:#ff3b30" @click.stop="histPlayRec = histPlayRec === profileGetStepRec(e, 0).filename ? null : profileGetStepRec(e, 0).filename">{{ histPlayRec === profileGetStepRec(e, 0)?.filename ? '⏹' : '🎥▶' }}</button>
+                      <button class="btn btn-ghost" style="font-size:9px;padding:1px 4px;color:#ff3b30" @click.stop="openVideoPlay(profileGetStepRec(e, 0))">🎥▶</button>
                       <button class="btn btn-ghost" style="font-size:9px;padding:1px 4px" @click.stop="openVideoCompare(profileGetStepRec(e, 0))">🔀</button>
                       <a :href="'/api/recordings/' + profileGetStepRec(e, 0).filename" :download="profileGetStepRec(e, 0).filename.replace('/', '_')" class="btn btn-ghost" style="font-size:9px;padding:1px 4px" @click.stop>⬇</a>
                     </template>
                     <button class="btn btn-ghost" style="font-size:9px;padding:1px 4px;color:var(--danger)" @click.stop="deleteHistoryEntry(e.id)">🗑</button>
                   </div>
-                  <video v-if="histPlayRec" :src="'/api/recordings/' + histPlayRec" controls autoplay style="width:100%;margin:2px 0 4px;border-radius:6px;max-height:200px"></video>
                 </div>
               </div>
             </div>
@@ -2007,13 +2005,12 @@
                     <span>{{ e.status === 'completed' ? '✅' : '⏹' }}</span>
                     <span style="font-size:10px">⏱{{ fmtDur(e.elapsed_sec) }}</span>
                     <template v-if="profileGetStepRec(e, 0)">
-                      <button class="btn btn-ghost" style="font-size:9px;padding:1px 4px;color:#ff3b30" @click.stop="histPlayRec = histPlayRec === profileGetStepRec(e, 0).filename ? null : profileGetStepRec(e, 0).filename">{{ histPlayRec === profileGetStepRec(e, 0)?.filename ? '⏹' : '🎥▶' }}</button>
+                      <button class="btn btn-ghost" style="font-size:9px;padding:1px 4px;color:#ff3b30" @click.stop="openVideoPlay(profileGetStepRec(e, 0))">🎥▶</button>
                       <button class="btn btn-ghost" style="font-size:9px;padding:1px 4px" @click.stop="openVideoCompare(profileGetStepRec(e, 0))">🔀</button>
                       <a :href="'/api/recordings/' + profileGetStepRec(e, 0).filename" :download="profileGetStepRec(e, 0).filename.replace('/', '_')" class="btn btn-ghost" style="font-size:9px;padding:1px 4px" @click.stop>⬇</a>
                     </template>
                     <button class="btn btn-ghost" style="font-size:9px;padding:1px 4px;color:var(--danger)" @click.stop="deleteHistoryEntry(e.id)">🗑</button>
                   </div>
-                  <video v-if="histPlayRec" :src="'/api/recordings/' + histPlayRec" controls autoplay style="width:100%;margin:2px 0 4px;border-radius:6px;max-height:200px"></video>
                 </div>
               </div>
             </div>
@@ -2103,14 +2100,11 @@
                         </span>
                         <template v-if="histGetStepRec(e, si)">
                           <button class="btn btn-ghost" style="font-size:9px;padding:1px 4px;color:#ff3b30" :title="t('tooltip.play')"
-                            @click.stop="histPlayRec = histPlayRec === histGetStepRec(e, si).filename ? null : histGetStepRec(e, si).filename">
-                            {{ histPlayRec === histGetStepRec(e, si)?.filename ? '⏹' : '🎥▶' }}
-                          </button>
+                            @click.stop="openVideoPlay(histGetStepRec(e, si))">🎥▶</button>
                           <a :href="'/api/recordings/' + histGetStepRec(e, si).filename" :download="histGetStepRec(e, si).filename.replace('/', '_')" class="btn btn-ghost" style="font-size:9px;padding:1px 4px" :title="t('tooltip.download')" @click.stop>⬇</a>
                           <button class="btn btn-ghost" style="font-size:9px;padding:1px 4px" :title="t('tooltip.compare')" @click.stop="openVideoCompare(histGetStepRec(e, si))">🔀</button>
                         </template>
                       </div>
-                      <video v-if="histPlayRec" :src="'/api/recordings/' + histPlayRec" controls autoplay style="width:100%;margin:4px 0;border-radius:6px;max-height:200px"></video>
                     </div>
                   </div>
                 </div>
@@ -2148,14 +2142,11 @@
                     <template v-if="histGetStepRec(e, 0)">
                       <span v-if="histHasRec(e)" style="display:inline-flex;align-items:center;gap:2px;font-size:9px;color:#ff3b30;font-weight:700"><span style="width:6px;height:6px;border-radius:50%;background:#ff3b30;animation:recBlink 1s infinite"></span>REC</span>
                       <button class="btn btn-ghost" style="font-size:9px;padding:1px 4px;color:#ff3b30" :title="t('tooltip.play')"
-                        @click.stop="histPlayRec = histPlayRec === histGetStepRec(e, 0).filename ? null : histGetStepRec(e, 0).filename">
-                        {{ histPlayRec === histGetStepRec(e, 0)?.filename ? '⏹' : '🎥▶' }}
-                      </button>
+                        @click.stop="openVideoPlay(histGetStepRec(e, 0))">🎥▶</button>
                       <a :href="'/api/recordings/' + histGetStepRec(e, 0).filename" :download="histGetStepRec(e, 0).filename.replace('/', '_')" class="btn btn-ghost" style="font-size:9px;padding:1px 4px" :title="t('tooltip.download')" @click.stop>⬇</a>
                       <button class="btn btn-ghost" style="font-size:9px;padding:1px 4px" :title="t('tooltip.compare')" @click.stop="openVideoCompare(histGetStepRec(e, 0))">🔀</button>
                     </template>
                   </div>
-                  <video v-if="histPlayRec" :src="'/api/recordings/' + histPlayRec" controls autoplay style="width:100%;margin:2px 0 6px;border-radius:6px;max-height:200px"></video>
                 </div>
               </div>
             </div>
@@ -2190,14 +2181,11 @@
                     <template v-if="histGetStepRec(e, 0)">
                       <span style="display:inline-flex;align-items:center;gap:2px;font-size:9px;color:#ff3b30;font-weight:700"><span style="width:6px;height:6px;border-radius:50%;background:#ff3b30;animation:recBlink 1s infinite"></span>REC</span>
                       <button class="btn btn-ghost" style="font-size:9px;padding:1px 4px;color:#ff3b30" :title="t('tooltip.play')"
-                        @click.stop="histPlayRec = histPlayRec === histGetStepRec(e, 0).filename ? null : histGetStepRec(e, 0).filename">
-                        {{ histPlayRec === histGetStepRec(e, 0)?.filename ? '⏹' : '🎥▶' }}
-                      </button>
+                        @click.stop="openVideoPlay(histGetStepRec(e, 0))">🎥▶</button>
                       <a :href="'/api/recordings/' + histGetStepRec(e, 0).filename" :download="histGetStepRec(e, 0).filename.replace('/', '_')" class="btn btn-ghost" style="font-size:9px;padding:1px 4px" :title="t('tooltip.download')" @click.stop>⬇</a>
                       <button class="btn btn-ghost" style="font-size:9px;padding:1px 4px" :title="t('tooltip.compare')" @click.stop="openVideoCompare(histGetStepRec(e, 0))">🔀</button>
                     </template>
                   </div>
-                  <video v-if="histPlayRec" :src="'/api/recordings/' + histPlayRec" controls autoplay style="width:100%;margin:2px 0 6px;border-radius:6px;max-height:200px"></video>
                 </div>
               </div>
             </div>
@@ -2292,6 +2280,27 @@
       <div class="vid-controls" style="margin-top:8px">
         <button class="btn btn-primary" style="font-size:12px;padding:5px 16px" @click="toggleBothVideos()">⏯ Play/Pause</button>
         <button class="btn btn-ghost" style="font-size:12px;padding:5px 12px" @click="restartBothVideos()">⏮ Restart</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Video playback modal ───────────────────────────────────────────── -->
+  <div v-if="videoPlay.show" class="modal-overlay" @click.self="closeVideoPlay()" style="z-index:250">
+    <div class="modal-sheet" style="max-width:95vw;width:600px">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
+        <h3 style="flex:1;font-size:14px">🎥 {{ videoPlay.label }}</h3>
+        <button class="btn btn-ghost" style="font-size:14px;padding:2px 6px" @click="closeVideoPlay()">✕</button>
+      </div>
+      <div class="vid-controls">
+        <span style="font-size:11px;color:var(--muted)">{{ t('stats.speed') }}:</span>
+        <button v-for="s in [0.25, 0.5, 0.75, 1]" :key="s" class="speed-btn" :class="{active: videoPlay.speed === s}" @click="setPlaySpeed(s)">{{ s }}x</button>
+      </div>
+      <video ref="vidSingle" :src="'/api/recordings/' + videoPlay.file" controls autoplay
+        style="width:100%;border-radius:6px;max-height:60vh;background:#000"></video>
+      <div class="vid-controls" style="margin-top:8px">
+        <button class="btn btn-ghost" style="font-size:13px;padding:5px 14px" @click="skipVideo(-5)">⏪ -5s</button>
+        <button class="btn btn-primary" style="font-size:13px;padding:5px 18px" @click="toggleSingleVideo()">⏯</button>
+        <button class="btn btn-ghost" style="font-size:13px;padding:5px 14px" @click="skipVideo(5)">+5s ⏩</button>
       </div>
     </div>
   </div>
@@ -3359,6 +3368,8 @@ const _app = createApp({
     const videoCompare = reactive({ show: false, leftFile: '', rightFile: '', others: [], stepName: '', leftLabel: '', rightLabel: '', speed: 1 })
     const vidLeft = ref(null)
     const vidRight = ref(null)
+    const videoPlay = reactive({ show: false, file: '', label: '', speed: 1 })
+    const vidSingle = ref(null)
     const playerFavorites = ref([])
     const favTrainings = computed(() => playerFavorites.value.filter(f => f.item_type === 'training'))
     const favDrills = computed(() => playerFavorites.value.filter(f => f.item_type === 'drill'))
@@ -4105,6 +4116,28 @@ const _app = createApp({
     function restartBothVideos() {
       if (vidLeft.value) { vidLeft.value.currentTime = 0; vidLeft.value.play() }
       if (vidRight.value) { vidRight.value.currentTime = 0; vidRight.value.play() }
+    }
+    function openVideoPlay(rec) {
+      videoPlay.file = rec.filename
+      videoPlay.label = _recLabel(rec)
+      videoPlay.speed = 1
+      videoPlay.show = true
+    }
+    function closeVideoPlay() {
+      videoPlay.show = false
+      if (vidSingle.value) vidSingle.value.pause()
+    }
+    function setPlaySpeed(s) {
+      videoPlay.speed = s
+      if (vidSingle.value) vidSingle.value.playbackRate = s
+    }
+    function skipVideo(secs) {
+      if (vidSingle.value) vidSingle.value.currentTime = Math.max(0, vidSingle.value.currentTime + secs)
+    }
+    function toggleSingleVideo() {
+      if (!vidSingle.value) return
+      if (vidSingle.value.paused) vidSingle.value.play()
+      else vidSingle.value.pause()
     }
 
     function playerRunCount(playerId) {
@@ -4983,7 +5016,8 @@ const _app = createApp({
       exerciseCategories, openExCats, selectedExercise, toggleExCat, loadExercises, onStepTypeSelect, getExFrameSrc, exAnimFrame,
       // Historia tab
       historyPlayerId, allHistory, allRecordings, historyExpanded, historySort,
-      loadAllHistory, toggleHistNode, histHasRec, histGetStepRec, histPlayRec, histDateRange, historyTree, leaderboard,
+      loadAllHistory, toggleHistNode, histHasRec, histGetStepRec, histDateRange, historyTree, leaderboard,
+      videoPlay, vidSingle, openVideoPlay, closeVideoPlay, setPlaySpeed, skipVideo, toggleSingleVideo,
     }
   }
 })
