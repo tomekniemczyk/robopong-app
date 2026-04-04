@@ -350,7 +350,7 @@ class TrainingRunner:
                         drill_done.set()
 
                 robot.add_listener(_on_drill_event)
-                await robot.run_drill(drill["balls"], repeat=0, count=count, percent=percent, skip_warmup=ball_preloaded)
+                await robot.run_drill(drill["balls"], repeat=0, count=count, percent=percent, skip_warmup=ball_preloaded, emit_countdown=False)
                 ball_preloaded = False
 
                 timeout = max(300, count * 30)

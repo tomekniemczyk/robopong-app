@@ -200,7 +200,7 @@ class Robot:
 
     # ── drill runner ──────────────────────────────────────────────────────────
 
-    async def run_drill(self, balls: List[Dict], repeat: int = 1, count: int = 0, percent: int = 100, skip_warmup: bool = False):
+    async def run_drill(self, balls: List[Dict], repeat: int = 1, count: int = 0, percent: int = 100, skip_warmup: bool = False, emit_countdown: bool = True):
         if self._drill and not self._drill.done():
             self._drill.cancel()
 
@@ -208,16 +208,15 @@ class Robot:
 
         async def _loop():
             if not skip_warmup:
-                # SetupDrill warmup
-                await self._write("H")
-                await asyncio.sleep(0.2)
-                await self._write("H")
-                await asyncio.sleep(1.0)
+                # Spin up motors immediately, 2-second countdown while warming up
                 b0 = balls[0]
+                await self._write("H")
+                await asyncio.sleep(0.1)
                 await self.set_ball(b0["top_speed"], b0["bot_speed"], b0["oscillation"], b0["height"], b0["rotation"], b0.get("wait_ms", 1000))
-                await asyncio.sleep(0.3)
-                await self.set_ball(b0["top_speed"], b0["bot_speed"], b0["oscillation"], b0["height"], b0["rotation"], b0.get("wait_ms", 1000))
-                await asyncio.sleep(1.5)
+                for sec in [2, 1]:
+                    if emit_countdown:
+                        self._emit("drill_countdown", {"sec": sec})
+                    await asyncio.sleep(1.0)
 
             run = 0
             thrown = 0
