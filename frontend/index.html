@@ -454,229 +454,11 @@
   </div>
 
 
-  <!-- ── Kalibracja ───────────────────────────────────────────────────── -->
+  <!-- ── Kalibracja (wizard jest jedynym UI) ── -->
   <div class="page" v-show="page === 'calibration' && !wizActive">
-
-    <!-- instrukcja -->
-    <div class="card" style="margin-bottom:12px">
-      <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;cursor:pointer" @click="helpOpen=!helpOpen">
-        <span class="section-title" style="margin-bottom:0">{{ t('cal.how_to') }}</span>
-        <span style="color:var(--muted);font-size:12px;margin-left:auto">{{ helpOpen ? t('cal.collapse') : t('cal.expand') }}</span>
-      </div>
-      <div v-if="helpOpen" style="font-size:13px;line-height:1.8;color:var(--text2)">
-        <p style="margin-bottom:8px"><strong style="color:var(--text)">{{ t('cal.motors_info') }}</strong> zakres <code>-249…249</code></p>
-        <ul style="padding-left:16px;margin-bottom:10px">
-          <li><code>80 / 80</code> — {{ t('cal.no_spin') }}</li>
-          <li><code>120 / 40</code> — {{ t('cal.topspin_desc') }}</li>
-          <li><code>40 / 120</code> — {{ t('cal.backspin_desc') }}</li>
-          <li>{{ t('cal.neg_reverse') }}</li>
-          <li>{{ t('cal.higher_faster') }}</li>
-        </ul>
-        <p style="margin-bottom:8px"><strong style="color:var(--text)">{{ t('cal.osc_info') }}</strong> {{ t('cal.osc_range') }}</p>
-        <ul style="padding-left:16px;margin-bottom:10px">
-          <li><code>150</code> — {{ t('cal.head_center') }}</li>
-          <li><code>173</code> — {{ t('cal.full_left') }}</li>
-          <li><code>127</code> — {{ t('cal.full_right') }}</li>
-        </ul>
-        <p style="margin-bottom:8px"><strong style="color:var(--text)">{{ t('cal.height_info') }}</strong> {{ t('cal.height_range') }}</p>
-        <ul style="padding-left:16px;margin-bottom:10px">
-          <li><code>150</code> — {{ t('cal.middle_pos') }}</li>
-          <li><code>75</code> — {{ t('cal.lowest') }}</li>
-          <li><code>210</code> — {{ t('cal.highest') }}</li>
-        </ul>
-        <p style="margin-bottom:8px"><strong style="color:var(--text)">{{ t('cal.rot_info') }}</strong> {{ t('cal.rot_range') }}</p>
-        <ul style="padding-left:16px;margin-bottom:10px">
-          <li><code>150</code> — {{ t('cal.head_straight') }}</li>
-          <li><code>90</code> — {{ t('cal.max_lr') }}, <code>210</code> — {{ t('cal.max_rr') }}</li>
-        </ul>
-        <p style="margin-bottom:4px"><strong style="color:var(--text)">{{ t('cal.wait_title') }}</strong></p>
-        <ul style="padding-left:16px">
-          <li><code>1500</code> — {{ t('cal.default_int') }}</li>
-          <li>{{ t('cal.min_max_ms') }}</li>
-        </ul>
-        <div style="margin-top:10px;padding:8px 12px;background:rgba(91,124,247,.08);border-radius:8px;font-size:12px;color:var(--muted)">
-          <strong>{{ t('cal.procedure_label') }}</strong> {{ t('cal.auto_info') }}
-        </div>
-      </div>
-    </div>
-
-    <div class="card" :class="{ 'observer-lock': myRole !== 'controller' }">
-      <div style="display:flex;align-items:center;gap:8px;margin-bottom:14px">
-        <h2 style="flex:1">{{ t('cal.title') }}</h2>
-        <button class="btn btn-ghost" style="padding:7px 14px;font-size:12px" @click="calReset" :disabled="myRole !== 'controller'">{{ t('cal.reset') }}</button>
-      </div>
-
-      <!-- ── Etap 1: Pozycja głowicy (silniki OFF) ── -->
-      <div style="margin-bottom:16px">
-        <h3 style="margin-bottom:8px">{{ t('cal.head_pos') }} <small style="color:var(--muted);font-weight:400">{{ t('cal.motors_off') }}</small></h3>
-        <div style="font-size:11px;color:var(--accent);background:rgba(91,124,247,.1);border-radius:6px;padding:6px 10px;margin-bottom:10px;display:flex;align-items:center;gap:6px">
-          <span style="font-size:14px;flex-shrink:0">ℹ️</span>
-          <span v-html="t('cal.head_info')"></span>
-        </div>
-        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px">
-          <!-- Wysokość -->
-          <div style="text-align:center">
-            <img src="/static/img/height.svg" :alt="t('cal.height_label')" style="width:80px;height:64px;margin-bottom:4px;cursor:zoom-in" @click="calImgOpen='/static/img/height.svg'" :title="t('cal.click_zoom')">
-            <div style="font-size:11px;color:var(--muted);margin-bottom:2px;font-weight:600">{{ t('cal.height_label') }}</div>
-            <div style="display:flex;align-items:center;justify-content:center;gap:4px">
-              <button class="btn btn-ghost" style="padding:6px 10px;font-size:16px" :disabled="!connected || myRole!=='controller'" @click="calStep('height',-2)">▼</button>
-              <span style="font-size:18px;font-weight:700;min-width:40px;display:inline-block;text-align:center">{{ cal.height }}</span>
-              <button class="btn btn-ghost" style="padding:6px 10px;font-size:16px" :disabled="!connected || myRole!=='controller'" @click="calStep('height',2)">▲</button>
-            </div>
-            <div style="font-size:10px;color:var(--muted)">{{ t('cal.height_hint') }}</div>
-          </div>
-          <!-- Oscylacja -->
-          <div style="text-align:center">
-            <img src="/static/img/oscillation.svg" :alt="t('cal.osc_label')" style="width:80px;height:64px;margin-bottom:4px;cursor:zoom-in" @click="calImgOpen='/static/img/oscillation.svg'" :title="t('cal.click_zoom')">
-            <div style="font-size:11px;color:var(--muted);margin-bottom:2px;font-weight:600">{{ t('cal.osc_label') }}</div>
-            <div style="display:flex;align-items:center;justify-content:center;gap:4px">
-              <button class="btn btn-ghost" style="padding:6px 10px;font-size:16px" :disabled="!connected || myRole!=='controller'" @click="calStep('oscillation',-2)">◀</button>
-              <span style="font-size:18px;font-weight:700;min-width:40px;display:inline-block;text-align:center">{{ cal.oscillation }}</span>
-              <button class="btn btn-ghost" style="padding:6px 10px;font-size:16px" :disabled="!connected || myRole!=='controller'" @click="calStep('oscillation',2)">▶</button>
-            </div>
-            <div style="font-size:10px;color:var(--muted)">{{ t('cal.osc_hint') }}</div>
-          </div>
-          <!-- Rotacja -->
-          <div style="text-align:center">
-            <img src="/static/img/rotation.svg" alt="Rotacja" style="width:80px;height:64px;margin-bottom:4px">
-            <div style="font-size:11px;color:var(--muted);margin-bottom:2px;font-weight:600">{{ t('cal.rot_label') }}</div>
-            <div style="display:flex;align-items:center;justify-content:center;gap:4px">
-              <button class="btn btn-ghost" style="padding:6px 10px;font-size:16px" :disabled="!connected || myRole!=='controller'" @click="calStep('rotation',-2)">◀</button>
-              <span style="font-size:18px;font-weight:700;min-width:40px;display:inline-block;text-align:center">{{ cal.rotation }}</span>
-              <button class="btn btn-ghost" style="padding:6px 10px;font-size:16px" :disabled="!connected || myRole!=='controller'" @click="calStep('rotation',2)">▶</button>
-            </div>
-            <div style="font-size:10px;color:var(--muted)">{{ t('cal.rot_hint') }}</div>
-          </div>
-        </div>
-        <!-- Lightbox — powiększenie obrazka -->
-        <div v-if="calImgOpen" class="modal-overlay" @click="calImgOpen=null"
-             style="z-index:1000;display:flex;align-items:center;justify-content:center;padding:20px">
-          <div style="background:var(--surface);border-radius:12px;padding:16px;max-width:90vw;max-height:80vh;position:relative" @click.stop>
-            <button @click="calImgOpen=null" style="position:absolute;top:8px;right:8px;background:none;border:none;color:var(--muted);font-size:20px;cursor:pointer">✕</button>
-            <img :src="calImgOpen" style="max-width:70vw;max-height:65vh;display:block;margin:0 auto">
-          </div>
-        </div>
-      </div>
-
-      <!-- ── Wizualizacja stołu ── -->
-      <div style="margin-bottom:16px;text-align:center">
-        <svg viewBox="0 0 300 240" style="width:100%;max-width:280px;margin:0 auto;display:block;border-radius:6px;overflow:visible">
-          <!-- Blat stołu -->
-          <rect x="0" y="20" width="300" height="200" fill="#1a4a8a"/>
-          <rect x="0" y="20" width="300" height="200" fill="none" stroke="#fff" stroke-width="2.5"/>
-          <!-- Linia środkowa podłużna -->
-          <line x1="150" y1="20" x2="150" y2="220" stroke="#fff" stroke-width="1.5" opacity="0.6"/>
-          <!-- Siatka -->
-          <rect x="-4" y="16" width="308" height="8" rx="1" fill="#666" stroke="#888" stroke-width="0.5"/>
-          <line x1="0" y1="20" x2="300" y2="20" stroke="#fff" stroke-width="1" opacity="0.4"/>
-          <!-- Robot -->
-          <rect x="115" y="0" width="70" height="16" rx="4" fill="#3a3d52" stroke="#6b6f8a" stroke-width="1"/>
-          <text x="150" y="11" text-anchor="middle" fill="#aaa" font-size="8" font-family="sans-serif" font-weight="600">ROBOT</text>
-          <!-- Linia końcowa gracza -->
-          <line x1="0" y1="220" x2="300" y2="220" stroke="#fff" stroke-width="2.5"/>
-          <!-- Statyczny cel — gdzie piłka powinna spaść po kalibracji -->
-          <circle cx="150" cy="174" r="30"
-            fill="rgba(255,255,255,0.1)" stroke="rgba(255,255,255,0.45)" stroke-width="1.5" stroke-dasharray="4 3"/>
-          <text x="150" y="170" text-anchor="middle" fill="rgba(255,255,255,0.55)" font-size="18" font-weight="700">↓</text>
-          <text x="150" y="182" text-anchor="middle" fill="rgba(255,255,255,0.35)" font-size="7" font-family="sans-serif" letter-spacing="0.5">{{ t('misc.target') }}</text>
-          <!-- Piłka — aktualna pozycja głowicy -->
-          <circle
-            :cx="ballTableX(cal)"
-            :cy="ballTableY(cal)"
-            r="14"
-            fill="#ffd43b"
-            stroke="#fff" stroke-width="2"
-            opacity="0.95"/>
-          <text
-            :x="ballTableX(cal)"
-            :y="ballTableY(cal) + 4"
-            text-anchor="middle"
-            fill="#333"
-            font-size="11"
-            font-weight="700">↓</text>
-          <!-- Krzyżyk celownika -->
-          <line :x1="ballTableX(cal)-22" :y1="ballTableY(cal)" :x2="ballTableX(cal)-17" :y2="ballTableY(cal)" stroke="#ffd43b" stroke-width="1" opacity="0.6"/>
-          <line :x1="ballTableX(cal)+17" :y1="ballTableY(cal)" :x2="ballTableX(cal)+22" :y2="ballTableY(cal)" stroke="#ffd43b" stroke-width="1" opacity="0.6"/>
-          <line :x1="ballTableX(cal)" :y1="ballTableY(cal)-22" :x2="ballTableX(cal)" :y2="ballTableY(cal)-17" stroke="#ffd43b" stroke-width="1" opacity="0.6"/>
-          <line :x1="ballTableX(cal)" :y1="ballTableY(cal)+17" :x2="ballTableX(cal)" :y2="ballTableY(cal)+22" stroke="#ffd43b" stroke-width="1" opacity="0.6"/>
-          <!-- Etykiety osi -->
-          <text x="150" y="235" text-anchor="middle" fill="#666" font-size="8" font-family="sans-serif">{{ t('cal.axis_labels', {osc: cal.oscillation, h: cal.height}) }}</text>
-        </svg>
-      </div>
-
-      <!-- ── Etap 2: Silniki ── -->
-      <div style="margin-bottom:14px">
-        <h3 style="margin-bottom:10px">{{ t('cal.motors_section') }}</h3>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px">
-          <div class="field" style="margin:0">
-            <label>{{ t('cal.top') }} <small>-249…249</small></label>
-            <div style="display:flex;align-items:center;gap:4px">
-              <button class="btn btn-ghost" style="padding:4px 8px" :disabled="!connected || myRole!=='controller'" @click="calStep('top_speed',-2)">−</button>
-              <input type="number" v-model.number="cal.top_speed" min="-249" max="249" style="flex:1;text-align:center"
-                @change="clampCal('top_speed',-249,249);calDirty=true">
-              <button class="btn btn-ghost" style="padding:4px 8px" :disabled="!connected || myRole!=='controller'" @click="calStep('top_speed',2)">+</button>
-            </div>
-          </div>
-          <div class="field" style="margin:0">
-            <label>{{ t('cal.bottom') }} <small>-249…249</small></label>
-            <div style="display:flex;align-items:center;gap:4px">
-              <button class="btn btn-ghost" style="padding:4px 8px" :disabled="!connected || myRole!=='controller'" @click="calStep('bot_speed',-2)">−</button>
-              <input type="number" v-model.number="cal.bot_speed" min="-249" max="249" style="flex:1;text-align:center"
-                @change="clampCal('bot_speed',-249,249);calDirty=true">
-              <button class="btn btn-ghost" style="padding:4px 8px" :disabled="!connected || myRole!=='controller'" @click="calStep('bot_speed',2)">+</button>
-            </div>
-          </div>
-        </div>
-        <div class="field" style="margin-bottom:10px">
-          <label>{{ t('cal.wait_ms') }} <small>200–10000</small></label>
-          <input type="number" v-model.number="cal.wait_ms" min="200" max="10000" @change="clampCal('wait_ms',200,10000);calDirty=true">
-        </div>
-        <div class="cal-actions">
-          <button class="btn btn-success" :disabled="!connected || myRole !== 'controller'" @click="calThrow">{{ t('cal.throw') }}</button>
-        </div>
-      </div>
-
-      <div style="margin-top:12px">
-        <div class="row" style="margin-bottom:8px">
-          <span style="font-size:12px;font-weight:600;color:var(--muted)">{{ t('presets.title') }}</span>
-          <div class="spacer"></div>
-          <button class="btn btn-ghost" style="font-size:11px;padding:5px 10px;display:flex;align-items:center;gap:4px" @click="exportCalibration" :title="t('cal.export')">
-            <svg width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M6.5 1v8M3 6l3.5 3.5L10 6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M1 11h11" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
-            {{ t('cal.export_btn') }}
-          </button>
-          <label class="btn btn-ghost" style="font-size:11px;padding:5px 10px;cursor:pointer;display:flex;align-items:center;gap:4px" :title="t('cal.import')">
-            <svg width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M6.5 9V1M3 4l3.5-3.5L10 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M1 11h11" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
-            {{ t('cal.import_btn') }}<input ref="importCalRef" type="file" accept=".json" style="display:none" @change="importCalibration">
-          </label>
-          <button class="btn btn-primary" style="font-size:12px;padding:6px 12px" @click="savePreset">{{ t('presets.save_as') }}</button>
-        </div>
-        <ul class="device-list" v-if="presets.length">
-          <li v-for="p in presets" :key="p.id" style="align-items:center">
-            <div style="flex:1;min-width:0">
-              <span style="font-weight:600;font-size:13px">{{ p.name }}</span>
-              <span v-if="p.is_default" style="margin-left:6px;font-size:10px;color:var(--accent);text-transform:uppercase">{{ t('presets.default') }}</span>
-            </div>
-            <button class="btn btn-ghost btn-icon" style="font-size:10px;padding:4px 7px" @click="loadPreset(p)" :title="t('presets.load')">{{ t('presets.load') }}</button>
-            <button class="btn btn-ghost btn-icon" style="font-size:10px;padding:4px 7px;color:var(--accent)" @click="updatePreset(p)" :title="t('presets.overwrite')">{{ t('presets.overwrite') }}</button>
-            <button class="btn btn-ghost btn-icon" style="font-size:11px;padding:4px 8px" @click="setDefaultPreset(p.id)" :title="t('presets.set_default')" v-if="!p.is_default">★</button>
-            <button class="btn btn-ghost btn-icon" style="font-size:11px;padding:4px 8px;color:var(--danger)" @click="deletePreset(p.id)" :title="t('presets.delete')">✕</button>
-          </li>
-        </ul>
-        <div v-else style="font-size:12px;color:var(--muted);padding:6px 0">{{ t('presets.none') }}</div>
-      </div>
-
-      <div style="margin-top:16px;padding-top:14px;border-top:1px solid var(--border);display:flex;gap:8px">
-        <button class="btn btn-ghost" style="flex:0;padding:12px 16px;font-size:13px"
-          @click="wizStart">
-          🧙 {{ t('wizard.start') }}
-        </button>
-        <div style="flex:1"></div>
-        <button class="btn btn-success" style="padding:12px 20px;font-size:14px;font-weight:700"
-          :disabled="!connected || myRole !== 'controller'" @click="calDone">
-          {{ t('cal.done_save') }}
-        </button>
-      </div>
-
+    <div style="text-align:center;padding:40px 20px;color:var(--muted)">
+      <div v-if="!connected" style="font-size:14px">{{ t('cal.connect_first') }}</div>
+      <div v-else-if="myRole !== 'controller'" style="font-size:14px">{{ t('cal.observer_info') }}</div>
     </div>
   </div>
 
@@ -857,9 +639,30 @@
         <div style="font-size:12px;color:var(--muted);margin-bottom:4px">{{ t('wizard.preset_label') }}</div>
         <input v-model="wizPresetName" style="width:100%;padding:10px;border-radius:8px;border:1px solid var(--border);background:var(--surface);color:var(--text);font-size:13px" />
       </div>
-      <div style="display:flex;gap:8px">
+      <div style="display:flex;gap:8px;margin-bottom:16px">
         <button class="btn btn-ghost" style="flex:1;padding:12px" @click="wizFinishDefault">{{ t('wizard.save_default') }}</button>
         <button class="btn btn-success" style="flex:1;padding:12px;font-weight:700" @click="wizFinishNamed">{{ t('wizard.save_named') }}</button>
+      </div>
+
+      <!-- Lista presetów -->
+      <div v-if="presets.length" style="text-align:left;border-top:1px solid var(--border);padding-top:12px">
+        <div style="font-size:11px;color:var(--muted);margin-bottom:6px;text-transform:uppercase;letter-spacing:0.05em">{{ t('cal.saved_presets') }}</div>
+        <div v-for="p in presets" :key="p.id"
+          style="display:flex;align-items:center;gap:6px;padding:6px 0;border-bottom:1px solid rgba(255,255,255,0.05)">
+          <span :style="p.is_default ? 'color:var(--success);font-size:12px;min-width:12px' : 'min-width:12px'">{{ p.is_default ? '★' : '' }}</span>
+          <span style="flex:1;font-size:12px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ p.name }}</span>
+          <button class="btn-xs" @click="loadPreset(p)" :title="t('btn.load')">↩</button>
+          <button class="btn-xs" @click="updatePreset(p)" :title="t('btn.overwrite')">↑</button>
+          <button class="btn-xs" @click="setDefaultPreset(p.id)" :title="t('btn.set_default')">★</button>
+          <button class="btn-xs" style="color:var(--danger)" @click="deletePreset(p.id)" :title="t('presets.delete')">🗑</button>
+        </div>
+      </div>
+
+      <!-- Export/Import -->
+      <div style="display:flex;gap:8px;margin-top:10px">
+        <button class="btn btn-ghost" style="flex:1;font-size:11px;padding:8px" @click="exportCalibration">{{ t('cal.export') }}</button>
+        <button class="btn btn-ghost" style="flex:1;font-size:11px;padding:8px" @click="importCalRef.click()">{{ t('cal.import') }}</button>
+        <input ref="importCalRef" type="file" accept=".json" style="display:none" @change="importCalibration"/>
       </div>
     </div>
   </div>
@@ -2703,9 +2506,6 @@ const _app = createApp({
 
     const cal            = reactive({ top_speed: 161, bot_speed: 0, oscillation: 150, height: 183, rotation: 150, wait_ms: 1000 })
     const calDirty       = ref(true)
-    const calMotorLocked = ref(true)
-    const helpOpen       = ref(false)
-    const calImgOpen     = ref(null)
     const expDrillId   = ref(null)
     const expDrillData = ref(null)
     const expBallIdx   = ref(0)
@@ -4688,15 +4488,6 @@ const _app = createApp({
       }, 300)
     }
 
-    function calSend() {
-      _clampAllCal()
-      _resetCalIdle()
-      send({ action: 'set_ball', ball: { ...cal } })
-      _calMotorsRunning = true
-      addLog(`⚡ top=${cal.top_speed} bot=${cal.bot_speed} osc=${cal.oscillation} h=${cal.height} rot=${cal.rotation}`)
-      calDirty.value = false
-      showToast(t('toast.motors_start'))
-    }
     let _calMotorsRunning = false
     let _calThrowBusy = false
     async function calThrow() {
@@ -4718,18 +4509,6 @@ const _app = createApp({
       await new Promise(r => setTimeout(r, 1500))
       _calThrowBusy = false
     }
-    function calStop() {
-      send({ action:'stop' })
-      _calMotorsRunning = false
-      addLog('→ H (stop)')
-      showToast(t('toast.stop'))
-    }
-    function calSetup() {
-      send({ action: 'begin_calibration' })
-      addLog('→ V (setup)')
-      showToast(t('toast.setup_reset'))
-    }
-
     // Auto-idle: 10s bez aktywności → silniki gasną
     let _calIdleTimer = null
     function _resetCalIdle() {
@@ -5265,7 +5044,7 @@ const _app = createApp({
       showDrillModal, drillModalId, openDrillModal, saveDrillModal,
       showTrainingModal, openTrainingModal,
       editId, editName, editDesc, editRepeat, editBalls,
-      cal, calDirty, calMotorLocked, isCalibrated, helpOpen, calImgOpen,
+      cal, calDirty, isCalibrated,
       expDrillId, expDrillData, expBallIdx, loadExpDrill, loadExpBall, saveExpToDrill, saveExpAsNew,
       lastAddr, robotName, editingName, robotNameEdit, camErr, camSrc,
       transport, deployTime, usbPorts, usbScanning, simulationMode, toggleSimulation,
@@ -5275,7 +5054,7 @@ const _app = createApp({
       runScenario, pauseDrill, resumeDrill, stopDrill, drillPaused,
       deleteScenario, openEditor, addBall, removeBall, saveScenario,
       clamp, clampCal,
-      calStep, calSend, calThrow, calStop, calSetup, calReset, loadCal,
+      calStep, calThrow, calReset, loadCal,
       wizActive, wizState, wizThrows, wizTrail, wizLastTap, wizWarmup, wizPresetName,
       wizStart, wizThrow, wizTableClick, wizRotStep, wizManualStep, wizZoom, wizFinishPrompt, wizFinishDefault, wizFinishNamed, wizCancel,
       presets, savePreset, updatePreset, loadPreset, setDefaultPreset, deletePreset,

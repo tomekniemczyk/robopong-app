@@ -339,6 +339,9 @@ window.I18N = {
   'btn.set':       { pl:'Ustaw',     en:'Set',       de:'Festlegen',    fr:'Définir',     zh:'设置' },
   'btn.overwrite': { pl:'Nadpisz',   en:'Overwrite', de:'Überschreiben',fr:'Écraser',     zh:'覆盖' },
   'btn.edit':      { pl:'Edytuj',    en:'Edit',      de:'Bearbeiten',   fr:'Modifier',    zh:'编辑' },
+  'btn.load':      { pl:'Wczytaj',   en:'Load',      de:'Laden',        fr:'Charger',     zh:'加载' },
+  'btn.set_default':{ pl:'Ustaw domyślny', en:'Set default', de:'Als Standard', fr:'Par défaut', zh:'设为默认' },
+  'cal.saved_presets': { pl:'Zapisane presety', en:'Saved presets', de:'Gespeicherte Presets', fr:'Préréglages sauvegardés', zh:'已保存预设' },
 
   // ── Confirm dialogs ────────────────────────────────────────────────
   'confirm.delete_folder':   { pl:'Usunąć folder? Drille przejdą do "Bez folderu".',
