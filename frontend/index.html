@@ -1123,7 +1123,7 @@
       </div>
       <div v-if="sessionNotes.length" style="margin-top:4px;max-height:50px;overflow-y:auto">
         <div v-for="(n, ni) in sessionNotes" :key="ni" style="font-size:10px;color:var(--text2);padding:1px 0">
-          💬 <span style="color:var(--muted)">krok {{ n.step }}:</span> {{ n.note }}
+          💬 <span style="color:var(--muted)">{{ t('training.step_label') }} {{ n.step }}:</span> {{ n.note }}
         </div>
       </div>
     </div>
@@ -1350,6 +1350,16 @@
             <button v-if="!tr.readonly" class="btn btn-ghost btn-icon" @click="openTrainingModal(tr)" :title="t('btn.edit')">✏</button>
             <button v-if="tr.readonly" class="btn btn-ghost btn-icon" @click="duplicateTraining(tr.id)" :title="t('training.duplicate')">📋</button>
             <button class="btn btn-ghost btn-icon" @click="showTrainingHistory(tr)" :title="t('training.history')">📊</button>
+            <span v-if="getTrainingNotes(tr.id).length" class="notes-tooltip-wrap">
+              <button class="btn btn-ghost btn-icon" style="position:relative">💬<sup style="font-size:8px;color:var(--accent)">{{ getTrainingNotes(tr.id).length }}</sup></button>
+              <div class="notes-tooltip">
+                <div v-for="(n, ni) in getTrainingNotes(tr.id).slice(0, 10)" :key="ni" style="padding:2px 0;border-bottom:1px solid rgba(255,255,255,.08)">
+                  <span style="color:var(--muted)">{{ n.date }}<template v-if="n.step"> · {{ t('training.step_label') }} {{ n.step }}</template>:</span>
+                  {{ n.text }}
+                </div>
+                <div v-if="getTrainingNotes(tr.id).length > 10" style="color:var(--muted);padding-top:4px">{{ t('training.and_more', {n: getTrainingNotes(tr.id).length - 10}) }}</div>
+              </div>
+            </span>
             <button class="btn btn-success btn-icon" @click="openTrainingStartModal(tr)" :disabled="!connected || myRole!=='controller'" title="Start">▶</button>
             <button v-if="!tr.readonly" class="btn btn-ghost btn-icon" style="color:var(--danger)" @click="deleteTraining(tr.id)" :title="t('btn.delete')">✕</button>
             <!-- Expanded steps -->
@@ -1440,7 +1450,7 @@
         <!-- Notatki per krok -->
         <div v-if="h.step_notes?.length" style="margin-top:4px">
           <div v-for="n in h.step_notes" :key="n.step + n.note" style="font-size:11px;color:var(--text2);padding:1px 0">
-            💬 <span style="color:var(--muted)">krok {{ n.step }}:</span> {{ n.note }}
+            💬 <span style="color:var(--muted)">{{ t('training.step_label') }} {{ n.step }}:</span> {{ n.note }}
           </div>
         </div>
         <!-- Komentarz sesji (edytowalny) -->
@@ -3664,6 +3674,16 @@ const _app = createApp({
       return new Date(last.started_at).toLocaleDateString()
     }
 
+    function getTrainingNotes(trainingId) {
+      const runs = trainingHistory.value.filter(h => h.training_id === trainingId)
+      const notes = []
+      for (const h of runs) {
+        if (h.session_comment) notes.push({ date: new Date(h.started_at).toLocaleDateString(), text: h.session_comment, type: 'comment' })
+        for (const n of (h.step_notes || [])) notes.push({ date: new Date(h.started_at).toLocaleDateString(), text: n.note, step: n.step, type: 'note' })
+      }
+      return notes
+    }
+
     async function loadTrainingHistory() {
       let url = '/api/training-history'
       if (selectedPlayerId.value) url += `?player_id=${selectedPlayerId.value}`
@@ -5214,7 +5234,7 @@ const _app = createApp({
       resumeFromStep, getResumeStep, expandedTraining,
       ballSpinLabel, ballPlaceLabel, nextStepInfo,
       stepNote, nextPercentAdjust, nextPercentDisplay, adjustNextPercent, sendStepNote,
-      historyModal, historyEntries, showTrainingHistory, getPlayerName, getTrainingName, saveSessionComment,
+      historyModal, historyEntries, showTrainingHistory, getPlayerName, getTrainingName, getTrainingNotes, saveSessionComment,
       editingCommentId, editingCommentText, sessionNotes,
       playersList, playerDetail, playerHistory, playerRecordings, playingRecording, profileTree, profileGetStepRec, profileHasRec,
       playerVoiceNotes, playingVoice, voiceRecording, currentHistoryId,
