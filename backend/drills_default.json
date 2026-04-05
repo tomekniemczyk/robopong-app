@@ -4605,6 +4605,215 @@
               "wait_ms": 1300
             }
           ]
+        },
+        {
+          "name": "Kicker Serve FH",
+          "description": "Fast topspin kicker to forehand — bounces high at end of table",
+          "youtube_id": "",
+          "delay_s": 0.0,
+          "repeat": 0,
+          "readonly": true,
+          "sort_order": 42,
+          "balls": [
+            {
+              "top_speed": 145,
+              "bot_speed": -45,
+              "oscillation": 140,
+              "height": 158,
+              "rotation": 150,
+              "wait_ms": 2000
+            }
+          ]
+        },
+        {
+          "name": "Kicker Serve BH",
+          "description": "Fast topspin kicker to backhand — bounces high at end of table",
+          "youtube_id": "",
+          "delay_s": 0.0,
+          "repeat": 0,
+          "readonly": true,
+          "sort_order": 43,
+          "balls": [
+            {
+              "top_speed": 145,
+              "bot_speed": -45,
+              "oscillation": 162,
+              "height": 158,
+              "rotation": 150,
+              "wait_ms": 2000
+            }
+          ]
+        },
+        {
+          "name": "Kicker Sidespin L",
+          "description": "Kicker serve with left sidespin — bounces high with curve",
+          "youtube_id": "",
+          "delay_s": 0.0,
+          "repeat": 0,
+          "readonly": true,
+          "sort_order": 44,
+          "balls": [
+            {
+              "top_speed": 140,
+              "bot_speed": -50,
+              "oscillation": 150,
+              "height": 156,
+              "rotation": 188,
+              "wait_ms": 2000
+            }
+          ]
+        },
+        {
+          "name": "Kicker Sidespin R",
+          "description": "Kicker serve with right sidespin — bounces high with curve",
+          "youtube_id": "",
+          "delay_s": 0.0,
+          "repeat": 0,
+          "readonly": true,
+          "sort_order": 45,
+          "balls": [
+            {
+              "top_speed": 140,
+              "bot_speed": -50,
+              "oscillation": 150,
+              "height": 156,
+              "rotation": 112,
+              "wait_ms": 2000
+            }
+          ]
+        },
+        {
+          "name": "Kicker Backspin",
+          "description": "Heavy backspin kicker — fast, deep, deceptive backspin that bounces long",
+          "youtube_id": "",
+          "delay_s": 0.0,
+          "repeat": 0,
+          "readonly": true,
+          "sort_order": 46,
+          "balls": [
+            {
+              "top_speed": -30,
+              "bot_speed": 130,
+              "oscillation": 150,
+              "height": 145,
+              "rotation": 150,
+              "wait_ms": 2000
+            }
+          ]
+        },
+        {
+          "name": "Short Sidespin-Topspin L",
+          "description": "Short serve with left sidespin + slight topspin — tricky spin read",
+          "youtube_id": "",
+          "delay_s": 0.0,
+          "repeat": 0,
+          "readonly": true,
+          "sort_order": 47,
+          "balls": [
+            {
+              "top_speed": 65,
+              "bot_speed": -30,
+              "oscillation": 150,
+              "height": 118,
+              "rotation": 185,
+              "wait_ms": 2200
+            }
+          ]
+        },
+        {
+          "name": "Short Sidespin-Topspin R",
+          "description": "Short serve with right sidespin + slight topspin — tricky spin read",
+          "youtube_id": "",
+          "delay_s": 0.0,
+          "repeat": 0,
+          "readonly": true,
+          "sort_order": 48,
+          "balls": [
+            {
+              "top_speed": 65,
+              "bot_speed": -30,
+              "oscillation": 150,
+              "height": 118,
+              "rotation": 115,
+              "wait_ms": 2200
+            }
+          ]
+        },
+        {
+          "name": "Long Sidespin-Backspin L",
+          "description": "Deep serve with left sidespin + heavy backspin — pendulum style",
+          "youtube_id": "",
+          "delay_s": 0.0,
+          "repeat": 0,
+          "readonly": true,
+          "sort_order": 49,
+          "balls": [
+            {
+              "top_speed": -25,
+              "bot_speed": 115,
+              "oscillation": 150,
+              "height": 140,
+              "rotation": 190,
+              "wait_ms": 1800
+            }
+          ]
+        },
+        {
+          "name": "Long Sidespin-Backspin R",
+          "description": "Deep serve with right sidespin + heavy backspin — reverse pendulum style",
+          "youtube_id": "",
+          "delay_s": 0.0,
+          "repeat": 0,
+          "readonly": true,
+          "sort_order": 50,
+          "balls": [
+            {
+              "top_speed": -25,
+              "bot_speed": 115,
+              "oscillation": 150,
+              "height": 140,
+              "rotation": 110,
+              "wait_ms": 1800
+            }
+          ]
+        },
+        {
+          "name": "Short Pendulum L",
+          "description": "Short left pendulum serve — sidespin + backspin, classic Chinese serve",
+          "youtube_id": "",
+          "delay_s": 0.0,
+          "repeat": 0,
+          "readonly": true,
+          "sort_order": 51,
+          "balls": [
+            {
+              "top_speed": -18,
+              "bot_speed": 90,
+              "oscillation": 150,
+              "height": 114,
+              "rotation": 192,
+              "wait_ms": 2300
+            }
+          ]
+        },
+        {
+          "name": "Short Reverse Pendulum R",
+          "description": "Short right reverse-pendulum serve — sidespin + backspin",
+          "youtube_id": "",
+          "delay_s": 0.0,
+          "repeat": 0,
+          "readonly": true,
+          "sort_order": 52,
+          "balls": [
+            {
+              "top_speed": -18,
+              "bot_speed": 90,
+              "oscillation": 150,
+              "height": 114,
+              "rotation": 108,
+              "wait_ms": 2300
+            }
+          ]
         }
       ]
     }

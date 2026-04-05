@@ -7931,6 +7931,246 @@
           ]
         }
       ]
+    },
+    {
+      "name": "Serwis Zaawansowany",
+      "description": "Odbiór serwisów: skoczki, boczne rotacje, pendulum, mixed",
+      "icon": "🌀",
+      "trainings": [
+        {
+          "name": "Skoczki (Kicker Serves)",
+          "description": "Odbiór skoczków: topspin kicker FH/BH, z boczną rotacją, backspin kicker",
+          "countdown_sec": 5,
+          "steps": [
+            {
+              "drill_id": 6043,
+              "count": 30,
+              "percent": 85,
+              "pause_after_sec": 15
+            },
+            {
+              "drill_id": 6044,
+              "count": 30,
+              "percent": 85,
+              "pause_after_sec": 15
+            },
+            {
+              "drill_id": 6045,
+              "count": 25,
+              "percent": 80,
+              "pause_after_sec": 20
+            },
+            {
+              "drill_id": 6046,
+              "count": 25,
+              "percent": 80,
+              "pause_after_sec": 20
+            },
+            {
+              "drill_id": 6047,
+              "count": 25,
+              "percent": 80,
+              "pause_after_sec": 20
+            },
+            {
+              "drill_id": 6043,
+              "count": 20,
+              "percent": 90,
+              "pause_after_sec": 10
+            }
+          ]
+        },
+        {
+          "name": "Boczno-Cięte & Boczno-Górne",
+          "description": "Serwisy z boczną rotacją: pendulum L/R, sidespin-topspin, sidespin-backspin",
+          "countdown_sec": 5,
+          "steps": [
+            {
+              "drill_id": 6052,
+              "count": 30,
+              "percent": 85,
+              "pause_after_sec": 15
+            },
+            {
+              "drill_id": 6053,
+              "count": 30,
+              "percent": 85,
+              "pause_after_sec": 15
+            },
+            {
+              "drill_id": 6048,
+              "count": 25,
+              "percent": 85,
+              "pause_after_sec": 15
+            },
+            {
+              "drill_id": 6049,
+              "count": 25,
+              "percent": 85,
+              "pause_after_sec": 15
+            },
+            {
+              "drill_id": 6050,
+              "count": 25,
+              "percent": 80,
+              "pause_after_sec": 20
+            },
+            {
+              "drill_id": 6051,
+              "count": 25,
+              "percent": 80,
+              "pause_after_sec": 20
+            },
+            {
+              "drill_id": 6052,
+              "count": 20,
+              "percent": 90,
+              "pause_after_sec": 10
+            }
+          ]
+        },
+        {
+          "name": "Krótkie vs Długie z Rotacją",
+          "description": "Czytanie głębokości: krótki pendulum → długi sidespin, mixed placement",
+          "countdown_sec": 5,
+          "steps": [
+            {
+              "drill_id": 6052,
+              "count": 25,
+              "percent": 85,
+              "pause_after_sec": 15
+            },
+            {
+              "drill_id": 6050,
+              "count": 25,
+              "percent": 80,
+              "pause_after_sec": 20
+            },
+            {
+              "drill_id": 6053,
+              "count": 25,
+              "percent": 85,
+              "pause_after_sec": 15
+            },
+            {
+              "drill_id": 6051,
+              "count": 25,
+              "percent": 80,
+              "pause_after_sec": 20
+            },
+            {
+              "drill_id": 3029,
+              "count": 20,
+              "percent": 80,
+              "pause_after_sec": 15
+            },
+            {
+              "drill_id": 3030,
+              "count": 20,
+              "percent": 80,
+              "pause_after_sec": 10
+            }
+          ]
+        },
+        {
+          "name": "Skoczki + Odpowiedź",
+          "description": "Kicker serve → rally: odbiór skoczka i kontynuacja gry",
+          "countdown_sec": 5,
+          "steps": [
+            {
+              "drill_id": 6043,
+              "count": 25,
+              "percent": 85,
+              "pause_after_sec": 15
+            },
+            {
+              "drill_id": 6044,
+              "count": 25,
+              "percent": 85,
+              "pause_after_sec": 15
+            },
+            {
+              "drill_id": 6045,
+              "count": 20,
+              "percent": 80,
+              "pause_after_sec": 20
+            },
+            {
+              "drill_id": 6046,
+              "count": 20,
+              "percent": 80,
+              "pause_after_sec": 20
+            },
+            {
+              "drill_id": 6047,
+              "count": 20,
+              "percent": 80,
+              "pause_after_sec": 20
+            },
+            {
+              "drill_id": 3021,
+              "count": 20,
+              "percent": 85,
+              "pause_after_sec": 10
+            }
+          ]
+        },
+        {
+          "name": "Full Serve Read Challenge",
+          "description": "Wszystkie typy serwisów: backspin, topspin, sidespin, skoczki — czyste czytanie",
+          "countdown_sec": 5,
+          "steps": [
+            {
+              "drill_id": 6052,
+              "count": 20,
+              "percent": 80,
+              "pause_after_sec": 15
+            },
+            {
+              "drill_id": 6048,
+              "count": 20,
+              "percent": 80,
+              "pause_after_sec": 15
+            },
+            {
+              "drill_id": 6043,
+              "count": 20,
+              "percent": 80,
+              "pause_after_sec": 15
+            },
+            {
+              "drill_id": 6051,
+              "count": 20,
+              "percent": 80,
+              "pause_after_sec": 15
+            },
+            {
+              "drill_id": 6049,
+              "count": 20,
+              "percent": 80,
+              "pause_after_sec": 15
+            },
+            {
+              "drill_id": 6047,
+              "count": 20,
+              "percent": 80,
+              "pause_after_sec": 15
+            },
+            {
+              "drill_id": 5005,
+              "count": 20,
+              "percent": 75,
+              "pause_after_sec": 15
+            },
+            {
+              "drill_id": 6045,
+              "count": 15,
+              "percent": 80,
+              "pause_after_sec": 10
+            }
+          ]
+        }
+      ]
     }
   ]
 }

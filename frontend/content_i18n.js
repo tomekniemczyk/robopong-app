@@ -24,6 +24,7 @@ window.CONTENT_I18N = {
     "Prędkość & Reakcja": { en: "Speed & Reaction", de: "Geschwindigkeit & Reaktion", fr: "Vitesse & Réaction", zh: "速度&反应" },
     "Placement": { en: "Placement", de: "Platzierung", fr: "Placement", zh: "落点" },
     "Match Patterns": { en: "Match Patterns", de: "Spielmuster", fr: "Schémas de match", zh: "比赛套路" },
+    "Serwis Zaawansowany": { en: "Advanced Serves", de: "Fortgeschrittene Aufschläge", fr: "Services avancés", zh: "高级发球" },
   },
 
   // ── Exercise category names (EN → pl/de/fr/zh) ──
@@ -80,6 +81,17 @@ window.CONTENT_I18N = {
     "FH Flick + Counter + Finish": { pl: "Flip FH + kontra + wykończenie", de: "VH-Flip + Konter + Abschluss", fr: "Flip CD + contre + fin", zh: "正手拧拉+反拉+得分" },
     "BH Flick → Cross FH": { pl: "Flip BH → cross FH", de: "RH-Flip → Cross VH", fr: "Flip RV → croisé CD", zh: "反手拧拉→正手斜线" },
     "FH Flick → Cross BH": { pl: "Flip FH → cross BH", de: "VH-Flip → Cross RH", fr: "Flip CD → croisé RV", zh: "正手拧拉→反手斜线" },
+    "Kicker Serve FH": { pl: "Skoczek FH", de: "Kicker-Aufschlag VH", fr: "Service kicker CD", zh: "正手弹跳发球" },
+    "Kicker Serve BH": { pl: "Skoczek BH", de: "Kicker-Aufschlag RH", fr: "Service kicker RV", zh: "反手弹跳发球" },
+    "Kicker Sidespin L": { pl: "Skoczek boczny L", de: "Kicker Seitschnitt L", fr: "Kicker latéral G", zh: "左侧弹跳发球" },
+    "Kicker Sidespin R": { pl: "Skoczek boczny R", de: "Kicker Seitschnitt R", fr: "Kicker latéral D", zh: "右侧弹跳发球" },
+    "Kicker Backspin": { pl: "Skoczek podcięty", de: "Kicker Unterschnitt", fr: "Kicker coupé", zh: "下旋弹跳发球" },
+    "Short Sidespin-Topspin L": { pl: "Krótka boczno-górna L", de: "Kurzer Seit-Topspin L", fr: "Courte latérale-lift G", zh: "短左侧上旋" },
+    "Short Sidespin-Topspin R": { pl: "Krótka boczno-górna R", de: "Kurzer Seit-Topspin R", fr: "Courte latérale-lift D", zh: "短右侧上旋" },
+    "Long Sidespin-Backspin L": { pl: "Długa boczno-cięta L", de: "Langer Seit-Unterschnitt L", fr: "Longue latérale-coupée G", zh: "长左侧下旋" },
+    "Long Sidespin-Backspin R": { pl: "Długa boczno-cięta R", de: "Langer Seit-Unterschnitt R", fr: "Longue latérale-coupée D", zh: "长右侧下旋" },
+    "Short Pendulum L": { pl: "Krótki pendulum L", de: "Kurzer Pendulum L", fr: "Court pendulum G", zh: "短正手摆发球" },
+    "Short Reverse Pendulum R": { pl: "Krótki reverse pendulum R", de: "Kurzer Reverse-Pendulum R", fr: "Court pendulum inversé D", zh: "短反手摆发球" },
     // ── Introductory drills ──
     "Forehand Warmup": { pl: "Rozgrzewka FH", de: "VH-Aufwärmung", fr: "Échauffement CD", zh: "正手热身" },
     "Backhand Warmup": { pl: "Rozgrzewka BH", de: "RH-Aufwärmung", fr: "Échauffement RV", zh: "反手热身" },
@@ -544,6 +556,11 @@ window.CONTENT_I18N = {
     "3rd Ball Attack": { en: "3rd Ball Attack", de: "3.-Ball-Angriff", fr: "Attaque 3e balle", zh: "第三板进攻" },
     "4th Ball Counter": { en: "4th Ball Counter", de: "4.-Ball-Konter", fr: "Contre 4e balle", zh: "第四板反拉" },
     "Full Rally Simulation": { en: "Full Rally Simulation", de: "Volle Ballwechsel-Simulation", fr: "Simulation de rallye complet", zh: "完整相持模拟" },
+    "Skoczki (Kicker Serves)": { en: "Kicker Serves", de: "Kicker-Aufschläge", fr: "Services kicker", zh: "弹跳发球" },
+    "Boczno-Cięte & Boczno-Górne": { en: "Sidespin-Cut & Sidespin-Top", de: "Seit-Schnitt & Seit-Topspin", fr: "Latérales-coupées & latérales-lift", zh: "侧下旋&侧上旋" },
+    "Krótkie vs Długie z Rotacją": { en: "Short vs Long with Spin", de: "Kurz vs Lang mit Spin", fr: "Courts vs longs avec effet", zh: "短vs长带旋转" },
+    "Skoczki + Odpowiedź": { en: "Kickers + Response", de: "Kicker + Antwort", fr: "Kickers + Réponse", zh: "弹跳发球+衔接" },
+    "Full Serve Read Challenge": { en: "Full Serve Read Challenge", de: "Volle Aufschlag-Lese-Challenge", fr: "Défi lecture de services complet", zh: "全面接发球挑战" },
   },
 
   // ── Training descriptions (PL → en/de/fr/zh) ──
