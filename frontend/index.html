@@ -419,6 +419,10 @@
           @click="showDeviceInfo=false;page='calibration'">{{ t('device.goto_cal') }}</button>
         <button class="btn btn-ghost" style="width:100%;padding:11px;font-size:13px"
           @click="copyDiagReport">{{ t('device.copy_report') }}</button>
+        <button v-if="connected" class="btn btn-danger" style="width:100%;padding:11px;font-size:13px"
+          @click="disconnectFull();showDeviceInfo=false">{{ t('conn.disconnect_full') }}</button>
+        <button class="btn btn-ghost" style="width:100%;padding:11px;font-size:12px;color:var(--muted)"
+          @click="forgetDevice();showDeviceInfo=false">{{ t('conn.forget_device') }}</button>
       </div>
     </div>
   </div>
