@@ -791,6 +791,7 @@
         <button class="btn btn-primary" v-if="!connected" @click="reconnectLast">{{ t('conn.connect') }}</button>
         <button class="btn btn-danger"  v-else @click="disconnect">{{ t('conn.disconnect') }}</button>
       </div>
+      <button class="btn btn-ghost" style="width:100%;margin-top:8px;font-size:11px;color:var(--muted)" @click="forgetDevice">{{ t('conn.forget_device') }}</button>
     </div>
 
     <!-- USB -->
@@ -2871,6 +2872,15 @@ const _app = createApp({
       send({ action: 'connect', address })
     }
     function disconnect() { send({ action: 'disconnect' }) }
+    function forgetDevice() {
+      if (connected.value) send({ action: 'disconnect' })
+      localStorage.removeItem('lastAddr')
+      localStorage.removeItem('robotName')
+      localStorage.removeItem(`cal_done:${lastAddr.value}`)
+      lastAddr.value = ''
+      robotName.value = ''
+      isCalibrated.value = false
+    }
     function usbScan() { usbScanning.value = true; usbPorts.value = []; send({ action: 'usb_scan' }) }
     function usbConnect(port) {
       lastAddr.value = `USB:${port}`
@@ -5138,7 +5148,7 @@ const _app = createApp({
       transport, deployTime, usbPorts, usbScanning, simulationMode, toggleSimulation,
       myRole, mySessionId, sessionsList, showSessions, showServiceMenu, showDeviceInfo, copyDiagReport, diagModalText, diagModalOpen, diagModalCopy, sessionAge, parseUA,
       takeoverReq, takeoverCountdown, takeoverCooldown,
-      scan, connect, disconnect, saveName, usbScan, usbConnect, reconnectLast,
+      scan, connect, disconnect, forgetDevice, saveName, usbScan, usbConnect, reconnectLast,
       runScenario, pauseDrill, resumeDrill, stopDrill, drillPaused,
       deleteScenario, openEditor, addBall, removeBall, saveScenario,
       clamp, clampCal,
