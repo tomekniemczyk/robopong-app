@@ -6649,6 +6649,1288 @@
           ]
         }
       ]
+    },
+    {
+      "name": "Rozgrzewka",
+      "description": "Zestawy rozgrzewkowe — różne długości i intensywności",
+      "icon": "🔥",
+      "trainings": [
+        {
+          "name": "Quick Warmup (3 min)",
+          "description": "Szybka rozgrzewka: nadgarstki, tułów, shadow play",
+          "countdown_sec": 3,
+          "steps": [
+            {
+              "exercise_id": 103,
+              "duration_sec": 25,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 109,
+              "duration_sec": 20,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 104,
+              "duration_sec": 30,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 108,
+              "duration_sec": 60,
+              "pause_after_sec": 0
+            }
+          ]
+        },
+        {
+          "name": "Full Warmup (8 min)",
+          "description": "Pełna rozgrzewka całego ciała z footworkiem i shadow play",
+          "countdown_sec": 3,
+          "steps": [
+            {
+              "exercise_id": 101,
+              "duration_sec": 45,
+              "pause_after_sec": 5
+            },
+            {
+              "exercise_id": 102,
+              "duration_sec": 25,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 103,
+              "duration_sec": 25,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 109,
+              "duration_sec": 20,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 104,
+              "duration_sec": 35,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 105,
+              "duration_sec": 25,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 110,
+              "duration_sec": 15,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 111,
+              "duration_sec": 15,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 107,
+              "duration_sec": 40,
+              "pause_after_sec": 5
+            },
+            {
+              "exercise_id": 201,
+              "duration_sec": 40,
+              "pause_after_sec": 5
+            },
+            {
+              "exercise_id": 108,
+              "duration_sec": 75,
+              "pause_after_sec": 0
+            }
+          ]
+        },
+        {
+          "name": "Footwork Warmup (6 min)",
+          "description": "Rozgrzewka z naciskiem na footwork: shuffle, pivot, Falkenberg",
+          "countdown_sec": 3,
+          "steps": [
+            {
+              "exercise_id": 101,
+              "duration_sec": 40,
+              "pause_after_sec": 5
+            },
+            {
+              "exercise_id": 105,
+              "duration_sec": 20,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 110,
+              "duration_sec": 15,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 201,
+              "duration_sec": 45,
+              "pause_after_sec": 5
+            },
+            {
+              "exercise_id": 207,
+              "duration_sec": 40,
+              "pause_after_sec": 5
+            },
+            {
+              "exercise_id": 204,
+              "duration_sec": 40,
+              "pause_after_sec": 5
+            },
+            {
+              "exercise_id": 203,
+              "duration_sec": 60,
+              "pause_after_sec": 0
+            }
+          ]
+        },
+        {
+          "name": "Match-Day Warmup (5 min)",
+          "description": "Intensywna rozgrzewka przed meczem: dynamiczna + szybka",
+          "countdown_sec": 3,
+          "steps": [
+            {
+              "exercise_id": 106,
+              "duration_sec": 35,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 103,
+              "duration_sec": 20,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 104,
+              "duration_sec": 25,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 116,
+              "duration_sec": 25,
+              "pause_after_sec": 5
+            },
+            {
+              "exercise_id": 201,
+              "duration_sec": 35,
+              "pause_after_sec": 5
+            },
+            {
+              "exercise_id": 108,
+              "duration_sec": 60,
+              "pause_after_sec": 0
+            }
+          ]
+        },
+        {
+          "name": "Wrist & Arm Focus (4 min)",
+          "description": "Rozgrzewka nadgarstków i ramion — idealna przed flickami/spinami",
+          "countdown_sec": 3,
+          "steps": [
+            {
+              "exercise_id": 103,
+              "duration_sec": 30,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 109,
+              "duration_sec": 25,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 102,
+              "duration_sec": 25,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 505,
+              "duration_sec": 40,
+              "pause_after_sec": 5
+            },
+            {
+              "exercise_id": 108,
+              "duration_sec": 60,
+              "pause_after_sec": 0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Wygaszanie",
+      "description": "Zestawy na zakończenie treningu — stretching i regeneracja",
+      "icon": "🧊",
+      "trainings": [
+        {
+          "name": "Quick Cooldown (3 min)",
+          "description": "Szybkie rozciąganie: nogi, nadgarstki, oddech",
+          "countdown_sec": 3,
+          "steps": [
+            {
+              "exercise_id": 601,
+              "duration_sec": 40,
+              "pause_after_sec": 5
+            },
+            {
+              "exercise_id": 604,
+              "duration_sec": 30,
+              "pause_after_sec": 5
+            },
+            {
+              "exercise_id": 605,
+              "duration_sec": 45,
+              "pause_after_sec": 0
+            }
+          ]
+        },
+        {
+          "name": "Full Recovery (8 min)",
+          "description": "Pełna regeneracja: wszystkie grupy mięśniowe + głębokie oddychanie",
+          "countdown_sec": 3,
+          "steps": [
+            {
+              "exercise_id": 101,
+              "duration_sec": 40,
+              "pause_after_sec": 5
+            },
+            {
+              "exercise_id": 601,
+              "duration_sec": 50,
+              "pause_after_sec": 5
+            },
+            {
+              "exercise_id": 602,
+              "duration_sec": 40,
+              "pause_after_sec": 5
+            },
+            {
+              "exercise_id": 603,
+              "duration_sec": 30,
+              "pause_after_sec": 5
+            },
+            {
+              "exercise_id": 604,
+              "duration_sec": 30,
+              "pause_after_sec": 5
+            },
+            {
+              "exercise_id": 112,
+              "duration_sec": 30,
+              "pause_after_sec": 5
+            },
+            {
+              "exercise_id": 113,
+              "duration_sec": 25,
+              "pause_after_sec": 5
+            },
+            {
+              "exercise_id": 605,
+              "duration_sec": 75,
+              "pause_after_sec": 0
+            }
+          ]
+        },
+        {
+          "name": "Active Recovery (5 min)",
+          "description": "Aktywna regeneracja: lekki ruch + dynamiczny stretching",
+          "countdown_sec": 3,
+          "steps": [
+            {
+              "exercise_id": 101,
+              "duration_sec": 45,
+              "pause_after_sec": 5
+            },
+            {
+              "exercise_id": 114,
+              "duration_sec": 25,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 115,
+              "duration_sec": 25,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 601,
+              "duration_sec": 40,
+              "pause_after_sec": 5
+            },
+            {
+              "exercise_id": 603,
+              "duration_sec": 25,
+              "pause_after_sec": 5
+            },
+            {
+              "exercise_id": 605,
+              "duration_sec": 50,
+              "pause_after_sec": 0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Topspin",
+      "description": "Czyste zestawy topspin — BH, FH, mixed",
+      "icon": "🔄",
+      "trainings": [
+        {
+          "name": "BH Topspin Progresja",
+          "description": "Progresja backhand topspinu: wolny → medium → szybki → kontra",
+          "countdown_sec": 5,
+          "steps": [
+            {
+              "drill_id": 1010,
+              "count": 40,
+              "percent": 90,
+              "pause_after_sec": 15
+            },
+            {
+              "drill_id": 6012,
+              "count": 40,
+              "percent": 90,
+              "pause_after_sec": 15
+            },
+            {
+              "drill_id": 6026,
+              "count": 35,
+              "percent": 90,
+              "pause_after_sec": 20
+            },
+            {
+              "drill_id": 3002,
+              "count": 35,
+              "percent": 90,
+              "pause_after_sec": 20
+            },
+            {
+              "drill_id": 6012,
+              "count": 30,
+              "percent": 95,
+              "pause_after_sec": 10
+            }
+          ]
+        },
+        {
+          "name": "FH Topspin Progresja",
+          "description": "Progresja forehand topspinu: wolny → medium → szybki → kontra",
+          "countdown_sec": 5,
+          "steps": [
+            {
+              "drill_id": 1009,
+              "count": 40,
+              "percent": 90,
+              "pause_after_sec": 15
+            },
+            {
+              "drill_id": 3001,
+              "count": 40,
+              "percent": 90,
+              "pause_after_sec": 15
+            },
+            {
+              "drill_id": 6025,
+              "count": 35,
+              "percent": 90,
+              "pause_after_sec": 20
+            },
+            {
+              "drill_id": 6035,
+              "count": 35,
+              "percent": 90,
+              "pause_after_sec": 20
+            },
+            {
+              "drill_id": 6025,
+              "count": 30,
+              "percent": 95,
+              "pause_after_sec": 10
+            }
+          ]
+        },
+        {
+          "name": "Mixed BH-FH Topspin",
+          "description": "Naprzemienne topspiny FH i BH z footworkiem",
+          "countdown_sec": 5,
+          "steps": [
+            {
+              "drill_id": 6027,
+              "count": 40,
+              "percent": 90,
+              "pause_after_sec": 15
+            },
+            {
+              "drill_id": 3003,
+              "count": 35,
+              "percent": 90,
+              "pause_after_sec": 20
+            },
+            {
+              "drill_id": 3008,
+              "count": 35,
+              "percent": 90,
+              "pause_after_sec": 20
+            },
+            {
+              "drill_id": 6027,
+              "count": 30,
+              "percent": 95,
+              "pause_after_sec": 15
+            },
+            {
+              "drill_id": 3007,
+              "count": 30,
+              "percent": 95,
+              "pause_after_sec": 10
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Footwork",
+      "description": "Zestawy footworkowe — 2-point, Falkenberg, In-Out",
+      "icon": "👟",
+      "trainings": [
+        {
+          "name": "2-Point FH-BH",
+          "description": "Klasyczny 2-point: FH-BH przejścia z shufflem",
+          "countdown_sec": 5,
+          "steps": [
+            {
+              "drill_id": 2003,
+              "count": 40,
+              "percent": 85,
+              "pause_after_sec": 15
+            },
+            {
+              "drill_id": 1003,
+              "count": 35,
+              "percent": 90,
+              "pause_after_sec": 15
+            },
+            {
+              "drill_id": 1004,
+              "count": 35,
+              "percent": 90,
+              "pause_after_sec": 15
+            },
+            {
+              "drill_id": 3006,
+              "count": 30,
+              "percent": 90,
+              "pause_after_sec": 20
+            },
+            {
+              "drill_id": 2003,
+              "count": 30,
+              "percent": 95,
+              "pause_after_sec": 10
+            }
+          ]
+        },
+        {
+          "name": "Falkenberg + Triangle",
+          "description": "Zaawansowany footwork: Falkenberg pattern, triangle, pivot",
+          "countdown_sec": 5,
+          "steps": [
+            {
+              "drill_id": 3009,
+              "count": 35,
+              "percent": 85,
+              "pause_after_sec": 20
+            },
+            {
+              "drill_id": 3004,
+              "count": 30,
+              "percent": 90,
+              "pause_after_sec": 15
+            },
+            {
+              "drill_id": 3005,
+              "count": 30,
+              "percent": 90,
+              "pause_after_sec": 15
+            },
+            {
+              "drill_id": 4003,
+              "count": 25,
+              "percent": 90,
+              "pause_after_sec": 20
+            },
+            {
+              "drill_id": 3009,
+              "count": 25,
+              "percent": 95,
+              "pause_after_sec": 10
+            }
+          ]
+        },
+        {
+          "name": "In-Out Movement",
+          "description": "Ruch przód-tył: krótka piłka → wyjście do tyłu → atak",
+          "countdown_sec": 5,
+          "steps": [
+            {
+              "drill_id": 2008,
+              "count": 30,
+              "percent": 85,
+              "pause_after_sec": 15
+            },
+            {
+              "drill_id": 6029,
+              "count": 35,
+              "percent": 90,
+              "pause_after_sec": 20
+            },
+            {
+              "drill_id": 6030,
+              "count": 35,
+              "percent": 90,
+              "pause_after_sec": 20
+            },
+            {
+              "drill_id": 2013,
+              "count": 30,
+              "percent": 90,
+              "pause_after_sec": 15
+            },
+            {
+              "drill_id": 2014,
+              "count": 30,
+              "percent": 90,
+              "pause_after_sec": 10
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Serwis-Odbiór",
+      "description": "Odbiór serwisu: push, flick, topspin na różne rotacje",
+      "icon": "🎯",
+      "trainings": [
+        {
+          "name": "Push & Flick na Krótkie",
+          "description": "Odbiór krótkich serwisów: push backspin, flick no-spin",
+          "countdown_sec": 5,
+          "steps": [
+            {
+              "drill_id": 1005,
+              "count": 35,
+              "percent": 90,
+              "pause_after_sec": 15
+            },
+            {
+              "drill_id": 1006,
+              "count": 35,
+              "percent": 90,
+              "pause_after_sec": 15
+            },
+            {
+              "drill_id": 6005,
+              "count": 30,
+              "percent": 90,
+              "pause_after_sec": 15
+            },
+            {
+              "drill_id": 6006,
+              "count": 30,
+              "percent": 90,
+              "pause_after_sec": 15
+            },
+            {
+              "drill_id": 6007,
+              "count": 25,
+              "percent": 90,
+              "pause_after_sec": 15
+            },
+            {
+              "drill_id": 6008,
+              "count": 25,
+              "percent": 90,
+              "pause_after_sec": 10
+            }
+          ]
+        },
+        {
+          "name": "Topspin na Długie Serwisy",
+          "description": "Odbiór długich serwisów: topspin, sidespin, mixed",
+          "countdown_sec": 5,
+          "steps": [
+            {
+              "drill_id": 2027,
+              "count": 35,
+              "percent": 90,
+              "pause_after_sec": 15
+            },
+            {
+              "drill_id": 2024,
+              "count": 30,
+              "percent": 90,
+              "pause_after_sec": 15
+            },
+            {
+              "drill_id": 2025,
+              "count": 30,
+              "percent": 90,
+              "pause_after_sec": 15
+            },
+            {
+              "drill_id": 3027,
+              "count": 25,
+              "percent": 90,
+              "pause_after_sec": 20
+            },
+            {
+              "drill_id": 3028,
+              "count": 25,
+              "percent": 90,
+              "pause_after_sec": 20
+            },
+            {
+              "drill_id": 5010,
+              "count": 25,
+              "percent": 90,
+              "pause_after_sec": 10
+            }
+          ]
+        },
+        {
+          "name": "Mixed Serve Read",
+          "description": "Czytanie rotacji: backspin, no-spin, sidespin — mixed",
+          "countdown_sec": 5,
+          "steps": [
+            {
+              "drill_id": 6011,
+              "count": 35,
+              "percent": 85,
+              "pause_after_sec": 15
+            },
+            {
+              "drill_id": 6018,
+              "count": 30,
+              "percent": 85,
+              "pause_after_sec": 20
+            },
+            {
+              "drill_id": 6020,
+              "count": 30,
+              "percent": 85,
+              "pause_after_sec": 20
+            },
+            {
+              "drill_id": 2026,
+              "count": 25,
+              "percent": 90,
+              "pause_after_sec": 15
+            },
+            {
+              "drill_id": 5005,
+              "count": 25,
+              "percent": 85,
+              "pause_after_sec": 15
+            },
+            {
+              "drill_id": 6018,
+              "count": 25,
+              "percent": 90,
+              "pause_after_sec": 10
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Kontra-atak",
+      "description": "Szybkie wymiany: counter drives, blocking, reaction",
+      "icon": "⚡",
+      "trainings": [
+        {
+          "name": "BH Counter Fast",
+          "description": "Szybkie bloki i kontra-topspiny backhandu",
+          "countdown_sec": 5,
+          "steps": [
+            {
+              "drill_id": 6003,
+              "count": 40,
+              "percent": 90,
+              "pause_after_sec": 15
+            },
+            {
+              "drill_id": 6026,
+              "count": 35,
+              "percent": 90,
+              "pause_after_sec": 15
+            },
+            {
+              "drill_id": 3026,
+              "count": 30,
+              "percent": 85,
+              "pause_after_sec": 20
+            },
+            {
+              "drill_id": 6026,
+              "count": 30,
+              "percent": 95,
+              "pause_after_sec": 15
+            },
+            {
+              "drill_id": 4002,
+              "count": 25,
+              "percent": 90,
+              "pause_after_sec": 10
+            }
+          ]
+        },
+        {
+          "name": "FH Counter Fast",
+          "description": "Szybkie kontra-topspiny i smash forehand",
+          "countdown_sec": 5,
+          "steps": [
+            {
+              "drill_id": 6025,
+              "count": 40,
+              "percent": 90,
+              "pause_after_sec": 15
+            },
+            {
+              "drill_id": 3025,
+              "count": 35,
+              "percent": 85,
+              "pause_after_sec": 20
+            },
+            {
+              "drill_id": 4001,
+              "count": 30,
+              "percent": 90,
+              "pause_after_sec": 15
+            },
+            {
+              "drill_id": 6025,
+              "count": 30,
+              "percent": 95,
+              "pause_after_sec": 15
+            },
+            {
+              "drill_id": 4024,
+              "count": 25,
+              "percent": 85,
+              "pause_after_sec": 10
+            }
+          ]
+        },
+        {
+          "name": "FH-BH Counter Exchange",
+          "description": "Szybkie przejścia FH-BH: blocking i counter na zmianę",
+          "countdown_sec": 5,
+          "steps": [
+            {
+              "drill_id": 6004,
+              "count": 35,
+              "percent": 90,
+              "pause_after_sec": 15
+            },
+            {
+              "drill_id": 4023,
+              "count": 30,
+              "percent": 85,
+              "pause_after_sec": 20
+            },
+            {
+              "drill_id": 4006,
+              "count": 30,
+              "percent": 85,
+              "pause_after_sec": 20
+            },
+            {
+              "drill_id": 3008,
+              "count": 30,
+              "percent": 90,
+              "pause_after_sec": 15
+            },
+            {
+              "drill_id": 4023,
+              "count": 25,
+              "percent": 90,
+              "pause_after_sec": 10
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Backspin & Otwieranie",
+      "description": "Praca z podcięciem: push, chop defense, opening topspin",
+      "icon": "🔻",
+      "trainings": [
+        {
+          "name": "Push Consistency",
+          "description": "Stabilny push: FH, BH, z footworkiem",
+          "countdown_sec": 5,
+          "steps": [
+            {
+              "drill_id": 1005,
+              "count": 35,
+              "percent": 90,
+              "pause_after_sec": 15
+            },
+            {
+              "drill_id": 1006,
+              "count": 35,
+              "percent": 90,
+              "pause_after_sec": 15
+            },
+            {
+              "drill_id": 1007,
+              "count": 30,
+              "percent": 90,
+              "pause_after_sec": 15
+            },
+            {
+              "drill_id": 1008,
+              "count": 30,
+              "percent": 90,
+              "pause_after_sec": 15
+            },
+            {
+              "drill_id": 4030,
+              "count": 25,
+              "percent": 85,
+              "pause_after_sec": 10
+            }
+          ]
+        },
+        {
+          "name": "Open-Up z Podcięcia",
+          "description": "Otwieranie topspinem z podcięcia — FH i BH",
+          "countdown_sec": 5,
+          "steps": [
+            {
+              "drill_id": 6023,
+              "count": 35,
+              "percent": 90,
+              "pause_after_sec": 15
+            },
+            {
+              "drill_id": 6024,
+              "count": 35,
+              "percent": 90,
+              "pause_after_sec": 15
+            },
+            {
+              "drill_id": 6013,
+              "count": 30,
+              "percent": 90,
+              "pause_after_sec": 20
+            },
+            {
+              "drill_id": 6028,
+              "count": 25,
+              "percent": 85,
+              "pause_after_sec": 20
+            },
+            {
+              "drill_id": 2032,
+              "count": 25,
+              "percent": 85,
+              "pause_after_sec": 10
+            }
+          ]
+        },
+        {
+          "name": "Chop Defense",
+          "description": "Obrona chopem na dalsze topspiny — FH i BH z footworkiem",
+          "countdown_sec": 5,
+          "steps": [
+            {
+              "drill_id": 1013,
+              "count": 35,
+              "percent": 90,
+              "pause_after_sec": 15
+            },
+            {
+              "drill_id": 1014,
+              "count": 35,
+              "percent": 90,
+              "pause_after_sec": 15
+            },
+            {
+              "drill_id": 1015,
+              "count": 30,
+              "percent": 90,
+              "pause_after_sec": 15
+            },
+            {
+              "drill_id": 1016,
+              "count": 30,
+              "percent": 90,
+              "pause_after_sec": 15
+            },
+            {
+              "drill_id": 4031,
+              "count": 25,
+              "percent": 85,
+              "pause_after_sec": 10
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Prędkość & Reakcja",
+      "description": "Szybkość, random placement, reakcja pod presją",
+      "icon": "💨",
+      "trainings": [
+        {
+          "name": "Speed Ladder",
+          "description": "Progresja prędkości: wolno → medium → szybko → max",
+          "countdown_sec": 5,
+          "steps": [
+            {
+              "drill_id": 1009,
+              "count": 30,
+              "percent": 80,
+              "pause_after_sec": 10
+            },
+            {
+              "drill_id": 3001,
+              "count": 30,
+              "percent": 85,
+              "pause_after_sec": 15
+            },
+            {
+              "drill_id": 3025,
+              "count": 25,
+              "percent": 85,
+              "pause_after_sec": 20
+            },
+            {
+              "drill_id": 4019,
+              "count": 20,
+              "percent": 85,
+              "pause_after_sec": 25
+            },
+            {
+              "drill_id": 2012,
+              "count": 20,
+              "percent": 80,
+              "pause_after_sec": 10
+            }
+          ]
+        },
+        {
+          "name": "Reaction Random",
+          "description": "Losowe piłki na cały stół — czysty trening reakcji",
+          "countdown_sec": 5,
+          "steps": [
+            {
+              "drill_id": 6016,
+              "count": 35,
+              "percent": 85,
+              "pause_after_sec": 15
+            },
+            {
+              "drill_id": 4011,
+              "count": 30,
+              "percent": 80,
+              "pause_after_sec": 20
+            },
+            {
+              "drill_id": 4012,
+              "count": 25,
+              "percent": 75,
+              "pause_after_sec": 25
+            },
+            {
+              "drill_id": 6016,
+              "count": 25,
+              "percent": 90,
+              "pause_after_sec": 15
+            },
+            {
+              "drill_id": 2012,
+              "count": 25,
+              "percent": 85,
+              "pause_after_sec": 10
+            }
+          ]
+        },
+        {
+          "name": "Sprint Drills",
+          "description": "Krótkie intensywne serie: speed balls, smashing, lobs",
+          "countdown_sec": 5,
+          "steps": [
+            {
+              "drill_id": 4019,
+              "count": 20,
+              "percent": 85,
+              "pause_after_sec": 20
+            },
+            {
+              "drill_id": 4024,
+              "count": 20,
+              "percent": 80,
+              "pause_after_sec": 25
+            },
+            {
+              "drill_id": 4023,
+              "count": 25,
+              "percent": 85,
+              "pause_after_sec": 20
+            },
+            {
+              "drill_id": 3031,
+              "count": 20,
+              "percent": 80,
+              "pause_after_sec": 25
+            },
+            {
+              "drill_id": 4019,
+              "count": 20,
+              "percent": 90,
+              "pause_after_sec": 10
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Placement",
+      "description": "Trening kierunkowy: cross-court, down-the-line, mixed",
+      "icon": "📐",
+      "trainings": [
+        {
+          "name": "Cross-Court Rally",
+          "description": "Rally cross-court: FH→FH, BH→BH, z budowaniem stabilności",
+          "countdown_sec": 5,
+          "steps": [
+            {
+              "drill_id": 1009,
+              "count": 35,
+              "percent": 90,
+              "pause_after_sec": 15
+            },
+            {
+              "drill_id": 1010,
+              "count": 35,
+              "percent": 90,
+              "pause_after_sec": 15
+            },
+            {
+              "drill_id": 1011,
+              "count": 30,
+              "percent": 90,
+              "pause_after_sec": 15
+            },
+            {
+              "drill_id": 1012,
+              "count": 30,
+              "percent": 90,
+              "pause_after_sec": 15
+            },
+            {
+              "drill_id": 6027,
+              "count": 30,
+              "percent": 95,
+              "pause_after_sec": 10
+            }
+          ]
+        },
+        {
+          "name": "Down-the-Line",
+          "description": "Zmiana kierunku: BH→FH cross i FH→BH cross",
+          "countdown_sec": 5,
+          "steps": [
+            {
+              "drill_id": 6041,
+              "count": 30,
+              "percent": 85,
+              "pause_after_sec": 15
+            },
+            {
+              "drill_id": 6042,
+              "count": 30,
+              "percent": 85,
+              "pause_after_sec": 15
+            },
+            {
+              "drill_id": 3013,
+              "count": 25,
+              "percent": 85,
+              "pause_after_sec": 20
+            },
+            {
+              "drill_id": 2015,
+              "count": 25,
+              "percent": 85,
+              "pause_after_sec": 20
+            },
+            {
+              "drill_id": 6041,
+              "count": 25,
+              "percent": 90,
+              "pause_after_sec": 10
+            }
+          ]
+        },
+        {
+          "name": "Mixed Placement",
+          "description": "Losowy placement z czytaniem pozycji robota",
+          "countdown_sec": 5,
+          "steps": [
+            {
+              "drill_id": 5001,
+              "count": 35,
+              "percent": 85,
+              "pause_after_sec": 15
+            },
+            {
+              "drill_id": 3008,
+              "count": 30,
+              "percent": 85,
+              "pause_after_sec": 20
+            },
+            {
+              "drill_id": 4007,
+              "count": 25,
+              "percent": 80,
+              "pause_after_sec": 20
+            },
+            {
+              "drill_id": 4008,
+              "count": 25,
+              "percent": 80,
+              "pause_after_sec": 25
+            },
+            {
+              "drill_id": 5001,
+              "count": 25,
+              "percent": 90,
+              "pause_after_sec": 10
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Match Patterns",
+      "description": "Wzorce meczowe: 3rd ball, 4th ball, pełne sekwencje",
+      "icon": "🏓",
+      "trainings": [
+        {
+          "name": "3rd Ball Attack",
+          "description": "Atak 3. piłką: serwis → push → topspin",
+          "countdown_sec": 5,
+          "steps": [
+            {
+              "drill_id": 6031,
+              "count": 30,
+              "percent": 90,
+              "pause_after_sec": 15
+            },
+            {
+              "drill_id": 6032,
+              "count": 30,
+              "percent": 90,
+              "pause_after_sec": 15
+            },
+            {
+              "drill_id": 6029,
+              "count": 25,
+              "percent": 90,
+              "pause_after_sec": 20
+            },
+            {
+              "drill_id": 6030,
+              "count": 25,
+              "percent": 90,
+              "pause_after_sec": 20
+            },
+            {
+              "drill_id": 6031,
+              "count": 25,
+              "percent": 95,
+              "pause_after_sec": 10
+            }
+          ]
+        },
+        {
+          "name": "4th Ball Counter",
+          "description": "Kontra 4. piłką: serwis → topspin → blok → counter",
+          "countdown_sec": 5,
+          "steps": [
+            {
+              "drill_id": 6033,
+              "count": 25,
+              "percent": 85,
+              "pause_after_sec": 20
+            },
+            {
+              "drill_id": 6034,
+              "count": 25,
+              "percent": 85,
+              "pause_after_sec": 20
+            },
+            {
+              "drill_id": 6036,
+              "count": 25,
+              "percent": 85,
+              "pause_after_sec": 25
+            },
+            {
+              "drill_id": 6033,
+              "count": 20,
+              "percent": 90,
+              "pause_after_sec": 20
+            },
+            {
+              "drill_id": 6034,
+              "count": 20,
+              "percent": 90,
+              "pause_after_sec": 10
+            }
+          ]
+        },
+        {
+          "name": "Full Rally Simulation",
+          "description": "Pełna symulacja meczowa: serwis → flick → rally → finish",
+          "countdown_sec": 5,
+          "steps": [
+            {
+              "drill_id": 6019,
+              "count": 20,
+              "percent": 85,
+              "pause_after_sec": 20
+            },
+            {
+              "drill_id": 6036,
+              "count": 20,
+              "percent": 85,
+              "pause_after_sec": 20
+            },
+            {
+              "drill_id": 4020,
+              "count": 20,
+              "percent": 80,
+              "pause_after_sec": 25
+            },
+            {
+              "drill_id": 3017,
+              "count": 15,
+              "percent": 80,
+              "pause_after_sec": 25
+            },
+            {
+              "drill_id": 6019,
+              "count": 20,
+              "percent": 90,
+              "pause_after_sec": 10
+            }
+          ]
+        }
+      ]
     }
   ]
 }
