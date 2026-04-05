@@ -485,8 +485,7 @@
     <div v-if="wizState !== 'warmup' && wizState !== 'complete'"
       :style="wizZoom ? 'overflow:auto;max-height:70vh;border:1px solid var(--border);border-radius:8px;margin:0 auto 4px;max-width:360px' : 'margin:0 auto 4px;max-width:360px'">
     <svg
-      viewBox="0 0 340 640" :style="wizZoom ? 'width:200%;display:block;cursor:crosshair' : 'width:100%;display:block;cursor:crosshair'"
-      @click="wizTableClick($event)">
+      viewBox="0 0 340 640" :style="wizZoom ? 'width:200%;display:block' : 'width:100%;display:block'">
 
       <!-- Robot z głowicą (styl jak rotation.svg) -->
       <g transform="translate(170, 20)">
@@ -535,23 +534,23 @@
       <line x1="20" y1="324.5" x2="320" y2="324.5" stroke="#fff" stroke-width="1" opacity="0.25"/>
       <line x1="170" y1="55" x2="170" y2="594" stroke="#fff" stroke-width="0.5" opacity="0.2"/>
 
-      <!-- Strzałki manualne: oscylacja ◀▶ -->
-      <g @click.stop="wizManualStep('oscillation',-1)" style="cursor:pointer">
-        <rect x="0" y="300" width="18" height="50" rx="4" fill="rgba(94,158,255,0.15)"/>
-        <text x="9" y="330" text-anchor="middle" fill="var(--accent,#5e9eff)" font-size="14" font-weight="700">◀</text>
-      </g>
+      <!-- Strzałki manualne: oscylacja ◀▶ (osc↑=piłka w lewo gracza, osc↓=prawo) -->
       <g @click.stop="wizManualStep('oscillation',1)" style="cursor:pointer">
-        <rect x="322" y="300" width="18" height="50" rx="4" fill="rgba(94,158,255,0.15)"/>
-        <text x="331" y="330" text-anchor="middle" fill="var(--accent,#5e9eff)" font-size="14" font-weight="700">▶</text>
+        <rect x="20" y="295" width="32" height="55" rx="4" fill="rgba(94,158,255,0.18)"/>
+        <text x="36" y="328" text-anchor="middle" fill="var(--accent,#5e9eff)" font-size="18" font-weight="700">◀</text>
+      </g>
+      <g @click.stop="wizManualStep('oscillation',-1)" style="cursor:pointer">
+        <rect x="288" y="295" width="32" height="55" rx="4" fill="rgba(94,158,255,0.18)"/>
+        <text x="304" y="328" text-anchor="middle" fill="var(--accent,#5e9eff)" font-size="18" font-weight="700">▶</text>
       </g>
       <!-- Strzałki manualne: wysokość ▲▼ -->
-      <g @click.stop="wizManualStep('height',1)" style="cursor:pointer">
-        <rect x="145" y="596" width="50" height="18" rx="4" fill="rgba(94,158,255,0.15)"/>
-        <text x="170" y="610" text-anchor="middle" fill="var(--accent,#5e9eff)" font-size="14" font-weight="700">▼</text>
-      </g>
       <g @click.stop="wizManualStep('height',-1)" style="cursor:pointer">
-        <rect x="145" y="38" width="50" height="14" rx="3" fill="rgba(94,158,255,0.15)"/>
-        <text x="170" y="50" text-anchor="middle" fill="var(--accent,#5e9eff)" font-size="12" font-weight="700">▲</text>
+        <rect x="145" y="57" width="50" height="28" rx="4" fill="rgba(94,158,255,0.18)"/>
+        <text x="170" y="76" text-anchor="middle" fill="var(--accent,#5e9eff)" font-size="16" font-weight="700">▲</text>
+      </g>
+      <g @click.stop="wizManualStep('height',1)" style="cursor:pointer">
+        <rect x="145" y="562" width="50" height="28" rx="4" fill="rgba(94,158,255,0.18)"/>
+        <text x="170" y="581" text-anchor="middle" fill="var(--accent,#5e9eff)" font-size="16" font-weight="700">▼</text>
       </g>
 
       <!-- Siatka cm (widoczna przy zoom) — co 10cm ≈ 19.67px szerokości, 19.67px długości -->
@@ -562,26 +561,11 @@
         <text v-for="i in 13" :key="'ly'+i" x="318" :y="55 + i*19.67*2 + 2" text-anchor="end" fill="#fff" font-size="4" opacity="0.5">{{ i*20 }}cm</text>
       </g>
 
-      <!-- Strefa celowa: ~85% w dół stołu -->
-      <ellipse cx="170" cy="513" rx="50" ry="22" fill="none" stroke="#34c759" stroke-width="1.5" stroke-dasharray="5,3" opacity="0.5">
-        <animate attributeName="rx" values="48;52;48" dur="2s" repeatCount="indefinite"/>
-      </ellipse>
-      <text x="170" y="518" text-anchor="middle" fill="#34c759" font-size="8" opacity="0.5">{{ t('wizard.target_zone') }}</text>
-
-      <!-- Trail -->
-      <circle v-for="(pt, i) in wizTrail" :key="i"
-        :cx="pt.svgX" :cy="pt.svgY"
-        r="6" fill="none" :stroke="pt.good ? '#34c759' : '#ff453a'" stroke-width="1"
-        :opacity="0.15 + i * 0.08"/>
-
-      <!-- Ostatni tap -->
-      <g v-if="wizLastTap">
-        <circle :cx="wizLastTap.svgX" :cy="wizLastTap.svgY" r="10" fill="#ff9f0a" opacity="0.7">
-          <animate attributeName="r" values="8;12;8" dur="0.8s" repeatCount="indefinite"/>
-        </circle>
-        <line :x1="wizLastTap.svgX - 15" :y1="wizLastTap.svgY" :x2="wizLastTap.svgX + 15" :y2="wizLastTap.svgY" stroke="#fff" stroke-width="0.8" opacity="0.5"/>
-        <line :x1="wizLastTap.svgX" :y1="wizLastTap.svgY - 15" :x2="wizLastTap.svgX" :y2="wizLastTap.svgY + 15" stroke="#fff" stroke-width="0.8" opacity="0.5"/>
-      </g>
+      <!-- Strefa celowa: 15cm od krawędzi gracza, śr. 15cm -->
+      <!-- y = 55 + (1 - 15/274)*539 = 55 + 509 = 564; r = 7.5/274*539 ≈ 15 -->
+      <circle cx="170" cy="564" r="15" fill="rgba(52,199,89,0.1)" stroke="#34c759" stroke-width="1.5" stroke-dasharray="4,3" opacity="0.7"/>
+      <circle cx="170" cy="564" r="2" fill="#34c759" opacity="0.8"/>
+      <text x="170" y="553" text-anchor="middle" fill="#34c759" font-size="7" opacity="0.6">{{ t('wizard.target_zone') }}</text>
 
       <!-- Etykiety FH/BH -->
       <text x="30" y="602" fill="#6b8ab5" font-size="10" opacity="0.6">{{ isLeftHanded ? 'FH' : 'BH' }}</text>
@@ -610,18 +594,12 @@
         🎯 {{ t('wizard.throw_btn') }}
       </button>
     </div>
-    <div v-if="wizState === 'tap_table'" style="text-align:center">
-      <div style="font-size:14px;font-weight:600;color:#ff9f0a;margin-bottom:8px">{{ t('wizard.tap_prompt') }}</div>
-      <button class="btn btn-success" style="width:100%;padding:14px;font-size:16px;font-weight:700;margin-top:4px" @click="wizThrow">
-        🎯 {{ t('wizard.throw_btn') }}
-      </button>
-    </div>
     <div v-if="wizState === 'throwing'" style="text-align:center;padding:12px 0">
       <div style="font-size:14px;color:var(--muted)">{{ t('wizard.observe') }}…</div>
     </div>
 
     <!-- Finish -->
-    <div style="margin-top:12px;display:flex;gap:8px" v-if="wizState === 'ready' || wizState === 'tap_table'">
+    <div style="margin-top:12px;display:flex;gap:8px" v-if="wizState === 'ready'">
       <button class="btn btn-ghost" style="flex:1;padding:10px;font-size:12px" @click="wizCancel">{{ t('btn.cancel') }}</button>
       <button class="btn btn-success" style="flex:1;padding:10px;font-size:13px;font-weight:700" @click="wizFinishPrompt">
         {{ t('wizard.finish') }}
@@ -4739,35 +4717,19 @@ const _app = createApp({
         }
       }, 10000)
     }
-    // ── Calibration Wizard (tap-on-table) ─────────────────────
-    // SVG: table area y=22..282 (260px for 274cm), x=0..300 (300px for 152.5cm)
-    // Target: center (x=0.5), ~85% down table (10-15cm from player end)
-    const WIZ_TARGET_Y = 0.85
+    // ── Calibration Wizard (strzałki manualne) ─────────────────────
     // SVG: stół 300×539 w viewBox 340×640, offset x=20 y=55
     const WIZ_TABLE_X0 = 20, WIZ_TABLE_Y0 = 55, WIZ_TABLE_W = 300, WIZ_TABLE_H = 539
-    const WIZ_SVG_W = 340, WIZ_SVG_H = 640
 
     const wizActive = ref(false)
-    const wizState = ref('idle') // idle|warmup|ready|throwing|tap_table|complete
+    const wizState = ref('idle') // idle|warmup|ready|throwing|complete
     const wizThrows = ref(0)
-    const wizTrail = ref([])     // [{svgX, svgY, good}]
-    const wizLastTap = ref(null) // {svgX, svgY}
     const wizWarmup = ref(0)
     const wizPresetName = ref('')
-    let _wizKeepAlive = null
-
-    function _wizNormToSvg(nx, ny) {
-      return { svgX: WIZ_TABLE_X0 + nx * WIZ_TABLE_W, svgY: WIZ_TABLE_Y0 + ny * WIZ_TABLE_H }
-    }
-
-    let _wizBaseCal = null  // snapshot of cal after throw (before any taps)
 
     async function wizStart() {
       wizActive.value = true
       wizThrows.value = 0
-      wizTrail.value = []
-      wizLastTap.value = null
-      _wizBaseCal = null
       Object.assign(cal, { ...CAL_DEFAULTS })
       wizPresetName.value = ''
       wizState.value = 'warmup'
@@ -4783,14 +4745,6 @@ const _app = createApp({
         wizWarmup.value--
         if (wizWarmup.value <= 0) { clearInterval(iv); wizState.value = 'ready' }
       }, 1000)
-      clearInterval(_wizKeepAlive)
-      _wizKeepAlive = setInterval(() => {
-        if (wizActive.value) {
-          clearTimeout(_calIdleTimer)
-          send({ action: 'set_ball', ball: { ...cal } })
-          _calMotorsRunning = true
-        }
-      }, 6000)
     }
 
     let _wizBusy = false
@@ -4799,91 +4753,12 @@ const _app = createApp({
       _wizBusy = true
       wizState.value = 'throwing'
       clearTimeout(_calIdleTimer)
-      _wizBaseCal = { top_speed: cal.top_speed, bot_speed: cal.bot_speed, oscillation: cal.oscillation, height: cal.height, rotation: cal.rotation, wait_ms: cal.wait_ms }
       send({ action: 'throw_ball', ball: { ...cal } })
       _calMotorsRunning = true
       wizThrows.value++
       await new Promise(r => setTimeout(r, 1500))
-      wizState.value = 'tap_table'
-      _wizBusy = false
-    }
-
-    function wizNextThrow() {
-      _wizBaseCal = null
       wizState.value = 'ready'
-    }
-
-    function wizTableClick(evt) {
-      if (wizState.value !== 'tap_table') return
-      const svg = evt.currentTarget
-      const rect = svg.getBoundingClientRect()
-      const svgX = (evt.clientX - rect.left) / rect.width * WIZ_SVG_W
-      const svgY = (evt.clientY - rect.top) / rect.height * WIZ_SVG_H
-
-      // Normalize to table surface: nx=0..1, ny=0 at net, ny=1 at player end
-      let nx = (svgX - WIZ_TABLE_X0) / WIZ_TABLE_W
-      let ny = (svgY - WIZ_TABLE_Y0) / WIZ_TABLE_H
-      nx = Math.max(-0.05, Math.min(1.05, nx))
-      ny = Math.max(-0.15, Math.min(1.15, ny))
-
-      // Always correct from base (post-throw) cal, not from previous tap
-      if (_wizBaseCal) Object.assign(cal, { ..._wizBaseCal })
-
-      // Apply auto-correction
-      _wizAutoCorrect(nx, ny)
-
-      // Record tap (replace last if re-tapping same throw)
-      const tapSvg = { svgX: Math.max(20, Math.min(320, svgX)), svgY: Math.max(42, Math.min(618, svgY)) }
-      const deltaX = Math.abs(nx - 0.5)
-      const deltaY = Math.abs(ny - WIZ_TARGET_Y)
-      const good = deltaX < 0.08 && deltaY < 0.08
-      wizLastTap.value = tapSvg
-      // Replace last trail entry for same throw, or push first
-      if (wizTrail.value.length > 0 && wizTrail.value[wizTrail.value.length - 1]._throwN === wizThrows.value) {
-        wizTrail.value[wizTrail.value.length - 1] = { ...tapSvg, good, _throwN: wizThrows.value }
-      } else {
-        wizTrail.value.push({ ...tapSvg, good, _throwN: wizThrows.value })
-        if (wizTrail.value.length > 8) wizTrail.value.shift()
-      }
-
-      // Send updated ball params — live correction
-      send({ action: 'set_ball', ball: { ...cal } })
-      _calMotorsRunning = true
-      // Stay in tap_table — user can re-tap or click "next throw"
-    }
-
-    function _wizAutoCorrect(nx, ny) {
-      const deltaX = nx - 0.5           // >0 = ball right, <0 = ball left
-      const deltaY = ny - WIZ_TARGET_Y  // >0 = too long, <0 = too short
-      const DEAD = 0.025
-
-      // Lateral: oscillation (osc 173=left, 127=right from player POV)
-      // Ball right of center (deltaX>0) → need to move left → INCREASE osc
-      // Ball left of center (deltaX<0) → need to move right → DECREASE osc
-      // Proportional: up to 5 units for large deviation
-      if (Math.abs(deltaX) > DEAD) {
-        const pct = Math.min(1, Math.abs(deltaX) / 0.4)
-        const step = Math.max(1, Math.round(pct * 5))
-        cal.oscillation += Math.sign(deltaX) * step
-        cal.oscillation = Math.max(127, Math.min(173, cal.oscillation))
-      }
-
-      // Depth: height (higher value = ball goes further)
-      // Ball short (deltaY<0) → increase height; ball long (deltaY>0) → decrease
-      if (Math.abs(deltaY) > DEAD) {
-        if (ny < 0.05) {
-          // Net zone — big correction up
-          cal.height = Math.min(210, cal.height + 8)
-        } else if (ny > 1.0) {
-          // Past table — big correction down
-          cal.height = Math.max(75, cal.height - 8)
-        } else {
-          const pct = Math.min(1, Math.abs(deltaY) / 0.4)
-          const step = Math.max(1, Math.round(pct * 5))
-          cal.height += Math.sign(-deltaY) * step
-          cal.height = Math.max(75, Math.min(210, cal.height))
-        }
-      }
+      _wizBusy = false
     }
 
     function wizFinishPrompt() {
@@ -5273,8 +5148,8 @@ const _app = createApp({
       deleteScenario, openEditor, addBall, removeBall, saveScenario,
       clamp, clampCal,
       calStep, calThrow, calReset, loadCal,
-      wizActive, wizState, wizThrows, wizTrail, wizLastTap, wizWarmup, wizPresetName,
-      wizStart, wizThrow, wizTableClick, wizRotStep, wizManualStep, wizZoom, wizFinishPrompt, wizFinishDefault, wizFinishNamed, wizCancel,
+      wizActive, wizState, wizThrows, wizWarmup, wizPresetName,
+      wizStart, wizThrow, wizRotStep, wizManualStep, wizZoom, wizFinishPrompt, wizFinishDefault, wizFinishNamed, wizCancel,
       presets, savePreset, updatePreset, loadPreset, setDefaultPreset, deletePreset,
       calDone, importCalRef, exportCalibration, importCalibration, showToast,
       expParams, expCount, expInterval, expBounce1, expBounce2, expClickPhase, expSpin, expArc, expSpd, expUseful, expRating, expComment, expHistory,
