@@ -1016,18 +1016,20 @@ def remove_player_favorite(pid: int, item_type: str = "", item_id: int = 0):
 # ── Recordings ───────────────────────────────────────────────────────────────
 
 @app.get("/api/recordings")
-def list_recordings(player_id: int | None = None):
-    return recordings.get_recordings(player_id=player_id)
+def list_recordings(player_id: int | None = None, is_ondemand: int | None = None):
+    return recordings.get_recordings(player_id=player_id, is_ondemand=is_ondemand)
 
 
 @app.get("/api/recordings/compare")
 def get_comparable_recordings(training_id: int | None = None, step_idx: int | None = None,
                               drill_id: int | None = None, exercise_id: int | None = None,
-                              exclude_filename: str | None = None):
+                              exclude_filename: str | None = None,
+                              ondemand: bool = False, player_id: int | None = None):
     return db.get_comparable_recordings(
         training_id=training_id, step_idx=step_idx,
         drill_id=drill_id, exercise_id=exercise_id,
-        exclude_filename=exclude_filename)
+        exclude_filename=exclude_filename,
+        ondemand=ondemand, player_id=player_id)
 
 
 @app.get("/api/recordings/info")
@@ -1058,6 +1060,119 @@ def get_recording(player_id: int, filename: str):
 def delete_recording(player_id: int, filename: str):
     if not recordings.delete_recording(f"{player_id}/{filename}"):
         raise HTTPException(404)
+
+
+# ── On-demand recording ─────────────────────────────────────────────────────
+
+class OndemandController:
+    def __init__(self):
+        self._task: asyncio.Task | None = None
+        self._recorder = recordings.Recorder()
+        self.state = "idle"   # idle | countdown | recording
+        self.countdown_remaining = 0
+        self.recording_elapsed = 0
+        self.recording_duration = 0
+        self._broadcast = None
+        self._stopped = False
+
+    @property
+    def active(self) -> bool:
+        return self.state != "idle"
+
+    def start(self, player_id: int, custom_name: str, duration_sec: int,
+              delay_sec: int, broadcast_fn):
+        if self.active:
+            self.stop()
+        self._stopped = False
+        self._broadcast = broadcast_fn
+        self.recording_duration = duration_sec
+        self._task = asyncio.create_task(
+            self._run(player_id, custom_name, duration_sec, delay_sec))
+
+    def stop(self):
+        self._stopped = True
+        if self._recorder.recording:
+            meta = self._recorder.stop()
+            if meta and self._broadcast:
+                self._broadcast("ondemand_recording_saved", meta)
+        if self._task and not self._task.done():
+            self._task.cancel()
+        self.state = "idle"
+        self.countdown_remaining = 0
+        self.recording_elapsed = 0
+        if self._broadcast:
+            self._broadcast("ondemand_stopped", {})
+
+    async def _run(self, player_id: int, custom_name: str,
+                   duration_sec: int, delay_sec: int):
+        bc = self._broadcast
+        try:
+            # Phase 1: countdown
+            if delay_sec > 0:
+                self.state = "countdown"
+                for remaining in range(delay_sec, 0, -1):
+                    if self._stopped:
+                        return
+                    self.countdown_remaining = remaining
+                    bc("ondemand_countdown", {"remaining": remaining})
+                    await asyncio.sleep(1)
+                self.countdown_remaining = 0
+
+            # Phase 2: recording
+            self.state = "recording"
+            self._recorder.start_ondemand(player_id, custom_name, duration_sec)
+            bc("ondemand_recording_started", {"duration": duration_sec, "name": custom_name})
+
+            for elapsed in range(1, duration_sec + 1):
+                if self._stopped:
+                    return
+                await asyncio.sleep(1)
+                self.recording_elapsed = elapsed
+                if elapsed % 5 == 0 or elapsed >= duration_sec - 3:
+                    bc("ondemand_recording_progress", {"elapsed": elapsed, "duration": duration_sec})
+
+            # Phase 3: done
+            meta = self._recorder.stop()
+            if meta:
+                bc("ondemand_recording_saved", meta)
+        except asyncio.CancelledError:
+            pass
+        finally:
+            if self._recorder.recording:
+                self._recorder.stop()
+            self.state = "idle"
+            self.recording_elapsed = 0
+            self.countdown_remaining = 0
+
+_ondemand = OndemandController()
+
+
+@app.post("/api/recordings/ondemand/start")
+async def start_ondemand(body: dict):
+    name = (body.get("custom_name") or "").strip()
+    if not name:
+        raise HTTPException(400, "Nazwa nagrania jest wymagana")
+    duration = body.get("duration_sec", 0)
+    if not 1 <= duration <= 10800:
+        raise HTTPException(400, "Czas trwania: 1s – 3h")
+    delay = body.get("delay_sec", 0)
+    if not 0 <= delay <= 10800:
+        raise HTTPException(400, "Opóźnienie: 0 – 3h")
+    player_id = body.get("player_id")
+    if not player_id:
+        raise HTTPException(400, "Wybierz gracza")
+    if _ondemand.active:
+        raise HTTPException(409, "Nagrywanie on-demand już trwa")
+    if _training_runner.running and _training_runner._recorder.recording:
+        raise HTTPException(409, "Nagrywanie treningowe w toku")
+    _ondemand.start(player_id, name, duration, delay, broadcast)
+    return {"status": "ok"}
+
+
+@app.post("/api/recordings/ondemand/stop")
+async def stop_ondemand():
+    _ondemand.stop()
+    return {"status": "ok"}
 
 
 # ── Voice notes ───────────────────────────────────────────────────────────────

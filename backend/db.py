@@ -177,6 +177,10 @@ def _migrate(c):
         c.execute("ALTER TABLE recordings_meta ADD COLUMN exercise_id INTEGER")
     if "training_history_id" not in rec_cols:
         c.execute("ALTER TABLE recordings_meta ADD COLUMN training_history_id INTEGER")
+    if "is_ondemand" not in rec_cols:
+        c.execute("ALTER TABLE recordings_meta ADD COLUMN is_ondemand INTEGER DEFAULT 0")
+    if "custom_name" not in rec_cols:
+        c.execute("ALTER TABLE recordings_meta ADD COLUMN custom_name TEXT DEFAULT ''")
 
 
 def _seed_drills(c):
@@ -680,14 +684,17 @@ def remove_favorite(player_id: int, item_type: str, item_id: int):
 
 def save_recording_meta(player_id, training_id, training_name, step_idx,
                         step_name, filename, duration_sec, size_bytes,
-                        drill_id=None, exercise_id=None, training_history_id=None):
+                        drill_id=None, exercise_id=None, training_history_id=None,
+                        is_ondemand=0, custom_name=""):
     with sqlite3.connect(DB) as c:
         c.execute(
             "INSERT INTO recordings_meta (player_id, training_id, training_name, step_idx, "
-            "step_name, filename, duration_sec, size_bytes, drill_id, exercise_id, training_history_id) "
-            "VALUES (?,?,?,?,?,?,?,?,?,?,?)",
+            "step_name, filename, duration_sec, size_bytes, drill_id, exercise_id, training_history_id,"
+            " is_ondemand, custom_name) "
+            "VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)",
             (player_id, training_id, training_name, step_idx, step_name,
-             filename, duration_sec, size_bytes, drill_id, exercise_id, training_history_id)
+             filename, duration_sec, size_bytes, drill_id, exercise_id, training_history_id,
+             is_ondemand, custom_name)
         )
 
 
@@ -695,19 +702,26 @@ def _rec_row(r):
     return {"id": r[0], "player_id": r[1], "training_id": r[2], "training_name": r[3],
             "step_idx": r[4], "step_name": r[5], "filename": r[6], "started_at": r[7],
             "duration_sec": r[8], "size_bytes": r[9], "drill_id": r[10], "exercise_id": r[11],
-            "training_history_id": r[12] if len(r) > 12 else None}
+            "training_history_id": r[12] if len(r) > 12 else None,
+            "is_ondemand": r[13] if len(r) > 13 else 0,
+            "custom_name": r[14] if len(r) > 14 else ""}
 
 _REC_COLS = ("id, player_id, training_id, training_name, step_idx, step_name,"
              " filename, started_at, duration_sec, size_bytes, drill_id, exercise_id,"
-             " training_history_id")
+             " training_history_id, is_ondemand, custom_name")
 
 
-def get_recordings_meta(player_id=None):
+def get_recordings_meta(player_id=None, is_ondemand=None):
     with sqlite3.connect(DB) as c:
         q = f"SELECT {_REC_COLS} FROM recordings_meta"
         params = []
+        wheres = []
         if player_id is not None:
-            q += " WHERE player_id=?"; params.append(player_id)
+            wheres.append("player_id=?"); params.append(player_id)
+        if is_ondemand is not None:
+            wheres.append("is_ondemand=?"); params.append(int(is_ondemand))
+        if wheres:
+            q += " WHERE " + " AND ".join(wheres)
         q += " ORDER BY started_at DESC"
         rows = c.execute(q, params).fetchall()
         return [_rec_row(r) for r in rows]
@@ -715,12 +729,17 @@ def get_recordings_meta(player_id=None):
 
 def get_comparable_recordings(training_id: int | None = None, step_idx: int | None = None,
                               drill_id: int | None = None, exercise_id: int | None = None,
-                              exclude_filename: str | None = None):
-    """Get comparable recordings — by drill_id/exercise_id or fallback to training_id+step_idx."""
+                              exclude_filename: str | None = None,
+                              ondemand: bool = False, player_id: int | None = None):
+    """Get comparable recordings — by drill_id/exercise_id, training_id+step_idx, or all on-demand."""
     with sqlite3.connect(DB) as c:
         q = f"SELECT {_REC_COLS} FROM recordings_meta WHERE 1=1"
         params = []
-        if drill_id is not None:
+        if ondemand:
+            q += " AND is_ondemand=1"
+            if player_id is not None:
+                q += " AND player_id=?"; params.append(player_id)
+        elif drill_id is not None:
             q += " AND drill_id=?"; params.append(drill_id)
         elif exercise_id is not None:
             q += " AND exercise_id=?"; params.append(exercise_id)
@@ -730,8 +749,7 @@ def get_comparable_recordings(training_id: int | None = None, step_idx: int | No
             q += " AND filename != ?"; params.append(exclude_filename)
         q += " ORDER BY started_at DESC"
         rows = c.execute(q, params).fetchall()
-        return [_rec_row(r)
-                for r in rows]
+        return [_rec_row(r) for r in rows]
 
 
 def delete_recording_meta(filename: str):

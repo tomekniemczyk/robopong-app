@@ -710,14 +710,87 @@
   <!-- ── Kamera ────────────────────────────────────────────────────────── -->
   <div class="page" v-show="page === 'camera'">
     <div class="card">
-      <div class="cam-wrap">
+      <div class="cam-wrap" style="position:relative">
         <img id="cam-img" :src="camSrc" :alt="t('camera.unavailable')" @error="camErr=true" v-if="!camErr">
         <div class="cam-off" v-else>
-          <div style="font-size:36px;margin-bottom:6px">📷</div>
+          <div style="font-size:36px;margin-bottom:6px">&#128247;</div>
           <p>{{ t('camera.unavailable') }}</p>
+        </div>
+        <!-- Countdown overlay -->
+        <div v-if="odState === 'countdown'" style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;background:rgba(0,0,0,.55);color:#fff;gap:8px">
+          <div style="font-size:14px;text-transform:uppercase;letter-spacing:.1em;opacity:.8">{{ t('ondemand.delay') }}</div>
+          <div style="font-size:72px;font-weight:700;line-height:1;font-variant-numeric:tabular-nums">{{ odCountdown }}</div>
+        </div>
+        <!-- REC overlay -->
+        <div v-if="odState === 'recording'" style="position:absolute;top:10px;left:10px;display:flex;align-items:center;gap:6px;background:rgba(0,0,0,.55);padding:4px 10px;border-radius:20px">
+          <span class="rec-blink" style="width:10px;height:10px;border-radius:50%;background:#e53e3e;display:inline-block"></span>
+          <span style="color:#fff;font-weight:700;font-size:13px;letter-spacing:.08em">REC</span>
+          <span style="color:#fff;font-size:12px;font-variant-numeric:tabular-nums">{{ fmtTime(odElapsed) }} / {{ fmtTime(odTotalDuration) }}</span>
         </div>
       </div>
       <p style="font-size:11px;color:var(--muted)">{{ t('camera.stream_info') }}</p>
+    </div>
+
+    <!-- On-demand recording controls -->
+    <div class="card">
+      <div style="font-size:13px;font-weight:600;margin-bottom:10px">&#127916; {{ t('ondemand.title') }}</div>
+
+      <div style="margin-bottom:8px">
+        <label style="font-size:12px;color:var(--muted);display:block;margin-bottom:3px">{{ t('ondemand.name') }}</label>
+        <input type="text" v-model="odName" :placeholder="t('ondemand.name_placeholder')" :disabled="odState !== 'idle'" style="width:100%;padding:7px 10px;font-size:13px">
+      </div>
+
+      <div style="margin-bottom:8px">
+        <label style="font-size:12px;color:var(--muted);display:block;margin-bottom:3px">{{ t('ondemand.duration') }}</label>
+        <div style="display:flex;gap:6px;align-items:center">
+          <select v-model="odDurH" :disabled="odState !== 'idle'" style="flex:1;padding:6px;font-size:13px">
+            <option v-for="h in 4" :key="h-1" :value="h-1">{{ h-1 }}h</option>
+          </select>
+          <select v-model="odDurM" :disabled="odState !== 'idle'" style="flex:1;padding:6px;font-size:13px">
+            <option v-for="m in 60" :key="m-1" :value="m-1">{{ String(m-1).padStart(2,'0') }}m</option>
+          </select>
+          <select v-model="odDurS" :disabled="odState !== 'idle'" style="flex:1;padding:6px;font-size:13px">
+            <option v-for="s in 60" :key="s-1" :value="s-1">{{ String(s-1).padStart(2,'0') }}s</option>
+          </select>
+        </div>
+      </div>
+
+      <div style="margin-bottom:8px">
+        <label style="font-size:12px;color:var(--muted);display:block;margin-bottom:3px">{{ t('ondemand.delay') }}</label>
+        <div style="display:flex;gap:6px;align-items:center">
+          <select v-model="odDelayH" :disabled="odState !== 'idle'" style="flex:1;padding:6px;font-size:13px">
+            <option v-for="h in 4" :key="h-1" :value="h-1">{{ h-1 }}h</option>
+          </select>
+          <select v-model="odDelayM" :disabled="odState !== 'idle'" style="flex:1;padding:6px;font-size:13px">
+            <option v-for="m in 60" :key="m-1" :value="m-1">{{ String(m-1).padStart(2,'0') }}m</option>
+          </select>
+          <select v-model="odDelayS" :disabled="odState !== 'idle'" style="flex:1;padding:6px;font-size:13px">
+            <option v-for="s in 60" :key="s-1" :value="s-1">{{ String(s-1).padStart(2,'0') }}s</option>
+          </select>
+        </div>
+      </div>
+
+      <div style="margin-bottom:12px">
+        <label style="font-size:12px;color:var(--muted);display:block;margin-bottom:3px">{{ t('ondemand.player') }}</label>
+        <select v-model="odPlayerId" :disabled="odState !== 'idle'" style="width:100%;padding:6px;font-size:13px">
+          <option v-for="p in playersList" :key="p.id" :value="p.id">{{ p.name }}</option>
+        </select>
+      </div>
+
+      <div style="display:flex;gap:8px">
+        <button class="btn btn-primary" style="flex:1" @click="startOndemandRec"
+          :disabled="odState !== 'idle' || !odName.trim() || !odPlayerId || odTotalDuration === 0">
+          &#9654; {{ t('ondemand.start') }}
+        </button>
+        <button class="btn btn-danger" style="flex:1" @click="stopOndemandRec"
+          :disabled="odState === 'idle'">
+          &#9724; {{ t('ondemand.stop') }}
+        </button>
+      </div>
+
+      <div v-if="odState === 'saved'" style="margin-top:8px;font-size:12px;color:var(--success);text-align:center">
+        &#10003; {{ t('ondemand.saved') }}
+      </div>
     </div>
   </div>
 
@@ -2075,7 +2148,28 @@
         </div>
       </div>
 
-      <div v-if="!allHistory.length" style="color:var(--muted);font-size:12px;text-align:center;padding:20px 0">{{ t('history.no_data') }}</div>
+      <!-- Tree: Nagrania własne (on-demand) -->
+      <div v-if="ondemandRecordings.length" style="margin-bottom:8px">
+        <div style="font-size:13px;font-weight:600;padding:6px 0;cursor:pointer;display:flex;align-items:center;gap:6px" @click="toggleHistNode('od')">
+          <span style="font-size:10px">{{ histSearch || historyExpanded.has('od') ? '▼' : '▶' }}</span>
+          &#128247; {{ t('history.ondemand') }} <span style="font-weight:400;color:var(--muted);font-size:11px">({{ ondemandRecordings.length }})</span>
+        </div>
+        <div v-if="histSearch || historyExpanded.has('od')" style="padding-left:12px">
+          <div v-for="rec in filteredOndemandRecordings" :key="'od-'+rec.id"
+               style="font-size:11px;padding:4px 0;border-bottom:1px solid rgba(255,255,255,.02);display:flex;align-items:center;gap:5px;flex-wrap:wrap">
+            <span style="flex:1;font-weight:500">{{ rec.custom_name || rec.step_name }}</span>
+            <span style="color:var(--muted);font-size:10px">{{ rec.started_at ? new Date(rec.started_at).toLocaleDateString() : '' }}</span>
+            <span style="font-size:10px">&#9203;{{ fmtDur(rec.duration_sec) }}</span>
+            <button class="btn btn-ghost" style="font-size:9px;padding:1px 4px;color:#ff3b30" :title="t('tooltip.play')"
+              @click.stop="openVideoPlay(rec)">&#127916;&#9654;</button>
+            <a :href="'/api/recordings/' + rec.filename" :download="rec.filename.replace('/', '_')" class="btn btn-ghost" style="font-size:9px;padding:1px 4px" :title="t('tooltip.download')" @click.stop>&#11015;</a>
+            <button class="btn btn-ghost" style="font-size:9px;padding:1px 4px" :title="t('tooltip.compare')" @click.stop="openVideoCompareOndemand(rec)">&#128260;</button>
+            <button class="btn btn-ghost" style="font-size:9px;padding:1px 4px;color:var(--danger)" :title="t('tooltip.delete_rec')" @click.stop="deleteOndemandRec(rec)">&#128465;</button>
+          </div>
+        </div>
+      </div>
+
+      <div v-if="!allHistory.length && !ondemandRecordings.length" style="color:var(--muted);font-size:12px;text-align:center;padding:20px 0">{{ t('history.no_data') }}</div>
     </div>
   </div>
 
@@ -2158,10 +2252,19 @@
       <div v-if="!videoCompare.others.length" style="text-align:center;color:var(--muted);font-size:12px;padding:20px 0">
         {{ t('stats.no_compare') }}
       </div>
+      <!-- Sync offset -->
+      <div v-if="videoCompare.others.length" class="vid-controls" style="margin-top:8px;flex-wrap:wrap;gap:8px">
+        <span style="font-size:11px;color:var(--muted)">{{ t('compare.sync_offset') }}:</span>
+        <label style="font-size:11px;color:var(--muted)">L</label>
+        <input type="number" v-model.number="videoCompare.offsetL" step="0.5" min="-60" max="60" style="width:60px;padding:3px 6px;font-size:12px;text-align:center" @change="applySyncOffset">
+        <label style="font-size:11px;color:var(--muted)">R</label>
+        <input type="number" v-model.number="videoCompare.offsetR" step="0.5" min="-60" max="60" style="width:60px;padding:3px 6px;font-size:12px;text-align:center" @change="applySyncOffset">
+        <span style="font-size:11px;color:var(--muted)">s</span>
+      </div>
       <!-- Play/pause both -->
       <div class="vid-controls" style="margin-top:8px">
-        <button class="btn btn-primary" style="font-size:12px;padding:5px 16px" @click="toggleBothVideos()">⏯ Play/Pause</button>
-        <button class="btn btn-ghost" style="font-size:12px;padding:5px 12px" @click="restartBothVideos()">⏮ Restart</button>
+        <button class="btn btn-primary" style="font-size:12px;padding:5px 16px" @click="toggleBothVideos()">&#9199; Play/Pause</button>
+        <button class="btn btn-ghost" style="font-size:12px;padding:5px 12px" @click="restartBothVideos()">&#9198; Restart</button>
       </div>
     </div>
   </div>
@@ -2377,7 +2480,10 @@
     <button :class="{ active: page === 'history' }" @click="page='history'; loadAllHistory()">
       <span class="nav-icon">📊</span>{{ t('nav.history') }}
     </button>
-    <button :class="{ active: ['exploration','camera','logs'].includes(page) }" @click="showServiceMenu = !showServiceMenu" style="position:relative">
+    <button :class="{ active: page === 'camera' }" @click="page='camera'">
+      <span class="nav-icon">📷</span>{{ t('nav.camera') }}
+    </button>
+    <button :class="{ active: ['exploration','logs'].includes(page) }" @click="showServiceMenu = !showServiceMenu" style="position:relative">
       <span class="nav-icon">🔧</span>{{ t('nav.service') }}
     </button>
   </nav>
@@ -2387,9 +2493,6 @@
   <div v-if="showServiceMenu" class="service-menu">
     <button @click="connected && !isCalibrated ? (showToast(t('toast.cal_required')), page='calibration') : page='exploration'; showServiceMenu=false">
       <span>🔬</span>{{ t('nav.exploration') }}
-    </button>
-    <button @click="page='camera'; showServiceMenu=false">
-      <span>📷</span>{{ t('nav.camera') }}
     </button>
     <button @click="page='logs'; showServiceMenu=false">
       <span>🖥</span>{{ t('nav.logs') }}
@@ -2519,6 +2622,19 @@ const _app = createApp({
     const robotNameEdit = ref('')
     const camErr        = ref(false)
     const camSrc        = `http://${window.location.hostname}:8081`
+    // On-demand recording
+    const odName        = ref('')
+    const odDurH        = ref(0)
+    const odDurM        = ref(5)
+    const odDurS        = ref(0)
+    const odDelayH      = ref(0)
+    const odDelayM      = ref(0)
+    const odDelayS      = ref(0)
+    const odPlayerId    = ref(null)
+    const odState       = ref('idle')   // idle | countdown | recording | saved
+    const odCountdown   = ref(0)
+    const odElapsed     = ref(0)
+    const odTotalDuration = computed(() => odDurH.value * 3600 + odDurM.value * 60 + odDurS.value)
     const transport     = ref('ble')
     const deployTime    = ref('')
     const usbPorts      = ref([])
@@ -2716,6 +2832,21 @@ const _app = createApp({
         if (playerDetail.value && m.player_id === playerDetail.value.id) {
           fetch(`/api/players/${playerDetail.value.id}/recordings`).then(r => r.json()).then(d => { playerRecordings.value = d })
         }
+      } else if (m.type === 'ondemand_countdown') {
+        odState.value = 'countdown'
+        odCountdown.value = m.remaining
+      } else if (m.type === 'ondemand_recording_started') {
+        odState.value = 'recording'
+        odElapsed.value = 0
+      } else if (m.type === 'ondemand_recording_progress') {
+        odState.value = 'recording'
+        odElapsed.value = m.elapsed
+      } else if (m.type === 'ondemand_recording_saved') {
+        odState.value = 'saved'
+        setTimeout(() => { odState.value = 'idle' }, 3000)
+        loadOndemandRecordings()
+      } else if (m.type === 'ondemand_stopped') {
+        odState.value = 'idle'
       } else if (m.type === 'history_updated') {
         loadTrainingHistory()
         if (playerDetail.value && m.player_id === playerDetail.value.id) {
@@ -3292,6 +3423,7 @@ const _app = createApp({
     // ── Training folders & history ────────────────────────────
     const openTrainingFolders = reactive(new Set())
     const trainingHistory = ref([])
+    const ondemandRecordings = ref([])
     const trainingStartModal = ref(null)
     const resumeFromStep = ref(0)
     const expandedTraining = ref(null)
@@ -3329,7 +3461,7 @@ const _app = createApp({
     const compareIdB = ref(null)
     const compareStatsA = ref(null)
     const compareStatsB = ref(null)
-    const videoCompare = reactive({ show: false, leftFile: '', rightFile: '', others: [], stepName: '', leftLabel: '', rightLabel: '', speed: 1 })
+    const videoCompare = reactive({ show: false, leftFile: '', rightFile: '', others: [], stepName: '', leftLabel: '', rightLabel: '', speed: 1, offsetL: 0, offsetR: 0 })
     const vidLeft = ref(null)
     const vidRight = ref(null)
     const videoPlay = reactive({ show: false, file: '', label: '', speed: 1 })
@@ -3537,6 +3669,44 @@ const _app = createApp({
       if (selectedPlayerId.value) url += `?player_id=${selectedPlayerId.value}`
       const r = await fetch(url)
       trainingHistory.value = await r.json()
+    }
+
+    async function loadOndemandRecordings() {
+      const url = '/api/recordings?is_ondemand=1' + (historyPlayerId.value ? `&player_id=${historyPlayerId.value}` : '')
+      const r = await fetch(url)
+      ondemandRecordings.value = await r.json()
+    }
+
+    function fmtTime(sec) {
+      const s = Math.floor(sec)
+      const h = Math.floor(s / 3600)
+      const m = Math.floor((s % 3600) / 60)
+      const ss = s % 60
+      if (h > 0) return `${h}:${String(m).padStart(2,'0')}:${String(ss).padStart(2,'0')}`
+      return `${String(m).padStart(2,'0')}:${String(ss).padStart(2,'0')}`
+    }
+
+    async function startOndemandRec() {
+      if (!odPlayerId.value || !odName.value.trim()) return
+      const duration = odTotalDuration.value
+      if (duration === 0) return
+      const delay = odDelayH.value * 3600 + odDelayM.value * 60 + odDelayS.value
+      await fetch('/api/recordings/ondemand/start', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ player_id: odPlayerId.value, custom_name: odName.value.trim(), duration_sec: duration, delay_sec: delay })
+      })
+    }
+
+    async function stopOndemandRec() {
+      await fetch('/api/recordings/ondemand/stop', { method: 'POST' })
+    }
+
+    async function deleteOndemandRec(rec) {
+      showConfirm(t('recordings.delete') + '?', async () => {
+        await fetch(`/api/recordings/${rec.filename}`, { method: 'DELETE' })
+        await loadAllHistory()
+      }, t('btn.delete'), '#e53e3e')
     }
 
     function openTrainingStartModal(tr, fromStep = 0) {
@@ -3877,6 +4047,11 @@ const _app = createApp({
     async function loadPlayers() {
       const r = await fetch('/api/players')
       playersList.value = await r.json()
+      if (!odPlayerId.value && playersList.value.length) {
+        odPlayerId.value = (selectedPlayerId.value && playersList.value.find(p => p.id === selectedPlayerId.value))
+          ? selectedPlayerId.value
+          : playersList.value[0].id
+      }
     }
 
     async function addPlayer() {
@@ -4039,6 +4214,8 @@ const _app = createApp({
       videoCompare.stepName = rec.step_name
       videoCompare.leftLabel = _recLabel(rec)
       videoCompare.speed = 1
+      videoCompare.offsetL = 0
+      videoCompare.offsetR = 0
       videoCompare.others = []
       videoCompare.rightFile = ''
       videoCompare.rightLabel = ''
@@ -4048,6 +4225,26 @@ const _app = createApp({
       else if (rec.exercise_id) url += `exercise_id=${rec.exercise_id}`
       else url += `training_id=${rec.training_id}&step_idx=${rec.step_idx}`
       url += `&exclude_filename=${encodeURIComponent(rec.filename)}`
+      const r = await fetch(url)
+      const others = await r.json()
+      videoCompare.others = others
+      if (videoCompare.others.length) {
+        videoCompare.rightFile = videoCompare.others[0].filename
+        videoCompare.rightLabel = _recLabel(videoCompare.others[0])
+      }
+    }
+    async function openVideoCompareOndemand(rec) {
+      videoCompare.leftFile = rec.filename
+      videoCompare.stepName = rec.custom_name || rec.step_name
+      videoCompare.leftLabel = _recLabel(rec)
+      videoCompare.speed = 1
+      videoCompare.offsetL = 0
+      videoCompare.offsetR = 0
+      videoCompare.others = []
+      videoCompare.rightFile = ''
+      videoCompare.rightLabel = ''
+      videoCompare.show = true
+      let url = `/api/recordings/compare?ondemand=true&player_id=${rec.player_id}&exclude_filename=${encodeURIComponent(rec.filename)}`
       const r = await fetch(url)
       const others = await r.json()
       videoCompare.others = others
@@ -4066,20 +4263,31 @@ const _app = createApp({
       if (vidLeft.value) vidLeft.value.playbackRate = s
       if (vidRight.value) vidRight.value.playbackRate = s
     }
+    function _syncRightToLeft() {
+      if (!vidRight.value) return
+      const offset = (videoCompare.offsetR || 0) - (videoCompare.offsetL || 0)
+      vidRight.value.currentTime = Math.max(0, vidLeft.value.currentTime + offset)
+    }
     function syncVideos(action) {
       if (!vidLeft.value || !vidRight.value) return
-      if (action === 'play') { vidRight.value.currentTime = vidLeft.value.currentTime; vidRight.value.play() }
+      if (action === 'play') { _syncRightToLeft(); vidRight.value.play() }
       if (action === 'pause') { vidRight.value.pause() }
-      if (action === 'seek') { vidRight.value.currentTime = vidLeft.value.currentTime }
+      if (action === 'seek') { _syncRightToLeft() }
+    }
+    function applySyncOffset() {
+      if (!vidLeft.value || !vidRight.value) return
+      _syncRightToLeft()
     }
     function toggleBothVideos() {
       if (!vidLeft.value) return
-      if (vidLeft.value.paused) { vidLeft.value.play(); if (vidRight.value) vidRight.value.play() }
+      if (vidLeft.value.paused) { vidLeft.value.play(); if (vidRight.value) { _syncRightToLeft(); vidRight.value.play() } }
       else { vidLeft.value.pause(); if (vidRight.value) vidRight.value.pause() }
     }
     function restartBothVideos() {
-      if (vidLeft.value) { vidLeft.value.currentTime = 0; vidLeft.value.play() }
-      if (vidRight.value) { vidRight.value.currentTime = 0; vidRight.value.play() }
+      const lOffset = videoCompare.offsetL || 0
+      const rOffset = videoCompare.offsetR || 0
+      if (vidLeft.value) { vidLeft.value.currentTime = Math.max(0, -lOffset); vidLeft.value.play() }
+      if (vidRight.value) { vidRight.value.currentTime = Math.max(0, -rOffset); vidRight.value.play() }
     }
     function openVideoPlay(rec) {
       videoPlay.file = rec.filename
@@ -4146,12 +4354,14 @@ const _app = createApp({
 
     async function loadAllHistory() {
       const pid = historyPlayerId.value
-      const [hRes, rRes] = await Promise.all([
+      const [hRes, rRes, odRes] = await Promise.all([
         fetch(pid ? `/api/training-history?player_id=${pid}` : '/api/training-history'),
         fetch(pid ? `/api/recordings?player_id=${pid}` : '/api/recordings'),
+        fetch((pid ? `/api/recordings?player_id=${pid}&` : '/api/recordings?') + 'is_ondemand=1'),
       ])
       allHistory.value = await hRes.json()
       allRecordings.value = await rRes.json()
+      ondemandRecordings.value = await odRes.json()
     }
 
     const histPlayRec = ref(null)
@@ -4256,6 +4466,14 @@ const _app = createApp({
 
     const historyTree = computed(() => buildHistTree(allHistory.value))
     const histSearch = ref('')
+
+    const filteredOndemandRecordings = computed(() => {
+      const q = histSearch.value.trim().toLowerCase()
+      if (!q) return ondemandRecordings.value
+      return ondemandRecordings.value.filter(r =>
+        (r.custom_name || r.step_name || '').toLowerCase().includes(q)
+      )
+    })
 
     const filteredHistoryTree = computed(() => {
       const q = histSearch.value.trim().toLowerCase()
@@ -5085,7 +5303,7 @@ const _app = createApp({
       expandedHistoryId, playerHistoryTotal, playerFavorites, playerStats, showActivity, statsMaxWeek,
       showCompareModal, compareIdA, compareIdB, compareStatsA, compareStatsB,
       compareMetrics, compareNameA, compareNameB, compare30A, compare30B, openCompare, loadCompareStats,
-      videoCompare, vidLeft, vidRight, openVideoCompare, closeVideoCompare, setVideoSpeed, syncVideos, toggleBothVideos, restartBothVideos,
+      videoCompare, vidLeft, vidRight, openVideoCompare, openVideoCompareOndemand, closeVideoCompare, setVideoSpeed, syncVideos, applySyncOffset, toggleBothVideos, restartBothVideos,
       favTrainings, favDrills, favExercises,
       getTrainingSteps, getStepRecording, getDrillName, getExerciseName, getHistoryLabel,
       landingMode, pendingLandings, drillLandings, handleLandingClick, saveLandings,
@@ -5099,8 +5317,13 @@ const _app = createApp({
       // Historia tab
       historyPlayerId, allHistory, allRecordings, historyExpanded, historySort,
       loadAllHistory, toggleHistNode, histHasRec, histGetStepRec, histDateRange, historyTree, leaderboard,
-      histSearch, filteredHistoryTree,
+      histSearch, filteredHistoryTree, filteredOndemandRecordings,
       videoPlay, vidSingle, openVideoPlay, closeVideoPlay, setPlaySpeed, skipVideo, toggleSingleVideo,
+      // On-demand recording
+      odName, odDurH, odDurM, odDurS, odDelayH, odDelayM, odDelayS, odPlayerId,
+      odState, odCountdown, odElapsed, odTotalDuration,
+      startOndemandRec, stopOndemandRec, deleteOndemandRec,
+      ondemandRecordings, loadOndemandRecordings, fmtTime,
     }
   }
 })

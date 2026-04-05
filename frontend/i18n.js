@@ -550,6 +550,19 @@ window.I18N = {
   'favorites.add':         { pl:'Dodaj do ulubionych', en:'Add to favorites', de:'Zu Favoriten',  fr:'Ajouter aux favoris', zh:'添加收藏' },
   'training.show_more':    { pl:'Pokaż więcej',    en:'Show more',        de:'Mehr anzeigen',    fr:'Afficher plus',    zh:'显示更多' },
 
+  // ── On-demand recording ──────────────────────────────────────────────
+  'ondemand.title':          { pl:'Nagrywanie na żądanie', en:'On-demand recording', de:'Aufnahme auf Abruf',     fr:'Enregistrement à la demande', zh:'按需录制' },
+  'ondemand.name':           { pl:'Nazwa nagrania',      en:'Recording name',       de:'Aufnahme-Name',          fr:'Nom de l\'enregistrement', zh:'录制名称' },
+  'ondemand.name_placeholder':{ pl:'np. Serwis z lewej', en:'e.g. Left serve',      de:'z.B. Aufschlag links',   fr:'ex. Service gauche',       zh:'例如：左发球' },
+  'ondemand.duration':       { pl:'Czas trwania',        en:'Duration',             de:'Dauer',                  fr:'Durée',                    zh:'录制时长' },
+  'ondemand.delay':          { pl:'Opóźniony start',     en:'Delayed start',        de:'Verzögerter Start',      fr:'Départ différé',           zh:'延迟启动' },
+  'ondemand.start':          { pl:'Rozpocznij nagrywanie', en:'Start recording',    de:'Aufnahme starten',       fr:'Démarrer l\'enregistrement', zh:'开始录制' },
+  'ondemand.stop':           { pl:'Zatrzymaj',           en:'Stop',                 de:'Stoppen',                fr:'Arrêter',                  zh:'停止' },
+  'ondemand.saved':          { pl:'Nagranie zapisane',   en:'Recording saved',      de:'Aufnahme gespeichert',   fr:'Enregistrement sauvegardé', zh:'录制已保存' },
+  'ondemand.player':         { pl:'Gracz',               en:'Player',               de:'Spieler',                fr:'Joueur',                   zh:'球员' },
+  'history.ondemand':        { pl:'Nagrania własne',     en:'On-demand recordings', de:'Eigene Aufnahmen',       fr:'Enregistrements manuels',  zh:'手动录制' },
+  'compare.sync_offset':     { pl:'Offset synchronizacji', en:'Sync offset',        de:'Sync-Offset',            fr:'Décalage sync',            zh:'同步偏移' },
+
   // ── Exploration ─────────────────────────────────────────────────────
   'nav.exploration':   { pl:'Eksploracja', en:'Exploration', de:'Erkundung',    fr:'Exploration',    zh:'探索' },
   'exp.title':         { pl:'Eksploracja robota',  en:'Robot Exploration',    de:'Roboter-Erkundung',  fr:'Exploration du robot',  zh:'机器人探索' },

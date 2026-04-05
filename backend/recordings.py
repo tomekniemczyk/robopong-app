@@ -45,7 +45,8 @@ class Recorder:
     def start(self, player_id: int, training_id: int, training_name: str,
               step_idx: int, step_name: str,
               drill_id: int | None = None, exercise_id: int | None = None,
-              training_history_id: int | None = None):
+              training_history_id: int | None = None,
+              max_duration_sec: int = 600):
         if self.recording:
             self.stop()
 
@@ -55,6 +56,44 @@ class Recorder:
         filename = f"{ts}_s{step_idx:02d}_{safe_name}.mp4"
         filepath = player_dir / filename
 
+        self._is_ondemand = False
+        self._custom_name = ""
+        self._start_ffmpeg(filepath, player_id, filename, max_duration_sec, {
+            "player_id": player_id,
+            "training_id": training_id,
+            "training_name": training_name,
+            "step_idx": step_idx,
+            "step_name": step_name,
+            "drill_id": drill_id,
+            "exercise_id": exercise_id,
+            "training_history_id": training_history_id,
+        })
+
+    def start_ondemand(self, player_id: int, custom_name: str, duration_sec: int):
+        if self.recording:
+            self.stop()
+
+        player_dir = _ensure_dir(player_id)
+        ts = datetime.now().strftime("%Y%m%d_%H%M%S")
+        safe_name = _safe_filename(custom_name)
+        filename = f"{ts}_{safe_name}.mp4"
+        filepath = player_dir / filename
+
+        self._is_ondemand = True
+        self._custom_name = custom_name
+        self._start_ffmpeg(filepath, player_id, filename, duration_sec, {
+            "player_id": player_id,
+            "training_id": None,
+            "training_name": "On-demand",
+            "step_idx": 0,
+            "step_name": custom_name,
+            "drill_id": None,
+            "exercise_id": None,
+            "training_history_id": None,
+        })
+
+    def _start_ffmpeg(self, filepath: Path, player_id: int, filename: str,
+                      max_duration_sec: int, meta: dict):
         try:
             log_path = filepath.with_suffix(".log")
             self._log_file = open(log_path, "w")
@@ -66,7 +105,7 @@ class Recorder:
                     "-c:v", "libx264",
                     "-preset", "ultrafast",
                     "-crf", "18",
-                    "-t", "600",  # max 10 min safety
+                    "-t", str(max_duration_sec),
                     str(filepath),
                 ],
                 stdin=subprocess.PIPE,
@@ -76,16 +115,9 @@ class Recorder:
             self._current_file = filepath
             self._start_time = datetime.now()
             self._current_meta = {
-                "player_id": player_id,
-                "training_id": training_id,
-                "training_name": training_name,
-                "step_idx": step_idx,
-                "step_name": step_name,
+                **meta,
                 "filename": f"{player_id}/{filename}",
                 "started_at": self._start_time.isoformat(),
-                "drill_id": drill_id,
-                "exercise_id": exercise_id,
-                "training_history_id": training_history_id,
             }
             logger.info("Recording started: %s", filepath)
         except FileNotFoundError:
@@ -114,7 +146,8 @@ class Recorder:
 
         if self._current_file and self._current_file.exists():
             duration = (datetime.now() - self._start_time).total_seconds() if self._start_time else 0
-            min_duration = 30 if skipped else 3
+            is_od = getattr(self, '_is_ondemand', False)
+            min_duration = 1 if is_od else (30 if skipped else 3)
             if duration < min_duration:
                 logger.info("Recording discarded (%.1fs < %ds%s): %s",
                             duration, min_duration, ", skipped" if skipped else "", self._current_file)
@@ -132,6 +165,8 @@ class Recorder:
                     meta["duration_sec"], meta["size_bytes"],
                     drill_id=meta.get("drill_id"), exercise_id=meta.get("exercise_id"),
                     training_history_id=meta.get("training_history_id"),
+                    is_ondemand=1 if is_od else 0,
+                    custom_name=getattr(self, '_custom_name', ''),
                 )
                 logger.info("Recording saved: %s (%.0fs)", self._current_file, duration)
         else:
@@ -152,8 +187,8 @@ class Recorder:
 
 # ── Query API ────────────────────────────────────────────────────────────────
 
-def get_recordings(player_id: int | None = None) -> list:
-    return db.get_recordings_meta(player_id=player_id)
+def get_recordings(player_id: int | None = None, is_ondemand: int | None = None) -> list:
+    return db.get_recordings_meta(player_id=player_id, is_ondemand=is_ondemand)
 
 
 def get_recording_path(filename: str) -> Path | None:
