@@ -789,10 +789,10 @@
         <button class="btn btn-primary" v-if="!connected" @click="reconnectLast">{{ t('conn.connect') }}</button>
         <button class="btn btn-danger"  v-else @click="disconnect">{{ t('conn.disconnect') }}</button>
       </div>
-      <div v-if="connected" style="display:flex;gap:6px;margin-top:8px">
+      <div style="display:flex;gap:6px;margin-top:8px">
         <button class="btn btn-ghost" style="flex:1;font-size:11px;color:var(--danger)" @click="disconnectFull">{{ t('conn.disconnect_full') }}</button>
+        <button class="btn btn-ghost" style="flex:1;font-size:11px;color:var(--muted)" @click="forgetDevice">{{ t('conn.forget_device') }}</button>
       </div>
-      <button class="btn btn-ghost" style="width:100%;margin-top:6px;font-size:11px;color:var(--muted)" @click="forgetDevice">{{ t('conn.forget_device') }}</button>
     </div>
 
     <!-- USB -->
