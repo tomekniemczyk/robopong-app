@@ -706,30 +706,47 @@
       viewBox="0 0 300 390" :style="wizZoom ? 'width:200%;display:block;cursor:crosshair' : 'width:100%;display:block;cursor:crosshair'"
       @click="wizTableClick($event)">
 
-      <!-- Robot z głowicą i kontrolkami rotacji -->
+      <!-- Robot z głowicą (styl jak rotation.svg) -->
       <g transform="translate(150, 18)">
-        <rect x="-45" y="-14" width="90" height="28" rx="6" fill="#3a3d52" stroke="#6b6f8a" stroke-width="0.5"/>
-        <text x="0" y="-6" text-anchor="middle" fill="#6b6f8a" font-size="4.5">ROBOT</text>
-        <!-- Głowica (obrót proporcjonalny do rotation) -->
+        <!-- Obudowa robota -->
+        <rect x="-50" y="-16" width="100" height="32" rx="5" fill="#1a1c2e" stroke="#3a3d52" stroke-width="1"/>
+        <!-- Rura wyrzutowa — przekrój z przodu -->
         <g :transform="`rotate(${(cal.rotation - 150) * 0.5})`">
-          <rect x="-6" y="-4" width="12" height="16" rx="2" fill="#5e9eff" opacity="0.8"/>
-          <circle cx="0" cy="-1" r="1.5" fill="#34c759"/><circle cx="0" cy="8" r="1.5" fill="#34c759"/>
+          <circle cx="0" cy="0" r="13" fill="#2a2d42" stroke="#6b6f8a" stroke-width="1"/>
+          <circle cx="0" cy="0" r="10" fill="none" stroke="#4a4d62" stroke-width="0.5" stroke-dasharray="2,1.5"/>
+          <!-- Górna rolka -->
+          <rect x="-8" y="-12" width="16" height="3" rx="1.5" fill="#5a6377" stroke="#8b90a8" stroke-width="0.5"/>
+          <!-- Dolna rolka -->
+          <rect x="-8" y="9" width="16" height="3" rx="1.5" fill="#5a6377" stroke="#8b90a8" stroke-width="0.5"/>
+          <!-- Piłeczka -->
+          <circle cx="0" cy="0" r="4" fill="#f59e0b" opacity="0.4"/>
+          <!-- Diody LED (odniesienie do rotacji — muszą być w pionie) -->
+          <circle cx="0" cy="-14" r="1.8" fill="#34c759" opacity="0.9">
+            <animate attributeName="opacity" values="0.9;0.4;0.9" dur="2s" repeatCount="indefinite"/>
+          </circle>
+          <circle cx="0" cy="14" r="1.8" fill="#34c759" opacity="0.9">
+            <animate attributeName="opacity" values="0.9;0.4;0.9" dur="2s" repeatCount="indefinite"/>
+          </circle>
         </g>
-        <!-- Rotacja LEWO — nawias ) ze strzałkami ↑↓ -->
-        <g @click.stop="wizRotStep(-1)" style="cursor:pointer">
-          <rect x="-75" y="-16" width="26" height="32" fill="transparent"/>
-          <path d="M-54,-10 C-64,-10 -64,10 -54,10" fill="none" stroke="#ff9f0a" stroke-width="2" opacity="0.6"/>
-          <polygon points="-54,-10 -51,-6 -57,-6" fill="#ff9f0a" opacity="0.6"/>
-          <polygon points="-54,10 -51,6 -57,6" fill="#ff9f0a" opacity="0.6"/>
+        <!-- Oś obrotu -->
+        <circle cx="0" cy="0" r="1" fill="#8b90a8"/>
+        <!-- Strzałka rotacji LEWA (czerwona) — klikalny nawias ze strzałkami -->
+        <g @click.stop="wizRotStep(-1)" style="cursor:pointer" class="rot-btn">
+          <rect x="-50" y="-18" width="20" height="36" fill="transparent"/>
+          <path d="M-32,-10 A18,18 0 0,0 -32,10" fill="none" stroke="#ef4444" stroke-width="1.8" stroke-linecap="round"/>
+          <polygon points="-32,-10 -29,-6 -35,-6" fill="#ef4444"/>
+          <polygon points="-32,10 -29,6 -35,6" fill="#ef4444"/>
+          <text x="-38" y="3" fill="#ef4444" font-size="5" font-weight="700" text-anchor="middle">L</text>
         </g>
-        <!-- Rotacja PRAWO — nawias ( ze strzałkami ↑↓ -->
-        <g @click.stop="wizRotStep(1)" style="cursor:pointer">
-          <rect x="49" y="-16" width="26" height="32" fill="transparent"/>
-          <path d="M54,-10 C64,-10 64,10 54,10" fill="none" stroke="#ff9f0a" stroke-width="2" opacity="0.6"/>
-          <polygon points="54,-10 51,-6 57,-6" fill="#ff9f0a" opacity="0.6"/>
-          <polygon points="54,10 51,6 57,6" fill="#ff9f0a" opacity="0.6"/>
+        <!-- Strzałka rotacji PRAWA (niebieska) — klikalny nawias ze strzałkami -->
+        <g @click.stop="wizRotStep(1)" style="cursor:pointer" class="rot-btn">
+          <rect x="30" y="-18" width="20" height="36" fill="transparent"/>
+          <path d="M32,-10 A18,18 0 0,1 32,10" fill="none" stroke="#3b82f6" stroke-width="1.8" stroke-linecap="round"/>
+          <polygon points="32,-10 29,-6 35,-6" fill="#3b82f6"/>
+          <polygon points="32,10 29,6 35,6" fill="#3b82f6"/>
+          <text x="38" y="3" fill="#3b82f6" font-size="5" font-weight="700" text-anchor="middle">R</text>
         </g>
-        <text x="0" y="22" text-anchor="middle" fill="#6b6f8a" font-size="4">rot: {{ cal.rotation }}</text>
+        <text x="0" y="24" text-anchor="middle" fill="#6b6f8a" font-size="4">rot: {{ cal.rotation }}</text>
       </g>
 
       <!-- Strefa "SIATKA" -->
@@ -802,9 +819,9 @@
       </button>
     </div>
     <div v-if="wizState === 'tap_table'" style="text-align:center">
-      <div style="font-size:15px;font-weight:600;color:#ff9f0a;margin-bottom:8px">{{ t('wizard.tap_prompt') }}</div>
-      <button class="btn btn-success" style="padding:12px 24px;font-size:15px;font-weight:700;margin-top:6px" @click="wizNextThrow">
-        🎯 {{ t('wizard.next_throw') }}
+      <div style="font-size:14px;font-weight:600;color:#ff9f0a;margin-bottom:8px">{{ t('wizard.tap_prompt') }}</div>
+      <button class="btn btn-success" style="width:100%;padding:14px;font-size:16px;font-weight:700;margin-top:4px" @click="wizThrow">
+        🎯 {{ t('wizard.throw_btn') }}
       </button>
     </div>
     <div v-if="wizState === 'throwing'" style="text-align:center;padding:12px 0">
@@ -5231,7 +5248,7 @@ const _app = createApp({
       clamp, clampCal,
       calStep, calSend, calThrow, calStop, calSetup, calReset, loadCal,
       wizActive, wizState, wizThrows, wizTrail, wizLastTap, wizWarmup, wizPresetName,
-      wizStart, wizThrow, wizNextThrow, wizTableClick, wizRotStep, wizZoom, wizFinishPrompt, wizFinishDefault, wizFinishNamed, wizCancel,
+      wizStart, wizThrow, wizTableClick, wizRotStep, wizZoom, wizFinishPrompt, wizFinishDefault, wizFinishNamed, wizCancel,
       presets, savePreset, updatePreset, loadPreset, setDefaultPreset, deletePreset,
       calDone, importCalRef, exportCalibration, importCalibration, showToast,
       expParams, expCount, expInterval, expBounce1, expBounce2, expClickPhase, expSpin, expArc, expSpd, expUseful, expRating, expComment, expHistory,
