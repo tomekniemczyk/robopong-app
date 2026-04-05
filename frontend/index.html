@@ -536,14 +536,14 @@
             </div>
             <div style="font-size:10px;color:var(--muted)">{{ t('cal.osc_hint') }}</div>
           </div>
-          <!-- Rotacja — zablokowana -->
-          <div style="text-align:center;opacity:0.35;pointer-events:none">
+          <!-- Rotacja -->
+          <div style="text-align:center">
             <img src="/static/img/rotation.svg" alt="Rotacja" style="width:80px;height:64px;margin-bottom:4px">
             <div style="font-size:11px;color:var(--muted);margin-bottom:2px;font-weight:600">{{ t('cal.rot_label') }}</div>
             <div style="display:flex;align-items:center;justify-content:center;gap:4px">
-              <button class="btn btn-ghost" style="padding:6px 10px;font-size:16px" disabled>◀</button>
+              <button class="btn btn-ghost" style="padding:6px 10px;font-size:16px" :disabled="!connected || myRole!=='controller'" @click="calStep('rotation',-2)">◀</button>
               <span style="font-size:18px;font-weight:700;min-width:40px;display:inline-block;text-align:center">{{ cal.rotation }}</span>
-              <button class="btn btn-ghost" style="padding:6px 10px;font-size:16px" disabled>▶</button>
+              <button class="btn btn-ghost" style="padding:6px 10px;font-size:16px" :disabled="!connected || myRole!=='controller'" @click="calStep('rotation',2)">▶</button>
             </div>
             <div style="font-size:10px;color:var(--muted)">{{ t('cal.rot_hint') }}</div>
           </div>
@@ -699,33 +699,65 @@
       <div style="font-size:14px;color:var(--muted)">{{ t('wizard.warmup') }}</div>
     </div>
 
-    <!-- SVG stołu — klikalny -->
-    <svg v-if="wizState !== 'warmup' && wizState !== 'complete'"
-      viewBox="0 0 300 360" style="width:100%;max-width:340px;margin:0 auto 8px;display:block;cursor:crosshair"
+    <!-- SVG stołu — klikalny + zoom -->
+    <div v-if="wizState !== 'warmup' && wizState !== 'complete'"
+      :style="wizZoom ? 'overflow:auto;max-height:65vh;border:1px solid var(--border);border-radius:8px;margin:0 auto 4px;max-width:340px' : 'margin:0 auto 4px;max-width:340px'">
+    <svg
+      viewBox="0 0 300 390" :style="wizZoom ? 'width:200%;display:block;cursor:crosshair' : 'width:100%;display:block;cursor:crosshair'"
       @click="wizTableClick($event)">
 
-      <!-- Robot -->
-      <rect x="115" y="2" width="70" height="10" rx="4" fill="#3a3d52" stroke="#6b6f8a" stroke-width="0.5"/>
-      <text x="150" y="9" text-anchor="middle" fill="#6b6f8a" font-size="5.5">ROBOT</text>
+      <!-- Robot z głowicą i kontrolkami rotacji -->
+      <g transform="translate(150, 18)">
+        <rect x="-45" y="-14" width="90" height="28" rx="6" fill="#3a3d52" stroke="#6b6f8a" stroke-width="0.5"/>
+        <text x="0" y="-6" text-anchor="middle" fill="#6b6f8a" font-size="4.5">ROBOT</text>
+        <!-- Głowica (obrót proporcjonalny do rotation) -->
+        <g :transform="`rotate(${(cal.rotation - 150) * 0.5})`">
+          <rect x="-6" y="-4" width="12" height="16" rx="2" fill="#5e9eff" opacity="0.8"/>
+          <circle cx="0" cy="-1" r="1.5" fill="#34c759"/><circle cx="0" cy="8" r="1.5" fill="#34c759"/>
+        </g>
+        <!-- Rotacja LEWO — nawias ) ze strzałkami ↑↓ -->
+        <g @click.stop="wizRotStep(-1)" style="cursor:pointer">
+          <rect x="-75" y="-16" width="26" height="32" fill="transparent"/>
+          <path d="M-54,-10 C-64,-10 -64,10 -54,10" fill="none" stroke="#ff9f0a" stroke-width="2" opacity="0.6"/>
+          <polygon points="-54,-10 -51,-6 -57,-6" fill="#ff9f0a" opacity="0.6"/>
+          <polygon points="-54,10 -51,6 -57,6" fill="#ff9f0a" opacity="0.6"/>
+        </g>
+        <!-- Rotacja PRAWO — nawias ( ze strzałkami ↑↓ -->
+        <g @click.stop="wizRotStep(1)" style="cursor:pointer">
+          <rect x="49" y="-16" width="26" height="32" fill="transparent"/>
+          <path d="M54,-10 C64,-10 64,10 54,10" fill="none" stroke="#ff9f0a" stroke-width="2" opacity="0.6"/>
+          <polygon points="54,-10 51,-6 57,-6" fill="#ff9f0a" opacity="0.6"/>
+          <polygon points="54,10 51,6 57,6" fill="#ff9f0a" opacity="0.6"/>
+        </g>
+        <text x="0" y="22" text-anchor="middle" fill="#6b6f8a" font-size="4">rot: {{ cal.rotation }}</text>
+      </g>
 
-      <!-- Strefa "SIATKA" (dotknięcie = trafił w siatkę) -->
-      <rect x="0" y="12" width="300" height="10" rx="2" fill="rgba(255,159,10,0.12)"/>
-      <rect x="0" y="14" width="300" height="6" rx="1.5" fill="#555" opacity="0.9"/>
-      <text x="150" y="9" text-anchor="middle" fill="#ff9f0a" font-size="6" opacity="0.5">{{ t('wizard.net_zone') }}</text>
+      <!-- Strefa "SIATKA" -->
+      <rect x="0" y="34" width="300" height="10" rx="2" fill="rgba(255,159,10,0.12)"/>
+      <rect x="0" y="36" width="300" height="6" rx="1.5" fill="#555" opacity="0.9"/>
+      <text x="150" y="32" text-anchor="middle" fill="#ff9f0a" font-size="5" opacity="0.5">{{ t('wizard.net_zone') }}</text>
 
       <!-- Stół — główna powierzchnia -->
-      <rect x="0" y="22" width="300" height="260" fill="#1a4a8a"/>
-      <rect x="0" y="22" width="300" height="260" fill="none" stroke="#fff" stroke-width="2"/>
+      <rect x="0" y="44" width="300" height="260" fill="#1a4a8a"/>
+      <rect x="0" y="44" width="300" height="260" fill="none" stroke="#fff" stroke-width="2"/>
       <!-- Linia środkowa (siatka) -->
-      <line x1="0" y1="152" x2="300" y2="152" stroke="#fff" stroke-width="1" opacity="0.25"/>
+      <line x1="0" y1="174" x2="300" y2="174" stroke="#fff" stroke-width="1" opacity="0.25"/>
       <!-- Linia pionowa -->
-      <line x1="150" y1="22" x2="150" y2="282" stroke="#fff" stroke-width="0.5" opacity="0.2"/>
+      <line x1="150" y1="44" x2="150" y2="304" stroke="#fff" stroke-width="0.5" opacity="0.2"/>
+
+      <!-- Siatka cm (widoczna przy zoom) -->
+      <g v-if="wizZoom" opacity="0.25">
+        <line v-for="i in 14" :key="'gx'+i" :x1="i * 19.67" y1="44" :x2="i * 19.67" y2="304" stroke="#fff" stroke-width="0.3"/>
+        <line v-for="i in 26" :key="'gy'+i" :x1="0" :y1="44 + i * 9.49" :x2="300" :y2="44 + i * 9.49" stroke="#fff" stroke-width="0.3"/>
+        <text v-for="i in 7" :key="'lx'+i" :x="150 + (i-4)*19.67*2" y="42" text-anchor="middle" fill="#fff" font-size="4" opacity="0.6">{{ (i-4)*20 }}</text>
+        <text v-for="i in 13" :key="'ly'+i" x="298" :y="44 + i*9.49*2 + 2" text-anchor="end" fill="#fff" font-size="3.5" opacity="0.5">{{ i*20 }}cm</text>
+      </g>
 
       <!-- Strefa celowa: ~85% w dół stołu (10-15cm od końca) -->
-      <ellipse cx="150" cy="243" rx="40" ry="16" fill="none" stroke="#34c759" stroke-width="1.5" stroke-dasharray="5,3" opacity="0.5">
+      <ellipse cx="150" cy="265" rx="40" ry="16" fill="none" stroke="#34c759" stroke-width="1.5" stroke-dasharray="5,3" opacity="0.5">
         <animate attributeName="rx" values="38;42;38" dur="2s" repeatCount="indefinite"/>
       </ellipse>
-      <text x="150" y="247" text-anchor="middle" fill="#34c759" font-size="7" opacity="0.5">{{ t('wizard.target_zone') }}</text>
+      <text x="150" y="269" text-anchor="middle" fill="#34c759" font-size="7" opacity="0.5">{{ t('wizard.target_zone') }}</text>
 
       <!-- Trail (zanikające, ostatnie 8) -->
       <circle v-for="(pt, i) in wizTrail" :key="i"
@@ -743,21 +775,25 @@
       </g>
 
       <!-- Etykiety FH/BH -->
-      <text x="15" y="296" fill="#6b8ab5" font-size="9" opacity="0.6">{{ isLeftHanded ? 'FH' : 'BH' }}</text>
-      <text x="275" y="296" fill="#6b8ab5" font-size="9" opacity="0.6">{{ isLeftHanded ? 'BH' : 'FH' }}</text>
+      <text x="15" y="318" fill="#6b8ab5" font-size="9" opacity="0.6">{{ isLeftHanded ? 'FH' : 'BH' }}</text>
+      <text x="275" y="318" fill="#6b8ab5" font-size="9" opacity="0.6">{{ isLeftHanded ? 'BH' : 'FH' }}</text>
 
       <!-- Strefa "ZA STOŁEM" -->
-      <rect x="0" y="284" width="300" height="30" fill="rgba(255,69,58,0.08)"/>
-      <text x="150" y="303" text-anchor="middle" fill="#ff453a" font-size="7" opacity="0.4">{{ t('wizard.too_far') }}</text>
+      <rect x="0" y="306" width="300" height="30" fill="rgba(255,69,58,0.08)"/>
+      <text x="150" y="325" text-anchor="middle" fill="#ff453a" font-size="7" opacity="0.4">{{ t('wizard.too_far') }}</text>
 
       <!-- Gracz -->
-      <g transform="translate(150,340)" opacity="0.4">
+      <g transform="translate(150,365)" opacity="0.4">
         <circle cx="0" cy="-8" r="4.5" fill="none" stroke="#ccc" stroke-width="1.2"/>
         <line x1="0" y1="-3" x2="0" y2="5" stroke="#ccc" stroke-width="1.2"/>
         <line x1="0" y1="5" x2="-5" y2="12" stroke="#ccc" stroke-width="1.2"/>
         <line x1="0" y1="5" x2="5" y2="12" stroke="#ccc" stroke-width="1.2"/>
       </g>
     </svg>
+    </div>
+    <div v-if="wizState !== 'warmup' && wizState !== 'complete'" style="text-align:center;margin-bottom:4px">
+      <button class="btn btn-ghost" style="font-size:11px;padding:3px 10px" @click="wizZoom = !wizZoom">{{ wizZoom ? '🔍−' : '🔍+' }}</button>
+    </div>
 
     <!-- Prompt / instrukcja -->
     <div v-if="wizState === 'ready'" style="text-align:center">
@@ -4683,7 +4719,7 @@ const _app = createApp({
     // SVG: table area y=22..282 (260px for 274cm), x=0..300 (300px for 152.5cm)
     // Target: center (x=0.5), ~85% down table (10-15cm from player end)
     const WIZ_TARGET_Y = 0.85
-    const WIZ_TABLE_Y0 = 22, WIZ_TABLE_H = 260, WIZ_NET_Y = 14, WIZ_SVG_W = 300
+    const WIZ_TABLE_Y0 = 44, WIZ_TABLE_H = 260, WIZ_NET_Y = 34, WIZ_SVG_H = 390, WIZ_SVG_W = 300
 
     const wizActive = ref(false)
     const wizState = ref('idle') // idle|warmup|ready|throwing|tap_table|complete
@@ -4753,7 +4789,7 @@ const _app = createApp({
       const svg = evt.currentTarget
       const rect = svg.getBoundingClientRect()
       const svgX = (evt.clientX - rect.left) / rect.width * 300
-      const svgY = (evt.clientY - rect.top) / rect.height * 360
+      const svgY = (evt.clientY - rect.top) / rect.height * WIZ_SVG_H
 
       // Normalize to table surface: ny=0 at net, ny=1 at player end
       let nx = svgX / WIZ_SVG_W
@@ -4862,6 +4898,21 @@ const _app = createApp({
       wizActive.value = false
       wizState.value = 'idle'
     }
+
+    // Rotation step with 1s debounce — each click +/-1, rapid clicks batch
+    let _wizRotTimer = null
+    function wizRotStep(delta) {
+      cal.rotation += delta
+      cal.rotation = Math.max(90, Math.min(210, cal.rotation))
+      clearTimeout(_wizRotTimer)
+      clearTimeout(_calIdleTimer)
+      _wizRotTimer = setTimeout(() => {
+        send({ action: 'set_ball', ball: { ...cal } })
+        _calMotorsRunning = true
+      }, 1000)
+    }
+
+    const wizZoom = ref(false)
 
     // ── Exploration ──────────────────────────────────────────
     const expParams = reactive({ top_speed: 120, bot_speed: 0, oscillation: 150, height: 190, rotation: 150, wait_ms: 2000 })
@@ -5180,7 +5231,7 @@ const _app = createApp({
       clamp, clampCal,
       calStep, calSend, calThrow, calStop, calSetup, calReset, loadCal,
       wizActive, wizState, wizThrows, wizTrail, wizLastTap, wizWarmup, wizPresetName,
-      wizStart, wizThrow, wizNextThrow, wizTableClick, wizFinishPrompt, wizFinishDefault, wizFinishNamed, wizCancel,
+      wizStart, wizThrow, wizNextThrow, wizTableClick, wizRotStep, wizZoom, wizFinishPrompt, wizFinishDefault, wizFinishNamed, wizCancel,
       presets, savePreset, updatePreset, loadPreset, setDefaultPreset, deletePreset,
       calDone, importCalRef, exportCalibration, importCalibration, showToast,
       expParams, expCount, expInterval, expBounce1, expBounce2, expClickPhase, expSpin, expArc, expSpd, expUseful, expRating, expComment, expHistory,
