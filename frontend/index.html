@@ -789,7 +789,10 @@
         <button class="btn btn-primary" v-if="!connected" @click="reconnectLast">{{ t('conn.connect') }}</button>
         <button class="btn btn-danger"  v-else @click="disconnect">{{ t('conn.disconnect') }}</button>
       </div>
-      <button class="btn btn-ghost" style="width:100%;margin-top:8px;font-size:11px;color:var(--muted)" @click="forgetDevice">{{ t('conn.forget_device') }}</button>
+      <div v-if="connected" style="display:flex;gap:6px;margin-top:8px">
+        <button class="btn btn-ghost" style="flex:1;font-size:11px;color:var(--danger)" @click="disconnectFull">{{ t('conn.disconnect_full') }}</button>
+      </div>
+      <button class="btn btn-ghost" style="width:100%;margin-top:6px;font-size:11px;color:var(--muted)" @click="forgetDevice">{{ t('conn.forget_device') }}</button>
     </div>
 
     <!-- USB -->
@@ -2870,6 +2873,7 @@ const _app = createApp({
       send({ action: 'connect', address })
     }
     function disconnect() { send({ action: 'disconnect' }) }
+    function disconnectFull() { send({ action: 'disconnect_full' }) }
     function forgetDevice() {
       if (connected.value) send({ action: 'disconnect' })
       localStorage.removeItem('lastAddr')
@@ -5146,7 +5150,7 @@ const _app = createApp({
       transport, deployTime, usbPorts, usbScanning, simulationMode, toggleSimulation,
       myRole, mySessionId, sessionsList, showSessions, showServiceMenu, showDeviceInfo, copyDiagReport, diagModalText, diagModalOpen, diagModalCopy, sessionAge, parseUA,
       takeoverReq, takeoverCountdown, takeoverCooldown,
-      scan, connect, disconnect, forgetDevice, saveName, usbScan, usbConnect, reconnectLast,
+      scan, connect, disconnect, disconnectFull, forgetDevice, saveName, usbScan, usbConnect, reconnectLast,
       runScenario, pauseDrill, resumeDrill, stopDrill, drillPaused,
       deleteScenario, openEditor, addBall, removeBall, saveScenario,
       clamp, clampCal,

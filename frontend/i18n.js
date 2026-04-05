@@ -18,6 +18,7 @@ window.I18N = {
   'conn.calibration':{ pl:'Kalibracja', en:'Calibration',  de:'Kalibrierung',fr:'Calibrage',     zh:'校准' },
   'conn.connect':    { pl:'Połącz',     en:'Connect',      de:'Verbinden',   fr:'Connecter',     zh:'连接' },
   'conn.disconnect': { pl:'Rozłącz',    en:'Disconnect',   de:'Trennen',     fr:'Déconnecter',   zh:'断开' },
+  'conn.disconnect_full':{ pl:'Rozłącz trwale (bez auto-reconnect)', en:'Disconnect permanently (no auto-reconnect)', de:'Dauerhaft trennen (kein Auto-Reconnect)', fr:'Déconnecter définitivement', zh:'永久断开（无自动重连）' },
   'conn.forget_device':{ pl:'Zapomnij to urządzenie', en:'Forget this device', de:'Gerät vergessen', fr:'Oublier cet appareil', zh:'忘记此设备' },
   'conn.last_device':{ pl:'Ostatnie urządzenie', en:'Last device', de:'Letztes Gerät', fr:'Dernier appareil', zh:'上次设备' },
   'conn.usb_cable':  { pl:'USB (kabel)',  en:'USB (cable)',  de:'USB (Kabel)', fr:'USB (câble)',   zh:'USB（线缆）' },

@@ -391,6 +391,9 @@ async def _handle(msg: dict, ws: WebSocket):
             await _send(ws, "error", {"message": "Nie można połączyć z robotem"})
 
     elif action == "disconnect":
+        await robot.disconnect()
+
+    elif action == "disconnect_full":
         _save_last_addr("")
         await robot.disconnect()
 
@@ -413,7 +416,6 @@ async def _handle(msg: dict, ws: WebSocket):
             broadcast("calibration_loaded", {"cal": cal, "calibrated": was_saved, "addr": addr})
 
     elif action == "usb_disconnect":
-        _save_last_addr("")
         await robot.disconnect()
 
     elif action == "set_ball":
