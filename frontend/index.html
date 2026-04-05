@@ -308,7 +308,7 @@
         <span class="conn-dot"></span>
         <span class="conn-name">{{ connected ? (robotName || 'Robopong') : simulationMode ? t('conn.simulation') : t('conn.offline') }}</span>
       </div>
-      <button v-if="connected" class="conn-cal-btn" @click="page='calibration'" :title="t('conn.calibration')">
+      <button v-if="connected" class="conn-cal-btn" @click="page='calibration';wizStart()" :title="t('conn.calibration')">
         <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
           <circle cx="10" cy="10" r="9" fill="#e02020" stroke="#fff" stroke-width="1"/>
           <circle cx="10" cy="10" r="6.5" fill="#fff"/>
@@ -416,7 +416,7 @@
 
       <div style="display:flex;flex-direction:column;gap:8px;margin-top:16px">
         <button class="btn" style="width:100%;background:var(--accent);color:#fff;padding:11px;font-size:13px"
-          @click="showDeviceInfo=false;page='calibration'">{{ t('device.goto_cal') }}</button>
+          @click="showDeviceInfo=false;page='calibration';wizStart()">{{ t('device.goto_cal') }}</button>
         <button class="btn btn-ghost" style="width:100%;padding:11px;font-size:13px"
           @click="copyDiagReport">{{ t('device.copy_report') }}</button>
         <button v-if="connected" class="btn btn-danger" style="width:100%;padding:11px;font-size:13px"
@@ -463,6 +463,11 @@
     <div style="text-align:center;padding:40px 20px;color:var(--muted)">
       <div v-if="!connected" style="font-size:14px">{{ t('cal.connect_first') }}</div>
       <div v-else-if="myRole !== 'controller'" style="font-size:14px">{{ t('cal.observer_info') }}</div>
+      <div v-else>
+        <button class="btn btn-success" style="padding:14px 28px;font-size:15px;font-weight:700" @click="wizStart()">
+          🧙 {{ t('wizard.title') }}
+        </button>
+      </div>
     </div>
   </div>
 
@@ -4742,6 +4747,8 @@ const _app = createApp({
     const wizPresetName = ref('')
 
     async function wizStart() {
+      if (!connected.value || myRole.value !== 'controller') return
+      if (wizState.value === 'warmup') return
       wizActive.value = true
       wizThrows.value = 0
       Object.assign(cal, { ...CAL_DEFAULTS })
