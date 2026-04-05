@@ -4411,6 +4411,200 @@
           "repeat": 0,
           "sort_order": 35,
           "readonly": true
+        },
+        {
+          "name": "BH Flick + 2 Rally",
+          "description": "Short backspin → banana flick → 2 topspin rally balls to BH — practice flick into sustained rally",
+          "youtube_id": "",
+          "delay_s": 0.0,
+          "repeat": 0,
+          "readonly": true,
+          "sort_order": 36,
+          "balls": [
+            {
+              "top_speed": -15,
+              "bot_speed": 80,
+              "oscillation": 162,
+              "height": 113,
+              "rotation": 150,
+              "wait_ms": 2000
+            },
+            {
+              "top_speed": 160,
+              "bot_speed": 0,
+              "oscillation": 160,
+              "height": 178,
+              "rotation": 150,
+              "wait_ms": 1300
+            },
+            {
+              "top_speed": 170,
+              "bot_speed": 0,
+              "oscillation": 158,
+              "height": 178,
+              "rotation": 150,
+              "wait_ms": 1100
+            }
+          ]
+        },
+        {
+          "name": "FH Flick + 2 Rally",
+          "description": "Short backspin → strawberry flick → 2 topspin rally balls to FH — practice flick into sustained rally",
+          "youtube_id": "",
+          "delay_s": 0.0,
+          "repeat": 0,
+          "readonly": true,
+          "sort_order": 37,
+          "balls": [
+            {
+              "top_speed": -15,
+              "bot_speed": 80,
+              "oscillation": 140,
+              "height": 113,
+              "rotation": 150,
+              "wait_ms": 2000
+            },
+            {
+              "top_speed": 160,
+              "bot_speed": 0,
+              "oscillation": 142,
+              "height": 178,
+              "rotation": 150,
+              "wait_ms": 1300
+            },
+            {
+              "top_speed": 170,
+              "bot_speed": 0,
+              "oscillation": 138,
+              "height": 178,
+              "rotation": 150,
+              "wait_ms": 1100
+            }
+          ]
+        },
+        {
+          "name": "BH Flick + Counter + Finish",
+          "description": "Chinese pattern: short → banana flick → fast counter → finish to BH — 3rd/4th ball attack",
+          "youtube_id": "",
+          "delay_s": 0.0,
+          "repeat": 0,
+          "readonly": true,
+          "sort_order": 38,
+          "balls": [
+            {
+              "top_speed": -15,
+              "bot_speed": 80,
+              "oscillation": 162,
+              "height": 113,
+              "rotation": 150,
+              "wait_ms": 1800
+            },
+            {
+              "top_speed": 170,
+              "bot_speed": 0,
+              "oscillation": 160,
+              "height": 176,
+              "rotation": 150,
+              "wait_ms": 1200
+            },
+            {
+              "top_speed": 185,
+              "bot_speed": 0,
+              "oscillation": 158,
+              "height": 174,
+              "rotation": 150,
+              "wait_ms": 1000
+            }
+          ]
+        },
+        {
+          "name": "FH Flick + Counter + Finish",
+          "description": "Chinese pattern: short → strawberry flick → fast counter → finish to FH — 3rd/4th ball attack",
+          "youtube_id": "",
+          "delay_s": 0.0,
+          "repeat": 0,
+          "readonly": true,
+          "sort_order": 39,
+          "balls": [
+            {
+              "top_speed": -15,
+              "bot_speed": 80,
+              "oscillation": 140,
+              "height": 113,
+              "rotation": 150,
+              "wait_ms": 1800
+            },
+            {
+              "top_speed": 170,
+              "bot_speed": 0,
+              "oscillation": 142,
+              "height": 176,
+              "rotation": 150,
+              "wait_ms": 1200
+            },
+            {
+              "top_speed": 185,
+              "bot_speed": 0,
+              "oscillation": 138,
+              "height": 174,
+              "rotation": 150,
+              "wait_ms": 1000
+            }
+          ]
+        },
+        {
+          "name": "BH Flick → Cross FH",
+          "description": "Short backspin to BH → flick → opponent responds cross-court to FH — placement change training",
+          "youtube_id": "",
+          "delay_s": 0.0,
+          "repeat": 0,
+          "readonly": true,
+          "sort_order": 40,
+          "balls": [
+            {
+              "top_speed": -15,
+              "bot_speed": 80,
+              "oscillation": 162,
+              "height": 113,
+              "rotation": 150,
+              "wait_ms": 2000
+            },
+            {
+              "top_speed": 165,
+              "bot_speed": 0,
+              "oscillation": 140,
+              "height": 178,
+              "rotation": 150,
+              "wait_ms": 1300
+            }
+          ]
+        },
+        {
+          "name": "FH Flick → Cross BH",
+          "description": "Short backspin to FH → flick → opponent responds cross-court to BH — placement change training",
+          "youtube_id": "",
+          "delay_s": 0.0,
+          "repeat": 0,
+          "readonly": true,
+          "sort_order": 41,
+          "balls": [
+            {
+              "top_speed": -15,
+              "bot_speed": 80,
+              "oscillation": 140,
+              "height": 113,
+              "rotation": 150,
+              "wait_ms": 2000
+            },
+            {
+              "top_speed": 165,
+              "bot_speed": 0,
+              "oscillation": 162,
+              "height": 178,
+              "rotation": 150,
+              "wait_ms": 1300
+            }
+          ]
         }
       ]
     }

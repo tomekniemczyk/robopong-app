@@ -6149,6 +6149,506 @@
           ]
         }
       ]
+    },
+    {
+      "name": "Backhand Flick",
+      "description": "Progresja banana flicka: od podstaw przez rally po symulację gry",
+      "icon": "🍌",
+      "trainings": [
+        {
+          "name": "BH Flick — Podstawy",
+          "description": "Podstawy banana flicka: krótkie podania backspin, no-spin i sidespin",
+          "countdown_sec": 5,
+          "steps": [
+            {
+              "exercise_id": 103,
+              "duration_sec": 25,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 109,
+              "duration_sec": 20,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 104,
+              "duration_sec": 25,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 204,
+              "duration_sec": 25,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 108,
+              "duration_sec": 30,
+              "pause_after_sec": 5
+            },
+            {
+              "drill_id": 6006,
+              "count": 40,
+              "percent": 90,
+              "pause_after_sec": 20
+            },
+            {
+              "drill_id": 6008,
+              "count": 40,
+              "percent": 90,
+              "pause_after_sec": 20
+            },
+            {
+              "drill_id": 6009,
+              "count": 35,
+              "percent": 90,
+              "pause_after_sec": 25
+            },
+            {
+              "drill_id": 6014,
+              "count": 30,
+              "percent": 90,
+              "pause_after_sec": 20
+            },
+            {
+              "drill_id": 6006,
+              "count": 30,
+              "percent": 95,
+              "pause_after_sec": 15
+            },
+            {
+              "exercise_id": 601,
+              "duration_sec": 30,
+              "pause_after_sec": 5
+            },
+            {
+              "exercise_id": 604,
+              "duration_sec": 25,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 605,
+              "duration_sec": 25,
+              "pause_after_sec": 0
+            }
+          ]
+        },
+        {
+          "name": "BH Flick + Odpowiedź",
+          "description": "Banana flick z kontynuacją rally — przeciwnik odpowiada 1-2 piłkami",
+          "countdown_sec": 5,
+          "steps": [
+            {
+              "exercise_id": 103,
+              "duration_sec": 25,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 109,
+              "duration_sec": 20,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 104,
+              "duration_sec": 25,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 204,
+              "duration_sec": 25,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 108,
+              "duration_sec": 30,
+              "pause_after_sec": 5
+            },
+            {
+              "drill_id": 6006,
+              "count": 30,
+              "percent": 90,
+              "pause_after_sec": 15
+            },
+            {
+              "drill_id": 6014,
+              "count": 35,
+              "percent": 90,
+              "pause_after_sec": 20
+            },
+            {
+              "drill_id": 6037,
+              "count": 30,
+              "percent": 90,
+              "pause_after_sec": 25
+            },
+            {
+              "drill_id": 6041,
+              "count": 30,
+              "percent": 90,
+              "pause_after_sec": 20
+            },
+            {
+              "drill_id": 6037,
+              "count": 25,
+              "percent": 95,
+              "pause_after_sec": 20
+            },
+            {
+              "drill_id": 6014,
+              "count": 25,
+              "percent": 95,
+              "pause_after_sec": 15
+            },
+            {
+              "exercise_id": 601,
+              "duration_sec": 30,
+              "pause_after_sec": 5
+            },
+            {
+              "exercise_id": 604,
+              "duration_sec": 25,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 605,
+              "duration_sec": 25,
+              "pause_after_sec": 0
+            }
+          ]
+        },
+        {
+          "name": "BH Flick — Symulacja Gry",
+          "description": "Chiński wzorzec: serwis → flick → counter → atak — pełna sekwencja meczowa",
+          "countdown_sec": 5,
+          "steps": [
+            {
+              "exercise_id": 103,
+              "duration_sec": 25,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 109,
+              "duration_sec": 20,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 104,
+              "duration_sec": 25,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 204,
+              "duration_sec": 25,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 108,
+              "duration_sec": 30,
+              "pause_after_sec": 5
+            },
+            {
+              "drill_id": 6014,
+              "count": 25,
+              "percent": 90,
+              "pause_after_sec": 15
+            },
+            {
+              "drill_id": 6037,
+              "count": 25,
+              "percent": 90,
+              "pause_after_sec": 20
+            },
+            {
+              "drill_id": 6039,
+              "count": 25,
+              "percent": 90,
+              "pause_after_sec": 25
+            },
+            {
+              "drill_id": 6019,
+              "count": 20,
+              "percent": 90,
+              "pause_after_sec": 25
+            },
+            {
+              "drill_id": 6041,
+              "count": 20,
+              "percent": 90,
+              "pause_after_sec": 20
+            },
+            {
+              "drill_id": 6039,
+              "count": 20,
+              "percent": 95,
+              "pause_after_sec": 15
+            },
+            {
+              "exercise_id": 601,
+              "duration_sec": 30,
+              "pause_after_sec": 5
+            },
+            {
+              "exercise_id": 604,
+              "duration_sec": 25,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 605,
+              "duration_sec": 25,
+              "pause_after_sec": 0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Forehand Flick",
+      "description": "Progresja strawberry flicka: od podstaw przez rally po symulację gry",
+      "icon": "🍓",
+      "trainings": [
+        {
+          "name": "FH Flick — Podstawy",
+          "description": "Podstawy strawberry flicka: krótkie podania backspin, no-spin i sidespin",
+          "countdown_sec": 5,
+          "steps": [
+            {
+              "exercise_id": 103,
+              "duration_sec": 25,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 109,
+              "duration_sec": 20,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 104,
+              "duration_sec": 25,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 204,
+              "duration_sec": 25,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 108,
+              "duration_sec": 30,
+              "pause_after_sec": 5
+            },
+            {
+              "drill_id": 6005,
+              "count": 40,
+              "percent": 90,
+              "pause_after_sec": 20
+            },
+            {
+              "drill_id": 6007,
+              "count": 40,
+              "percent": 90,
+              "pause_after_sec": 20
+            },
+            {
+              "drill_id": 6010,
+              "count": 35,
+              "percent": 90,
+              "pause_after_sec": 25
+            },
+            {
+              "drill_id": 6015,
+              "count": 30,
+              "percent": 90,
+              "pause_after_sec": 20
+            },
+            {
+              "drill_id": 6005,
+              "count": 30,
+              "percent": 95,
+              "pause_after_sec": 15
+            },
+            {
+              "exercise_id": 601,
+              "duration_sec": 30,
+              "pause_after_sec": 5
+            },
+            {
+              "exercise_id": 604,
+              "duration_sec": 25,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 605,
+              "duration_sec": 25,
+              "pause_after_sec": 0
+            }
+          ]
+        },
+        {
+          "name": "FH Flick + Odpowiedź",
+          "description": "Strawberry flick z kontynuacją rally — przeciwnik odpowiada 1-2 piłkami",
+          "countdown_sec": 5,
+          "steps": [
+            {
+              "exercise_id": 103,
+              "duration_sec": 25,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 109,
+              "duration_sec": 20,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 104,
+              "duration_sec": 25,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 204,
+              "duration_sec": 25,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 108,
+              "duration_sec": 30,
+              "pause_after_sec": 5
+            },
+            {
+              "drill_id": 6005,
+              "count": 30,
+              "percent": 90,
+              "pause_after_sec": 15
+            },
+            {
+              "drill_id": 6015,
+              "count": 35,
+              "percent": 90,
+              "pause_after_sec": 20
+            },
+            {
+              "drill_id": 6038,
+              "count": 30,
+              "percent": 90,
+              "pause_after_sec": 25
+            },
+            {
+              "drill_id": 6042,
+              "count": 30,
+              "percent": 90,
+              "pause_after_sec": 20
+            },
+            {
+              "drill_id": 6038,
+              "count": 25,
+              "percent": 95,
+              "pause_after_sec": 20
+            },
+            {
+              "drill_id": 6015,
+              "count": 25,
+              "percent": 95,
+              "pause_after_sec": 15
+            },
+            {
+              "exercise_id": 601,
+              "duration_sec": 30,
+              "pause_after_sec": 5
+            },
+            {
+              "exercise_id": 604,
+              "duration_sec": 25,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 605,
+              "duration_sec": 25,
+              "pause_after_sec": 0
+            }
+          ]
+        },
+        {
+          "name": "FH Flick — Symulacja Gry",
+          "description": "Chiński wzorzec: serwis → flick → counter → atak — pełna sekwencja meczowa",
+          "countdown_sec": 5,
+          "steps": [
+            {
+              "exercise_id": 103,
+              "duration_sec": 25,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 109,
+              "duration_sec": 20,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 104,
+              "duration_sec": 25,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 204,
+              "duration_sec": 25,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 108,
+              "duration_sec": 30,
+              "pause_after_sec": 5
+            },
+            {
+              "drill_id": 6015,
+              "count": 25,
+              "percent": 90,
+              "pause_after_sec": 15
+            },
+            {
+              "drill_id": 6038,
+              "count": 25,
+              "percent": 90,
+              "pause_after_sec": 20
+            },
+            {
+              "drill_id": 6040,
+              "count": 25,
+              "percent": 90,
+              "pause_after_sec": 25
+            },
+            {
+              "drill_id": 6019,
+              "count": 20,
+              "percent": 90,
+              "pause_after_sec": 25
+            },
+            {
+              "drill_id": 6042,
+              "count": 20,
+              "percent": 90,
+              "pause_after_sec": 20
+            },
+            {
+              "drill_id": 6040,
+              "count": 20,
+              "percent": 95,
+              "pause_after_sec": 15
+            },
+            {
+              "exercise_id": 601,
+              "duration_sec": 30,
+              "pause_after_sec": 5
+            },
+            {
+              "exercise_id": 604,
+              "duration_sec": 25,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 605,
+              "duration_sec": 25,
+              "pause_after_sec": 0
+            }
+          ]
+        }
+      ]
     }
   ]
 }

@@ -12,6 +12,8 @@ window.CONTENT_I18N = {
     "Bonus": { pl: "Bonus", de: "Bonus", fr: "Bonus", zh: "附加" },
     "30-Day Program": { pl: "Program 30-dniowy", de: "30-Tage-Programm", fr: "Programme 30 jours", zh: "30天训练计划" },
     "30-Day Challenge": { pl: "Wyzwanie 30-dniowe", de: "30-Tage-Challenge", fr: "Défi 30 jours", zh: "30天挑战" },
+    "Backhand Flick": { pl: "Flip BH (Banana)", de: "RH-Flip (Banana)", fr: "Flip RV (Banana)", zh: "反手拧拉" },
+    "Forehand Flick": { pl: "Flip FH (Strawberry)", de: "VH-Flip (Strawberry)", fr: "Flip CD (Strawberry)", zh: "正手拧拉" },
   },
 
   // ── Exercise category names (EN → pl/de/fr/zh) ──
@@ -62,6 +64,12 @@ window.CONTENT_I18N = {
     "4th Ball Counter BH": { pl: "4. piłka kontra BH", de: "4. Ball Konter RH", fr: "4e balle contre RV", zh: "反手第四板反拉" },
     "FH Topspin Everywhere": { pl: "Topspin FH na cały stół", de: "VH-Topspin überall", fr: "Topspin CD partout", zh: "正手全台弧圈" },
     "Serve-Flick-Counter": { pl: "Serwis-flip-kontra", de: "Aufschlag-Flip-Konter", fr: "Service-flip-contre", zh: "发球-拧拉-反拉" },
+    "BH Flick + 2 Rally": { pl: "Flip BH + 2 rally", de: "RH-Flip + 2 Ballwechsel", fr: "Flip RV + 2 échanges", zh: "反手拧拉+2板相持" },
+    "FH Flick + 2 Rally": { pl: "Flip FH + 2 rally", de: "VH-Flip + 2 Ballwechsel", fr: "Flip CD + 2 échanges", zh: "正手拧拉+2板相持" },
+    "BH Flick + Counter + Finish": { pl: "Flip BH + kontra + wykończenie", de: "RH-Flip + Konter + Abschluss", fr: "Flip RV + contre + fin", zh: "反手拧拉+反拉+得分" },
+    "FH Flick + Counter + Finish": { pl: "Flip FH + kontra + wykończenie", de: "VH-Flip + Konter + Abschluss", fr: "Flip CD + contre + fin", zh: "正手拧拉+反拉+得分" },
+    "BH Flick → Cross FH": { pl: "Flip BH → cross FH", de: "RH-Flip → Cross VH", fr: "Flip RV → croisé CD", zh: "反手拧拉→正手斜线" },
+    "FH Flick → Cross BH": { pl: "Flip FH → cross BH", de: "VH-Flip → Cross RH", fr: "Flip CD → croisé RV", zh: "正手拧拉→反手斜线" },
     // ── Introductory drills ──
     "Forehand Warmup": { pl: "Rozgrzewka FH", de: "VH-Aufwärmung", fr: "Échauffement CD", zh: "正手热身" },
     "Backhand Warmup": { pl: "Rozgrzewka BH", de: "RH-Aufwärmung", fr: "Échauffement RV", zh: "反手热身" },
@@ -488,6 +496,12 @@ window.CONTENT_I18N = {
     "Dzień 28: Wytrzymałość + Regularność": { en: "Day 28: Endurance + Consistency", de: "Tag 28: Ausdauer + Konstanz", fr: "Jour 28 : Endurance + Régularité", zh: "第28天：耐力+稳定性" },
     "Dzień 29: Pełny Random Challenge": { en: "Day 29: Full Random Challenge", de: "Tag 29: Vollständige Zufalls-Challenge", fr: "Jour 29 : Défi aléatoire complet", zh: "第29天：完全随机挑战" },
     "Dzień 30: Egzamin Końcowy": { en: "Day 30: Final Exam", de: "Tag 30: Abschlussprüfung", fr: "Jour 30 : Examen final", zh: "第30天：结业考试" },
+    "BH Flick — Podstawy": { en: "BH Flick — Basics", de: "RH-Flip — Grundlagen", fr: "Flip RV — Bases", zh: "反手拧拉——基础" },
+    "BH Flick + Odpowiedź": { en: "BH Flick + Response", de: "RH-Flip + Antwort", fr: "Flip RV + Réponse", zh: "反手拧拉+衔接" },
+    "BH Flick — Symulacja Gry": { en: "BH Flick — Game Simulation", de: "RH-Flip — Spielsimulation", fr: "Flip RV — Simulation de match", zh: "反手拧拉——比赛模拟" },
+    "FH Flick — Podstawy": { en: "FH Flick — Basics", de: "VH-Flip — Grundlagen", fr: "Flip CD — Bases", zh: "正手拧拉——基础" },
+    "FH Flick + Odpowiedź": { en: "FH Flick + Response", de: "VH-Flip + Antwort", fr: "Flip CD + Réponse", zh: "正手拧拉+衔接" },
+    "FH Flick — Symulacja Gry": { en: "FH Flick — Game Simulation", de: "VH-Flip — Spielsimulation", fr: "Flip CD — Simulation de match", zh: "正手拧拉——比赛模拟" },
   },
 
   // ── Training descriptions (PL → en/de/fr/zh) ──
@@ -522,5 +536,10 @@ window.CONTENT_I18N = {
     "Dłuższe serie, mniej odpoczynku — budowanie kondycji i stabilności.": { en: "Longer series, less rest — building fitness and consistency.", de: "Längere Serien, weniger Erholung — Kondition und Konstanz aufbauen.", fr: "Séries plus longues, moins de repos — développer la condition physique et la régularité.", zh: "更长的系列、更少休息——建立体能和稳定性。" },
     "Maksymalna prędkość, losowe rotacje — sprawdzian pod presją.": { en: "Maximum speed, random spins — test under pressure.", de: "Maximale Geschwindigkeit, zufällige Spins — Test unter Druck.", fr: "Vitesse maximale, effets aléatoires — test sous pression.", zh: "最大速度、随机旋转——压力下的测试。" },
     "Kompleksowy test wszystkich umiejętności — drille mieszane na pełnej prędkości.": { en: "Comprehensive test of all skills — mixed drills at full speed.", de: "Umfassender Test aller Fähigkeiten — gemischte Drills bei voller Geschwindigkeit.", fr: "Test complet de toutes les compétences — drills mixtes à pleine vitesse.", zh: "全面技能测试——全速混合训练。" },
+    "Podstawy banana flicka: krótkie podania backspin, no-spin i sidespin": { en: "Banana flick basics: short backspin, no-spin and sidespin serves", de: "Banana-Flip Grundlagen: kurze Unterschnitt-, Leer- und Seitschnitt-Aufschläge", fr: "Bases du banana flip : services courts coupés, sans effet et latéraux", zh: "香蕉拧拉基础：短下旋、不转和侧旋发球" },
+    "Banana flick z kontynuacją rally — przeciwnik odpowiada 1-2 piłkami": { en: "Banana flick with rally continuation — opponent responds with 1-2 balls", de: "Banana-Flip mit Ballwechsel-Fortsetzung — Gegner antwortet mit 1-2 Bällen", fr: "Banana flip avec continuation d'échange — l'adversaire répond avec 1-2 balles", zh: "香蕉拧拉接相持——对手回球1-2板" },
+    "Chiński wzorzec: serwis → flick → counter → atak — pełna sekwencja meczowa": { en: "Chinese pattern: serve → flick → counter → attack — full match sequence", de: "Chinesisches Muster: Aufschlag → Flip → Konter → Angriff — vollständige Spielsequenz", fr: "Schéma chinois : service → flip → contre → attaque — séquence de match complète", zh: "中国模式：发球→拧拉→反拉→进攻——完整比赛套路" },
+    "Podstawy strawberry flicka: krótkie podania backspin, no-spin i sidespin": { en: "Strawberry flick basics: short backspin, no-spin and sidespin serves", de: "Strawberry-Flip Grundlagen: kurze Unterschnitt-, Leer- und Seitschnitt-Aufschläge", fr: "Bases du strawberry flip : services courts coupés, sans effet et latéraux", zh: "草莓拧拉基础：短下旋、不转和侧旋发球" },
+    "Strawberry flick z kontynuacją rally — przeciwnik odpowiada 1-2 piłkami": { en: "Strawberry flick with rally continuation — opponent responds with 1-2 balls", de: "Strawberry-Flip mit Ballwechsel-Fortsetzung — Gegner antwortet mit 1-2 Bällen", fr: "Strawberry flip avec continuation d'échange — l'adversaire répond avec 1-2 balles", zh: "草莓拧拉接相持——对手回球1-2板" },
   },
 }
