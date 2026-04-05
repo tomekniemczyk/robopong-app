@@ -991,7 +991,8 @@
   </div>
 
   <!-- ── Training runner overlay ─────────────────────────────────────────── -->
-  <div class="runner-overlay" v-if="trainingRunning" style="display:flex;flex-direction:column;padding:12px 16px;height:100dvh;box-sizing:border-box;overflow:hidden">
+  <div class="runner-overlay" v-if="trainingRunning">
+  <div class="runner-sheet">
 
     <!-- Góra: pasek postępu + przyciski (zawsze widoczne) -->
     <div style="flex-shrink:0">
@@ -1023,7 +1024,7 @@
       <div style="font-size:18px;font-weight:700;margin-bottom:8px;flex-shrink:0">{{ tcm(trainingDrillName, 'drills', 'exercises') }}</div>
 
       <!-- Stół SVG -->
-      <svg v-if="trainingBalls.length" viewBox="0 0 300 220" style="width:100%;max-width:300px;margin:0 auto 8px;display:block;border-radius:4px;flex-shrink:0">
+      <svg v-if="trainingBalls.length" viewBox="0 0 300 220" style="width:100%;max-width:220px;margin:0 auto 6px;display:block;border-radius:4px;flex-shrink:0">
         <rect x="130" y="0" width="40" height="6" rx="2" fill="#3a3d52" stroke="#6b6f8a" stroke-width="0.5"/>
         <text x="150" y="5" text-anchor="middle" fill="#6b6f8a" font-size="4">ROBOT</text>
         <rect x="-2" y="6" width="304" height="4" rx="1" fill="#555"/>
@@ -1052,8 +1053,8 @@
 
       <!-- Faza: countdown -->
       <div v-if="trainingPhase === 'countdown'" style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center">
-        <div class="ball-counter" style="font-size:96px">{{ trainingTimer }}</div>
-        <div class="ball-sub" style="font-size:16px">{{ t('tr.get_ready') }}</div>
+        <div class="ball-counter" style="font-size:72px">{{ trainingTimer }}</div>
+        <div class="ball-sub" style="font-size:14px">{{ t('tr.get_ready') }}</div>
       </div>
 
       <!-- Faza: drill -->
@@ -1068,15 +1069,15 @@
         <div class="progress-bar"><div class="fill" :style="{width: trainingBallTotal ? (trainingBall/trainingBallTotal*100)+'%' : '0'}"></div></div>
       </div>
 
-      <!-- Faza: exercise (duże, na cały ekran) -->
+      <!-- Faza: exercise -->
       <div v-if="trainingPhase === 'exercise'" style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center">
-        <div class="ball-counter" style="color:#a855f7;font-size:88px">{{ trainingTimer }}</div>
+        <div class="ball-counter" style="color:#a855f7;font-size:64px">{{ trainingTimer }}</div>
         <div style="font-size:18px;font-weight:600;color:#a855f7;margin:4px 0 10px">{{ tc('exercises', trainingDrillName) }}</div>
         <img v-if="trainingExerciseId"
           :src="getExFrameSrc(trainingExerciseId)"
           :alt="tc('exercises', trainingDrillName)"
           @error="$event.target.style.display='none'"
-          style="display:block;width:200px;height:200px;object-fit:contain;margin:0 auto 10px;border-radius:14px;background:rgba(168,85,247,.08)">
+          style="display:block;width:140px;height:140px;object-fit:contain;margin:0 auto 8px;border-radius:14px;background:rgba(168,85,247,.08)">
         <div v-if="trainingExerciseDesc" style="font-size:14px;color:var(--text2);line-height:1.5;text-align:center;padding:0 16px;max-width:440px">
           {{ tc('exercise_desc', trainingExerciseDesc) }}
         </div>
@@ -1127,6 +1128,7 @@
         </div>
       </div>
     </div>
+  </div>
   </div>
 
   <!-- ── Takeover request modal (dla kontrolera) ─────────────────────────── -->
