@@ -210,6 +210,8 @@ async def _do_connect(addr: str) -> bool:
                     addr, was_saved, cal.get("top_speed"), cal.get("bot_speed"),
                     cal.get("oscillation"), cal.get("height"), cal.get("rotation"))
         broadcast("calibration_loaded", {"cal": cal, "calibrated": was_saved, "addr": addr})
+        await robot.apply_calibration(cal)
+        logger.info("CAL applied after connect: Q/U/O/R sent to robot")
     else:
         logger.warning("CAL _do_connect(%s): połączenie nieudane", addr)
     return ok
@@ -347,7 +349,7 @@ async def ws_endpoint(ws: WebSocket):
         _broadcast_sessions()
 
 
-ROBOT_ACTIONS  = {"set_ball", "throw", "throw_ball", "run_scenario", "run_drill", "run_training", "begin_calibration", "run_drill_solo", "run_exercise_solo", "run_step_solo", "stop_training", "pause_training", "resume_training", "skip_training"}
+ROBOT_ACTIONS  = {"set_ball", "throw", "throw_ball", "run_scenario", "run_drill", "run_training", "begin_calibration", "apply_calibration", "run_drill_solo", "run_exercise_solo", "run_step_solo", "stop_training", "pause_training", "resume_training", "skip_training"}
 STANDBY_SECS   = 5 * 60
 _last_activity: float = 0.0
 _training_runner = training.TrainingRunner()
@@ -451,6 +453,15 @@ async def _handle(msg: dict, ws: WebSocket):
     elif action == "stop":
         _log("Motors stop")
         await robot.stop()
+
+    elif action == "apply_calibration":
+        addr = robot.device or _load_last_addr()
+        cal, was_saved = _load_cal(addr)
+        if was_saved and robot.is_connected:
+            await robot.apply_calibration(cal)
+            _log("CAL applied via WS: Q/U/O/R sent — top=%s h=%s osc=%s rot=%s",
+                 cal.get("top_speed"), cal.get("height"), cal.get("oscillation"), cal.get("rotation"))
+            broadcast("calibration_loaded", {"cal": cal, "calibrated": True, "addr": addr})
 
     elif action == "begin_calibration":
         _log("Begin calibration — V (reset head)")
@@ -682,24 +693,34 @@ def list_presets():
 
 @app.post("/api/presets", status_code=201)
 def create_preset(body: dict):
+    global DEFAULT_CAL
     allowed = {"top_speed", "bot_speed", "oscillation", "height", "rotation", "wait_ms"}
     data = {k: v for k, v in body.items() if k in allowed}
     new_id = presets.save_preset(body["name"], data, body.get("is_default", False))
+    if body.get("is_default"):
+        DEFAULT_CAL = {k: data[k] for k in ("top_speed", "bot_speed", "oscillation", "height", "rotation", "wait_ms")}
     return {"id": new_id, "name": body["name"], **data, "is_default": body.get("is_default", False)}
 
 
 @app.put("/api/presets/{preset_id}")
 def update_preset_endpoint(preset_id: int, body: dict):
+    global DEFAULT_CAL
     allowed = {"top_speed", "bot_speed", "oscillation", "height", "rotation", "wait_ms"}
     data = {k: v for k, v in body.items() if k in allowed}
     presets.update_preset(preset_id, body.get("name", ""), data, body.get("is_default", False))
+    if body.get("is_default"):
+        DEFAULT_CAL = {k: data[k] for k in ("top_speed", "bot_speed", "oscillation", "height", "rotation", "wait_ms")}
     _log("UPDATE PRESET id=%d name=%s data=%s", preset_id, body.get("name"), data)
     return {"ok": True}
 
 
 @app.put("/api/presets/{preset_id}/default", status_code=204)
 def set_default_preset(preset_id: int):
+    global DEFAULT_CAL
     presets.set_default(preset_id)
+    p = presets.get_default_preset()
+    if p:
+        DEFAULT_CAL = {k: p[k] for k in ("top_speed", "bot_speed", "oscillation", "height", "rotation", "wait_ms")}
 
 
 @app.delete("/api/presets/{preset_id}", status_code=204)

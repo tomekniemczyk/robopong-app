@@ -1014,7 +1014,7 @@
     </div>
 
     <!-- Środek: aktualny krok (scrollowalny, zajmuje resztę) -->
-    <div style="flex:1;overflow-y:auto;text-align:center;display:flex;flex-direction:column">
+    <div style="flex:1;min-height:0;overflow-y:auto;text-align:center;display:flex;flex-direction:column">
 
       <!-- Paused banner -->
       <div v-if="trainingIsPaused" style="font-size:20px;color:#ff9f0a;font-weight:700;margin:8px 0;flex-shrink:0">{{ t('tr.paused') }}</div>
@@ -1108,8 +1108,11 @@
         </div>
       </div>
 
-      <!-- Komentarz do sesji -->
-      <div v-if="trainingPhase !== 'countdown'" style="margin-top:8px;display:flex;gap:6px;flex-shrink:0">
+    </div>
+
+    <!-- Komentarz do sesji (zawsze widoczny na dole, poza scrollable area) -->
+    <div style="flex-shrink:0;padding-top:8px">
+      <div style="display:flex;gap:6px">
         <input v-model="stepNote" :placeholder="t('training.add_note')" style="flex:1;font-size:12px;padding:6px 10px" @keyup.enter="sendStepNote">
         <button class="btn btn-ghost" style="font-size:12px;padding:6px 10px" @click="sendStepNote" :disabled="!stepNote.trim()">💬</button>
         <button v-if="selectedPlayerId" class="btn btn-ghost" style="font-size:14px;padding:6px 10px"
@@ -1118,7 +1121,7 @@
           {{ voiceRecording ? '⏹' : '🎙' }}
         </button>
       </div>
-      <div v-if="sessionNotes.length" style="margin-top:4px;max-height:50px;overflow-y:auto;flex-shrink:0">
+      <div v-if="sessionNotes.length" style="margin-top:4px;max-height:50px;overflow-y:auto">
         <div v-for="(n, ni) in sessionNotes" :key="ni" style="font-size:10px;color:var(--text2);padding:1px 0">
           💬 <span style="color:var(--muted)">krok {{ n.step }}:</span> {{ n.note }}
         </div>
@@ -4577,6 +4580,15 @@ const _app = createApp({
     async function setDefaultPreset(id) {
       showConfirm(t('confirm.set_default'), async () => {
         await fetch(`/api/presets/${id}/default`, { method: 'PUT' })
+        const p = presets.value.find(x => x.id === id)
+        if (p) {
+          Object.assign(cal, { top_speed: p.top_speed, bot_speed: p.bot_speed, oscillation: p.oscillation, height: p.height, rotation: p.rotation, wait_ms: p.wait_ms })
+          await fetch('/api/calibration', {
+            method: 'PUT', headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ ...cal }),
+          })
+          send({ action: 'apply_calibration' })
+        }
         await loadPresets()
       }, t('btn.set'))
     }
@@ -4612,6 +4624,11 @@ const _app = createApp({
           body: JSON.stringify({ name, ...cal, is_default: true }),
         })
       }
+      await fetch('/api/calibration', {
+        method: 'PUT', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ...cal }),
+      })
+      send({ action: 'apply_calibration' })
       await loadPresets()
       localStorage.setItem(`cal_done:${lastAddr.value}`, '1')
       isCalibrated.value = true
