@@ -4764,9 +4764,12 @@ const _app = createApp({
       wizState.value = 'warmup'
       clearTimeout(_calIdleTimer)
       send({ action: 'begin_calibration' })
-      send({ action: 'set_ball', ball: { ...cal } })
-      _calMotorsRunning = true
+      // begin_calibration wysyła V×2 z 500ms przerwą (~1.2s) — set_ball MUSI poczekać
       wizWarmup.value = 2
+      setTimeout(() => {
+        send({ action: 'set_ball', ball: { ...cal } })
+        _calMotorsRunning = true
+      }, 1300)
       const iv = setInterval(() => {
         wizWarmup.value--
         if (wizWarmup.value <= 0) { clearInterval(iv); wizState.value = 'ready' }
