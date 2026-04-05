@@ -472,7 +472,6 @@
           {{ t('wizard.throw_n') }} #{{ wizThrows }} · H={{ cal.height }} · Osc={{ cal.oscillation }} · Spd={{ cal.top_speed }}
         </div>
       </div>
-      <button class="btn btn-ghost" style="font-size:11px;padding:4px 10px" @click="wizCancel">{{ t('wizard.manual') }}</button>
     </div>
 
     <!-- Warmup countdown -->
@@ -4771,7 +4770,6 @@ const _app = createApp({
     }
 
     async function wizFinishDefault() {
-      clearInterval(_wizKeepAlive)
       await calDone()
       wizActive.value = false
       wizState.value = 'idle'
@@ -4779,7 +4777,6 @@ const _app = createApp({
     }
 
     async function wizFinishNamed() {
-      clearInterval(_wizKeepAlive)
       const name = wizPresetName.value.trim()
       if (name) {
         await fetch('/api/presets', {
@@ -4798,7 +4795,6 @@ const _app = createApp({
     function wizCancel() {
       send({ action: 'stop' })
       _calMotorsRunning = false
-      clearInterval(_wizKeepAlive)
       wizActive.value = false
       wizState.value = 'idle'
     }
