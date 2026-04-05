@@ -709,8 +709,9 @@
       <text x="150" y="9" text-anchor="middle" fill="#6b6f8a" font-size="5.5">ROBOT</text>
 
       <!-- Strefa "SIATKA" (dotknięcie = trafił w siatkę) -->
-      <rect x="0" y="14" width="300" height="8" rx="2" fill="#555" opacity="0.8"/>
-      <text x="150" y="20" text-anchor="middle" fill="#aaa" font-size="5">NET</text>
+      <rect x="0" y="12" width="300" height="10" rx="2" fill="rgba(255,159,10,0.12)"/>
+      <rect x="0" y="14" width="300" height="6" rx="1.5" fill="#555" opacity="0.9"/>
+      <text x="150" y="9" text-anchor="middle" fill="#ff9f0a" font-size="6" opacity="0.5">{{ t('wizard.net_zone') }}</text>
 
       <!-- Stół — główna powierzchnia -->
       <rect x="0" y="22" width="300" height="260" fill="#1a4a8a"/>
@@ -766,7 +767,9 @@
     </div>
     <div v-if="wizState === 'tap_table'" style="text-align:center">
       <div style="font-size:15px;font-weight:600;color:#ff9f0a;margin-bottom:8px">{{ t('wizard.tap_prompt') }}</div>
-      <button class="btn btn-ghost" style="font-size:12px;padding:6px 14px;color:var(--muted)" @click="wizMissed">{{ t('wizard.missed') }}</button>
+      <button class="btn btn-success" style="padding:12px 24px;font-size:15px;font-weight:700;margin-top:6px" @click="wizNextThrow">
+        🎯 {{ t('wizard.next_throw') }}
+      </button>
     </div>
     <div v-if="wizState === 'throwing'" style="text-align:center;padding:12px 0">
       <div style="font-size:14px;color:var(--muted)">{{ t('wizard.observe') }}…</div>
@@ -4695,22 +4698,19 @@ const _app = createApp({
       return { svgX: nx * WIZ_SVG_W, svgY: WIZ_TABLE_Y0 + ny * WIZ_TABLE_H }
     }
 
+    let _wizBaseCal = null  // snapshot of cal after throw (before any taps)
+
     async function wizStart() {
       wizActive.value = true
       wizThrows.value = 0
       wizTrail.value = []
       wizLastTap.value = null
-      cal.top_speed = 120
-      cal.bot_speed = 0
-      cal.oscillation = 150
-      cal.height = 190
-      cal.rotation = 150
-      cal.wait_ms = 3000
+      _wizBaseCal = null
+      Object.assign(cal, { ...CAL_DEFAULTS })
       wizPresetName.value = ''
       wizState.value = 'warmup'
       clearTimeout(_calIdleTimer)
       send({ action: 'begin_calibration' })
-      await new Promise(r => setTimeout(r, 500))
       send({ action: 'set_ball', ball: { ...cal } })
       _calMotorsRunning = true
       wizWarmup.value = 2
@@ -4734,12 +4734,18 @@ const _app = createApp({
       _wizBusy = true
       wizState.value = 'throwing'
       clearTimeout(_calIdleTimer)
+      _wizBaseCal = { top_speed: cal.top_speed, bot_speed: cal.bot_speed, oscillation: cal.oscillation, height: cal.height, rotation: cal.rotation, wait_ms: cal.wait_ms }
       send({ action: 'throw_ball', ball: { ...cal } })
       _calMotorsRunning = true
       wizThrows.value++
       await new Promise(r => setTimeout(r, 1500))
       wizState.value = 'tap_table'
       _wizBusy = false
+    }
+
+    function wizNextThrow() {
+      _wizBaseCal = null
+      wizState.value = 'ready'
     }
 
     function wizTableClick(evt) {
@@ -4752,67 +4758,67 @@ const _app = createApp({
       // Normalize to table surface: ny=0 at net, ny=1 at player end
       let nx = svgX / WIZ_SVG_W
       let ny = (svgY - WIZ_TABLE_Y0) / WIZ_TABLE_H
-
-      // Allow slightly beyond table for "off-table" taps
       nx = Math.max(-0.05, Math.min(1.05, nx))
-      // ny < 0 = net zone, ny > 1 = past table
       ny = Math.max(-0.15, Math.min(1.15, ny))
+
+      // Always correct from base (post-throw) cal, not from previous tap
+      if (_wizBaseCal) Object.assign(cal, { ..._wizBaseCal })
 
       // Apply auto-correction
       _wizAutoCorrect(nx, ny)
 
-      // Record tap
+      // Record tap (replace last if re-tapping same throw)
       const tapSvg = { svgX: Math.max(0, Math.min(300, svgX)), svgY: Math.max(14, Math.min(320, svgY)) }
       const deltaX = Math.abs(nx - 0.5)
       const deltaY = Math.abs(ny - WIZ_TARGET_Y)
       const good = deltaX < 0.08 && deltaY < 0.08
       wizLastTap.value = tapSvg
-      wizTrail.value.push({ ...tapSvg, good })
-      if (wizTrail.value.length > 8) wizTrail.value.shift()
+      // Replace last trail entry for same throw, or push first
+      if (wizTrail.value.length > 0 && wizTrail.value[wizTrail.value.length - 1]._throwN === wizThrows.value) {
+        wizTrail.value[wizTrail.value.length - 1] = { ...tapSvg, good, _throwN: wizThrows.value }
+      } else {
+        wizTrail.value.push({ ...tapSvg, good, _throwN: wizThrows.value })
+        if (wizTrail.value.length > 8) wizTrail.value.shift()
+      }
 
-      // Send updated ball params
+      // Send updated ball params — live correction
       send({ action: 'set_ball', ball: { ...cal } })
       _calMotorsRunning = true
-      wizState.value = 'ready'
+      // Stay in tap_table — user can re-tap or click "next throw"
     }
 
     function _wizAutoCorrect(nx, ny) {
       const deltaX = nx - 0.5           // >0 = ball right, <0 = ball left
       const deltaY = ny - WIZ_TARGET_Y  // >0 = too long, <0 = too short
+      const DEAD = 0.025
 
-      const CLOSE_X = 0.07   // ~10cm of 152.5cm
-      const CLOSE_Y = 0.06   // ~16cm of 274cm
-      const DEAD = 0.025     // dead zone — no correction
-
-      // Lateral: oscillation (higher osc = more left from robot POV)
-      // If ball lands right of center, we need less oscillation
+      // Lateral: oscillation (osc 173=left, 127=right from player POV)
+      // Ball right of center (deltaX>0) → need to move left → INCREASE osc
+      // Ball left of center (deltaX<0) → need to move right → DECREASE osc
+      // Proportional: up to 5 units for large deviation
       if (Math.abs(deltaX) > DEAD) {
-        const step = Math.abs(deltaX) > CLOSE_X ? 5 : 1
-        const dir = isLeftHanded.value ? 1 : -1  // mirror for lefties
-        cal.oscillation += Math.sign(deltaX) * step * dir
+        const pct = Math.min(1, Math.abs(deltaX) / 0.4)
+        const step = Math.max(1, Math.round(pct * 5))
+        cal.oscillation += Math.sign(deltaX) * step
         cal.oscillation = Math.max(127, Math.min(173, cal.oscillation))
       }
 
-      // Depth: height (higher = ball goes further)
-      // Too short (ny < target) → increase height; too long → decrease
+      // Depth: height (higher value = ball goes further)
+      // Ball short (deltaY<0) → increase height; ball long (deltaY>0) → decrease
       if (Math.abs(deltaY) > DEAD) {
-        const step = Math.abs(deltaY) > CLOSE_Y ? 5 : 1
-        if (ny < -0.05) {
-          // Hit the net — big correction
+        if (ny < 0.05) {
+          // Net zone — big correction up
           cal.height = Math.min(210, cal.height + 8)
+        } else if (ny > 1.0) {
+          // Past table — big correction down
+          cal.height = Math.max(75, cal.height - 8)
         } else {
-          cal.height += Math.sign(-deltaY) * step  // short → increase, long → decrease
+          const pct = Math.min(1, Math.abs(deltaY) / 0.4)
+          const step = Math.max(1, Math.round(pct * 5))
+          cal.height += Math.sign(-deltaY) * step
+          cal.height = Math.max(75, Math.min(210, cal.height))
         }
-        cal.height = Math.max(75, Math.min(210, cal.height))
       }
-    }
-
-    function wizMissed() {
-      // Ball completely missed — big height increase
-      cal.height = Math.min(210, cal.height + 8)
-      send({ action: 'set_ball', ball: { ...cal } })
-      _calMotorsRunning = true
-      wizState.value = 'ready'
     }
 
     function wizFinishPrompt() {
@@ -5174,7 +5180,7 @@ const _app = createApp({
       clamp, clampCal,
       calStep, calSend, calThrow, calStop, calSetup, calReset, loadCal,
       wizActive, wizState, wizThrows, wizTrail, wizLastTap, wizWarmup, wizPresetName,
-      wizStart, wizThrow, wizTableClick, wizMissed, wizFinishPrompt, wizFinishDefault, wizFinishNamed, wizCancel,
+      wizStart, wizThrow, wizNextThrow, wizTableClick, wizFinishPrompt, wizFinishDefault, wizFinishNamed, wizCancel,
       presets, savePreset, updatePreset, loadPreset, setDefaultPreset, deletePreset,
       calDone, importCalRef, exportCalibration, importCalibration, showToast,
       expParams, expCount, expInterval, expBounce1, expBounce2, expClickPhase, expSpin, expArc, expSpd, expUseful, expRating, expComment, expHistory,
