@@ -617,6 +617,13 @@ async def _handle(msg: dict, ws: WebSocket):
             await _send(ws, "session_role", {"role": Role.CONTROLLER, "session_id": sess.id})
             _broadcast_sessions()
 
+    elif action == "set_drill_mode":
+        mode = msg.get("mode", "auto")
+        if mode in ("auto", "sync", "async"):
+            robot.drill_mode = mode
+            _log("Drill mode set to: %s (effective: %s)", mode, robot._effective_drill_mode())
+            broadcast("info", {"message": f"Drill mode: {robot._effective_drill_mode()}"})
+
     # ── Zarządzanie sesjami ──────────────────────────────────────────────────
 
     elif action == "request_takeover":

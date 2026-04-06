@@ -1,5 +1,6 @@
 import asyncio
 import logging
+import random as _random
 from typing import Callable, Dict, List, Optional
 
 import audio
@@ -26,6 +27,10 @@ class Robot:
         self._on_event = on_event or (lambda *_: None)
         self._listeners: List[Callable] = []
         self.left_handed: bool = False
+        # Drill mode: "auto" (BLE FW>=701→async, else sync), "sync", "async"
+        self.drill_mode: str = "auto"
+        self._drill_response_queue: Optional[asyncio.Queue] = None
+        self._tracking_drill_responses: bool = False
 
     # ── listener API ──────────────────────────────────────────────────────────
 
@@ -148,7 +153,8 @@ class Robot:
 
     # ── robot control ─────────────────────────────────────────────────────────
 
-    async def set_ball(self, top: int, bot: int, osc: int, height: int, rotation: int, wait_ms: int = 1500):
+    def _build_ball_params(self, top: int, bot: int, osc: int, height: int, rotation: int) -> str:
+        """Build ball parameter string (shared by B and A commands)."""
         if self.left_handed:
             osc = 300 - osc  # mirror around center 150 (127↔173)
         dir_t = 1 if top < 0 else 0
@@ -156,16 +162,23 @@ class Robot:
         spd_t = min(999, int(abs(top) * 4.016))
         spd_b = min(999, int(abs(bot) * 4.016))
         leds  = self._spin_leds(top, bot)
+        return f"{dir_t}{spd_t:03d}{dir_b}{spd_b:03d}{osc:03d}{height:03d}{rotation:03d}{leds}"
 
-        # Always use B command — starts motors immediately.
-        # A command (fw >= 701) requires END protocol which we don't use yet;
-        # without END, A sets params but may not spin motors → balls drop.
-        cmd = f"B{dir_t}{spd_t:03d}{dir_b}{spd_b:03d}{osc:03d}{height:03d}{rotation:03d}{leds}"
-
-        logger.debug("→ %s top=%d bot=%d osc=%d h=%d rot=%d", cmd[:1], top, bot, osc, height, rotation)
+    async def set_ball(self, top: int, bot: int, osc: int, height: int, rotation: int, wait_ms: int = 1500):
+        params = self._build_ball_params(top, bot, osc, height, rotation)
+        cmd = f"B{params}"
+        logger.debug("→ B top=%d bot=%d osc=%d h=%d rot=%d", top, bot, osc, height, rotation)
         await self._write(cmd)
         if self.is_simulation:
             audio.play("sim_motor_start")
+
+    def _effective_drill_mode(self) -> str:
+        """Determine drill mode: async for BLE FW>=701, sync otherwise."""
+        if self.drill_mode != "auto":
+            return self.drill_mode
+        if self.transport_type == "ble" and self.firmware >= 701:
+            return "async"
+        return "sync"
 
     async def throw(self):
         logger.debug("→ T")
@@ -205,59 +218,191 @@ class Robot:
             self._drill.cancel()
 
         min_wait_ms = 500 if len(balls) == 1 else 750
+        mode = self._effective_drill_mode()
+        logger.info("Drill start: mode=%s, balls=%d, repeat=%s, count=%d, percent=%d",
+                     mode, len(balls), "inf" if repeat == 0 else repeat, count, percent)
 
-        async def _loop():
-            first_ball_ready = False
+        if mode == "async":
+            self._drill = asyncio.create_task(
+                self._drill_loop_async(balls, repeat, count, percent, min_wait_ms, skip_warmup, emit_countdown))
+        else:
+            self._drill = asyncio.create_task(
+                self._drill_loop_sync(balls, repeat, count, percent, min_wait_ms, skip_warmup, emit_countdown))
+
+    # ── async drill: wTA + A + END (FW >= 701, robot manages timing) ─────
+
+    async def _drill_loop_async(self, balls, repeat, count, percent, min_wait_ms, skip_warmup, emit_countdown):
+        """Async protocol: preload balls via wTA+A, execute via END, robot manages throws."""
+        # Build ball commands (params + adjusted wait)
+        ball_cmds = []
+        for b in balls:
+            params = self._build_ball_params(
+                b["top_speed"], b["bot_speed"], b["oscillation"], b["height"], b["rotation"])
+            raw_wait = b.get("wait_ms", 1500)
+            adj_wait = max(min_wait_ms, int(raw_wait * (100 + (100 - percent)) / 100))
+            ball_cmds.append((params, adj_wait))
+
+        thrown = 0
+        self._drill_response_queue = asyncio.Queue()
+
+        try:
+            # Setup: identical to original — H, pre-spin first ball, brief warmup
             if not skip_warmup:
-                # Phase 1: Spin flywheel at boosted speed (2s) — reach full RPM from standstill
-                b0 = balls[0]
                 await self._write("H")
-                await asyncio.sleep(0.1)
-                warmup_top = max(abs(b0["top_speed"]), 200) * (1 if b0["top_speed"] >= 0 else -1)
-                warmup_bot = max(abs(b0["bot_speed"]), 200) * (1 if b0["bot_speed"] >= 0 else -1) if b0["bot_speed"] != 0 else 0
-                await self.set_ball(warmup_top, warmup_bot, b0["oscillation"], b0["height"], b0["rotation"], b0.get("wait_ms", 1000))
-                if emit_countdown:
-                    self._emit("drill_countdown", {"sec": 3})
-                await asyncio.sleep(1.0)
-                if emit_countdown:
-                    self._emit("drill_countdown", {"sec": 2})
-                await asyncio.sleep(1.0)
-                # Phase 2: Settle to actual drill params (1s) before first throw
-                await self.set_ball(b0["top_speed"], b0["bot_speed"], b0["oscillation"], b0["height"], b0["rotation"], b0.get("wait_ms", 1000))
+                await asyncio.sleep(0.2)
+                await self._write("H")
+                await asyncio.sleep(0.2)
+                # Pre-spin motors with first ball (B command — immediate motor start)
+                b0 = balls[0]
+                params0 = self._build_ball_params(
+                    b0["top_speed"], b0["bot_speed"], b0["oscillation"], b0["height"], b0["rotation"])
+                await self._write(f"B{params0}")
                 if emit_countdown:
                     self._emit("drill_countdown", {"sec": 1})
                 await asyncio.sleep(1.0)
-                first_ball_ready = True
 
-            run = 0
-            thrown = 0
-            try:
-                while repeat == 0 or run < repeat:
-                    for i, b in enumerate(balls):
-                        if count > 0 and thrown >= count:
-                            return
-                        raw_wait = b.get("wait_ms", 1500)
-                        adj_wait = max(min_wait_ms, int(raw_wait * (100 + (100 - percent)) / 100))
-                        if first_ball_ready:
-                            first_ball_ready = False
-                        else:
-                            await self.set_ball(b["top_speed"], b["bot_speed"], b["oscillation"], b["height"], b["rotation"], adj_wait)
-                            await asyncio.sleep(0.15)
-                        await self.throw()
+            while True:
+                # Calculate batch size for END command (max 999)
+                if count > 0:
+                    remaining = count - thrown
+                elif repeat > 0:
+                    remaining = len(balls) * repeat - thrown
+                else:
+                    remaining = 999  # infinite — batch at 999
+                if remaining <= 0:
+                    break
+                batch = min(remaining, 999)
+
+                # Load all balls: wTA + A for each, 250ms between
+                for params, wait_ms in ball_cmds:
+                    wta = max(1, wait_ms // 10)
+                    logger.debug("→ wTA%03d + A%s", wta, params[:8])
+                    await self._write(f"wTA{wta:03d}")
+                    await self._write(f"A{params}")
+                    await asyncio.sleep(0.25)
+
+                # Clear stray responses from loading phase
+                while not self._drill_response_queue.empty():
+                    try:
+                        self._drill_response_queue.get_nowait()
+                    except asyncio.QueueEmpty:
+                        break
+
+                # Start tracking + send END
+                self._tracking_drill_responses = True
+                seed = _random.randint(1, 255)
+                cmd = f"END{batch:03d}{seed:03d}000"
+                logger.info("→ %s (batch=%d)", cmd, batch)
+                await self._write(cmd)
+
+                # Simulation: fake K/N responses
+                if self.is_simulation:
+                    asyncio.create_task(self._simulate_drill_responses(batch, ball_cmds))
+
+                # Wait for K (ball thrown) and N (drill complete) from robot
+                batch_thrown = 0
+                while batch_thrown < batch:
+                    try:
+                        resp = await asyncio.wait_for(self._drill_response_queue.get(), timeout=60)
+                    except asyncio.TimeoutError:
+                        logger.warning("Drill response timeout after %d/%d balls", batch_thrown, batch)
+                        break
+                    if resp == "K":
                         thrown += 1
+                        batch_thrown += 1
+                        ball_idx = (thrown - 1) % len(balls)
+                        run = (thrown - 1) // len(balls)
                         self._emit("drill_progress", {
-                            "ball": i + 1, "total": len(balls), "run": run + 1,
+                            "ball": ball_idx + 1, "total": len(balls), "run": run + 1,
                             "max_repeat": repeat, "thrown": thrown, "count": count, "percent": percent,
                         })
-                        await asyncio.sleep(max(0.3, adj_wait / 1000 - 0.15))
-                    run += 1
-            except asyncio.CancelledError:
-                pass
-            finally:
-                await self._write("H")
-                self._emit("drill_ended", {})
+                        if count > 0 and thrown >= count:
+                            break
+                    elif resp == "N":
+                        logger.debug("Robot sent N — batch complete (%d thrown)", batch_thrown)
+                        break
 
-        self._drill = asyncio.create_task(_loop())
+                self._tracking_drill_responses = False
+
+                # Check termination
+                if count > 0 and thrown >= count:
+                    break
+                if repeat > 0 and thrown >= len(balls) * repeat:
+                    break
+                # infinite (repeat=0, count=0): reload balls and send another END
+        except asyncio.CancelledError:
+            pass
+        finally:
+            self._tracking_drill_responses = False
+            self._drill_response_queue = None
+            await self._write("H")
+            self._emit("drill_ended", {})
+
+    async def _simulate_drill_responses(self, count: int, ball_cmds: list):
+        """Simulate robot K/N responses for simulation mode."""
+        for i in range(count):
+            if not self._drill_response_queue:
+                return
+            _, wait_ms = ball_cmds[i % len(ball_cmds)]
+            await asyncio.sleep(wait_ms / 1000)
+            if self._drill_response_queue:
+                self._drill_response_queue.put_nowait("K")
+                audio.play("sim_throw")
+        await asyncio.sleep(0.1)
+        if self._drill_response_queue:
+            self._drill_response_queue.put_nowait("N")
+
+    # ── sync drill: B + T (legacy/USB, app manages timing) ───────────────
+
+    async def _drill_loop_sync(self, balls, repeat, count, percent, min_wait_ms, skip_warmup, emit_countdown):
+        """Sync protocol: B command + T throw, app controls all timing."""
+        first_ball_ready = False
+        if not skip_warmup:
+            b0 = balls[0]
+            await self._write("H")
+            await asyncio.sleep(0.1)
+            warmup_top = max(abs(b0["top_speed"]), 200) * (1 if b0["top_speed"] >= 0 else -1)
+            warmup_bot = max(abs(b0["bot_speed"]), 200) * (1 if b0["bot_speed"] >= 0 else -1) if b0["bot_speed"] != 0 else 0
+            await self.set_ball(warmup_top, warmup_bot, b0["oscillation"], b0["height"], b0["rotation"], b0.get("wait_ms", 1000))
+            if emit_countdown:
+                self._emit("drill_countdown", {"sec": 3})
+            await asyncio.sleep(1.0)
+            if emit_countdown:
+                self._emit("drill_countdown", {"sec": 2})
+            await asyncio.sleep(1.0)
+            await self.set_ball(b0["top_speed"], b0["bot_speed"], b0["oscillation"], b0["height"], b0["rotation"], b0.get("wait_ms", 1000))
+            if emit_countdown:
+                self._emit("drill_countdown", {"sec": 1})
+            await asyncio.sleep(1.0)
+            first_ball_ready = True
+
+        run = 0
+        thrown = 0
+        try:
+            while repeat == 0 or run < repeat:
+                for i, b in enumerate(balls):
+                    if count > 0 and thrown >= count:
+                        return
+                    raw_wait = b.get("wait_ms", 1500)
+                    adj_wait = max(min_wait_ms, int(raw_wait * (100 + (100 - percent)) / 100))
+                    if first_ball_ready:
+                        first_ball_ready = False
+                    else:
+                        await self.set_ball(b["top_speed"], b["bot_speed"], b["oscillation"], b["height"], b["rotation"], adj_wait)
+                        await asyncio.sleep(0.15)
+                    await self.throw()
+                    thrown += 1
+                    self._emit("drill_progress", {
+                        "ball": i + 1, "total": len(balls), "run": run + 1,
+                        "max_repeat": repeat, "thrown": thrown, "count": count, "percent": percent,
+                    })
+                    await asyncio.sleep(max(0.3, adj_wait / 1000 - 0.15))
+                run += 1
+        except asyncio.CancelledError:
+            pass
+        finally:
+            await self._write("H")
+            self._emit("drill_ended", {})
 
     def stop_drill(self):
         self._stop_drill_nowait()
@@ -341,6 +486,15 @@ class Robot:
         """Callback from BLE transport notifications."""
         self._emit("robot_response", {"data": text})
 
+        # Capture K/N during async drill execution (after END sent)
+        if self._tracking_drill_responses and self._drill_response_queue:
+            for ch in text:
+                if ch in ("K", "N"):
+                    try:
+                        self._drill_response_queue.put_nowait(ch)
+                    except asyncio.QueueFull:
+                        pass
+
         if self._awaiting_version:
             if text in ("K", "N", "M"):
                 return
@@ -395,6 +549,8 @@ class Robot:
             "robot_version": self.robot_version,
             "device":        self.device,
             "transport":     self.transport_type,
+            "drill_mode":    self.drill_mode,
+            "effective_drill_mode": self._effective_drill_mode(),
         })
 
     async def _reconnect_loop(self):
