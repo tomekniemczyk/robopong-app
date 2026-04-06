@@ -1453,6 +1453,7 @@
           <span>{{ h.status === 'completed' ? '✅' : h.status === 'stopped' ? '⏹' : '❌' }}</span>
           <span style="flex:1">{{ new Date(h.started_at).toLocaleDateString() }} {{ new Date(h.started_at).toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'}) }}</span>
           <span class="chip">{{ fmtDur(h.elapsed_sec) }}</span>
+          <button class="btn btn-ghost btn-icon" style="font-size:10px;color:var(--danger);padding:2px 4px" @click="deleteHistoryEntry(h.id)" :title="t('btn.delete')">🗑</button>
         </div>
         <div style="font-size:11px;color:var(--muted);margin-top:2px">
           {{ t('training.steps_done', {done: h.steps_completed, total: h.steps_total}) }}
@@ -1480,6 +1481,9 @@
           </button>
         </div>
       </div>
+      <button v-if="historyEntries.length > 1" class="btn btn-ghost" style="width:100%;margin-top:12px;font-size:11px;color:var(--danger);padding:8px" @click="clearAllHistory">
+        🗑 {{ t('training.clear_history') }}
+      </button>
     </div>
   </div>
 
@@ -4007,6 +4011,7 @@ const _app = createApp({
         await fetch(`/api/training-history/${hid}`, { method: 'DELETE' })
         if (playerDetail.value) await openPlayerDetail(playerDetail.value)
         await loadTrainingHistory()
+        historyEntries.value = historyEntries.value.filter(h => h.id !== hid)
       }
       if (info.count > 0) {
         const extra = t('confirm.recordings_info', {count: info.count, size: formatSize(info.total_size)})
@@ -4023,6 +4028,18 @@ const _app = createApp({
       } else {
         showConfirm(t('recordings.delete') + '?', doDelete)
       }
+    }
+
+    async function clearAllHistory() {
+      const ids = historyEntries.value.map(h => h.id)
+      showConfirm(t('training.clear_history') + ` (${ids.length})?`, async () => {
+        for (const hid of ids) {
+          await fetch(`/api/training-history/${hid}`, { method: 'DELETE' })
+        }
+        historyEntries.value = []
+        await loadTrainingHistory()
+        if (playerDetail.value) await openPlayerDetail(playerDetail.value)
+      })
     }
 
     function historyEndTime(h) {
@@ -5243,7 +5260,7 @@ const _app = createApp({
       saveTraining, deleteTraining, stopTraining, totalTrainingTime,
       trainingGroups, openTrainingFolders, toggleTrainingFolder, trainingFolderProgress, trainingFolderPct,
       trainingStatusIcon, lastRunDate, trainingStartModal, selectedPlayerId, recordTraining, recordType, skipWarmup, skipCooldown, showPlayerSelectModal,
-      currentPlayerName, selectPlayer, createAndSelectPlayer, deleteHistoryEntry, historyEndTime, recDownloadName, rerunStep,
+      currentPlayerName, selectPlayer, createAndSelectPlayer, deleteHistoryEntry, clearAllHistory, historyEndTime, recDownloadName, rerunStep,
       openTrainingStartModal, startTrainingConfirmed, duplicateTraining,
       resumeFromStep, getResumeStep, expandedTraining,
       ballSpinLabel, ballPlaceLabel, nextStepInfo,

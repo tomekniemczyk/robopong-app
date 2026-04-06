@@ -486,6 +486,7 @@ window.I18N = {
   'training.duration':     { pl:'Czas',            en:'Duration',         de:'Dauer',            fr:'Durée',            zh:'时长' },
   'training.skipped':      { pl:'pominiętych',     en:'skipped',          de:'übersprungen',     fr:'ignorés',          zh:'已跳过' },
   'training.and_more':     { pl:'…i jeszcze {n}',  en:'…and {n} more',    de:'…und {n} weitere', fr:'…et {n} de plus',  zh:'…还有 {n} 条' },
+  'training.clear_history':{ pl:'Usuń całą historię', en:'Clear all history', de:'Gesamten Verlauf löschen', fr:'Supprimer tout l\'historique', zh:'清除全部历史' },
   'training.step_label':   { pl:'krok',            en:'step',             de:'Schritt',          fr:'étape',            zh:'步' },
   'tr.steps_label':        { pl:'drilli',          en:'drills',           de:'Drills',           fr:'lancers',          zh:'训练' },
   'confirm.delete_player': { pl:'Usunąć gracza?',  en:'Delete player?',   de:'Spieler löschen?', fr:'Supprimer le joueur ?', zh:'删除球员？' },
