@@ -141,6 +141,7 @@ class TrainingRunner:
         self._skip = False
         self._robot = None
         self._recorder = recordings.Recorder()
+        self._ball_preloaded = False
 
     @property
     def running(self) -> bool:
@@ -287,7 +288,7 @@ class TrainingRunner:
         countdown_sec = scenario.get("countdown_sec", 5)
         total_steps = len(steps)
         start_time = time.monotonic()
-        ball_preloaded = False
+        self._ball_preloaded = False
 
         # Create history entry at start (status='running') so recordings can reference it
         self._history_id = record_run(
@@ -318,12 +319,19 @@ class TrainingRunner:
                 if self._stopped: return
                 await self._wait_unpaused()
                 broadcast("training_countdown", {"sec": sec, "total": countdown_sec})
-                if sec == 5 and first_drill:
+                if sec == countdown_sec and first_drill:
+                    b = first_drill["balls"][0]
+                    wt = max(abs(b["top_speed"]), 200) * (1 if b["top_speed"] >= 0 else -1)
+                    wb = max(abs(b["bot_speed"]), 200) * (1 if b["bot_speed"] >= 0 else -1) if b["bot_speed"] != 0 else 0
+                    await robot.set_ball(wt, wb,
+                                        b["oscillation"], b["height"], b["rotation"],
+                                        b.get("wait_ms", 1000))
+                    self._ball_preloaded = True
+                if sec == 2 and first_drill and self._ball_preloaded:
                     b = first_drill["balls"][0]
                     await robot.set_ball(b["top_speed"], b["bot_speed"],
                                         b["oscillation"], b["height"], b["rotation"],
                                         b.get("wait_ms", 1000))
-                    ball_preloaded = True
                 if sec <= 5:
                     audio.play("beep" if sec > 3 else "beep_high")
                 await asyncio.sleep(1)
@@ -385,8 +393,8 @@ class TrainingRunner:
                         drill_done.set()
 
                 robot.add_listener(_on_drill_event)
-                await robot.run_drill(drill["balls"], repeat=0, count=count, percent=percent, skip_warmup=ball_preloaded, emit_countdown=False)
-                ball_preloaded = False
+                await robot.run_drill(drill["balls"], repeat=0, count=count, percent=percent, skip_warmup=self._ball_preloaded, emit_countdown=False)
+                self._ball_preloaded = False
 
                 timeout = max(300, count * 30)
                 elapsed = 0.0
@@ -438,10 +446,17 @@ class TrainingRunner:
                         })
                         if sec == 5 and next_drill:
                             b = next_drill["balls"][0]
+                            wt = max(abs(b["top_speed"]), 200) * (1 if b["top_speed"] >= 0 else -1)
+                            wb = max(abs(b["bot_speed"]), 200) * (1 if b["bot_speed"] >= 0 else -1) if b["bot_speed"] != 0 else 0
+                            await robot.set_ball(wt, wb,
+                                                b["oscillation"], b["height"], b["rotation"],
+                                                b.get("wait_ms", 1000))
+                            self._ball_preloaded = True
+                        if sec == 2 and next_drill and self._ball_preloaded:
+                            b = next_drill["balls"][0]
                             await robot.set_ball(b["top_speed"], b["bot_speed"],
                                                 b["oscillation"], b["height"], b["rotation"],
                                                 b.get("wait_ms", 1000))
-                            ball_preloaded = True
                         if sec <= 3:
                             audio.play("beep_high")
                         await asyncio.sleep(1)
@@ -527,6 +542,8 @@ class TrainingRunner:
         })
 
         if step_idx < total_steps - 1 and pause_sec > 0 and not skipped:
+            next_step = steps[step_idx + 1]
+            next_drill = self._resolve_drill(next_step)
             for sec in range(pause_sec, 0, -1):
                 if self._stopped: return
                 if self._consume_skip(): break
@@ -534,8 +551,21 @@ class TrainingRunner:
                 broadcast("training_pause", {
                     "sec": sec, "total": pause_sec,
                     "step": step_idx + 1, "total_steps": total_steps,
-                    "next_drill": self._resolve_step_name(steps[step_idx + 1]),
+                    "next_drill": self._resolve_step_name(next_step),
                 })
+                if sec == 5 and next_drill:
+                    b = next_drill["balls"][0]
+                    wt = max(abs(b["top_speed"]), 200) * (1 if b["top_speed"] >= 0 else -1)
+                    wb = max(abs(b["bot_speed"]), 200) * (1 if b["bot_speed"] >= 0 else -1) if b["bot_speed"] != 0 else 0
+                    await self._robot.set_ball(wt, wb,
+                                        b["oscillation"], b["height"], b["rotation"],
+                                        b.get("wait_ms", 1000))
+                    self._ball_preloaded = True
+                if sec == 2 and next_drill and self._ball_preloaded:
+                    b = next_drill["balls"][0]
+                    await self._robot.set_ball(b["top_speed"], b["bot_speed"],
+                                        b["oscillation"], b["height"], b["rotation"],
+                                        b.get("wait_ms", 1000))
                 if sec <= 3:
                     audio.play("beep_high")
                 await asyncio.sleep(1)

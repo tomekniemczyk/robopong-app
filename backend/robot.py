@@ -214,8 +214,8 @@ class Robot:
                 b0 = balls[0]
                 await self._write("H")
                 await asyncio.sleep(0.1)
-                warmup_top = max(abs(b0["top_speed"]), 120) * (1 if b0["top_speed"] >= 0 else -1)
-                warmup_bot = max(abs(b0["bot_speed"]), 120) * (1 if b0["bot_speed"] >= 0 else -1) if b0["bot_speed"] != 0 else 0
+                warmup_top = max(abs(b0["top_speed"]), 200) * (1 if b0["top_speed"] >= 0 else -1)
+                warmup_bot = max(abs(b0["bot_speed"]), 200) * (1 if b0["bot_speed"] >= 0 else -1) if b0["bot_speed"] != 0 else 0
                 await self.set_ball(warmup_top, warmup_bot, b0["oscillation"], b0["height"], b0["rotation"], b0.get("wait_ms", 1000))
                 if emit_countdown:
                     self._emit("drill_countdown", {"sec": 3})
