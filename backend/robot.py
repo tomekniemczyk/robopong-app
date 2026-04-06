@@ -262,13 +262,15 @@ class Robot:
                     break
                 batch = min(remaining, 999)
 
-                # Load all balls: wTA + A for each, 250ms between
+                # Load all balls: wTA + A for each
+                # Original app waits for K after each command — add delays to let robot process
                 for params, wait_ms in ball_cmds:
                     wta = max(1, wait_ms // 10)
-                    logger.debug("→ wTA%03d + A%s", wta, params[:8])
+                    logger.debug("→ wTA%03d + A%s...", wta, params[:12])
                     await self._write(f"wTA{wta:03d}")
+                    await asyncio.sleep(0.15)  # wait for robot to process wTA (K)
                     await self._write(f"A{params}")
-                    await asyncio.sleep(0.25)
+                    await asyncio.sleep(0.15)  # wait for robot to process A (K)
 
                 # Clear stray responses from loading phase
                 while not self._drill_response_queue.empty():
