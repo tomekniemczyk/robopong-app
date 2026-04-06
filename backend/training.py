@@ -313,6 +313,7 @@ class TrainingRunner:
                 "name": scenario.get("name", ""),
                 "total_steps": total_steps,
                 "phase": "countdown",
+                "skipped_indices": sorted(skipped_indices),
             })
 
             for sec in range(countdown_sec, 0, -1):

@@ -2794,6 +2794,10 @@ const _app = createApp({
         trainingIsPaused.value = false
         trainingScenarioName.value = m.name
         trainingTotalSteps.value = m.total_steps
+        if (m.skipped_indices?.length) {
+          const skip = new Set(m.skipped_indices)
+          trainingStepsList.value = trainingStepsList.value.filter((_, i) => !skip.has(i))
+        }
       } else if (m.type === 'training_countdown') {
         trainingPhase.value = 'countdown'
         trainingTimer.value = m.sec
