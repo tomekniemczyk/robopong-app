@@ -3690,8 +3690,10 @@ const _app = createApp({
       const runs = trainingHistory.value.filter(h => h.training_id === trainingId)
       const notes = []
       for (const h of runs) {
-        if (h.session_comment) notes.push({ date: new Date(h.started_at).toLocaleDateString(), text: h.session_comment, type: 'comment' })
-        for (const n of (h.step_notes || [])) notes.push({ date: new Date(h.started_at).toLocaleDateString(), text: n.note, step: n.step, type: 'note' })
+        const dt = new Date(h.started_at)
+        const dateStr = dt.toLocaleDateString() + ' ' + dt.toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'})
+        if (h.session_comment) notes.push({ date: dateStr, text: h.session_comment, type: 'comment' })
+        for (const n of (h.step_notes || [])) notes.push({ date: dateStr, text: n.note, step: n.step, type: 'note' })
       }
       return notes
     }

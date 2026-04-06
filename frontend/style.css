@@ -482,7 +482,7 @@ input[type=number] { -moz-appearance: textfield; }
 .notes-tooltip {
   display: none;
   position: absolute;
-  right: 0; bottom: 100%;
+  right: 0; top: 100%;
   width: max(240px, 50vw); max-width: 340px;
   max-height: 200px; overflow-y: auto;
   background: var(--surface); border: 1px solid var(--border);
