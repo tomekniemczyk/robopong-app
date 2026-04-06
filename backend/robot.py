@@ -246,20 +246,9 @@ class Robot:
         self._drill_response_queue = asyncio.Queue()
 
         try:
-            # Setup: identical to original — H, pre-spin first ball, brief warmup
-            if not skip_warmup:
-                await self._write("H")
-                await asyncio.sleep(0.2)
-                await self._write("H")
-                await asyncio.sleep(0.2)
-                # Pre-spin motors with first ball (B command — immediate motor start)
-                b0 = balls[0]
-                params0 = self._build_ball_params(
-                    b0["top_speed"], b0["bot_speed"], b0["oscillation"], b0["height"], b0["rotation"])
-                await self._write(f"B{params0}")
-                if emit_countdown:
-                    self._emit("drill_countdown", {"sec": 1})
-                await asyncio.sleep(1.0)
+            # Clean stop before loading — no B pre-spin (mixing B with A confuses firmware)
+            await self._write("H")
+            await asyncio.sleep(0.2)
 
             while True:
                 # Calculate batch size for END command (max 999)
