@@ -319,19 +319,19 @@ class TrainingRunner:
                 if self._stopped: return
                 await self._wait_unpaused()
                 broadcast("training_countdown", {"sec": sec, "total": countdown_sec})
-                if sec == countdown_sec and first_drill:
+                if sec == 3 and first_drill:
+                    # Phase 1: boosted RPM — spin flywheel fast to reach full speed
                     b = first_drill["balls"][0]
-                    wt = max(abs(b["top_speed"]), 200) * (1 if b["top_speed"] >= 0 else -1)
-                    wb = max(abs(b["bot_speed"]), 200) * (1 if b["bot_speed"] >= 0 else -1) if b["bot_speed"] != 0 else 0
-                    await robot.set_ball(wt, wb,
-                                        b["oscillation"], b["height"], b["rotation"],
-                                        b.get("wait_ms", 1000))
-                    self._ball_preloaded = True
-                if sec == 2 and first_drill and self._ball_preloaded:
+                    warmup_top = max(abs(b["top_speed"]), 120) * (1 if b["top_speed"] >= 0 else -1)
+                    warmup_bot = max(abs(b["bot_speed"]), 120) * (1 if b["bot_speed"] >= 0 else -1) if b["bot_speed"] != 0 else 0
+                    await robot.set_ball(warmup_top, warmup_bot, b["oscillation"], b["height"], b["rotation"], b.get("wait_ms", 1000))
+                elif sec == 1 and first_drill:
+                    # Phase 2: settle to actual drill params before first throw
                     b = first_drill["balls"][0]
                     await robot.set_ball(b["top_speed"], b["bot_speed"],
                                         b["oscillation"], b["height"], b["rotation"],
                                         b.get("wait_ms", 1000))
+                    ball_preloaded = True
                 if sec <= 5:
                     audio.play("beep" if sec > 3 else "beep_high")
                 await asyncio.sleep(1)

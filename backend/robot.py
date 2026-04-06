@@ -185,19 +185,18 @@ class Robot:
         await self._write("V")
 
     async def apply_calibration(self, cal: dict):
+        """Send SpeedCAL (Q) to firmware after connect.
+        U/O/R are NOT sent here — they set persistent firmware offsets that would
+        be ADDED to every B command, making all balls fly too high/wide.
+        U/O/R are only sent during the calibration wizard (same as original app)."""
         top = cal.get("top_speed", 161)
         speed_cal = top - 161
         if speed_cal > 0:
             await self._write(f"Q{speed_cal:03d}")
             await asyncio.sleep(0.3)
-        await self._write(f"U{cal.get('height', 183)}")
-        await asyncio.sleep(0.2)
-        await self._write(f"O{cal.get('oscillation', 150)}")
-        await asyncio.sleep(0.2)
-        await self._write(f"R{cal.get('rotation', 150)}")
-        await asyncio.sleep(0.2)
-        logger.info("Calibration applied: Q=%d U=%d O=%d R=%d",
-                     speed_cal, cal.get('height', 183), cal.get('oscillation', 150), cal.get('rotation', 150))
+            logger.info("SpeedCAL applied: Q=%d", speed_cal)
+        else:
+            logger.info("SpeedCAL: no offset needed (top=%d)", top)
 
     # ── drill runner ──────────────────────────────────────────────────────────
 
