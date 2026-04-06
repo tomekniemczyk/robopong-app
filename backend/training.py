@@ -254,9 +254,10 @@ class TrainingRunner:
 
     @staticmethod
     def _filter_steps(steps: list, skip_warmup: bool, skip_cooldown: bool) -> tuple:
-        """Return (filtered_steps, skipped_indices) with warmup/cooldown exercises removed."""
+        """Return (filtered_steps, skipped_indices, index_map) with warmup/cooldown removed.
+        index_map maps filtered index → original index so recordings/broadcasts use correct step numbers."""
         if not steps or (not skip_warmup and not skip_cooldown):
-            return steps, set()
+            return steps, set(), {i: i for i in range(len(steps))}
         skipped = set()
         if skip_warmup:
             for i, s in enumerate(steps):
@@ -270,11 +271,17 @@ class TrainingRunner:
                     skipped.add(i)
                 else:
                     break
-        return [s for i, s in enumerate(steps) if i not in skipped], skipped
+        filtered = []
+        index_map = {}
+        for i, s in enumerate(steps):
+            if i not in skipped:
+                index_map[len(filtered)] = i
+                filtered.append(s)
+        return filtered, skipped, index_map
 
     async def _run(self, scenario: dict, robot, broadcast: Callable):
         raw_steps = scenario.get("steps", [])
-        steps, skipped_indices = self._filter_steps(raw_steps, self._skip_warmup, self._skip_cooldown)
+        steps, skipped_indices, index_map = self._filter_steps(raw_steps, self._skip_warmup, self._skip_cooldown)
         countdown_sec = scenario.get("countdown_sec", 5)
         total_steps = len(steps)
         start_time = time.monotonic()
@@ -325,10 +332,11 @@ class TrainingRunner:
                     continue
                 if self._stopped: return
                 await self._wait_unpaused()
+                orig_idx = index_map.get(step_idx, step_idx)
 
                 is_exercise = bool(step.get("exercise_id"))
                 if is_exercise:
-                    await self._run_exercise_step(step_idx, step, steps, total_steps, broadcast, scenario)
+                    await self._run_exercise_step(step_idx, orig_idx, step, steps, total_steps, broadcast, scenario)
                     self._steps_completed = step_idx + 1
                     continue
 
@@ -347,7 +355,7 @@ class TrainingRunner:
                 avg_wait = 1.5
                 est_remaining = int(remaining_balls * avg_wait + sum(s.get("pause_after_sec", 30) for s in steps[step_idx+1:]))
 
-                self._start_recording(scenario, step_idx, drill_name,
+                self._start_recording(scenario, orig_idx, drill_name,
                                      drill_id=step.get("drill_id"))
 
                 broadcast("training_step", {
@@ -390,7 +398,7 @@ class TrainingRunner:
                 if skipped:
                     robot.stop_drill()
                     await robot.stop()
-                    self._steps_skipped.append(step_idx)
+                    self._steps_skipped.append(orig_idx)
 
                 robot.remove_listener(_on_drill_event)
                 self._stop_recording(skipped=skipped)
@@ -470,7 +478,7 @@ class TrainingRunner:
             except Exception:
                 pass
 
-    async def _run_exercise_step(self, step_idx, step, steps, total_steps, broadcast, scenario):
+    async def _run_exercise_step(self, step_idx, orig_idx, step, steps, total_steps, broadcast, scenario):
         ex = exercises.get_exercise(step["exercise_id"])
         if not ex:
             logger.warning("Exercise %s not found, skipping", step.get("exercise_id"))
@@ -479,7 +487,7 @@ class TrainingRunner:
         duration = step.get("duration_sec") or ex.get("duration_sec", 60)
         pause_sec = step.get("pause_after_sec", 30)
 
-        self._start_recording(scenario, step_idx, name,
+        self._start_recording(scenario, orig_idx, name,
                              exercise_id=step.get("exercise_id"))
 
         broadcast("training_step", {
@@ -494,7 +502,7 @@ class TrainingRunner:
         for sec in range(duration, 0, -1):
             if self._stopped: return
             if self._consume_skip():
-                self._steps_skipped.append(step_idx)
+                self._steps_skipped.append(orig_idx)
                 skipped = True
                 break
             await self._wait_unpaused()
