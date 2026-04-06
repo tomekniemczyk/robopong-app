@@ -181,8 +181,7 @@ class TrainingRunner:
         self._stopped = True
         self._paused = False
         self._skip = False
-        if self._recorder.recording:
-            self._recorder.stop()
+        self._stop_recording()
         if self._task and not self._task.done():
             self._task.cancel()
         if self._robot:
@@ -222,22 +221,25 @@ class TrainingRunner:
 
     def _start_recording(self, scenario: dict, step_idx: int, step_name: str,
                          drill_id: int | None = None, exercise_id: int | None = None):
-        if self._record and self._player_id:
-            self._recorder.start(
-                self._player_id,
-                scenario.get("id", 0),
-                scenario.get("name", ""),
-                step_idx,
-                step_name,
-                drill_id=drill_id,
-                exercise_id=exercise_id,
-                training_history_id=self._history_id,
-            )
-            if self._broadcast:
-                self._broadcast("recording_started", {
-                    "step_idx": step_idx, "step_name": step_name,
-                    "training_history_id": self._history_id,
-                })
+        if not (self._record and self._player_id):
+            return
+        if self._record_type == "drills" and exercise_id:
+            return
+        self._recorder.start(
+            self._player_id,
+            scenario.get("id", 0),
+            scenario.get("name", ""),
+            step_idx,
+            step_name,
+            drill_id=drill_id,
+            exercise_id=exercise_id,
+            training_history_id=self._history_id,
+        )
+        if self._broadcast:
+            self._broadcast("recording_started", {
+                "step_idx": step_idx, "step_name": step_name,
+                "training_history_id": self._history_id,
+            })
 
     def _stop_recording(self, skipped: bool = False):
         if self._recorder.recording:
@@ -355,9 +357,6 @@ class TrainingRunner:
                 avg_wait = 1.5
                 est_remaining = int(remaining_balls * avg_wait + sum(s.get("pause_after_sec", 30) for s in steps[step_idx+1:]))
 
-                self._start_recording(scenario, orig_idx, drill_name,
-                                     drill_id=step.get("drill_id"))
-
                 broadcast("training_step", {
                     "step": step_idx + 1, "total": total_steps,
                     "drill_name": drill_name, "phase": "drill",
@@ -370,6 +369,9 @@ class TrainingRunner:
                 await asyncio.sleep(1.5)
 
                 if self._stopped: return
+
+                self._start_recording(scenario, orig_idx, drill_name,
+                                     drill_id=step.get("drill_id"))
 
                 drill_done = asyncio.Event()
 
@@ -487,9 +489,6 @@ class TrainingRunner:
         duration = step.get("duration_sec") or ex.get("duration_sec", 60)
         pause_sec = step.get("pause_after_sec", 30)
 
-        self._start_recording(scenario, orig_idx, name,
-                             exercise_id=step.get("exercise_id"))
-
         broadcast("training_step", {
             "step": step_idx + 1, "total": total_steps,
             "drill_name": f"🏋 {name}", "phase": "exercise",
@@ -497,6 +496,9 @@ class TrainingRunner:
             "completed_steps": step_idx,
         })
         audio.play("beep")
+
+        self._start_recording(scenario, orig_idx, name,
+                             exercise_id=step.get("exercise_id"))
 
         skipped = False
         for sec in range(duration, 0, -1):
