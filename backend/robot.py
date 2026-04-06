@@ -154,7 +154,9 @@ class Robot:
     # ── robot control ─────────────────────────────────────────────────────────
 
     def _build_ball_params(self, top: int, bot: int, osc: int, height: int, rotation: int) -> str:
-        """Build ball parameter string (shared by B and A commands)."""
+        """Build ball parameter string for B/A commands.
+        Full protocol format: {d}{sss}{d}{sss}00{ooo}{hhh}{rrr} {L}
+        The "00" is SpeedCAL (zeroed in modern firmware), space before LEDs is required."""
         if self.left_handed:
             osc = 300 - osc  # mirror around center 150 (127↔173)
         dir_t = 1 if top < 0 else 0
@@ -162,12 +164,12 @@ class Robot:
         spd_t = min(999, int(abs(top) * 4.016))
         spd_b = min(999, int(abs(bot) * 4.016))
         leds  = self._spin_leds(top, bot)
-        return f"{dir_t}{spd_t:03d}{dir_b}{spd_b:03d}{osc:03d}{height:03d}{rotation:03d}{leds}"
+        return f"{dir_t}{spd_t:03d}{dir_b}{spd_b:03d}00{osc:03d}{height:03d}{rotation:03d} {leds}"
 
     async def set_ball(self, top: int, bot: int, osc: int, height: int, rotation: int, wait_ms: int = 1500):
         params = self._build_ball_params(top, bot, osc, height, rotation)
         cmd = f"B{params}"
-        logger.debug("→ B top=%d bot=%d osc=%d h=%d rot=%d", top, bot, osc, height, rotation)
+        logger.debug("→ B top=%d bot=%d osc=%d h=%d rot=%d cmd=%s", top, bot, osc, height, rotation, cmd)
         await self._write(cmd)
         if self.is_simulation:
             audio.play("sim_motor_start")
