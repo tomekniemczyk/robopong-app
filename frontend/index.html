@@ -134,6 +134,10 @@
       background:transparent; color:var(--muted); border:1px solid var(--border);
       border-radius:10px; padding:6px 14px; font-size:12px; cursor:pointer;
     }
+    .btn-force-takeover {
+      background:transparent; color:var(--danger,#ff453a); border:1px solid var(--danger,#ff453a);
+      border-radius:10px; padding:6px 12px; font-size:11px; font-weight:600; cursor:pointer; white-space:nowrap;
+    }
 
     /* ── Takeover modal ─────────────────────────────────────── */
     .takeover-backdrop {
@@ -448,6 +452,7 @@
   <!-- ── Observer / Pending banner ───────────────────────────────────────── -->
   <div v-if="myRole === 'observer'" class="role-banner obs-banner">
     <span>{{ t('banner.observing') }}</span>
+    <button class="btn-force-takeover" @click="forceTakeover">{{ t('banner.force_takeover') }}</button>
     <button class="btn-takeover" :disabled="takeoverCooldown > 0" @click="requestTakeover">
       {{ takeoverCooldown > 0 ? t('banner.wait_n', {n: takeoverCooldown}) : t('banner.takeover') }}
     </button>
@@ -2669,6 +2674,7 @@ const _app = createApp({
     const takeoverCooldown  = ref(0)
     let _takeoverTimer    = null
     let _cooldownTimer    = null
+    let _forceTakeoverPending = false
 
     function roleLabel(role) {
       return { controller: '🎮 Ctrl', observer: '👁 Obs', pending: '⏳ Czeka' }[role] || role
@@ -2695,6 +2701,10 @@ const _app = createApp({
     function releaseControl() {
       send({ action: 'release_control' })
       if (ws) ws.close()
+    }
+    function forceTakeover() {
+      _forceTakeoverPending = true
+      send({ action: 'force_takeover' })
     }
 
     // ── WebSocket ──────────────────────────────────────────────
@@ -2723,9 +2733,14 @@ const _app = createApp({
           localStorage.setItem('lastAddr', m.device)
         }
 
+      } else if (m.type === 'kicked') {
+        showToast(t('toast.kicked'))
+        myRole.value = 'observer'
+
       } else if (m.type === 'session_role') {
         myRole.value = m.role
-        if (m.role === 'controller') showToast(t('toast.controller'))
+        if (m.role === 'controller' && _forceTakeoverPending) { _forceTakeoverPending = false; showToast(t('toast.force_took')) }
+        else if (m.role === 'controller') showToast(t('toast.controller'))
         else if (m.role === 'observer') showToast(t('toast.released'))
 
       } else if (m.type === 'sessions') {
@@ -5253,7 +5268,7 @@ const _app = createApp({
       expParams, expCount, expInterval, expBounce1, expBounce2, expClickPhase, expSpin, expArc, expSpd, expUseful, expRating, expComment, expHistory,
       expThrow, onExpTableClick, expSave, expReset, expDelete, loadExpHistory,
       roleLabel, rolePillClass,
-      requestTakeover, cancelTakeover, respondTakeover, releaseControl,
+      requestTakeover, cancelTakeover, respondTakeover, releaseControl, forceTakeover,
       trainings, trainingRunning, trainingScenarioName, trainingPhase,
       trainingStep, trainingTotalSteps, trainingDrillName, trainingNextDrill,
       trainingTimer, trainingBall, trainingBallTotal,

@@ -671,6 +671,36 @@ async def _handle(msg: dict, ws: WebSocket):
             _promote_first_observer()
             _broadcast_sessions()
 
+    elif action == "force_takeover":
+        if sess and sess.role == Role.CONTROLLER:
+            return  # już jest kontrolerem
+        ctrl = _get_controller()
+        if not ctrl:
+            if sess:
+                sess.role = Role.CONTROLLER
+                _broadcast_sessions()
+                await _send(ws, "session_role", {"role": Role.CONTROLLER, "session_id": sess.id})
+            return
+        _log("Force takeover: session %s kicking controller %s", sid, ctrl.id)
+        # Anuluj pending takeover jeśli jest
+        for s in list(sessions.values()):
+            if s.role == Role.PENDING:
+                s.role = Role.OBSERVER
+        # Usuń kontrolera z sessions PRZED zamknięciem WS (prevent double-handle)
+        sessions.pop(ctrl.ws, None)
+        try:
+            await _send(ctrl.ws, "kicked", {"message": "Twoja sesja kontrolera została przejęta siłą"})
+            await ctrl.ws.close()
+        except Exception:
+            pass
+        if _training_runner.running:
+            _training_runner.stop()
+        asyncio.ensure_future(robot.stop())
+        if sess:
+            sess.role = Role.CONTROLLER
+            await _send(ws, "session_role", {"role": Role.CONTROLLER, "session_id": sess.id})
+        _broadcast_sessions()
+
 
 # ── REST — kalibracja ─────────────────────────────────────────────────────────
 
