@@ -153,21 +153,65 @@ class Robot:
 
     # ── robot control ─────────────────────────────────────────────────────────
 
+    # ── safety limits (from original Newgy app RE analysis) ─────────────────
+    SAFE_MOTOR_RAW_MAX = 210       # getMotorSpeed max output
+    SAFE_HEIGHT_MIN = 75
+    SAFE_HEIGHT_MAX = 210
+    SAFE_OSC_MIN = 127
+    SAFE_OSC_MAX = 173
+    SAFE_ROT_MIN = 90
+    SAFE_ROT_MAX = 210
+    SAFE_PWM_MAX = 843             # 210 * 4.016 — original app max
+
+    class SafetyError(Exception):
+        """Raised when ball parameters would send unsafe values to robot."""
+        pass
+
+    def _validate_ball_params(self, top: int, bot: int, osc: int, height: int, rotation: int):
+        """Validate parameters are within safe hardware limits.
+        Raises SafetyError if any parameter could damage the robot."""
+        errors = []
+        if abs(top) > self.SAFE_MOTOR_RAW_MAX:
+            errors.append(f"top_speed={top} exceeds ±{self.SAFE_MOTOR_RAW_MAX}")
+        if abs(bot) > self.SAFE_MOTOR_RAW_MAX:
+            errors.append(f"bot_speed={bot} exceeds ±{self.SAFE_MOTOR_RAW_MAX}")
+        if not (self.SAFE_HEIGHT_MIN <= height <= self.SAFE_HEIGHT_MAX):
+            errors.append(f"height={height} outside {self.SAFE_HEIGHT_MIN}-{self.SAFE_HEIGHT_MAX}")
+        if not (self.SAFE_OSC_MIN <= osc <= self.SAFE_OSC_MAX):
+            errors.append(f"oscillation={osc} outside {self.SAFE_OSC_MIN}-{self.SAFE_OSC_MAX}")
+        if not (self.SAFE_ROT_MIN <= rotation <= self.SAFE_ROT_MAX):
+            errors.append(f"rotation={rotation} outside {self.SAFE_ROT_MIN}-{self.SAFE_ROT_MAX}")
+        pwm_t = round(abs(top) * 4.016)
+        pwm_b = round(abs(bot) * 4.016)
+        if pwm_t > self.SAFE_PWM_MAX:
+            errors.append(f"top PWM={pwm_t} exceeds {self.SAFE_PWM_MAX}")
+        if pwm_b > self.SAFE_PWM_MAX:
+            errors.append(f"bot PWM={pwm_b} exceeds {self.SAFE_PWM_MAX}")
+        if errors:
+            raise Robot.SafetyError("; ".join(errors))
+
     def _build_ball_params(self, top: int, bot: int, osc: int, height: int, rotation: int) -> str:
         """Build ball parameter string for B/A commands.
-        Full protocol format: {d}{sss}{d}{sss}00{ooo}{hhh}{rrr} {L}
-        The "00" is SpeedCAL (zeroed in modern firmware), space before LEDs is required."""
+        Format: {d}{sss}{d}{sss}{ooo}{hhh}{rrr}{L} — 18 chars.
+        Source: BUSINESS_LOGIC_COMPLETE.md:252, ANDROID_APP_RE.md:521"""
+        self._validate_ball_params(top, bot, osc, height, rotation)
         if self.left_handed:
             osc = 300 - osc  # mirror around center 150 (127↔173)
         dir_t = 1 if top < 0 else 0
         dir_b = 1 if bot < 0 else 0
-        spd_t = min(999, int(abs(top) * 4.016))
-        spd_b = min(999, int(abs(bot) * 4.016))
+        spd_t = min(999, round(abs(top) * 4.016))
+        spd_b = min(999, round(abs(bot) * 4.016))
         leds  = self._spin_leds(top, bot)
-        return f"{dir_t}{spd_t:03d}{dir_b}{spd_b:03d}00{osc:03d}{height:03d}{rotation:03d} {leds}"
+        return f"{dir_t}{spd_t:03d}{dir_b}{spd_b:03d}{osc:03d}{height:03d}{rotation:03d}{leds}"
 
     async def set_ball(self, top: int, bot: int, osc: int, height: int, rotation: int, wait_ms: int = 1500):
-        params = self._build_ball_params(top, bot, osc, height, rotation)
+        try:
+            params = self._build_ball_params(top, bot, osc, height, rotation)
+        except Robot.SafetyError as e:
+            logger.error("SAFETY STOP: %s", e)
+            await self._write("H")
+            self._emit("error", {"message": f"SAFETY: {e}", "critical": True})
+            raise
         cmd = f"B{params}"
         logger.debug("→ B top=%d bot=%d osc=%d h=%d rot=%d cmd=%s", top, bot, osc, height, rotation, cmd)
         await self._write(cmd)
@@ -238,8 +282,15 @@ class Robot:
         # Build ball commands (params + adjusted wait)
         ball_cmds = []
         for b in balls:
-            params = self._build_ball_params(
-                b["top_speed"], b["bot_speed"], b["oscillation"], b["height"], b["rotation"])
+            try:
+                params = self._build_ball_params(
+                    b["top_speed"], b["bot_speed"], b["oscillation"], b["height"], b["rotation"])
+            except Robot.SafetyError as e:
+                logger.error("SAFETY STOP in drill: %s", e)
+                await self._write("H")
+                self._emit("error", {"message": f"SAFETY: {e}", "critical": True})
+                self._emit("drill_ended", {})
+                return
             raw_wait = b.get("wait_ms", 1500)
             adj_wait = max(min_wait_ms, int(raw_wait * (100 + (100 - percent)) / 100))
             ball_cmds.append((params, adj_wait))
@@ -349,13 +400,25 @@ class Robot:
 
     async def _drill_loop_sync(self, balls, repeat, count, percent, min_wait_ms, skip_warmup, emit_countdown):
         """Sync protocol: B command + T throw, app controls all timing."""
+        # Pre-validate all balls before starting
+        for b in balls:
+            try:
+                self._validate_ball_params(
+                    b["top_speed"], b["bot_speed"], b["oscillation"], b["height"], b["rotation"])
+            except Robot.SafetyError as e:
+                logger.error("SAFETY STOP in drill: %s", e)
+                await self._write("H")
+                self._emit("error", {"message": f"SAFETY: {e}", "critical": True})
+                self._emit("drill_ended", {})
+                return
+
         first_ball_ready = False
         if not skip_warmup:
             b0 = balls[0]
             await self._write("H")
             await asyncio.sleep(0.1)
-            warmup_top = max(abs(b0["top_speed"]), 200) * (1 if b0["top_speed"] >= 0 else -1)
-            warmup_bot = max(abs(b0["bot_speed"]), 200) * (1 if b0["bot_speed"] >= 0 else -1) if b0["bot_speed"] != 0 else 0
+            warmup_top = min(abs(b0["top_speed"]), self.SAFE_MOTOR_RAW_MAX) * (1 if b0["top_speed"] >= 0 else -1)
+            warmup_bot = min(abs(b0["bot_speed"]), self.SAFE_MOTOR_RAW_MAX) * (1 if b0["bot_speed"] >= 0 else -1) if b0["bot_speed"] != 0 else 0
             await self.set_ball(warmup_top, warmup_bot, b0["oscillation"], b0["height"], b0["rotation"], b0.get("wait_ms", 1000))
             if emit_countdown:
                 self._emit("drill_countdown", {"sec": 3})

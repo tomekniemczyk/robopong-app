@@ -112,8 +112,8 @@ class RoboCLI:
         p = self.params
         dt = 1 if p["top"] < 0 else 0
         db = 1 if p["bot"] < 0 else 0
-        st = min(999, int(abs(p["top"]) * 4.016))
-        sb = min(999, int(abs(p["bot"]) * 4.016))
+        st = min(843, round(abs(p["top"]) * 4.016))
+        sb = min(843, round(abs(p["bot"]) * 4.016))
         if self.firmware >= 701:
             await self.write(f"wTA{p['wait']//10:03d}")
             await asyncio.sleep(0.5)
