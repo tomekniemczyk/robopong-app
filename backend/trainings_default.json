@@ -11,37 +11,37 @@
           "countdown_sec": 5,
           "steps": [
             {
-              "exercise_id": 103,
+              "exercise_id": 105,
               "duration_sec": 30,
-              "pause_after_sec": 5
-            },
-            {
-              "exercise_id": 109,
-              "duration_sec": 20,
-              "pause_after_sec": 5
-            },
-            {
-              "exercise_id": 102,
-              "duration_sec": 20,
               "pause_after_sec": 5
             },
             {
               "exercise_id": 104,
+              "duration_sec": 20,
+              "pause_after_sec": 5
+            },
+            {
+              "exercise_id": 103,
+              "duration_sec": 20,
+              "pause_after_sec": 5
+            },
+            {
+              "exercise_id": 106,
               "duration_sec": 30,
               "pause_after_sec": 5
             },
             {
-              "exercise_id": 110,
-              "duration_sec": 15,
-              "pause_after_sec": 3
-            },
-            {
-              "exercise_id": 111,
-              "duration_sec": 15,
-              "pause_after_sec": 3
-            },
-            {
               "exercise_id": 112,
+              "duration_sec": 15,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 113,
+              "duration_sec": 15,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 109,
               "duration_sec": 35,
               "pause_after_sec": 3
             },
@@ -51,17 +51,17 @@
               "pause_after_sec": 3
             },
             {
-              "exercise_id": 113,
+              "exercise_id": 107,
               "duration_sec": 15,
               "pause_after_sec": 3
             },
             {
-              "exercise_id": 114,
+              "exercise_id": 110,
               "duration_sec": 15,
               "pause_after_sec": 3
             },
             {
-              "exercise_id": 115,
+              "exercise_id": 111,
               "duration_sec": 15,
               "pause_after_sec": 3
             },
@@ -81,7 +81,7 @@
               "pause_after_sec": 3
             },
             {
-              "exercise_id": 116,
+              "exercise_id": 118,
               "duration_sec": 25,
               "pause_after_sec": 10
             },
@@ -216,37 +216,37 @@
           "countdown_sec": 5,
           "steps": [
             {
-              "exercise_id": 103,
+              "exercise_id": 105,
               "duration_sec": 30,
-              "pause_after_sec": 5
-            },
-            {
-              "exercise_id": 109,
-              "duration_sec": 20,
-              "pause_after_sec": 5
-            },
-            {
-              "exercise_id": 102,
-              "duration_sec": 20,
               "pause_after_sec": 5
             },
             {
               "exercise_id": 104,
+              "duration_sec": 20,
+              "pause_after_sec": 5
+            },
+            {
+              "exercise_id": 103,
+              "duration_sec": 20,
+              "pause_after_sec": 5
+            },
+            {
+              "exercise_id": 106,
               "duration_sec": 30,
               "pause_after_sec": 5
             },
             {
-              "exercise_id": 110,
-              "duration_sec": 15,
-              "pause_after_sec": 3
-            },
-            {
-              "exercise_id": 111,
-              "duration_sec": 15,
-              "pause_after_sec": 3
-            },
-            {
               "exercise_id": 112,
+              "duration_sec": 15,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 113,
+              "duration_sec": 15,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 109,
               "duration_sec": 35,
               "pause_after_sec": 3
             },
@@ -256,17 +256,17 @@
               "pause_after_sec": 3
             },
             {
-              "exercise_id": 113,
+              "exercise_id": 107,
               "duration_sec": 15,
               "pause_after_sec": 3
             },
             {
-              "exercise_id": 114,
+              "exercise_id": 110,
               "duration_sec": 15,
               "pause_after_sec": 3
             },
             {
-              "exercise_id": 115,
+              "exercise_id": 111,
               "duration_sec": 15,
               "pause_after_sec": 3
             },
@@ -286,7 +286,7 @@
               "pause_after_sec": 3
             },
             {
-              "exercise_id": 116,
+              "exercise_id": 118,
               "duration_sec": 25,
               "pause_after_sec": 10
             },
@@ -421,37 +421,37 @@
           "countdown_sec": 5,
           "steps": [
             {
-              "exercise_id": 103,
+              "exercise_id": 105,
               "duration_sec": 30,
-              "pause_after_sec": 5
-            },
-            {
-              "exercise_id": 109,
-              "duration_sec": 20,
-              "pause_after_sec": 5
-            },
-            {
-              "exercise_id": 102,
-              "duration_sec": 20,
               "pause_after_sec": 5
             },
             {
               "exercise_id": 104,
+              "duration_sec": 20,
+              "pause_after_sec": 5
+            },
+            {
+              "exercise_id": 103,
+              "duration_sec": 20,
+              "pause_after_sec": 5
+            },
+            {
+              "exercise_id": 106,
               "duration_sec": 30,
               "pause_after_sec": 5
             },
             {
-              "exercise_id": 110,
-              "duration_sec": 15,
-              "pause_after_sec": 3
-            },
-            {
-              "exercise_id": 111,
-              "duration_sec": 15,
-              "pause_after_sec": 3
-            },
-            {
               "exercise_id": 112,
+              "duration_sec": 15,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 113,
+              "duration_sec": 15,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 109,
               "duration_sec": 35,
               "pause_after_sec": 3
             },
@@ -461,17 +461,17 @@
               "pause_after_sec": 3
             },
             {
-              "exercise_id": 113,
+              "exercise_id": 107,
               "duration_sec": 15,
               "pause_after_sec": 3
             },
             {
-              "exercise_id": 114,
+              "exercise_id": 110,
               "duration_sec": 15,
               "pause_after_sec": 3
             },
             {
-              "exercise_id": 115,
+              "exercise_id": 111,
               "duration_sec": 15,
               "pause_after_sec": 3
             },
@@ -491,7 +491,7 @@
               "pause_after_sec": 3
             },
             {
-              "exercise_id": 116,
+              "exercise_id": 118,
               "duration_sec": 25,
               "pause_after_sec": 10
             },
@@ -619,37 +619,37 @@
           "countdown_sec": 5,
           "steps": [
             {
-              "exercise_id": 103,
+              "exercise_id": 105,
               "duration_sec": 30,
-              "pause_after_sec": 5
-            },
-            {
-              "exercise_id": 109,
-              "duration_sec": 20,
-              "pause_after_sec": 5
-            },
-            {
-              "exercise_id": 102,
-              "duration_sec": 20,
               "pause_after_sec": 5
             },
             {
               "exercise_id": 104,
+              "duration_sec": 20,
+              "pause_after_sec": 5
+            },
+            {
+              "exercise_id": 103,
+              "duration_sec": 20,
+              "pause_after_sec": 5
+            },
+            {
+              "exercise_id": 106,
               "duration_sec": 30,
               "pause_after_sec": 5
             },
             {
-              "exercise_id": 110,
-              "duration_sec": 15,
-              "pause_after_sec": 3
-            },
-            {
-              "exercise_id": 111,
-              "duration_sec": 15,
-              "pause_after_sec": 3
-            },
-            {
               "exercise_id": 112,
+              "duration_sec": 15,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 113,
+              "duration_sec": 15,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 109,
               "duration_sec": 35,
               "pause_after_sec": 3
             },
@@ -659,17 +659,17 @@
               "pause_after_sec": 3
             },
             {
-              "exercise_id": 113,
+              "exercise_id": 107,
               "duration_sec": 15,
               "pause_after_sec": 3
             },
             {
-              "exercise_id": 114,
+              "exercise_id": 110,
               "duration_sec": 15,
               "pause_after_sec": 3
             },
             {
-              "exercise_id": 115,
+              "exercise_id": 111,
               "duration_sec": 15,
               "pause_after_sec": 3
             },
@@ -689,7 +689,7 @@
               "pause_after_sec": 3
             },
             {
-              "exercise_id": 116,
+              "exercise_id": 118,
               "duration_sec": 25,
               "pause_after_sec": 10
             },
@@ -824,37 +824,37 @@
           "countdown_sec": 5,
           "steps": [
             {
-              "exercise_id": 103,
+              "exercise_id": 105,
               "duration_sec": 30,
-              "pause_after_sec": 5
-            },
-            {
-              "exercise_id": 109,
-              "duration_sec": 20,
-              "pause_after_sec": 5
-            },
-            {
-              "exercise_id": 102,
-              "duration_sec": 20,
               "pause_after_sec": 5
             },
             {
               "exercise_id": 104,
+              "duration_sec": 20,
+              "pause_after_sec": 5
+            },
+            {
+              "exercise_id": 103,
+              "duration_sec": 20,
+              "pause_after_sec": 5
+            },
+            {
+              "exercise_id": 106,
               "duration_sec": 30,
               "pause_after_sec": 5
             },
             {
-              "exercise_id": 110,
-              "duration_sec": 15,
-              "pause_after_sec": 3
-            },
-            {
-              "exercise_id": 111,
-              "duration_sec": 15,
-              "pause_after_sec": 3
-            },
-            {
               "exercise_id": 112,
+              "duration_sec": 15,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 113,
+              "duration_sec": 15,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 109,
               "duration_sec": 35,
               "pause_after_sec": 3
             },
@@ -864,17 +864,17 @@
               "pause_after_sec": 3
             },
             {
-              "exercise_id": 113,
+              "exercise_id": 107,
               "duration_sec": 15,
               "pause_after_sec": 3
             },
             {
-              "exercise_id": 114,
+              "exercise_id": 110,
               "duration_sec": 15,
               "pause_after_sec": 3
             },
             {
-              "exercise_id": 115,
+              "exercise_id": 111,
               "duration_sec": 15,
               "pause_after_sec": 3
             },
@@ -894,7 +894,7 @@
               "pause_after_sec": 3
             },
             {
-              "exercise_id": 116,
+              "exercise_id": 118,
               "duration_sec": 25,
               "pause_after_sec": 10
             },
@@ -1029,37 +1029,37 @@
           "countdown_sec": 5,
           "steps": [
             {
-              "exercise_id": 103,
+              "exercise_id": 105,
               "duration_sec": 30,
-              "pause_after_sec": 5
-            },
-            {
-              "exercise_id": 109,
-              "duration_sec": 20,
-              "pause_after_sec": 5
-            },
-            {
-              "exercise_id": 102,
-              "duration_sec": 20,
               "pause_after_sec": 5
             },
             {
               "exercise_id": 104,
+              "duration_sec": 20,
+              "pause_after_sec": 5
+            },
+            {
+              "exercise_id": 103,
+              "duration_sec": 20,
+              "pause_after_sec": 5
+            },
+            {
+              "exercise_id": 106,
               "duration_sec": 30,
               "pause_after_sec": 5
             },
             {
-              "exercise_id": 110,
-              "duration_sec": 15,
-              "pause_after_sec": 3
-            },
-            {
-              "exercise_id": 111,
-              "duration_sec": 15,
-              "pause_after_sec": 3
-            },
-            {
               "exercise_id": 112,
+              "duration_sec": 15,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 113,
+              "duration_sec": 15,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 109,
               "duration_sec": 35,
               "pause_after_sec": 3
             },
@@ -1069,17 +1069,17 @@
               "pause_after_sec": 3
             },
             {
-              "exercise_id": 113,
+              "exercise_id": 107,
               "duration_sec": 15,
               "pause_after_sec": 3
             },
             {
-              "exercise_id": 114,
+              "exercise_id": 110,
               "duration_sec": 15,
               "pause_after_sec": 3
             },
             {
-              "exercise_id": 115,
+              "exercise_id": 111,
               "duration_sec": 15,
               "pause_after_sec": 3
             },
@@ -1099,7 +1099,7 @@
               "pause_after_sec": 3
             },
             {
-              "exercise_id": 116,
+              "exercise_id": 118,
               "duration_sec": 25,
               "pause_after_sec": 10
             },
@@ -1234,37 +1234,37 @@
           "countdown_sec": 5,
           "steps": [
             {
-              "exercise_id": 103,
+              "exercise_id": 105,
               "duration_sec": 30,
-              "pause_after_sec": 5
-            },
-            {
-              "exercise_id": 109,
-              "duration_sec": 20,
-              "pause_after_sec": 5
-            },
-            {
-              "exercise_id": 102,
-              "duration_sec": 20,
               "pause_after_sec": 5
             },
             {
               "exercise_id": 104,
+              "duration_sec": 20,
+              "pause_after_sec": 5
+            },
+            {
+              "exercise_id": 103,
+              "duration_sec": 20,
+              "pause_after_sec": 5
+            },
+            {
+              "exercise_id": 106,
               "duration_sec": 30,
               "pause_after_sec": 5
             },
             {
-              "exercise_id": 110,
-              "duration_sec": 15,
-              "pause_after_sec": 3
-            },
-            {
-              "exercise_id": 111,
-              "duration_sec": 15,
-              "pause_after_sec": 3
-            },
-            {
               "exercise_id": 112,
+              "duration_sec": 15,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 113,
+              "duration_sec": 15,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 109,
               "duration_sec": 35,
               "pause_after_sec": 3
             },
@@ -1274,17 +1274,17 @@
               "pause_after_sec": 3
             },
             {
-              "exercise_id": 113,
+              "exercise_id": 107,
               "duration_sec": 15,
               "pause_after_sec": 3
             },
             {
-              "exercise_id": 114,
+              "exercise_id": 110,
               "duration_sec": 15,
               "pause_after_sec": 3
             },
             {
-              "exercise_id": 115,
+              "exercise_id": 111,
               "duration_sec": 15,
               "pause_after_sec": 3
             },
@@ -1304,7 +1304,7 @@
               "pause_after_sec": 3
             },
             {
-              "exercise_id": 116,
+              "exercise_id": 118,
               "duration_sec": 25,
               "pause_after_sec": 10
             },
@@ -1439,37 +1439,37 @@
           "countdown_sec": 5,
           "steps": [
             {
-              "exercise_id": 103,
+              "exercise_id": 105,
               "duration_sec": 30,
-              "pause_after_sec": 5
-            },
-            {
-              "exercise_id": 109,
-              "duration_sec": 20,
-              "pause_after_sec": 5
-            },
-            {
-              "exercise_id": 102,
-              "duration_sec": 20,
               "pause_after_sec": 5
             },
             {
               "exercise_id": 104,
+              "duration_sec": 20,
+              "pause_after_sec": 5
+            },
+            {
+              "exercise_id": 103,
+              "duration_sec": 20,
+              "pause_after_sec": 5
+            },
+            {
+              "exercise_id": 106,
               "duration_sec": 30,
               "pause_after_sec": 5
             },
             {
-              "exercise_id": 110,
-              "duration_sec": 15,
-              "pause_after_sec": 3
-            },
-            {
-              "exercise_id": 111,
-              "duration_sec": 15,
-              "pause_after_sec": 3
-            },
-            {
               "exercise_id": 112,
+              "duration_sec": 15,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 113,
+              "duration_sec": 15,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 109,
               "duration_sec": 35,
               "pause_after_sec": 3
             },
@@ -1479,17 +1479,17 @@
               "pause_after_sec": 3
             },
             {
-              "exercise_id": 113,
+              "exercise_id": 107,
               "duration_sec": 15,
               "pause_after_sec": 3
             },
             {
-              "exercise_id": 114,
+              "exercise_id": 110,
               "duration_sec": 15,
               "pause_after_sec": 3
             },
             {
-              "exercise_id": 115,
+              "exercise_id": 111,
               "duration_sec": 15,
               "pause_after_sec": 3
             },
@@ -1509,7 +1509,7 @@
               "pause_after_sec": 3
             },
             {
-              "exercise_id": 116,
+              "exercise_id": 118,
               "duration_sec": 25,
               "pause_after_sec": 10
             },
@@ -1644,37 +1644,37 @@
           "countdown_sec": 5,
           "steps": [
             {
-              "exercise_id": 103,
+              "exercise_id": 105,
               "duration_sec": 30,
-              "pause_after_sec": 5
-            },
-            {
-              "exercise_id": 109,
-              "duration_sec": 20,
-              "pause_after_sec": 5
-            },
-            {
-              "exercise_id": 102,
-              "duration_sec": 20,
               "pause_after_sec": 5
             },
             {
               "exercise_id": 104,
+              "duration_sec": 20,
+              "pause_after_sec": 5
+            },
+            {
+              "exercise_id": 103,
+              "duration_sec": 20,
+              "pause_after_sec": 5
+            },
+            {
+              "exercise_id": 106,
               "duration_sec": 30,
               "pause_after_sec": 5
             },
             {
-              "exercise_id": 110,
-              "duration_sec": 15,
-              "pause_after_sec": 3
-            },
-            {
-              "exercise_id": 111,
-              "duration_sec": 15,
-              "pause_after_sec": 3
-            },
-            {
               "exercise_id": 112,
+              "duration_sec": 15,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 113,
+              "duration_sec": 15,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 109,
               "duration_sec": 35,
               "pause_after_sec": 3
             },
@@ -1684,17 +1684,17 @@
               "pause_after_sec": 3
             },
             {
-              "exercise_id": 113,
+              "exercise_id": 107,
               "duration_sec": 15,
               "pause_after_sec": 3
             },
             {
-              "exercise_id": 114,
+              "exercise_id": 110,
               "duration_sec": 15,
               "pause_after_sec": 3
             },
             {
-              "exercise_id": 115,
+              "exercise_id": 111,
               "duration_sec": 15,
               "pause_after_sec": 3
             },
@@ -1714,7 +1714,7 @@
               "pause_after_sec": 3
             },
             {
-              "exercise_id": 116,
+              "exercise_id": 118,
               "duration_sec": 25,
               "pause_after_sec": 10
             },
@@ -1849,37 +1849,37 @@
           "countdown_sec": 5,
           "steps": [
             {
-              "exercise_id": 103,
+              "exercise_id": 105,
               "duration_sec": 30,
-              "pause_after_sec": 5
-            },
-            {
-              "exercise_id": 109,
-              "duration_sec": 20,
-              "pause_after_sec": 5
-            },
-            {
-              "exercise_id": 102,
-              "duration_sec": 20,
               "pause_after_sec": 5
             },
             {
               "exercise_id": 104,
+              "duration_sec": 20,
+              "pause_after_sec": 5
+            },
+            {
+              "exercise_id": 103,
+              "duration_sec": 20,
+              "pause_after_sec": 5
+            },
+            {
+              "exercise_id": 106,
               "duration_sec": 30,
               "pause_after_sec": 5
             },
             {
-              "exercise_id": 110,
-              "duration_sec": 15,
-              "pause_after_sec": 3
-            },
-            {
-              "exercise_id": 111,
-              "duration_sec": 15,
-              "pause_after_sec": 3
-            },
-            {
               "exercise_id": 112,
+              "duration_sec": 15,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 113,
+              "duration_sec": 15,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 109,
               "duration_sec": 35,
               "pause_after_sec": 3
             },
@@ -1889,17 +1889,17 @@
               "pause_after_sec": 3
             },
             {
-              "exercise_id": 113,
+              "exercise_id": 107,
               "duration_sec": 15,
               "pause_after_sec": 3
             },
             {
-              "exercise_id": 114,
+              "exercise_id": 110,
               "duration_sec": 15,
               "pause_after_sec": 3
             },
             {
-              "exercise_id": 115,
+              "exercise_id": 111,
               "duration_sec": 15,
               "pause_after_sec": 3
             },
@@ -1919,7 +1919,7 @@
               "pause_after_sec": 3
             },
             {
-              "exercise_id": 116,
+              "exercise_id": 118,
               "duration_sec": 25,
               "pause_after_sec": 10
             },
@@ -2054,37 +2054,37 @@
           "countdown_sec": 5,
           "steps": [
             {
-              "exercise_id": 103,
+              "exercise_id": 105,
               "duration_sec": 30,
-              "pause_after_sec": 5
-            },
-            {
-              "exercise_id": 109,
-              "duration_sec": 20,
-              "pause_after_sec": 5
-            },
-            {
-              "exercise_id": 102,
-              "duration_sec": 20,
               "pause_after_sec": 5
             },
             {
               "exercise_id": 104,
+              "duration_sec": 20,
+              "pause_after_sec": 5
+            },
+            {
+              "exercise_id": 103,
+              "duration_sec": 20,
+              "pause_after_sec": 5
+            },
+            {
+              "exercise_id": 106,
               "duration_sec": 30,
               "pause_after_sec": 5
             },
             {
-              "exercise_id": 110,
-              "duration_sec": 15,
-              "pause_after_sec": 3
-            },
-            {
-              "exercise_id": 111,
-              "duration_sec": 15,
-              "pause_after_sec": 3
-            },
-            {
               "exercise_id": 112,
+              "duration_sec": 15,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 113,
+              "duration_sec": 15,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 109,
               "duration_sec": 35,
               "pause_after_sec": 3
             },
@@ -2094,17 +2094,17 @@
               "pause_after_sec": 3
             },
             {
-              "exercise_id": 113,
+              "exercise_id": 107,
               "duration_sec": 15,
               "pause_after_sec": 3
             },
             {
-              "exercise_id": 114,
+              "exercise_id": 110,
               "duration_sec": 15,
               "pause_after_sec": 3
             },
             {
-              "exercise_id": 115,
+              "exercise_id": 111,
               "duration_sec": 15,
               "pause_after_sec": 3
             },
@@ -2124,7 +2124,7 @@
               "pause_after_sec": 3
             },
             {
-              "exercise_id": 116,
+              "exercise_id": 118,
               "duration_sec": 25,
               "pause_after_sec": 10
             },
@@ -2259,37 +2259,37 @@
           "countdown_sec": 5,
           "steps": [
             {
-              "exercise_id": 103,
+              "exercise_id": 105,
               "duration_sec": 30,
-              "pause_after_sec": 5
-            },
-            {
-              "exercise_id": 109,
-              "duration_sec": 20,
-              "pause_after_sec": 5
-            },
-            {
-              "exercise_id": 102,
-              "duration_sec": 20,
               "pause_after_sec": 5
             },
             {
               "exercise_id": 104,
+              "duration_sec": 20,
+              "pause_after_sec": 5
+            },
+            {
+              "exercise_id": 103,
+              "duration_sec": 20,
+              "pause_after_sec": 5
+            },
+            {
+              "exercise_id": 106,
               "duration_sec": 30,
               "pause_after_sec": 5
             },
             {
-              "exercise_id": 110,
-              "duration_sec": 15,
-              "pause_after_sec": 3
-            },
-            {
-              "exercise_id": 111,
-              "duration_sec": 15,
-              "pause_after_sec": 3
-            },
-            {
               "exercise_id": 112,
+              "duration_sec": 15,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 113,
+              "duration_sec": 15,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 109,
               "duration_sec": 35,
               "pause_after_sec": 3
             },
@@ -2299,17 +2299,17 @@
               "pause_after_sec": 3
             },
             {
-              "exercise_id": 113,
+              "exercise_id": 107,
               "duration_sec": 15,
               "pause_after_sec": 3
             },
             {
-              "exercise_id": 114,
+              "exercise_id": 110,
               "duration_sec": 15,
               "pause_after_sec": 3
             },
             {
-              "exercise_id": 115,
+              "exercise_id": 111,
               "duration_sec": 15,
               "pause_after_sec": 3
             },
@@ -2329,7 +2329,7 @@
               "pause_after_sec": 3
             },
             {
-              "exercise_id": 116,
+              "exercise_id": 118,
               "duration_sec": 25,
               "pause_after_sec": 10
             },
@@ -2464,37 +2464,37 @@
           "countdown_sec": 5,
           "steps": [
             {
-              "exercise_id": 103,
+              "exercise_id": 105,
               "duration_sec": 30,
-              "pause_after_sec": 5
-            },
-            {
-              "exercise_id": 109,
-              "duration_sec": 20,
-              "pause_after_sec": 5
-            },
-            {
-              "exercise_id": 102,
-              "duration_sec": 20,
               "pause_after_sec": 5
             },
             {
               "exercise_id": 104,
+              "duration_sec": 20,
+              "pause_after_sec": 5
+            },
+            {
+              "exercise_id": 103,
+              "duration_sec": 20,
+              "pause_after_sec": 5
+            },
+            {
+              "exercise_id": 106,
               "duration_sec": 30,
               "pause_after_sec": 5
             },
             {
-              "exercise_id": 110,
-              "duration_sec": 15,
-              "pause_after_sec": 3
-            },
-            {
-              "exercise_id": 111,
-              "duration_sec": 15,
-              "pause_after_sec": 3
-            },
-            {
               "exercise_id": 112,
+              "duration_sec": 15,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 113,
+              "duration_sec": 15,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 109,
               "duration_sec": 35,
               "pause_after_sec": 3
             },
@@ -2504,17 +2504,17 @@
               "pause_after_sec": 3
             },
             {
-              "exercise_id": 113,
+              "exercise_id": 107,
               "duration_sec": 15,
               "pause_after_sec": 3
             },
             {
-              "exercise_id": 114,
+              "exercise_id": 110,
               "duration_sec": 15,
               "pause_after_sec": 3
             },
             {
-              "exercise_id": 115,
+              "exercise_id": 111,
               "duration_sec": 15,
               "pause_after_sec": 3
             },
@@ -2534,7 +2534,7 @@
               "pause_after_sec": 3
             },
             {
-              "exercise_id": 116,
+              "exercise_id": 118,
               "duration_sec": 25,
               "pause_after_sec": 10
             },
@@ -2669,37 +2669,37 @@
           "countdown_sec": 5,
           "steps": [
             {
-              "exercise_id": 103,
+              "exercise_id": 105,
               "duration_sec": 30,
-              "pause_after_sec": 5
-            },
-            {
-              "exercise_id": 109,
-              "duration_sec": 20,
-              "pause_after_sec": 5
-            },
-            {
-              "exercise_id": 102,
-              "duration_sec": 20,
               "pause_after_sec": 5
             },
             {
               "exercise_id": 104,
+              "duration_sec": 20,
+              "pause_after_sec": 5
+            },
+            {
+              "exercise_id": 103,
+              "duration_sec": 20,
+              "pause_after_sec": 5
+            },
+            {
+              "exercise_id": 106,
               "duration_sec": 30,
               "pause_after_sec": 5
             },
             {
-              "exercise_id": 110,
-              "duration_sec": 15,
-              "pause_after_sec": 3
-            },
-            {
-              "exercise_id": 111,
-              "duration_sec": 15,
-              "pause_after_sec": 3
-            },
-            {
               "exercise_id": 112,
+              "duration_sec": 15,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 113,
+              "duration_sec": 15,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 109,
               "duration_sec": 35,
               "pause_after_sec": 3
             },
@@ -2709,17 +2709,17 @@
               "pause_after_sec": 3
             },
             {
-              "exercise_id": 113,
+              "exercise_id": 107,
               "duration_sec": 15,
               "pause_after_sec": 3
             },
             {
-              "exercise_id": 114,
+              "exercise_id": 110,
               "duration_sec": 15,
               "pause_after_sec": 3
             },
             {
-              "exercise_id": 115,
+              "exercise_id": 111,
               "duration_sec": 15,
               "pause_after_sec": 3
             },
@@ -2739,7 +2739,7 @@
               "pause_after_sec": 3
             },
             {
-              "exercise_id": 116,
+              "exercise_id": 118,
               "duration_sec": 25,
               "pause_after_sec": 10
             },
@@ -2874,37 +2874,37 @@
           "countdown_sec": 5,
           "steps": [
             {
-              "exercise_id": 103,
+              "exercise_id": 105,
               "duration_sec": 30,
-              "pause_after_sec": 5
-            },
-            {
-              "exercise_id": 109,
-              "duration_sec": 20,
-              "pause_after_sec": 5
-            },
-            {
-              "exercise_id": 102,
-              "duration_sec": 20,
               "pause_after_sec": 5
             },
             {
               "exercise_id": 104,
+              "duration_sec": 20,
+              "pause_after_sec": 5
+            },
+            {
+              "exercise_id": 103,
+              "duration_sec": 20,
+              "pause_after_sec": 5
+            },
+            {
+              "exercise_id": 106,
               "duration_sec": 30,
               "pause_after_sec": 5
             },
             {
-              "exercise_id": 110,
-              "duration_sec": 15,
-              "pause_after_sec": 3
-            },
-            {
-              "exercise_id": 111,
-              "duration_sec": 15,
-              "pause_after_sec": 3
-            },
-            {
               "exercise_id": 112,
+              "duration_sec": 15,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 113,
+              "duration_sec": 15,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 109,
               "duration_sec": 35,
               "pause_after_sec": 3
             },
@@ -2914,17 +2914,17 @@
               "pause_after_sec": 3
             },
             {
-              "exercise_id": 113,
+              "exercise_id": 107,
               "duration_sec": 15,
               "pause_after_sec": 3
             },
             {
-              "exercise_id": 114,
+              "exercise_id": 110,
               "duration_sec": 15,
               "pause_after_sec": 3
             },
             {
-              "exercise_id": 115,
+              "exercise_id": 111,
               "duration_sec": 15,
               "pause_after_sec": 3
             },
@@ -2944,7 +2944,7 @@
               "pause_after_sec": 3
             },
             {
-              "exercise_id": 116,
+              "exercise_id": 118,
               "duration_sec": 25,
               "pause_after_sec": 10
             },
@@ -3079,37 +3079,37 @@
           "countdown_sec": 5,
           "steps": [
             {
-              "exercise_id": 103,
+              "exercise_id": 105,
               "duration_sec": 30,
-              "pause_after_sec": 5
-            },
-            {
-              "exercise_id": 109,
-              "duration_sec": 20,
-              "pause_after_sec": 5
-            },
-            {
-              "exercise_id": 102,
-              "duration_sec": 20,
               "pause_after_sec": 5
             },
             {
               "exercise_id": 104,
+              "duration_sec": 20,
+              "pause_after_sec": 5
+            },
+            {
+              "exercise_id": 103,
+              "duration_sec": 20,
+              "pause_after_sec": 5
+            },
+            {
+              "exercise_id": 106,
               "duration_sec": 30,
               "pause_after_sec": 5
             },
             {
-              "exercise_id": 110,
-              "duration_sec": 15,
-              "pause_after_sec": 3
-            },
-            {
-              "exercise_id": 111,
-              "duration_sec": 15,
-              "pause_after_sec": 3
-            },
-            {
               "exercise_id": 112,
+              "duration_sec": 15,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 113,
+              "duration_sec": 15,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 109,
               "duration_sec": 35,
               "pause_after_sec": 3
             },
@@ -3119,17 +3119,17 @@
               "pause_after_sec": 3
             },
             {
-              "exercise_id": 113,
+              "exercise_id": 107,
               "duration_sec": 15,
               "pause_after_sec": 3
             },
             {
-              "exercise_id": 114,
+              "exercise_id": 110,
               "duration_sec": 15,
               "pause_after_sec": 3
             },
             {
-              "exercise_id": 115,
+              "exercise_id": 111,
               "duration_sec": 15,
               "pause_after_sec": 3
             },
@@ -3149,7 +3149,7 @@
               "pause_after_sec": 3
             },
             {
-              "exercise_id": 116,
+              "exercise_id": 118,
               "duration_sec": 25,
               "pause_after_sec": 10
             },
@@ -3284,37 +3284,37 @@
           "countdown_sec": 5,
           "steps": [
             {
-              "exercise_id": 103,
+              "exercise_id": 105,
               "duration_sec": 30,
-              "pause_after_sec": 5
-            },
-            {
-              "exercise_id": 109,
-              "duration_sec": 20,
-              "pause_after_sec": 5
-            },
-            {
-              "exercise_id": 102,
-              "duration_sec": 20,
               "pause_after_sec": 5
             },
             {
               "exercise_id": 104,
+              "duration_sec": 20,
+              "pause_after_sec": 5
+            },
+            {
+              "exercise_id": 103,
+              "duration_sec": 20,
+              "pause_after_sec": 5
+            },
+            {
+              "exercise_id": 106,
               "duration_sec": 30,
               "pause_after_sec": 5
             },
             {
-              "exercise_id": 110,
-              "duration_sec": 15,
-              "pause_after_sec": 3
-            },
-            {
-              "exercise_id": 111,
-              "duration_sec": 15,
-              "pause_after_sec": 3
-            },
-            {
               "exercise_id": 112,
+              "duration_sec": 15,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 113,
+              "duration_sec": 15,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 109,
               "duration_sec": 35,
               "pause_after_sec": 3
             },
@@ -3324,17 +3324,17 @@
               "pause_after_sec": 3
             },
             {
-              "exercise_id": 113,
+              "exercise_id": 107,
               "duration_sec": 15,
               "pause_after_sec": 3
             },
             {
-              "exercise_id": 114,
+              "exercise_id": 110,
               "duration_sec": 15,
               "pause_after_sec": 3
             },
             {
-              "exercise_id": 115,
+              "exercise_id": 111,
               "duration_sec": 15,
               "pause_after_sec": 3
             },
@@ -3354,7 +3354,7 @@
               "pause_after_sec": 3
             },
             {
-              "exercise_id": 116,
+              "exercise_id": 118,
               "duration_sec": 25,
               "pause_after_sec": 10
             },
@@ -3489,37 +3489,37 @@
           "countdown_sec": 5,
           "steps": [
             {
-              "exercise_id": 103,
+              "exercise_id": 105,
               "duration_sec": 30,
-              "pause_after_sec": 5
-            },
-            {
-              "exercise_id": 109,
-              "duration_sec": 20,
-              "pause_after_sec": 5
-            },
-            {
-              "exercise_id": 102,
-              "duration_sec": 20,
               "pause_after_sec": 5
             },
             {
               "exercise_id": 104,
+              "duration_sec": 20,
+              "pause_after_sec": 5
+            },
+            {
+              "exercise_id": 103,
+              "duration_sec": 20,
+              "pause_after_sec": 5
+            },
+            {
+              "exercise_id": 106,
               "duration_sec": 30,
               "pause_after_sec": 5
             },
             {
-              "exercise_id": 110,
-              "duration_sec": 15,
-              "pause_after_sec": 3
-            },
-            {
-              "exercise_id": 111,
-              "duration_sec": 15,
-              "pause_after_sec": 3
-            },
-            {
               "exercise_id": 112,
+              "duration_sec": 15,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 113,
+              "duration_sec": 15,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 109,
               "duration_sec": 35,
               "pause_after_sec": 3
             },
@@ -3529,17 +3529,17 @@
               "pause_after_sec": 3
             },
             {
-              "exercise_id": 113,
+              "exercise_id": 107,
               "duration_sec": 15,
               "pause_after_sec": 3
             },
             {
-              "exercise_id": 114,
+              "exercise_id": 110,
               "duration_sec": 15,
               "pause_after_sec": 3
             },
             {
-              "exercise_id": 115,
+              "exercise_id": 111,
               "duration_sec": 15,
               "pause_after_sec": 3
             },
@@ -3559,7 +3559,7 @@
               "pause_after_sec": 3
             },
             {
-              "exercise_id": 116,
+              "exercise_id": 118,
               "duration_sec": 25,
               "pause_after_sec": 10
             },
@@ -3694,37 +3694,37 @@
           "countdown_sec": 5,
           "steps": [
             {
-              "exercise_id": 103,
+              "exercise_id": 105,
               "duration_sec": 30,
-              "pause_after_sec": 5
-            },
-            {
-              "exercise_id": 109,
-              "duration_sec": 20,
-              "pause_after_sec": 5
-            },
-            {
-              "exercise_id": 102,
-              "duration_sec": 20,
               "pause_after_sec": 5
             },
             {
               "exercise_id": 104,
+              "duration_sec": 20,
+              "pause_after_sec": 5
+            },
+            {
+              "exercise_id": 103,
+              "duration_sec": 20,
+              "pause_after_sec": 5
+            },
+            {
+              "exercise_id": 106,
               "duration_sec": 30,
               "pause_after_sec": 5
             },
             {
-              "exercise_id": 110,
-              "duration_sec": 15,
-              "pause_after_sec": 3
-            },
-            {
-              "exercise_id": 111,
-              "duration_sec": 15,
-              "pause_after_sec": 3
-            },
-            {
               "exercise_id": 112,
+              "duration_sec": 15,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 113,
+              "duration_sec": 15,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 109,
               "duration_sec": 35,
               "pause_after_sec": 3
             },
@@ -3734,17 +3734,17 @@
               "pause_after_sec": 3
             },
             {
-              "exercise_id": 113,
+              "exercise_id": 107,
               "duration_sec": 15,
               "pause_after_sec": 3
             },
             {
-              "exercise_id": 114,
+              "exercise_id": 110,
               "duration_sec": 15,
               "pause_after_sec": 3
             },
             {
-              "exercise_id": 115,
+              "exercise_id": 111,
               "duration_sec": 15,
               "pause_after_sec": 3
             },
@@ -3764,7 +3764,7 @@
               "pause_after_sec": 3
             },
             {
-              "exercise_id": 116,
+              "exercise_id": 118,
               "duration_sec": 25,
               "pause_after_sec": 10
             },
@@ -3899,37 +3899,37 @@
           "countdown_sec": 5,
           "steps": [
             {
-              "exercise_id": 103,
+              "exercise_id": 105,
               "duration_sec": 30,
-              "pause_after_sec": 5
-            },
-            {
-              "exercise_id": 109,
-              "duration_sec": 20,
-              "pause_after_sec": 5
-            },
-            {
-              "exercise_id": 102,
-              "duration_sec": 20,
               "pause_after_sec": 5
             },
             {
               "exercise_id": 104,
+              "duration_sec": 20,
+              "pause_after_sec": 5
+            },
+            {
+              "exercise_id": 103,
+              "duration_sec": 20,
+              "pause_after_sec": 5
+            },
+            {
+              "exercise_id": 106,
               "duration_sec": 30,
               "pause_after_sec": 5
             },
             {
-              "exercise_id": 110,
-              "duration_sec": 15,
-              "pause_after_sec": 3
-            },
-            {
-              "exercise_id": 111,
-              "duration_sec": 15,
-              "pause_after_sec": 3
-            },
-            {
               "exercise_id": 112,
+              "duration_sec": 15,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 113,
+              "duration_sec": 15,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 109,
               "duration_sec": 35,
               "pause_after_sec": 3
             },
@@ -3939,17 +3939,17 @@
               "pause_after_sec": 3
             },
             {
-              "exercise_id": 113,
+              "exercise_id": 107,
               "duration_sec": 15,
               "pause_after_sec": 3
             },
             {
-              "exercise_id": 114,
+              "exercise_id": 110,
               "duration_sec": 15,
               "pause_after_sec": 3
             },
             {
-              "exercise_id": 115,
+              "exercise_id": 111,
               "duration_sec": 15,
               "pause_after_sec": 3
             },
@@ -3969,7 +3969,7 @@
               "pause_after_sec": 3
             },
             {
-              "exercise_id": 116,
+              "exercise_id": 118,
               "duration_sec": 25,
               "pause_after_sec": 10
             },
@@ -4104,37 +4104,37 @@
           "countdown_sec": 5,
           "steps": [
             {
-              "exercise_id": 103,
+              "exercise_id": 105,
               "duration_sec": 30,
-              "pause_after_sec": 5
-            },
-            {
-              "exercise_id": 109,
-              "duration_sec": 20,
-              "pause_after_sec": 5
-            },
-            {
-              "exercise_id": 102,
-              "duration_sec": 20,
               "pause_after_sec": 5
             },
             {
               "exercise_id": 104,
+              "duration_sec": 20,
+              "pause_after_sec": 5
+            },
+            {
+              "exercise_id": 103,
+              "duration_sec": 20,
+              "pause_after_sec": 5
+            },
+            {
+              "exercise_id": 106,
               "duration_sec": 30,
               "pause_after_sec": 5
             },
             {
-              "exercise_id": 110,
-              "duration_sec": 15,
-              "pause_after_sec": 3
-            },
-            {
-              "exercise_id": 111,
-              "duration_sec": 15,
-              "pause_after_sec": 3
-            },
-            {
               "exercise_id": 112,
+              "duration_sec": 15,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 113,
+              "duration_sec": 15,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 109,
               "duration_sec": 35,
               "pause_after_sec": 3
             },
@@ -4144,17 +4144,17 @@
               "pause_after_sec": 3
             },
             {
-              "exercise_id": 113,
+              "exercise_id": 107,
               "duration_sec": 15,
               "pause_after_sec": 3
             },
             {
-              "exercise_id": 114,
+              "exercise_id": 110,
               "duration_sec": 15,
               "pause_after_sec": 3
             },
             {
-              "exercise_id": 115,
+              "exercise_id": 111,
               "duration_sec": 15,
               "pause_after_sec": 3
             },
@@ -4174,7 +4174,7 @@
               "pause_after_sec": 3
             },
             {
-              "exercise_id": 116,
+              "exercise_id": 118,
               "duration_sec": 25,
               "pause_after_sec": 10
             },
@@ -4309,37 +4309,37 @@
           "countdown_sec": 5,
           "steps": [
             {
-              "exercise_id": 103,
+              "exercise_id": 105,
               "duration_sec": 30,
-              "pause_after_sec": 5
-            },
-            {
-              "exercise_id": 109,
-              "duration_sec": 20,
-              "pause_after_sec": 5
-            },
-            {
-              "exercise_id": 102,
-              "duration_sec": 20,
               "pause_after_sec": 5
             },
             {
               "exercise_id": 104,
+              "duration_sec": 20,
+              "pause_after_sec": 5
+            },
+            {
+              "exercise_id": 103,
+              "duration_sec": 20,
+              "pause_after_sec": 5
+            },
+            {
+              "exercise_id": 106,
               "duration_sec": 30,
               "pause_after_sec": 5
             },
             {
-              "exercise_id": 110,
-              "duration_sec": 15,
-              "pause_after_sec": 3
-            },
-            {
-              "exercise_id": 111,
-              "duration_sec": 15,
-              "pause_after_sec": 3
-            },
-            {
               "exercise_id": 112,
+              "duration_sec": 15,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 113,
+              "duration_sec": 15,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 109,
               "duration_sec": 35,
               "pause_after_sec": 3
             },
@@ -4349,17 +4349,17 @@
               "pause_after_sec": 3
             },
             {
-              "exercise_id": 113,
+              "exercise_id": 107,
               "duration_sec": 15,
               "pause_after_sec": 3
             },
             {
-              "exercise_id": 114,
+              "exercise_id": 110,
               "duration_sec": 15,
               "pause_after_sec": 3
             },
             {
-              "exercise_id": 115,
+              "exercise_id": 111,
               "duration_sec": 15,
               "pause_after_sec": 3
             },
@@ -4379,7 +4379,7 @@
               "pause_after_sec": 3
             },
             {
-              "exercise_id": 116,
+              "exercise_id": 118,
               "duration_sec": 25,
               "pause_after_sec": 10
             },
@@ -4514,37 +4514,37 @@
           "countdown_sec": 5,
           "steps": [
             {
-              "exercise_id": 103,
+              "exercise_id": 105,
               "duration_sec": 30,
-              "pause_after_sec": 5
-            },
-            {
-              "exercise_id": 109,
-              "duration_sec": 20,
-              "pause_after_sec": 5
-            },
-            {
-              "exercise_id": 102,
-              "duration_sec": 20,
               "pause_after_sec": 5
             },
             {
               "exercise_id": 104,
+              "duration_sec": 20,
+              "pause_after_sec": 5
+            },
+            {
+              "exercise_id": 103,
+              "duration_sec": 20,
+              "pause_after_sec": 5
+            },
+            {
+              "exercise_id": 106,
               "duration_sec": 30,
               "pause_after_sec": 5
             },
             {
-              "exercise_id": 110,
-              "duration_sec": 15,
-              "pause_after_sec": 3
-            },
-            {
-              "exercise_id": 111,
-              "duration_sec": 15,
-              "pause_after_sec": 3
-            },
-            {
               "exercise_id": 112,
+              "duration_sec": 15,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 113,
+              "duration_sec": 15,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 109,
               "duration_sec": 35,
               "pause_after_sec": 3
             },
@@ -4554,17 +4554,17 @@
               "pause_after_sec": 3
             },
             {
-              "exercise_id": 113,
+              "exercise_id": 107,
               "duration_sec": 15,
               "pause_after_sec": 3
             },
             {
-              "exercise_id": 114,
+              "exercise_id": 110,
               "duration_sec": 15,
               "pause_after_sec": 3
             },
             {
-              "exercise_id": 115,
+              "exercise_id": 111,
               "duration_sec": 15,
               "pause_after_sec": 3
             },
@@ -4584,7 +4584,7 @@
               "pause_after_sec": 3
             },
             {
-              "exercise_id": 116,
+              "exercise_id": 118,
               "duration_sec": 25,
               "pause_after_sec": 10
             },
@@ -4719,37 +4719,37 @@
           "countdown_sec": 5,
           "steps": [
             {
-              "exercise_id": 103,
+              "exercise_id": 105,
               "duration_sec": 30,
-              "pause_after_sec": 5
-            },
-            {
-              "exercise_id": 109,
-              "duration_sec": 20,
-              "pause_after_sec": 5
-            },
-            {
-              "exercise_id": 102,
-              "duration_sec": 20,
               "pause_after_sec": 5
             },
             {
               "exercise_id": 104,
+              "duration_sec": 20,
+              "pause_after_sec": 5
+            },
+            {
+              "exercise_id": 103,
+              "duration_sec": 20,
+              "pause_after_sec": 5
+            },
+            {
+              "exercise_id": 106,
               "duration_sec": 30,
               "pause_after_sec": 5
             },
             {
-              "exercise_id": 110,
-              "duration_sec": 15,
-              "pause_after_sec": 3
-            },
-            {
-              "exercise_id": 111,
-              "duration_sec": 15,
-              "pause_after_sec": 3
-            },
-            {
               "exercise_id": 112,
+              "duration_sec": 15,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 113,
+              "duration_sec": 15,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 109,
               "duration_sec": 35,
               "pause_after_sec": 3
             },
@@ -4759,17 +4759,17 @@
               "pause_after_sec": 3
             },
             {
-              "exercise_id": 113,
+              "exercise_id": 107,
               "duration_sec": 15,
               "pause_after_sec": 3
             },
             {
-              "exercise_id": 114,
+              "exercise_id": 110,
               "duration_sec": 15,
               "pause_after_sec": 3
             },
             {
-              "exercise_id": 115,
+              "exercise_id": 111,
               "duration_sec": 15,
               "pause_after_sec": 3
             },
@@ -4789,7 +4789,7 @@
               "pause_after_sec": 3
             },
             {
-              "exercise_id": 116,
+              "exercise_id": 118,
               "duration_sec": 25,
               "pause_after_sec": 10
             },
@@ -4924,37 +4924,37 @@
           "countdown_sec": 5,
           "steps": [
             {
-              "exercise_id": 103,
+              "exercise_id": 105,
               "duration_sec": 30,
-              "pause_after_sec": 5
-            },
-            {
-              "exercise_id": 109,
-              "duration_sec": 20,
-              "pause_after_sec": 5
-            },
-            {
-              "exercise_id": 102,
-              "duration_sec": 20,
               "pause_after_sec": 5
             },
             {
               "exercise_id": 104,
+              "duration_sec": 20,
+              "pause_after_sec": 5
+            },
+            {
+              "exercise_id": 103,
+              "duration_sec": 20,
+              "pause_after_sec": 5
+            },
+            {
+              "exercise_id": 106,
               "duration_sec": 30,
               "pause_after_sec": 5
             },
             {
-              "exercise_id": 110,
-              "duration_sec": 15,
-              "pause_after_sec": 3
-            },
-            {
-              "exercise_id": 111,
-              "duration_sec": 15,
-              "pause_after_sec": 3
-            },
-            {
               "exercise_id": 112,
+              "duration_sec": 15,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 113,
+              "duration_sec": 15,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 109,
               "duration_sec": 35,
               "pause_after_sec": 3
             },
@@ -4964,17 +4964,17 @@
               "pause_after_sec": 3
             },
             {
-              "exercise_id": 113,
+              "exercise_id": 107,
               "duration_sec": 15,
               "pause_after_sec": 3
             },
             {
-              "exercise_id": 114,
+              "exercise_id": 110,
               "duration_sec": 15,
               "pause_after_sec": 3
             },
             {
-              "exercise_id": 115,
+              "exercise_id": 111,
               "duration_sec": 15,
               "pause_after_sec": 3
             },
@@ -4994,7 +4994,7 @@
               "pause_after_sec": 3
             },
             {
-              "exercise_id": 116,
+              "exercise_id": 118,
               "duration_sec": 25,
               "pause_after_sec": 10
             },
@@ -5129,37 +5129,37 @@
           "countdown_sec": 5,
           "steps": [
             {
-              "exercise_id": 103,
+              "exercise_id": 105,
               "duration_sec": 30,
-              "pause_after_sec": 5
-            },
-            {
-              "exercise_id": 109,
-              "duration_sec": 20,
-              "pause_after_sec": 5
-            },
-            {
-              "exercise_id": 102,
-              "duration_sec": 20,
               "pause_after_sec": 5
             },
             {
               "exercise_id": 104,
+              "duration_sec": 20,
+              "pause_after_sec": 5
+            },
+            {
+              "exercise_id": 103,
+              "duration_sec": 20,
+              "pause_after_sec": 5
+            },
+            {
+              "exercise_id": 106,
               "duration_sec": 30,
               "pause_after_sec": 5
             },
             {
-              "exercise_id": 110,
-              "duration_sec": 15,
-              "pause_after_sec": 3
-            },
-            {
-              "exercise_id": 111,
-              "duration_sec": 15,
-              "pause_after_sec": 3
-            },
-            {
               "exercise_id": 112,
+              "duration_sec": 15,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 113,
+              "duration_sec": 15,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 109,
               "duration_sec": 35,
               "pause_after_sec": 3
             },
@@ -5169,17 +5169,17 @@
               "pause_after_sec": 3
             },
             {
-              "exercise_id": 113,
+              "exercise_id": 107,
               "duration_sec": 15,
               "pause_after_sec": 3
             },
             {
-              "exercise_id": 114,
+              "exercise_id": 110,
               "duration_sec": 15,
               "pause_after_sec": 3
             },
             {
-              "exercise_id": 115,
+              "exercise_id": 111,
               "duration_sec": 15,
               "pause_after_sec": 3
             },
@@ -5199,7 +5199,7 @@
               "pause_after_sec": 3
             },
             {
-              "exercise_id": 116,
+              "exercise_id": 118,
               "duration_sec": 25,
               "pause_after_sec": 10
             },
@@ -5334,37 +5334,37 @@
           "countdown_sec": 5,
           "steps": [
             {
-              "exercise_id": 103,
+              "exercise_id": 105,
               "duration_sec": 30,
-              "pause_after_sec": 5
-            },
-            {
-              "exercise_id": 109,
-              "duration_sec": 20,
-              "pause_after_sec": 5
-            },
-            {
-              "exercise_id": 102,
-              "duration_sec": 20,
               "pause_after_sec": 5
             },
             {
               "exercise_id": 104,
+              "duration_sec": 20,
+              "pause_after_sec": 5
+            },
+            {
+              "exercise_id": 103,
+              "duration_sec": 20,
+              "pause_after_sec": 5
+            },
+            {
+              "exercise_id": 106,
               "duration_sec": 30,
               "pause_after_sec": 5
             },
             {
-              "exercise_id": 110,
-              "duration_sec": 15,
-              "pause_after_sec": 3
-            },
-            {
-              "exercise_id": 111,
-              "duration_sec": 15,
-              "pause_after_sec": 3
-            },
-            {
               "exercise_id": 112,
+              "duration_sec": 15,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 113,
+              "duration_sec": 15,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 109,
               "duration_sec": 35,
               "pause_after_sec": 3
             },
@@ -5374,17 +5374,17 @@
               "pause_after_sec": 3
             },
             {
-              "exercise_id": 113,
+              "exercise_id": 107,
               "duration_sec": 15,
               "pause_after_sec": 3
             },
             {
-              "exercise_id": 114,
+              "exercise_id": 110,
               "duration_sec": 15,
               "pause_after_sec": 3
             },
             {
-              "exercise_id": 115,
+              "exercise_id": 111,
               "duration_sec": 15,
               "pause_after_sec": 3
             },
@@ -5404,7 +5404,7 @@
               "pause_after_sec": 3
             },
             {
-              "exercise_id": 116,
+              "exercise_id": 118,
               "duration_sec": 25,
               "pause_after_sec": 10
             },
@@ -5539,37 +5539,37 @@
           "countdown_sec": 5,
           "steps": [
             {
-              "exercise_id": 103,
+              "exercise_id": 105,
               "duration_sec": 30,
-              "pause_after_sec": 5
-            },
-            {
-              "exercise_id": 109,
-              "duration_sec": 20,
-              "pause_after_sec": 5
-            },
-            {
-              "exercise_id": 102,
-              "duration_sec": 20,
               "pause_after_sec": 5
             },
             {
               "exercise_id": 104,
+              "duration_sec": 20,
+              "pause_after_sec": 5
+            },
+            {
+              "exercise_id": 103,
+              "duration_sec": 20,
+              "pause_after_sec": 5
+            },
+            {
+              "exercise_id": 106,
               "duration_sec": 30,
               "pause_after_sec": 5
             },
             {
-              "exercise_id": 110,
-              "duration_sec": 15,
-              "pause_after_sec": 3
-            },
-            {
-              "exercise_id": 111,
-              "duration_sec": 15,
-              "pause_after_sec": 3
-            },
-            {
               "exercise_id": 112,
+              "duration_sec": 15,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 113,
+              "duration_sec": 15,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 109,
               "duration_sec": 35,
               "pause_after_sec": 3
             },
@@ -5579,17 +5579,17 @@
               "pause_after_sec": 3
             },
             {
-              "exercise_id": 113,
+              "exercise_id": 107,
               "duration_sec": 15,
               "pause_after_sec": 3
             },
             {
-              "exercise_id": 114,
+              "exercise_id": 110,
               "duration_sec": 15,
               "pause_after_sec": 3
             },
             {
-              "exercise_id": 115,
+              "exercise_id": 111,
               "duration_sec": 15,
               "pause_after_sec": 3
             },
@@ -5609,7 +5609,7 @@
               "pause_after_sec": 3
             },
             {
-              "exercise_id": 116,
+              "exercise_id": 118,
               "duration_sec": 25,
               "pause_after_sec": 10
             },
@@ -5744,37 +5744,37 @@
           "countdown_sec": 5,
           "steps": [
             {
-              "exercise_id": 103,
+              "exercise_id": 105,
               "duration_sec": 30,
-              "pause_after_sec": 5
-            },
-            {
-              "exercise_id": 109,
-              "duration_sec": 20,
-              "pause_after_sec": 5
-            },
-            {
-              "exercise_id": 102,
-              "duration_sec": 20,
               "pause_after_sec": 5
             },
             {
               "exercise_id": 104,
+              "duration_sec": 20,
+              "pause_after_sec": 5
+            },
+            {
+              "exercise_id": 103,
+              "duration_sec": 20,
+              "pause_after_sec": 5
+            },
+            {
+              "exercise_id": 106,
               "duration_sec": 30,
               "pause_after_sec": 5
             },
             {
-              "exercise_id": 110,
-              "duration_sec": 15,
-              "pause_after_sec": 3
-            },
-            {
-              "exercise_id": 111,
-              "duration_sec": 15,
-              "pause_after_sec": 3
-            },
-            {
               "exercise_id": 112,
+              "duration_sec": 15,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 113,
+              "duration_sec": 15,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 109,
               "duration_sec": 35,
               "pause_after_sec": 3
             },
@@ -5784,17 +5784,17 @@
               "pause_after_sec": 3
             },
             {
-              "exercise_id": 113,
+              "exercise_id": 107,
               "duration_sec": 15,
               "pause_after_sec": 3
             },
             {
-              "exercise_id": 114,
+              "exercise_id": 110,
               "duration_sec": 15,
               "pause_after_sec": 3
             },
             {
-              "exercise_id": 115,
+              "exercise_id": 111,
               "duration_sec": 15,
               "pause_after_sec": 3
             },
@@ -5814,7 +5814,7 @@
               "pause_after_sec": 3
             },
             {
-              "exercise_id": 116,
+              "exercise_id": 118,
               "duration_sec": 25,
               "pause_after_sec": 10
             },
@@ -5949,37 +5949,37 @@
           "countdown_sec": 5,
           "steps": [
             {
-              "exercise_id": 103,
+              "exercise_id": 105,
               "duration_sec": 30,
-              "pause_after_sec": 5
-            },
-            {
-              "exercise_id": 109,
-              "duration_sec": 20,
-              "pause_after_sec": 5
-            },
-            {
-              "exercise_id": 102,
-              "duration_sec": 20,
               "pause_after_sec": 5
             },
             {
               "exercise_id": 104,
+              "duration_sec": 20,
+              "pause_after_sec": 5
+            },
+            {
+              "exercise_id": 103,
+              "duration_sec": 20,
+              "pause_after_sec": 5
+            },
+            {
+              "exercise_id": 106,
               "duration_sec": 30,
               "pause_after_sec": 5
             },
             {
-              "exercise_id": 110,
-              "duration_sec": 15,
-              "pause_after_sec": 3
-            },
-            {
-              "exercise_id": 111,
-              "duration_sec": 15,
-              "pause_after_sec": 3
-            },
-            {
               "exercise_id": 112,
+              "duration_sec": 15,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 113,
+              "duration_sec": 15,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 109,
               "duration_sec": 35,
               "pause_after_sec": 3
             },
@@ -5989,17 +5989,17 @@
               "pause_after_sec": 3
             },
             {
-              "exercise_id": 113,
+              "exercise_id": 107,
               "duration_sec": 15,
               "pause_after_sec": 3
             },
             {
-              "exercise_id": 114,
+              "exercise_id": 110,
               "duration_sec": 15,
               "pause_after_sec": 3
             },
             {
-              "exercise_id": 115,
+              "exercise_id": 111,
               "duration_sec": 15,
               "pause_after_sec": 3
             },
@@ -6019,7 +6019,7 @@
               "pause_after_sec": 3
             },
             {
-              "exercise_id": 116,
+              "exercise_id": 118,
               "duration_sec": 25,
               "pause_after_sec": 10
             },
@@ -6161,17 +6161,17 @@
           "countdown_sec": 5,
           "steps": [
             {
-              "exercise_id": 103,
+              "exercise_id": 105,
               "duration_sec": 25,
               "pause_after_sec": 3
             },
             {
-              "exercise_id": 109,
+              "exercise_id": 104,
               "duration_sec": 20,
               "pause_after_sec": 3
             },
             {
-              "exercise_id": 104,
+              "exercise_id": 106,
               "duration_sec": 25,
               "pause_after_sec": 3
             },
@@ -6181,7 +6181,7 @@
               "pause_after_sec": 3
             },
             {
-              "exercise_id": 108,
+              "exercise_id": 117,
               "duration_sec": 30,
               "pause_after_sec": 5
             },
@@ -6238,17 +6238,17 @@
           "countdown_sec": 5,
           "steps": [
             {
-              "exercise_id": 103,
+              "exercise_id": 105,
               "duration_sec": 25,
               "pause_after_sec": 3
             },
             {
-              "exercise_id": 109,
+              "exercise_id": 104,
               "duration_sec": 20,
               "pause_after_sec": 3
             },
             {
-              "exercise_id": 104,
+              "exercise_id": 106,
               "duration_sec": 25,
               "pause_after_sec": 3
             },
@@ -6258,7 +6258,7 @@
               "pause_after_sec": 3
             },
             {
-              "exercise_id": 108,
+              "exercise_id": 117,
               "duration_sec": 30,
               "pause_after_sec": 5
             },
@@ -6321,17 +6321,17 @@
           "countdown_sec": 5,
           "steps": [
             {
-              "exercise_id": 103,
+              "exercise_id": 105,
               "duration_sec": 25,
               "pause_after_sec": 3
             },
             {
-              "exercise_id": 109,
+              "exercise_id": 104,
               "duration_sec": 20,
               "pause_after_sec": 3
             },
             {
-              "exercise_id": 104,
+              "exercise_id": 106,
               "duration_sec": 25,
               "pause_after_sec": 3
             },
@@ -6341,7 +6341,7 @@
               "pause_after_sec": 3
             },
             {
-              "exercise_id": 108,
+              "exercise_id": 117,
               "duration_sec": 30,
               "pause_after_sec": 5
             },
@@ -6411,17 +6411,17 @@
           "countdown_sec": 5,
           "steps": [
             {
-              "exercise_id": 103,
+              "exercise_id": 105,
               "duration_sec": 25,
               "pause_after_sec": 3
             },
             {
-              "exercise_id": 109,
+              "exercise_id": 104,
               "duration_sec": 20,
               "pause_after_sec": 3
             },
             {
-              "exercise_id": 104,
+              "exercise_id": 106,
               "duration_sec": 25,
               "pause_after_sec": 3
             },
@@ -6431,7 +6431,7 @@
               "pause_after_sec": 3
             },
             {
-              "exercise_id": 108,
+              "exercise_id": 117,
               "duration_sec": 30,
               "pause_after_sec": 5
             },
@@ -6488,17 +6488,17 @@
           "countdown_sec": 5,
           "steps": [
             {
-              "exercise_id": 103,
+              "exercise_id": 105,
               "duration_sec": 25,
               "pause_after_sec": 3
             },
             {
-              "exercise_id": 109,
+              "exercise_id": 104,
               "duration_sec": 20,
               "pause_after_sec": 3
             },
             {
-              "exercise_id": 104,
+              "exercise_id": 106,
               "duration_sec": 25,
               "pause_after_sec": 3
             },
@@ -6508,7 +6508,7 @@
               "pause_after_sec": 3
             },
             {
-              "exercise_id": 108,
+              "exercise_id": 117,
               "duration_sec": 30,
               "pause_after_sec": 5
             },
@@ -6571,17 +6571,17 @@
           "countdown_sec": 5,
           "steps": [
             {
-              "exercise_id": 103,
+              "exercise_id": 105,
               "duration_sec": 25,
               "pause_after_sec": 3
             },
             {
-              "exercise_id": 109,
+              "exercise_id": 104,
               "duration_sec": 20,
               "pause_after_sec": 3
             },
             {
-              "exercise_id": 104,
+              "exercise_id": 106,
               "duration_sec": 25,
               "pause_after_sec": 3
             },
@@ -6591,7 +6591,7 @@
               "pause_after_sec": 3
             },
             {
-              "exercise_id": 108,
+              "exercise_id": 117,
               "duration_sec": 30,
               "pause_after_sec": 5
             },
@@ -6661,22 +6661,22 @@
           "countdown_sec": 3,
           "steps": [
             {
-              "exercise_id": 103,
+              "exercise_id": 105,
               "duration_sec": 25,
               "pause_after_sec": 3
             },
             {
-              "exercise_id": 109,
+              "exercise_id": 104,
               "duration_sec": 20,
               "pause_after_sec": 3
             },
             {
-              "exercise_id": 104,
+              "exercise_id": 106,
               "duration_sec": 30,
               "pause_after_sec": 3
             },
             {
-              "exercise_id": 108,
+              "exercise_id": 117,
               "duration_sec": 60,
               "pause_after_sec": 0
             }
@@ -6688,28 +6688,13 @@
           "countdown_sec": 3,
           "steps": [
             {
-              "exercise_id": 101,
+              "exercise_id": 115,
               "duration_sec": 45,
               "pause_after_sec": 5
             },
             {
-              "exercise_id": 102,
-              "duration_sec": 25,
-              "pause_after_sec": 3
-            },
-            {
               "exercise_id": 103,
               "duration_sec": 25,
-              "pause_after_sec": 3
-            },
-            {
-              "exercise_id": 109,
-              "duration_sec": 20,
-              "pause_after_sec": 3
-            },
-            {
-              "exercise_id": 104,
-              "duration_sec": 35,
               "pause_after_sec": 3
             },
             {
@@ -6718,17 +6703,32 @@
               "pause_after_sec": 3
             },
             {
-              "exercise_id": 110,
+              "exercise_id": 104,
+              "duration_sec": 20,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 106,
+              "duration_sec": 35,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 108,
+              "duration_sec": 25,
+              "pause_after_sec": 3
+            },
+            {
+              "exercise_id": 112,
               "duration_sec": 15,
               "pause_after_sec": 3
             },
             {
-              "exercise_id": 111,
+              "exercise_id": 113,
               "duration_sec": 15,
               "pause_after_sec": 3
             },
             {
-              "exercise_id": 107,
+              "exercise_id": 114,
               "duration_sec": 40,
               "pause_after_sec": 5
             },
@@ -6738,7 +6738,7 @@
               "pause_after_sec": 5
             },
             {
-              "exercise_id": 108,
+              "exercise_id": 117,
               "duration_sec": 75,
               "pause_after_sec": 0
             }
@@ -6750,17 +6750,17 @@
           "countdown_sec": 3,
           "steps": [
             {
-              "exercise_id": 101,
+              "exercise_id": 115,
               "duration_sec": 40,
               "pause_after_sec": 5
             },
             {
-              "exercise_id": 105,
+              "exercise_id": 108,
               "duration_sec": 20,
               "pause_after_sec": 3
             },
             {
-              "exercise_id": 110,
+              "exercise_id": 112,
               "duration_sec": 15,
               "pause_after_sec": 3
             },
@@ -6792,22 +6792,22 @@
           "countdown_sec": 3,
           "steps": [
             {
-              "exercise_id": 106,
+              "exercise_id": 116,
               "duration_sec": 35,
               "pause_after_sec": 3
             },
             {
-              "exercise_id": 103,
+              "exercise_id": 105,
               "duration_sec": 20,
               "pause_after_sec": 3
             },
             {
-              "exercise_id": 104,
+              "exercise_id": 106,
               "duration_sec": 25,
               "pause_after_sec": 3
             },
             {
-              "exercise_id": 116,
+              "exercise_id": 118,
               "duration_sec": 25,
               "pause_after_sec": 5
             },
@@ -6817,7 +6817,7 @@
               "pause_after_sec": 5
             },
             {
-              "exercise_id": 108,
+              "exercise_id": 117,
               "duration_sec": 60,
               "pause_after_sec": 0
             }
@@ -6829,17 +6829,17 @@
           "countdown_sec": 3,
           "steps": [
             {
-              "exercise_id": 103,
+              "exercise_id": 105,
               "duration_sec": 30,
               "pause_after_sec": 3
             },
             {
-              "exercise_id": 109,
+              "exercise_id": 104,
               "duration_sec": 25,
               "pause_after_sec": 3
             },
             {
-              "exercise_id": 102,
+              "exercise_id": 103,
               "duration_sec": 25,
               "pause_after_sec": 3
             },
@@ -6849,7 +6849,7 @@
               "pause_after_sec": 5
             },
             {
-              "exercise_id": 108,
+              "exercise_id": 117,
               "duration_sec": 60,
               "pause_after_sec": 0
             }
@@ -6890,7 +6890,7 @@
           "countdown_sec": 3,
           "steps": [
             {
-              "exercise_id": 101,
+              "exercise_id": 115,
               "duration_sec": 40,
               "pause_after_sec": 5
             },
@@ -6915,12 +6915,12 @@
               "pause_after_sec": 5
             },
             {
-              "exercise_id": 112,
+              "exercise_id": 109,
               "duration_sec": 30,
               "pause_after_sec": 5
             },
             {
-              "exercise_id": 113,
+              "exercise_id": 107,
               "duration_sec": 25,
               "pause_after_sec": 5
             },
@@ -6937,17 +6937,17 @@
           "countdown_sec": 3,
           "steps": [
             {
-              "exercise_id": 101,
+              "exercise_id": 115,
               "duration_sec": 45,
               "pause_after_sec": 5
             },
             {
-              "exercise_id": 114,
+              "exercise_id": 110,
               "duration_sec": 25,
               "pause_after_sec": 3
             },
             {
-              "exercise_id": 115,
+              "exercise_id": 111,
               "duration_sec": 25,
               "pause_after_sec": 3
             },
@@ -8168,6 +8168,76 @@
               "percent": 80,
               "pause_after_sec": 10
             }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Warmup Programs",
+      "description": "Gotowe programy rozgrzewkowe w 3 wariantach czasowych",
+      "icon": "🔥",
+      "trainings": [
+        {
+          "name": "Warmup Quick",
+          "description": "Szybka rozgrzewka stawowa — głowa, ramiona, nadgarstki, tułów, nogi. Idealna przed krótkim treningiem.",
+          "countdown_sec": 5,
+          "steps": [
+            {"exercise_id": 101, "duration_sec": 30, "pause_after_sec": 3},
+            {"exercise_id": 102, "duration_sec": 30, "pause_after_sec": 3},
+            {"exercise_id": 103, "duration_sec": 30, "pause_after_sec": 3},
+            {"exercise_id": 105, "duration_sec": 30, "pause_after_sec": 3},
+            {"exercise_id": 106, "duration_sec": 45, "pause_after_sec": 3},
+            {"exercise_id": 108, "duration_sec": 30, "pause_after_sec": 3},
+            {"exercise_id": 112, "duration_sec": 20, "pause_after_sec": 3},
+            {"exercise_id": 113, "duration_sec": 20, "pause_after_sec": 3},
+            {"exercise_id": 114, "duration_sec": 45, "pause_after_sec": 3}
+          ]
+        },
+        {
+          "name": "Warmup Standard",
+          "description": "Pełna mobilność stawowa + rozciąganie dynamiczne + aktywacja cardio. Standard przed każdym treningiem.",
+          "countdown_sec": 5,
+          "steps": [
+            {"exercise_id": 101, "duration_sec": 30, "pause_after_sec": 3},
+            {"exercise_id": 102, "duration_sec": 30, "pause_after_sec": 3},
+            {"exercise_id": 103, "duration_sec": 30, "pause_after_sec": 3},
+            {"exercise_id": 104, "duration_sec": 20, "pause_after_sec": 3},
+            {"exercise_id": 105, "duration_sec": 30, "pause_after_sec": 3},
+            {"exercise_id": 106, "duration_sec": 45, "pause_after_sec": 3},
+            {"exercise_id": 107, "duration_sec": 20, "pause_after_sec": 3},
+            {"exercise_id": 108, "duration_sec": 30, "pause_after_sec": 3},
+            {"exercise_id": 109, "duration_sec": 35, "pause_after_sec": 3},
+            {"exercise_id": 110, "duration_sec": 20, "pause_after_sec": 3},
+            {"exercise_id": 111, "duration_sec": 20, "pause_after_sec": 3},
+            {"exercise_id": 112, "duration_sec": 20, "pause_after_sec": 3},
+            {"exercise_id": 113, "duration_sec": 20, "pause_after_sec": 3},
+            {"exercise_id": 114, "duration_sec": 60, "pause_after_sec": 3},
+            {"exercise_id": 115, "duration_sec": 60, "pause_after_sec": 3}
+          ]
+        },
+        {
+          "name": "Warmup Full",
+          "description": "Kompletna rozgrzewka: mobilność + rozciąganie + cardio + shadow play. Przed meczem lub intensywnym treningiem.",
+          "countdown_sec": 5,
+          "steps": [
+            {"exercise_id": 101, "duration_sec": 30, "pause_after_sec": 3},
+            {"exercise_id": 102, "duration_sec": 30, "pause_after_sec": 3},
+            {"exercise_id": 103, "duration_sec": 30, "pause_after_sec": 3},
+            {"exercise_id": 104, "duration_sec": 20, "pause_after_sec": 3},
+            {"exercise_id": 105, "duration_sec": 30, "pause_after_sec": 3},
+            {"exercise_id": 106, "duration_sec": 45, "pause_after_sec": 3},
+            {"exercise_id": 107, "duration_sec": 20, "pause_after_sec": 3},
+            {"exercise_id": 108, "duration_sec": 30, "pause_after_sec": 3},
+            {"exercise_id": 109, "duration_sec": 35, "pause_after_sec": 3},
+            {"exercise_id": 110, "duration_sec": 20, "pause_after_sec": 3},
+            {"exercise_id": 111, "duration_sec": 20, "pause_after_sec": 3},
+            {"exercise_id": 112, "duration_sec": 20, "pause_after_sec": 3},
+            {"exercise_id": 113, "duration_sec": 20, "pause_after_sec": 3},
+            {"exercise_id": 114, "duration_sec": 60, "pause_after_sec": 3},
+            {"exercise_id": 115, "duration_sec": 60, "pause_after_sec": 5},
+            {"exercise_id": 116, "duration_sec": 45, "pause_after_sec": 5},
+            {"exercise_id": 117, "duration_sec": 90, "pause_after_sec": 5},
+            {"exercise_id": 118, "duration_sec": 30, "pause_after_sec": 3}
           ]
         }
       ]
