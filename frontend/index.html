@@ -1521,37 +1521,27 @@
         <span class="chip">{{ cat.exercises.length }}</span>
       </div>
       <div v-if="exSearch || openExCats.has(cat.id)" class="drill-list">
-        <div v-for="ex in cat.exercises" :key="ex.id" class="drill-row" @click="selectedExercise = selectedExercise?.id === ex.id ? null : ex" style="cursor:pointer">
-          <span v-if="selectedPlayerId" style="cursor:pointer;margin-right:4px" @click.stop="toggleFavorite('exercise', ex.id)">{{ isFavorite('exercise', ex.id) ? '★' : '☆' }}</span>
-          <span class="drill-name">{{ tc('exercises', ex.name) }}</span>
-          <span class="time-badge">⏱ {{ fmtDur(ex.duration_sec) }}</span>
-        </div>
-        <!-- Wybrany exercise detail -->
-        <div v-if="selectedExercise && cat.exercises.some(e => e.id === selectedExercise.id)"
-          style="background:var(--card);border:1px solid var(--border);border-radius:0 0 8px 8px;padding:10px;margin-top:-2px;margin-bottom:4px">
-          <!-- Filmstrip -->
-          <div style="background:#1a1a2e;border-radius:10px;padding:7px 8px;margin-bottom:10px">
-            <div style="display:flex;justify-content:space-around;margin-bottom:5px">
-              <div v-for="n in 7" :key="n" style="width:9px;height:7px;background:#111;border-radius:2px;border:1px solid #2a2a3e"></div>
-            </div>
-            <img :src="getExFrameSrc(selectedExercise)" :alt="tc('exercises', selectedExercise.name)"
-              style="width:100%;display:block;border-radius:4px"
-              @error="$event.target.style.display='none'"/>
-            <div style="display:flex;justify-content:space-around;margin-top:5px">
-              <div v-for="n in 7" :key="n" style="width:9px;height:7px;background:#111;border-radius:2px;border:1px solid #2a2a3e"></div>
-            </div>
+        <div v-for="ex in cat.exercises" :key="ex.id">
+          <div class="drill-row" @click="selectedExercise = selectedExercise?.id === ex.id ? null : ex" style="cursor:pointer">
+            <span v-if="selectedPlayerId" style="cursor:pointer;margin-right:4px" @click.stop="toggleFavorite('exercise', ex.id)">{{ isFavorite('exercise', ex.id) ? '★' : '☆' }}</span>
+            <span class="drill-name">{{ tc('exercises', ex.name) }}</span>
+            <span class="time-badge">⏱ {{ fmtDur(ex.duration_sec) }}</span>
           </div>
-          <div style="font-size:12px;color:var(--text2);line-height:1.5;margin-bottom:8px">{{ tc('exercise_desc', selectedExercise.description) }}</div>
-          <div style="display:flex;align-items:center;gap:8px;margin-top:8px">
-            <span style="font-size:11px;color:var(--muted)">{{ t('ex.time') }}</span>
-            <input type="number" v-model.number="selectedExercise.duration_sec" min="10" max="600" style="width:60px;text-align:center">
-            <span style="font-size:11px;color:var(--muted)">{{ t('ex.sec') }}</span>
-            <label v-if="selectedPlayerId" style="font-size:11px;display:flex;align-items:center;gap:4px;cursor:pointer;color:var(--text2);margin-left:auto">
-              <input type="checkbox" v-model="recordTraining"> 🎥
-            </label>
-            <button class="btn btn-success" style="padding:7px 18px;font-size:13px"
-              :disabled="!connected || myRole !== 'controller'"
-              @click="runExerciseSolo(selectedExercise)">▶ Start</button>
+          <!-- Panel ćwiczenia -->
+          <div v-if="selectedExercise && selectedExercise.id === ex.id"
+            style="background:var(--card);border:1px solid var(--border);border-radius:0 0 12px 12px;margin-top:-4px;padding:12px;margin-bottom:6px">
+            <div style="font-size:12px;color:var(--muted);line-height:1.5;margin-bottom:10px">{{ tc('exercise_desc', selectedExercise.description) }}</div>
+            <div style="display:flex;align-items:center;gap:8px;margin-top:8px">
+              <span style="font-size:11px;color:var(--muted)">{{ t('ex.time') }}</span>
+              <input type="number" v-model.number="selectedExercise.duration_sec" min="10" max="600" style="width:60px;text-align:center">
+              <span style="font-size:11px;color:var(--muted)">{{ t('ex.sec') }}</span>
+              <label v-if="selectedPlayerId" style="font-size:11px;display:flex;align-items:center;gap:4px;cursor:pointer;color:var(--text2);margin-left:auto">
+                <input type="checkbox" v-model="recordTraining"> 🎥
+              </label>
+              <button class="btn btn-success" style="padding:7px 18px;font-size:13px"
+                :disabled="!connected || myRole !== 'controller'"
+                @click="runExerciseSolo(selectedExercise)">▶ Start</button>
+            </div>
           </div>
         </div>
       </div>
