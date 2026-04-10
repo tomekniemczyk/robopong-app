@@ -387,6 +387,8 @@ async def _handle(msg: dict, ws: WebSocket):
             _log("CAL connect BLE %s: was_saved=%s top=%s bot=%s osc=%s h=%s rot=%s",
                  addr, was_saved, cal.get("top_speed"), cal.get("bot_speed"),
                  cal.get("oscillation"), cal.get("height"), cal.get("rotation"))
+            await robot.apply_calibration(cal)
+            _log("CAL applied after connect: R/U/O/Q sent")
             broadcast("calibration_loaded", {"cal": cal, "calibrated": was_saved, "addr": addr})
         else:
             _log("Connection failed for %s", addr)
@@ -415,6 +417,8 @@ async def _handle(msg: dict, ws: WebSocket):
             _log("CAL connect USB %s: was_saved=%s top=%s bot=%s osc=%s h=%s rot=%s",
                  addr, was_saved, cal.get("top_speed"), cal.get("bot_speed"),
                  cal.get("oscillation"), cal.get("height"), cal.get("rotation"))
+            await robot.apply_calibration(cal)
+            _log("CAL applied after USB connect: R/U/O/Q sent")
             broadcast("calibration_loaded", {"cal": cal, "calibrated": was_saved, "addr": addr})
 
     elif action == "usb_disconnect":
