@@ -31,6 +31,7 @@ class Robot:
         self.drill_mode: str = "auto"
         self._drill_response_queue: Optional[asyncio.Queue] = None
         self._tracking_drill_responses: bool = False
+        self._calibration: Optional[dict] = None   # stored after apply_calibration, re-applied on reconnect
 
     # ── listener API ──────────────────────────────────────────────────────────
 
@@ -244,18 +245,34 @@ class Robot:
         await self._write("V")
 
     async def apply_calibration(self, cal: dict):
-        """Send SpeedCAL (Q) to firmware after connect.
-        U/O/R are NOT sent here — they set persistent firmware offsets that would
-        be ADDED to every B command, making all balls fly too high/wide.
-        U/O/R are only sent during the calibration wizard (same as original app)."""
-        top = cal.get("top_speed", 161)
-        speed_cal = top - 161
+        """Send full calibration (R/U/O/Q) to firmware after every connect/reconnect.
+        Firmware stores U/O/R as head position offsets:
+          effective_h   = h_B   + (U - 150)
+          effective_osc = osc_B + (O - 150)
+          effective_rot = rot_B + (R - 150)
+        Original app sent these only during calibration wizard; we send on every
+        connect so calibration survives power cycles.
+        Order: R → U → O → Q (matches original ControlCalibrate sequence)."""
+        self._calibration = cal
+
+        h   = cal.get("height",      183)
+        osc = cal.get("oscillation", 150)
+        rot = cal.get("rotation",    150)
+        top = cal.get("top_speed",   161)
+
+        await self._write(f"R{rot:03d}")
+        await asyncio.sleep(0.3)
+        await self._write(f"U{h:03d}")
+        await asyncio.sleep(0.3)
+        await self._write(f"O{osc:03d}")
+        await asyncio.sleep(0.3)
+
+        speed_cal = top - 161  # Gen2 baseline
         if speed_cal > 0:
             await self._write(f"Q{speed_cal:03d}")
             await asyncio.sleep(0.3)
-            logger.info("SpeedCAL applied: Q=%d", speed_cal)
-        else:
-            logger.info("SpeedCAL: no offset needed (top=%d)", top)
+
+        logger.info("Calibration applied: R=%d U=%d O=%d Q=%d", rot, h, osc, speed_cal)
 
     # ── drill runner ──────────────────────────────────────────────────────────
 
@@ -620,6 +637,8 @@ class Robot:
             ok = await self._do_connect(self._last_addr)
             if ok:
                 logger.info("Reconnected successfully")
+                if self._calibration:
+                    await self.apply_calibration(self._calibration)
                 return
         logger.warning("Reconnect failed — all attempts exhausted")
         self._emit("error", {"message": "Nie udało się ponownie połączyć z robotem"})

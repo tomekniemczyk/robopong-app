@@ -630,8 +630,10 @@ class TestBuildBallParamsCompliance:
 
 
 class TestApplyCalibrationCompliance:
-    """Test calibration command matches original app.
-    Source: BUSINESS_LOGIC_COMPLETE.md:346-351"""
+    """Test calibration command sequence matches original app + AcePad extension.
+    Original app (ControlCalibrate): R → U → Q → O
+    AcePad: R → U → O → Q (all 4 sent on every connect, not just wizard)
+    Source: BUSINESS_LOGIC_COMPLETE.md:346-351, feedback_calibration.md"""
 
     @pytest.fixture(autouse=True)
     def setup_robot(self):
@@ -641,12 +643,44 @@ class TestApplyCalibrationCompliance:
         self.robot.robot_version = 2
         self.sent_commands = []
 
-        original_write = self.robot._write
         async def capture_write(cmd):
             self.sent_commands.append(cmd)
         self.robot._write = capture_write
         from transport import SimulationTransport
         self.robot._transport = SimulationTransport()
+
+    @pytest.mark.asyncio
+    async def test_full_sequence_sends_R_U_O(self):
+        """Full calibration always sends R, U, O regardless of speed."""
+        cal = {"top_speed": 161, "height": 183, "oscillation": 144, "rotation": 150}
+        await self.robot.apply_calibration(cal)
+        assert any(c.startswith("R") for c in self.sent_commands), "R must be sent"
+        assert any(c.startswith("U") for c in self.sent_commands), "U must be sent"
+        assert any(c.startswith("O") for c in self.sent_commands), "O must be sent"
+
+    @pytest.mark.asyncio
+    async def test_R_U_O_values_from_cal(self):
+        """R=rotation, U=height, O=oscillation values taken from cal dict."""
+        cal = {"height": 184, "oscillation": 144, "rotation": 155, "top_speed": 161}
+        await self.robot.apply_calibration(cal)
+        r_cmds = [c for c in self.sent_commands if c.startswith("R")]
+        u_cmds = [c for c in self.sent_commands if c.startswith("U")]
+        o_cmds = [c for c in self.sent_commands if c.startswith("O")]
+        assert r_cmds[0] == "R155"
+        assert u_cmds[0] == "U184"
+        assert o_cmds[0] == "O144"
+
+    @pytest.mark.asyncio
+    async def test_R_U_O_defaults_when_not_specified(self):
+        """Defaults: height=183, oscillation=150, rotation=150."""
+        cal = {"top_speed": 161}
+        await self.robot.apply_calibration(cal)
+        r_cmds = [c for c in self.sent_commands if c.startswith("R")]
+        u_cmds = [c for c in self.sent_commands if c.startswith("U")]
+        o_cmds = [c for c in self.sent_commands if c.startswith("O")]
+        assert r_cmds[0] == "R150"
+        assert u_cmds[0] == "U183"
+        assert o_cmds[0] == "O150"
 
     @pytest.mark.asyncio
     async def test_speedcal_default_gen2_not_sent(self):
@@ -672,6 +706,23 @@ class TestApplyCalibrationCompliance:
         await self.robot.apply_calibration(cal)
         q_cmds = [c for c in self.sent_commands if c.startswith("Q")]
         assert q_cmds[0] == "Q005"
+
+    @pytest.mark.asyncio
+    async def test_sequence_order_R_then_U_then_O(self):
+        """Sequence order: R → U → O (before Q)."""
+        cal = {"height": 184, "oscillation": 144, "rotation": 150, "top_speed": 161}
+        await self.robot.apply_calibration(cal)
+        r_idx = next(i for i, c in enumerate(self.sent_commands) if c.startswith("R"))
+        u_idx = next(i for i, c in enumerate(self.sent_commands) if c.startswith("U"))
+        o_idx = next(i for i, c in enumerate(self.sent_commands) if c.startswith("O"))
+        assert r_idx < u_idx < o_idx, "Order must be R → U → O"
+
+    @pytest.mark.asyncio
+    async def test_calibration_stored_for_reconnect(self):
+        """Cal dict stored in _calibration for auto-reconnect."""
+        cal = {"top_speed": 161, "height": 184}
+        await self.robot.apply_calibration(cal)
+        assert self.robot._calibration == cal
 
 
 # ═══════════════════════════════════════════════════════════════════════════════
