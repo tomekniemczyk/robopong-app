@@ -5,19 +5,22 @@ Usage:
     # Simulation mode (no robot needed)
     python test_drill_manual.py --sim
 
-    # BLE connection
-    python test_drill_manual.py --ble AA:BB:CC:DD:EE:FF
+    # BLE connection — auto-loads calibration, 3 test balls → confirm → full drill
+    python test_drill_manual.py --ble FC:0F:E7:6D:01:B9
+
+    # Use calibration params from .calibration.json
+    python test_drill_manual.py --ble FC:0F:E7:6D:01:B9 --cal
+
+    # Run named drill from built-in library
+    python test_drill_manual.py --ble FC:0F:E7:6D:01:B9 --drill fh_flick_bs
+
+    # Run with custom ball params
+    python test_drill_manual.py --ble FC:0F:E7:6D:01:B9 --top 161 --bot 0 --osc 144 --height 150 --rot 150
 
     # USB connection
     python test_drill_manual.py --usb /dev/ttyUSB0
 
-    # Run specific drill from drills_default.json
-    python test_drill_manual.py --sim --drill "Forehand Warmup" --count 5
-
-    # Run with custom ball
-    python test_drill_manual.py --sim --top 120 --bot 0 --osc 150 --height 142 --rot 150
-
-    # Verify command format only (dry run, prints commands)
+    # Verify command format only (dry run)
     python test_drill_manual.py --verify
 
     # Compare our output vs original app (reference check)
@@ -30,6 +33,7 @@ import json
 import os
 import sys
 import time
+from pathlib import Path
 
 # Add backend to path
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
@@ -39,13 +43,43 @@ from transport import SimulationTransport
 
 
 # ═══════════════════════════════════════════════════════════════════════════════
-# REFERENCE: Original Newgy app formulas (from RE analysis)
+# BUILT-IN DRILL LIBRARY (przetestowane na FC:0F:E7:6D:01:B9, 2026-04-07/10)
 # ═══════════════════════════════════════════════════════════════════════════════
 
-def original_getMotorSpeed(pct, min_s=28, max_s=210):
-    if pct == 0: return 0
-    if pct < 0: return int(max_s * (pct / 100))
-    return int(min_s + (max_s - min_s) * (pct / 100))
+DRILLS = {
+    "cal":         {"name": "Calibration (center table)", "top": 161, "bot":  0,  "osc": 144, "h": 150, "rot": 150, "wait": 2500},
+    "fh_flick_bs": {"name": "FH Flick vs Backspin",       "top": -10, "bot": 90,  "osc": 137, "h": 117, "rot": 150, "wait": 2500},
+    "fh_flick_ns": {"name": "FH Flick vs No-Spin",        "top":  58, "bot": 58,  "osc": 137, "h": 119, "rot": 150, "wait": 2500},
+    "fh_flick_ts": {"name": "FH Flick vs Topspin",        "top":  60, "bot": 55,  "osc": 137, "h": 120, "rot": 150, "wait": 2500},
+    "wide_fh_ns":  {"name": "Max Wide FH No-Spin",        "top":  58, "bot": 58,  "osc": 127, "h": 134, "rot": 147, "wait": 2500},
+    "wide_bh_ns":  {"name": "Max Wide BH No-Spin",        "top":  60, "bot": 60,  "osc": 173, "h": 134, "rot": 147, "wait": 2500},
+    "net_touch":   {"name": "Net Touch Recovery",         "top":  55, "bot": 55,  "osc": 137, "h": 125, "rot": 150, "wait": 2500},
+    "ultra_short": {"name": "Ultra-Short Drop",           "top":  45, "bot": 45,  "osc": 140, "h": 116, "rot": 150, "wait": 2500},
+}
+
+DEFAULT_CAL = {"top_speed": 161, "bot_speed": 0, "oscillation": 150, "height": 183, "rotation": 150, "wait_ms": 1000}
+
+
+def load_calibration(addr: str) -> dict:
+    """Load calibration for device address from .calibration.json."""
+    cal_file = Path(__file__).parent / ".calibration.json"
+    if not cal_file.exists():
+        print("  [cal] No .calibration.json — using default")
+        return dict(DEFAULT_CAL)
+    data = json.loads(cal_file.read_text())
+    if addr in data:
+        print(f"  [cal] Loaded for {addr}")
+        return data[addr]
+    if "_default_" in data:
+        print(f"  [cal] No entry for {addr} — using _default_")
+        return data["_default_"]
+    print("  [cal] No calibration found — using default")
+    return dict(DEFAULT_CAL)
+
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# REFERENCE: Original Newgy app formulas (from RE analysis)
+# ═══════════════════════════════════════════════════════════════════════════════
 
 def original_getMotorPWM(raw, speed_cal=0):
     return round(abs(raw) * 4.016) + speed_cal
@@ -92,17 +126,17 @@ class CommandLogger:
         robot._write = logged_write
 
     def _print_cmd(self, elapsed, cmd):
-        # Color-code by command type
         colors = {
-            "H": "\033[91m",    # red
-            "B": "\033[93m",    # yellow
-            "A": "\033[92m",    # green
-            "T": "\033[96m",    # cyan
-            "wTA": "\033[95m",  # magenta
-            "END": "\033[94m",  # blue
-            "Z": "\033[90m",    # gray
-            "F": "\033[90m",
-            "I": "\033[90m",
+            "H":   "\033[91m",    # red
+            "B":   "\033[93m",    # yellow
+            "A":   "\033[92m",    # green
+            "T":   "\033[96m",    # cyan
+            "wTA": "\033[95m",    # magenta
+            "END": "\033[94m",    # blue
+            "Q":   "\033[92m",    # green
+            "Z":   "\033[90m",    # gray
+            "F":   "\033[90m",
+            "I":   "\033[90m",
         }
         reset = "\033[0m"
         color = "\033[0m"
@@ -122,7 +156,6 @@ class CommandLogger:
         for key, cnt in sorted(counts.items()):
             print(f"  {key}: {cnt}")
 
-        # Verify B/A command format
         ball_cmds = [(t, c) for t, c in self.commands
                      if c[0] in ("B", "A") and len(c) > 2]
         errors = []
@@ -137,56 +170,73 @@ class CommandLogger:
             for e in errors:
                 print(e)
         else:
-            print(f"\n\033[92mAll {len(ball_cmds)} ball commands have correct format (19 chars, no spaces)\033[0m")
+            print(f"\n\033[92mAll {len(ball_cmds)} ball commands: correct format (19 chars, no spaces)\033[0m")
 
 
 # ═══════════════════════════════════════════════════════════════════════════════
-# DRILL RUNNER
+# DRILL SEQUENCE
 # ═══════════════════════════════════════════════════════════════════════════════
 
-async def run_drill(robot, logger, balls, count=10, repeat=1, percent=100, mode=None):
-    """Run a drill and wait for completion."""
-    if mode:
-        robot.drill_mode = mode
+async def pre_drill(robot):
+    """Clear ball before drill — H×2 like original app."""
+    await robot._write("H")
+    await asyncio.sleep(0.2)
+    await robot._write("H")
+    await asyncio.sleep(1.0)
 
-    effective = robot._effective_drill_mode()
-    print(f"\nDrill: {len(balls)} ball(s), count={count}, repeat={repeat}, "
-          f"percent={percent}%, mode={effective}")
-    print(f"{'='*60}")
 
-    for i, b in enumerate(balls):
-        ref_cmd = original_build_B(b["top_speed"], b["bot_speed"],
-                                    b["oscillation"], b["height"], b["rotation"])
-        print(f"  Ball {i+1}: top={b['top_speed']} bot={b['bot_speed']} "
-              f"osc={b['oscillation']} h={b['height']} rot={b['rotation']} "
-              f"wait={b['wait_ms']}ms")
-        print(f"          Reference B: {ref_cmd}")
+async def test_3_balls(robot, top, bot, osc, h, rot, wait_ms=2500, warmup_s=5):
+    """Pre-drill → set ball → warmup → 3 throws → stop. Returns False on safety error."""
+    print(f"\n--- TEST: 3 balls ---")
+    print(f"  top={top} bot={bot} osc={osc} h={h} rot={rot} wait={wait_ms}ms")
 
-    print(f"{'='*60}")
-    print("Commands sent:\n")
+    await pre_drill(robot)
 
-    events = []
-    def on_event(etype, data):
-        if etype == "drill_progress":
-            events.append(data)
-            print(f"  {'':7s}  \033[97m⚡ ball {data.get('ball')}/{data.get('total')} "
-                  f"(thrown: {data.get('thrown')})\033[0m")
-        elif etype == "drill_ended":
-            print(f"  {'':7s}  \033[97m✓ drill ended\033[0m")
+    try:
+        params = robot._build_ball_params(top, bot, osc, h, rot)
+    except Robot.SafetyError as e:
+        print(f"\033[91m  SAFETY ERROR: {e}\033[0m")
+        return False
 
-    robot.add_listener(on_event)
+    await robot._write(f"B{params}")
+    print(f"  Warmup {warmup_s}s...", end="", flush=True)
+    await asyncio.sleep(warmup_s)
+    print(" done")
 
-    await robot.run_drill(balls, repeat=repeat, count=count, percent=percent,
-                          skip_warmup=True, emit_countdown=False)
+    for i in range(3):
+        print(f"  → Throw {i+1}/3")
+        await robot._write("T")
+        await asyncio.sleep(wait_ms / 1000)
 
-    # Wait for drill to complete
-    total_balls = count if count > 0 else len(balls) * (repeat if repeat > 0 else 999)
-    max_wait = min(total_balls * 3 + 5, 60)
-    await asyncio.sleep(max_wait)
+    await robot._write("H")
+    print("  Stopped.")
+    return True
 
-    robot.remove_listener(on_event)
-    logger.dump_summary()
-    print(f"\nBalls thrown: {len(events)}")
+
+async def run_full_drill(robot, top, bot, osc, h, rot, wait_ms=2500, count=50, warmup_s=5):
+    """Pre-drill → set ball → warmup → throw N balls → stop."""
+    print(f"\n--- DRILL: {count} balls ---")
+
+    await pre_drill(robot)
+
+    try:
+        params = robot._build_ball_params(top, bot, osc, h, rot)
+    except Robot.SafetyError as e:
+        print(f"\033[91m  SAFETY ERROR: {e}\033[0m")
+        return
+
+    await robot._write(f"B{params}")
+    print(f"  Warmup {warmup_s}s...", end="", flush=True)
+    await asyncio.sleep(warmup_s)
+    print(" done")
+
+    for i in range(count):
+        print(f"  → {i+1}/{count}", end="\r", flush=True)
+        await robot._write("T")
+        await asyncio.sleep(wait_ms / 1000)
+
+    await robot._write("H")
+    print(f"\n  Done — {count} balls thrown.")
 
 
 # ═══════════════════════════════════════════════════════════════════════════════
@@ -194,22 +244,21 @@ async def run_drill(robot, logger, balls, count=10, repeat=1, percent=100, mode=
 # ═══════════════════════════════════════════════════════════════════════════════
 
 def verify_format():
-    """Verify B/A command format against original app (no robot needed)."""
     robot = Robot()
     robot.firmware = 701
     robot.robot_version = 2
 
     test_cases = [
-        ("Topspin FH", 120, 0, 164, 116, 150),
-        ("Topspin BH", 120, 0, 136, 116, 150),
-        ("Backspin", -20, 100, 150, 142, 150),
+        ("Topspin FH",     120,   0, 164, 116, 150),
+        ("Topspin BH",     120,   0, 136, 116, 150),
+        ("Backspin",       -20, 100, 150, 142, 150),
         ("Heavy backspin", -12, 100, 150, 116, 150),
-        ("No spin", 50, 50, 150, 142, 150),
-        ("Fast topspin", 149, -12, 150, 142, 150),
-        ("Max speed", 210, 0, 150, 183, 150),
-        ("Zero speed", 0, 0, 150, 142, 150),
+        ("No spin",         50,  50, 150, 142, 150),
+        ("Fast topspin",   149, -12, 150, 142, 150),
+        ("Max speed",      210,   0, 150, 183, 150),
+        ("Zero speed",       0,   0, 150, 142, 150),
         ("Both negative", -100, -80, 150, 142, 150),
-        ("Extreme osc", 100, 50, 127, 75, 90),
+        ("Extreme osc",    100,  50, 127,  75,  90),
     ]
 
     print("B/A Command Format Verification")
@@ -229,7 +278,6 @@ def verify_format():
         if not match:
             print(f"  {'':18} \033[91mOurs:  {our!r}\033[0m")
             print(f"  {'':18} \033[92mRef:   {ref!r}\033[0m")
-            # Show field-by-field diff
             for i, (a, b_char) in enumerate(zip(our, ref)):
                 if a != b_char:
                     print(f"  {'':18} \033[91mDiff at pos {i}: ours='{a}' ref='{b_char}'\033[0m")
@@ -243,7 +291,6 @@ def verify_format():
 
 
 def compare_drills():
-    """Compare all default drill commands with original app."""
     robot = Robot()
     robot.firmware = 701
     robot.robot_version = 2
@@ -292,37 +339,36 @@ def compare_drills():
 async def main():
     parser = argparse.ArgumentParser(description="Manual drill tester for Robopong 3050XL")
     conn = parser.add_mutually_exclusive_group()
-    conn.add_argument("--sim", action="store_true", help="Simulation mode (no robot)")
-    conn.add_argument("--ble", metavar="ADDR", help="BLE address (AA:BB:CC:DD:EE:FF)")
-    conn.add_argument("--usb", metavar="PORT", help="USB port (/dev/ttyUSB0)")
-    conn.add_argument("--verify", action="store_true", help="Verify command format (dry run)")
+    conn.add_argument("--sim",     action="store_true", help="Simulation mode (no robot)")
+    conn.add_argument("--ble",     metavar="ADDR",      help="BLE address (AA:BB:CC:DD:EE:FF)")
+    conn.add_argument("--usb",     metavar="PORT",      help="USB port (/dev/ttyUSB0)")
+    conn.add_argument("--verify",  action="store_true", help="Verify command format (dry run)")
     conn.add_argument("--compare", action="store_true", help="Compare all drills vs original")
 
-    parser.add_argument("--drill", help="Drill name from drills_default.json")
-    parser.add_argument("--top", type=int, default=120, help="Top motor raw (default: 120)")
-    parser.add_argument("--bot", type=int, default=0, help="Bottom motor raw (default: 0)")
-    parser.add_argument("--osc", type=int, default=150, help="Oscillation raw (default: 150)")
-    parser.add_argument("--height", type=int, default=142, help="Height raw (default: 142)")
-    parser.add_argument("--rot", type=int, default=150, help="Rotation raw (default: 150)")
-    parser.add_argument("--wait", type=int, default=1500, help="Wait ms (default: 1500)")
-    parser.add_argument("--count", type=int, default=5, help="Ball count (default: 5)")
-    parser.add_argument("--repeat", type=int, default=1, help="Repeat (0=infinite, default: 1)")
-    parser.add_argument("--percent", type=int, default=100, help="Tempo percent (default: 100)")
-    parser.add_argument("--mode", choices=["sync", "async", "auto"], default="auto",
-                        help="Drill mode (default: auto)")
+    parser.add_argument("--drill",      help=f"Named drill: {', '.join(DRILLS.keys())} — or name from drills_default.json")
+    parser.add_argument("--cal",        action="store_true", help="Use calibration params from .calibration.json")
+    parser.add_argument("--count",      type=int, default=50,   help="Ball count for full drill (default: 50)")
+    parser.add_argument("--warmup",     type=int, default=5,    help="Warmup seconds (default: 5)")
+    parser.add_argument("--top",        type=int, default=161,  help="Top motor raw (default: 161)")
+    parser.add_argument("--bot",        type=int, default=0,    help="Bottom motor raw (default: 0)")
+    parser.add_argument("--osc",        type=int, default=144,  help="Oscillation raw (default: 144)")
+    parser.add_argument("--height",     type=int, default=150,  help="Height raw (default: 150)")
+    parser.add_argument("--rot",        type=int, default=150,  help="Rotation raw (default: 150)")
+    parser.add_argument("--wait",       type=int, default=2500, help="Wait ms between throws (default: 2500)")
+    parser.add_argument("--no-confirm", action="store_true",    help="Skip confirmation — run full drill immediately")
+    parser.add_argument("--test-only",  action="store_true",    help="Only throw 3 test balls, no full drill")
 
     args = parser.parse_args()
 
     # Verify / compare modes (no connection needed)
     if args.verify:
-        ok = verify_format()
-        sys.exit(0 if ok else 1)
+        sys.exit(0 if verify_format() else 1)
     if args.compare:
-        ok = compare_drills()
-        sys.exit(0 if ok else 1)
+        sys.exit(0 if compare_drills() else 1)
 
     # Create robot
     robot = Robot()
+    cal = None
 
     if args.sim:
         robot.enable_simulation()
@@ -334,6 +380,13 @@ async def main():
             print("BLE connection failed!")
             sys.exit(1)
         print(f"Connected! FW={robot.firmware}, Version={robot.robot_version}")
+
+        # Auto-apply calibration (Q command) after every connect
+        cal = load_calibration(args.ble)
+        print(f"  [cal] top={cal.get('top_speed',161)} bot={cal.get('bot_speed',0)} "
+              f"osc={cal.get('oscillation',150)} h={cal.get('height',183)} rot={cal.get('rotation',150)}")
+        await robot.apply_calibration(cal)
+
     elif args.usb:
         print(f"Connecting USB: {args.usb}...")
         ok = await robot.connect_usb(args.usb)
@@ -343,42 +396,77 @@ async def main():
         print(f"Connected! FW={robot.firmware}, Version={robot.robot_version}")
     else:
         print("Specify connection: --sim, --ble ADDR, or --usb PORT")
+        print(f"\nBuilt-in drills: {', '.join(DRILLS.keys())}")
         print("Or use: --verify, --compare")
         sys.exit(1)
 
-    if args.mode != "auto":
-        robot.drill_mode = args.mode
-
     logger = CommandLogger(robot)
 
-    # Build ball list
+    # Resolve ball params
     if args.drill:
-        defaults_path = os.path.join(os.path.dirname(__file__), "drills_default.json")
-        with open(defaults_path) as f:
-            data = json.load(f)
-        found = None
-        for folder in data.get("folders", []):
-            for drill in folder.get("drills", []):
-                if drill["name"].lower() == args.drill.lower():
-                    found = drill
-                    break
-        if not found:
-            print(f"Drill not found: {args.drill}")
-            sys.exit(1)
-        balls = found["balls"]
-        print(f"Loaded drill: {found['name']} ({len(balls)} ball(s))")
+        if args.drill in DRILLS:
+            d = DRILLS[args.drill]
+            top, bot, osc, h, rot, wait_ms = d["top"], d["bot"], d["osc"], d["h"], d["rot"], d["wait"]
+            print(f"Drill: {d['name']}")
+        else:
+            defaults_path = os.path.join(os.path.dirname(__file__), "drills_default.json")
+            with open(defaults_path) as f:
+                data = json.load(f)
+            found = None
+            for folder in data.get("folders", []):
+                for drill in folder.get("drills", []):
+                    if drill["name"].lower() == args.drill.lower():
+                        found = drill
+                        break
+            if not found:
+                print(f"Drill not found: {args.drill}")
+                print(f"Built-in: {', '.join(DRILLS.keys())}")
+                sys.exit(1)
+            b0 = found["balls"][0]
+            top, bot, osc, h, rot = (
+                b0["top_speed"], b0["bot_speed"], b0["oscillation"],
+                b0["height"], b0["rotation"])
+            wait_ms = b0.get("wait_ms", args.wait)
+            print(f"Drill: {found['name']}")
+    elif args.cal:
+        src = cal if cal else load_calibration(args.ble or "")
+        top    = src.get("top_speed", 161)
+        bot    = src.get("bot_speed", 0)
+        osc    = src.get("oscillation", 144)
+        h      = src.get("height", 150)
+        rot    = src.get("rotation", 150)
+        wait_ms = args.wait
+        print("Mode: CALIBRATION TEST")
     else:
-        balls = [{
-            "top_speed": args.top, "bot_speed": args.bot,
-            "oscillation": args.osc, "height": args.height,
-            "rotation": args.rot, "wait_ms": args.wait,
-        }]
+        top, bot, osc, h, rot, wait_ms = args.top, args.bot, args.osc, args.height, args.rot, args.wait
+
+    print(f"\nParams: top={top} bot={bot} osc={osc} h={h} rot={rot} wait={wait_ms}ms")
+    print(f"{'='*60}")
+    print("Commands:\n")
 
     try:
-        await run_drill(robot, logger, balls, count=args.count,
-                       repeat=args.repeat, percent=args.percent)
+        ok = await test_3_balls(robot, top, bot, osc, h, rot,
+                                wait_ms=wait_ms, warmup_s=args.warmup)
+        if not ok:
+            return
+
+        if args.test_only:
+            print("Test-only mode — done.")
+        else:
+            if not args.no_confirm and not args.sim:
+                resp = input(f"\nOK? Run {args.count} balls? [Enter=yes / q=quit]: ").strip().lower()
+                if resp == "q":
+                    print("Aborted.")
+                    return
+
+            await run_full_drill(robot, top, bot, osc, h, rot,
+                                 wait_ms=wait_ms, count=args.count, warmup_s=args.warmup)
+
+        logger.dump_summary()
+
     except KeyboardInterrupt:
         print("\nStopping...")
+        await robot._write("H")
     finally:
         await robot.stop()
         if args.ble or args.usb:
