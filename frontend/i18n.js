@@ -492,6 +492,9 @@ window.I18N = {
   'training.clear_history':{ pl:'Usuń całą historię', en:'Clear all history', de:'Gesamten Verlauf löschen', fr:'Supprimer tout l\'historique', zh:'清除全部历史' },
   'training.step_label':   { pl:'krok',            en:'step',             de:'Schritt',          fr:'étape',            zh:'步' },
   'tr.steps_label':        { pl:'drilli',          en:'drills',           de:'Drills',           fr:'lancers',          zh:'训练' },
+  'tr.filter_upcoming':    { pl:'Nadchodzące',     en:'Upcoming',         de:'Bevorstehend',     fr:'À venir',          zh:'待完成' },
+  'tr.filter_all':         { pl:'Wszystkie',       en:'All',              de:'Alle',             fr:'Tous',             zh:'全部' },
+  'tr.filter_past':        { pl:'Przeszłe',        en:'Past',             de:'Vergangen',        fr:'Passés',           zh:'已完成' },
   'confirm.delete_player': { pl:'Usunąć gracza?',  en:'Delete player?',   de:'Spieler löschen?', fr:'Supprimer le joueur ?', zh:'删除球员？' },
 
   // ── Players ────────────────────────────────────────────────────────

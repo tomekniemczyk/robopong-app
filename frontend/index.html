@@ -1335,6 +1335,14 @@
         <button class="btn btn-primary" @click="openTrainingModal(null)">{{ t('tr.new') }}</button>
       </div>
 
+      <!-- Filter tabs -->
+      <div style="display:flex;gap:4px;margin-bottom:12px">
+        <button v-for="f in ['upcoming','all','past']" :key="f"
+          class="btn btn-ghost"
+          :style="{fontSize:'12px',padding:'4px 10px',borderRadius:'16px',fontWeight: trainingFilter===f ? '600' : '400',background: trainingFilter===f ? 'rgba(91,124,247,.18)' : 'transparent',borderColor: trainingFilter===f ? 'rgba(91,124,247,.5)' : 'var(--border)',color: trainingFilter===f ? 'var(--accent)' : 'var(--muted)'}"
+          @click="trainingFilter=f">{{ t('tr.filter_'+f) }}</button>
+      </div>
+
       <!-- Grouped by folder -->
       <template v-for="group in trainingGroups" :key="group.folder || '__user__'">
         <!-- Folder header (only for folder groups) -->
@@ -3462,6 +3470,7 @@ const _app = createApp({
     const trainingStartModal = ref(null)
     const resumeFromStep = ref(0)
     const expandedTraining = ref(null)
+    const trainingFilter = ref('all')
     const selectedPlayerId = ref(null)
     const showPlayerSelectModal = ref(false)
     const newPlayerName = ref('')
@@ -3656,9 +3665,13 @@ const _app = createApp({
 
     // ── Training groups (folder-based) ────────────────────────
     const trainingGroups = computed(() => {
+      const f = trainingFilter.value
       const folders = {}
       const user = []
       for (const tr of trainings.value) {
+        const hasRun = trainingHistory.value.some(h => h.training_id === tr.id)
+        if (f === 'upcoming' && hasRun) continue
+        if (f === 'past' && !hasRun) continue
         if (tr.folder) {
           if (!folders[tr.folder]) folders[tr.folder] = { folder: tr.folder, icon: tr.folder_icon || '', trainings: [] }
           folders[tr.folder].trainings.push(tr)
@@ -5267,7 +5280,7 @@ const _app = createApp({
       loadTrainings, addTrainingStep, moveStep,
       pauseTraining, resumeTraining, skipTraining, runExerciseSolo, fmtDur,
       saveTraining, deleteTraining, stopTraining, totalTrainingTime,
-      trainingGroups, openTrainingFolders, toggleTrainingFolder, trainingFolderProgress, trainingFolderPct,
+      trainingGroups, openTrainingFolders, toggleTrainingFolder, trainingFolderProgress, trainingFolderPct, trainingFilter,
       trainingStatusIcon, lastRunDate, trainingStartModal, selectedPlayerId, recordTraining, recordType, skipWarmup, skipCooldown, showPlayerSelectModal,
       currentPlayerName, selectPlayer, createAndSelectPlayer, deleteHistoryEntry, clearAllHistory, historyEndTime, recDownloadName, rerunStep,
       openTrainingStartModal, startTrainingConfirmed, duplicateTraining,
