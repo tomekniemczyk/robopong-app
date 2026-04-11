@@ -274,6 +274,27 @@ class Robot:
 
         logger.info("Calibration applied: R=%d U=%d O=%d Q=%d", rot, h, osc, speed_cal)
 
+    def drill_compensate(self, h: int, osc: int, rot: int) -> tuple:
+        """Compensate drill ball parameters for active firmware calibration offsets.
+
+        Newgy drills are designed for factory defaults (U=183, O=150, R=150).
+        When user calibrates to different values (e.g. U=199), the firmware offset
+        shifts all effective servo positions. This method adjusts the raw values sent
+        in B/A commands so that effective positions always match drill design intent:
+            effective_h   = h_drill − 33   (Newgy factory reference)
+            effective_osc = osc_drill       (exact drill value)
+            effective_rot = rot_drill       (exact drill value)
+        """
+        if not self._calibration:
+            return h, osc, rot
+        cal_h   = self._calibration.get("height",      183)
+        cal_osc = self._calibration.get("oscillation", 150)
+        cal_rot = self._calibration.get("rotation",    150)
+        comp_h   = max(75,  min(210, h   + (cal_h   - 183)))
+        comp_osc = max(127, min(173, osc + (cal_osc  - 150)))
+        comp_rot = max(90,  min(210, rot + (cal_rot  - 150)))
+        return comp_h, comp_osc, comp_rot
+
     # ── drill runner ──────────────────────────────────────────────────────────
 
     async def run_drill(self, balls: List[Dict], repeat: int = 1, count: int = 0, percent: int = 100, skip_warmup: bool = False, emit_countdown: bool = True):
@@ -300,8 +321,9 @@ class Robot:
         ball_cmds = []
         for b in balls:
             try:
+                h, osc, rot = self.drill_compensate(b["height"], b["oscillation"], b["rotation"])
                 params = self._build_ball_params(
-                    b["top_speed"], b["bot_speed"], b["oscillation"], b["height"], b["rotation"])
+                    b["top_speed"], b["bot_speed"], osc, h, rot)
             except Robot.SafetyError as e:
                 logger.error("SAFETY STOP in drill: %s", e)
                 await self._write("H")
@@ -436,14 +458,15 @@ class Robot:
             await asyncio.sleep(0.1)
             warmup_top = min(abs(b0["top_speed"]), self.SAFE_MOTOR_RAW_MAX) * (1 if b0["top_speed"] >= 0 else -1)
             warmup_bot = min(abs(b0["bot_speed"]), self.SAFE_MOTOR_RAW_MAX) * (1 if b0["bot_speed"] >= 0 else -1) if b0["bot_speed"] != 0 else 0
-            await self.set_ball(warmup_top, warmup_bot, b0["oscillation"], b0["height"], b0["rotation"], b0.get("wait_ms", 1000))
+            h0, osc0, rot0 = self.drill_compensate(b0["height"], b0["oscillation"], b0["rotation"])
+            await self.set_ball(warmup_top, warmup_bot, osc0, h0, rot0, b0.get("wait_ms", 1000))
             if emit_countdown:
                 self._emit("drill_countdown", {"sec": 3})
             await asyncio.sleep(1.0)
             if emit_countdown:
                 self._emit("drill_countdown", {"sec": 2})
             await asyncio.sleep(1.0)
-            await self.set_ball(b0["top_speed"], b0["bot_speed"], b0["oscillation"], b0["height"], b0["rotation"], b0.get("wait_ms", 1000))
+            await self.set_ball(b0["top_speed"], b0["bot_speed"], osc0, h0, rot0, b0.get("wait_ms", 1000))
             if emit_countdown:
                 self._emit("drill_countdown", {"sec": 1})
             await asyncio.sleep(1.0)
@@ -461,7 +484,8 @@ class Robot:
                     if first_ball_ready:
                         first_ball_ready = False
                     else:
-                        await self.set_ball(b["top_speed"], b["bot_speed"], b["oscillation"], b["height"], b["rotation"], adj_wait)
+                        bh, bosc, brot = self.drill_compensate(b["height"], b["oscillation"], b["rotation"])
+                        await self.set_ball(b["top_speed"], b["bot_speed"], bosc, bh, brot, adj_wait)
                         await asyncio.sleep(0.15)
                     await self.throw()
                     thrown += 1
