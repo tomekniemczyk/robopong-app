@@ -8,8 +8,12 @@ SOUNDS = Path(__file__).parent / "sounds"
 
 def play(name: str):
     path = SOUNDS / f"{name}.wav"
-    if path.exists():
+    if not path.exists():
+        return
+    try:
         subprocess.Popen(["aplay", "-q", str(path)])
+    except FileNotFoundError:
+        pass
 
 
 def get_volume() -> int:
