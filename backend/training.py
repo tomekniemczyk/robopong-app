@@ -385,11 +385,18 @@ class TrainingRunner:
                                      drill_id=step.get("drill_id"))
 
                 drill_done = asyncio.Event()
+                drill_offset = 0  # balls thrown in prior runs of this step (pause/resume)
+                last_run_thrown = [0]
 
                 def _on_drill_event(event_type, data):
                     if event_type == "drill_progress":
+                        this_run = data.get("thrown", 0)
+                        last_run_thrown[0] = this_run
                         broadcast("training_drill_progress", {
-                            **data, "step": step_idx + 1, "total_steps": total_steps,
+                            **data,
+                            "thrown": drill_offset + this_run,
+                            "count": count,
+                            "step": step_idx + 1, "total_steps": total_steps,
                             "drill_name": drill_name, "est_remaining_sec": est_remaining,
                         })
                     elif event_type == "drill_ended":
@@ -401,12 +408,31 @@ class TrainingRunner:
 
                 timeout = max(300, count * 30)
                 elapsed = 0.0
-                while not drill_done.is_set() and not self._stopped and not self._skip:
-                    await asyncio.sleep(0.2)
-                    elapsed += 0.2
-                    if elapsed > timeout:
-                        logger.warning("Drill timeout")
+                while True:
+                    while not drill_done.is_set() and not self._stopped and not self._skip:
+                        await asyncio.sleep(0.2)
+                        elapsed += 0.2
+                        if elapsed > timeout:
+                            logger.warning("Drill timeout")
+                            break
+                    if self._stopped or self._skip or elapsed > timeout:
                         break
+                    if self._paused:
+                        drill_offset += last_run_thrown[0]
+                        last_run_thrown[0] = 0
+                        remaining = count - drill_offset
+                        if remaining <= 0:
+                            break
+                        logger.info("Drill paused at %d/%d — waiting for resume", drill_offset, count)
+                        await self._wait_unpaused()
+                        if self._stopped or self._skip:
+                            break
+                        logger.info("Drill resumed — restarting with %d remaining balls", remaining)
+                        drill_done.clear()
+                        await robot.run_drill(drill["balls"], repeat=0, count=remaining, percent=percent, skip_warmup=False, emit_countdown=False)
+                        elapsed = 0.0
+                        continue
+                    break
                 skipped = self._consume_skip()
                 if skipped:
                     robot.stop_drill()
