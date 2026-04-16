@@ -1,6 +1,6 @@
 """Camera recording per drill/exercise step.
 
-Uses ffmpeg to capture from motion MJPEG stream (port 8081) into MP4 files.
+Uses ffmpeg to capture MJPEG stream from uStreamer (port 8081) into MP4 files.
 Each drill/exercise step gets its own recording file.
 """
 
@@ -17,7 +17,9 @@ import db
 logger = logging.getLogger(__name__)
 
 RECORDINGS_DIR = Path(__file__).parent / "recordings"
-MOTION_STREAM = "http://localhost:8081"
+# uStreamer MJPEG endpoint (port 8081). Path /stream returns multipart
+# JPEG frames; root / returns HTML index — ffmpeg needs the stream path.
+MOTION_STREAM = "http://localhost:8081/stream"
 
 
 def _ensure_dir(player_id: int):

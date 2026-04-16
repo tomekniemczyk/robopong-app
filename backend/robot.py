@@ -234,8 +234,19 @@ class Robot:
             audio.play("sim_throw")
 
     async def stop(self):
-        logger.debug("→ H (stop)")
+        """Force full motor stop. Sends B{zeros}+H+H sequence because H alone
+        sometimes leaves flywheel spinning on FW 701 (observed: 1-2 min coast
+        after mid-drill stop). B with zero PWM explicitly clears motor speed."""
+        logger.debug("→ STOP: B{zeros} + H×2")
         self._stop_drill_nowait()
+        try:
+            zero_params = self._build_ball_params(0, 0, 150, 150, 150)
+            await self._write(f"B{zero_params}")
+            await asyncio.sleep(0.05)
+        except Exception as e:
+            logger.warning("stop: B{zeros} failed: %s", e)
+        await self._write("H")
+        await asyncio.sleep(0.05)
         await self._write("H")
         if self.is_simulation:
             audio.play("sim_motor_stop")
@@ -453,6 +464,12 @@ class Robot:
         finally:
             self._tracking_drill_responses = False
             self._drill_response_queue = None
+            try:
+                zero_params = self._build_ball_params(0, 0, 150, 150, 150)
+                await self._write(f"B{zero_params}")
+                await asyncio.sleep(0.05)
+            except Exception:
+                pass
             await self._write("H")
             self._emit("drill_ended", {})
 
@@ -532,6 +549,12 @@ class Robot:
         except asyncio.CancelledError:
             pass
         finally:
+            try:
+                zero_params = self._build_ball_params(0, 0, 150, 150, 150)
+                await self._write(f"B{zero_params}")
+                await asyncio.sleep(0.05)
+            except Exception:
+                pass
             await self._write("H")
             self._emit("drill_ended", {})
 

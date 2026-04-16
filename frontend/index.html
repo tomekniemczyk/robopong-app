@@ -3358,6 +3358,7 @@ const _app = createApp({
       }
     }
     function stopDrill() {
+      if (drillIsSolo.value) send({ action: 'stop_training' })
       send({ action: 'stop_drill' })
       send({ action: 'stop' })
       drillRunning.value = false

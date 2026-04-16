@@ -482,7 +482,8 @@ class TestAsyncDrillNoPreSpinB:
 
     @pytest.mark.asyncio
     async def test_no_B_command_in_async_drill(self):
-        """Async drill should only use A commands, not B."""
+        """Async drill should only use A commands for balls, not B.
+        (B{zeros} on stop/cleanup is a motor-kill safety command, not a ball cmd.)"""
         robot, cap = make_robot(firmware=701, mode="async")
         ball = make_ball(top=120, bot=0)
 
@@ -491,8 +492,9 @@ class TestAsyncDrillNoPreSpinB:
         robot.stop_drill()
         await asyncio.sleep(0.2)
 
-        # B commands should only be H (1 char) at start, not ball B commands
-        b_ball_cmds = [c for c in cap.filter("B") if len(c) > 2]
+        # Ignore zero-motor B safety command; only ball-config B is forbidden
+        zero_b = "B000000001501501500"
+        b_ball_cmds = [c for c in cap.filter("B") if len(c) > 2 and c != zero_b]
         assert len(b_ball_cmds) == 0, (
             f"Async drill should not send B ball commands, got: {b_ball_cmds}")
 
