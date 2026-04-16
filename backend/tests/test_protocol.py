@@ -726,6 +726,82 @@ class TestApplyCalibrationCompliance:
 
 
 # ═══════════════════════════════════════════════════════════════════════════════
+# COMMIT CALIBRATION — full save sequence matching original complete()
+# ═══════════════════════════════════════════════════════════════════════════════
+
+class TestCommitCalibration:
+    """commit_calibration replicates original ControlCalibrate.complete() from stage 3.
+    Source: BUSINESS_LOGIC_COMPLETE.md:306-361, ANDROID_APP_RE.md:738-755"""
+
+    @pytest.fixture(autouse=True)
+    def setup_robot(self):
+        from robot import Robot
+        self.robot = Robot()
+        self.robot.firmware = 701
+        self.robot.robot_version = 2
+        self.sent_commands = []
+
+        async def capture_write(cmd):
+            self.sent_commands.append(cmd)
+        self.robot._write = capture_write
+        from transport import SimulationTransport
+        self.robot._transport = SimulationTransport()
+
+    @pytest.mark.asyncio
+    async def test_full_sequence_order(self):
+        """Original order: R → U → (Q if >0) → B{zeros,h-30} → O × 2 → H → W000."""
+        cal = {"top_speed": 175, "height": 183, "oscillation": 150, "rotation": 150}
+        await self.robot.commit_calibration(cal)
+        prefixes = [c[0] if c[:3] != "W00" else "W" for c in self.sent_commands]
+        # Expected: R, U, Q, B, O, O, H, W
+        assert prefixes == ["R", "U", "Q", "B", "O", "O", "H", "W"], \
+            f"Unexpected order: {self.sent_commands}"
+
+    @pytest.mark.asyncio
+    async def test_no_Q_when_speed_default(self):
+        """Gen2 default top=161 → offset=0 → Q skipped."""
+        cal = {"top_speed": 161, "height": 183, "oscillation": 150, "rotation": 150}
+        await self.robot.commit_calibration(cal)
+        q_cmds = [c for c in self.sent_commands if c.startswith("Q")]
+        assert len(q_cmds) == 0
+
+    @pytest.mark.asyncio
+    async def test_B_has_zero_motors_and_height_minus_30(self):
+        """B command in commit has zero motors and height-30 (original baseline offset).
+        Format: B{d}{sss}{d}{sss}{ooo}{hhh}{rrr}{L} — zero motors, osc=150, h=153, rot=150, leds=0."""
+        cal = {"top_speed": 161, "height": 183, "oscillation": 150, "rotation": 150}
+        await self.robot.commit_calibration(cal)
+        b_cmd = next(c for c in self.sent_commands if c.startswith("B"))
+        assert b_cmd == "B000000001501531500", f"unexpected B format: {b_cmd}"
+
+    @pytest.mark.asyncio
+    async def test_O_sent_twice(self):
+        """O command sent twice with same osc value (original complete behavior)."""
+        cal = {"top_speed": 161, "height": 183, "oscillation": 144, "rotation": 150}
+        await self.robot.commit_calibration(cal)
+        o_cmds = [c for c in self.sent_commands if c.startswith("O")]
+        assert len(o_cmds) == 2
+        assert o_cmds[0] == o_cmds[1] == "O144"
+
+    @pytest.mark.asyncio
+    async def test_ends_with_H_then_W000(self):
+        """Final two commands: H (ClearBall), W000 (SetAdjustment)."""
+        cal = {"top_speed": 161, "height": 183, "oscillation": 150, "rotation": 150}
+        await self.robot.commit_calibration(cal)
+        assert self.sent_commands[-2] == "H"
+        assert self.sent_commands[-1] == "W000"
+
+    @pytest.mark.asyncio
+    async def test_height_adjusted_clamped_to_min(self):
+        """If user height < SAFE_HEIGHT_MIN+30, h_adjusted clamped to SAFE_HEIGHT_MIN (no crash)."""
+        cal = {"top_speed": 161, "height": 80, "oscillation": 150, "rotation": 150}
+        await self.robot.commit_calibration(cal)
+        b_cmd = next(c for c in self.sent_commands if c.startswith("B"))
+        # 80-30=50, clamped to 75 (SAFE_HEIGHT_MIN)
+        assert "075" in b_cmd, f"h_adjusted should be clamped to 75; got: {b_cmd}"
+
+
+# ═══════════════════════════════════════════════════════════════════════════════
 # HANDSHAKE SEQUENCE TESTS
 # ═══════════════════════════════════════════════════════════════════════════════
 

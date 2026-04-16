@@ -245,14 +245,19 @@ class Robot:
         await self._write("V")
 
     async def apply_calibration(self, cal: dict):
-        """Send full calibration (R/U/O/Q) to firmware after every connect/reconnect.
+        """Restore calibration offsets after connect/reconnect (minimal sequence).
+
         Firmware stores U/O/R as head position offsets:
           effective_h   = h_B   + (U - 150)
           effective_osc = osc_B + (O - 150)
           effective_rot = rot_B + (R - 150)
-        Original app sent these only during calibration wizard; we send on every
-        connect so calibration survives power cycles.
-        Order: R → U → O → Q (matches original ControlCalibrate sequence)."""
+
+        Original app sent offsets only during calibration wizard and relied on
+        firmware to persist them. Robopong 3050XL does NOT persist across power
+        cycles, so we resend R/U/O/Q after every connect.
+
+        For saving calibration from UI, use commit_calibration() which runs the
+        full original ControlCalibrate.complete() sequence."""
         self._calibration = cal
 
         h   = cal.get("height",      183)
@@ -272,28 +277,58 @@ class Robot:
             await self._write(f"Q{speed_cal:03d}")
             await asyncio.sleep(0.3)
 
-        logger.info("Calibration applied: R=%d U=%d O=%d Q=%d", rot, h, osc, speed_cal)
+        logger.info("Calibration restored: R=%d U=%d O=%d Q=%d", rot, h, osc, speed_cal)
 
-    def drill_compensate(self, h: int, osc: int, rot: int) -> tuple:
-        """Compensate drill ball parameters for active firmware calibration offsets.
+    async def commit_calibration(self, cal: dict):
+        """Save calibration from UI — full sequence matching original complete() in stage 3.
 
-        Newgy drills are designed for factory defaults (U=183, O=150, R=150).
-        When user calibrates to different values (e.g. U=199), the firmware offset
-        shifts all effective servo positions. This method adjusts the raw values sent
-        in B/A commands so that effective positions always match drill design intent:
-            effective_h   = h_drill − 33   (Newgy factory reference)
-            effective_osc = osc_drill       (exact drill value)
-            effective_rot = rot_drill       (exact drill value)
-        """
-        if not self._calibration:
-            return h, osc, rot
-        cal_h   = self._calibration.get("height",      183)
-        cal_osc = self._calibration.get("oscillation", 150)
-        cal_rot = self._calibration.get("rotation",    150)
-        comp_h   = max(75,  min(210, h   + (cal_h   - 183)))
-        comp_osc = max(127, min(173, osc + (cal_osc  - 150)))
-        comp_rot = max(90,  min(210, rot + (cal_rot  - 150)))
-        return comp_h, comp_osc, comp_rot
+        Original flow (ControlCalibrate.complete, BUSINESS_LOGIC_COMPLETE.md:306-361):
+          1. R{rot}   — commit rotation offset (end of stage 1 in wizard)
+          2. U{h}     — commit height offset   (end of stage 2 in wizard)
+          3. Q{speed} — commit speed offset    (stage 3, only if offset > 0)
+          4. B{zeros, h-30, osc, rot} — final state with zero motors, height-30
+          5. wait 500ms
+          6. O{osc} × 2 with 500ms between — adjust oscillation (sent twice)
+          7. H    — ClearBall
+          8. W000 — SetAdjustment (end of calibration session)
+
+        AcePad uses 1-screen UI but matches the protocol exactly."""
+        self._calibration = cal
+
+        h   = cal.get("height",      183)
+        osc = cal.get("oscillation", 150)
+        rot = cal.get("rotation",    150)
+        top = cal.get("top_speed",   161)
+
+        await self._write(f"R{rot:03d}")
+        await asyncio.sleep(0.3)
+        await self._write(f"U{h:03d}")
+        await asyncio.sleep(0.3)
+
+        speed_cal = top - 161  # Gen2 baseline
+        if speed_cal > 0:
+            await self._write(f"Q{speed_cal:03d}")
+            await asyncio.sleep(0.3)
+
+        # B with zero motors and height-30 (original baseline offset compensation)
+        h_adjusted = max(self.SAFE_HEIGHT_MIN, h - 30)
+        params = self._build_ball_params(0, 0, osc, h_adjusted, rot)
+        await self._write(f"B{params}")
+        await asyncio.sleep(0.5)
+
+        # Adjust Oscillation × 2 (original sends twice with 500ms between)
+        await self._write(f"O{osc:03d}")
+        await asyncio.sleep(0.5)
+        await self._write(f"O{osc:03d}")
+        await asyncio.sleep(0.3)
+
+        # Finish: ClearBall + SetAdjustment
+        await self._write("H")
+        await asyncio.sleep(0.3)
+        await self._write("W000")
+
+        logger.info("Calibration committed: R=%d U=%d O=%d Q=%d + B{zeros,h-30} + O×2 + H + W000",
+                    rot, h, osc, speed_cal)
 
     # ── drill runner ──────────────────────────────────────────────────────────
 
@@ -321,9 +356,9 @@ class Robot:
         ball_cmds = []
         for b in balls:
             try:
-                h, osc, rot = self.drill_compensate(b["height"], b["oscillation"], b["rotation"])
                 params = self._build_ball_params(
-                    b["top_speed"], b["bot_speed"], osc, h, rot)
+                    b["top_speed"], b["bot_speed"],
+                    b["oscillation"], b["height"], b["rotation"])
             except Robot.SafetyError as e:
                 logger.error("SAFETY STOP in drill: %s", e)
                 await self._write("H")
@@ -458,15 +493,14 @@ class Robot:
             await asyncio.sleep(0.1)
             warmup_top = min(abs(b0["top_speed"]), self.SAFE_MOTOR_RAW_MAX) * (1 if b0["top_speed"] >= 0 else -1)
             warmup_bot = min(abs(b0["bot_speed"]), self.SAFE_MOTOR_RAW_MAX) * (1 if b0["bot_speed"] >= 0 else -1) if b0["bot_speed"] != 0 else 0
-            h0, osc0, rot0 = self.drill_compensate(b0["height"], b0["oscillation"], b0["rotation"])
-            await self.set_ball(warmup_top, warmup_bot, osc0, h0, rot0, b0.get("wait_ms", 1000))
+            await self.set_ball(warmup_top, warmup_bot, b0["oscillation"], b0["height"], b0["rotation"], b0.get("wait_ms", 1000))
             if emit_countdown:
                 self._emit("drill_countdown", {"sec": 3})
             await asyncio.sleep(1.0)
             if emit_countdown:
                 self._emit("drill_countdown", {"sec": 2})
             await asyncio.sleep(1.0)
-            await self.set_ball(b0["top_speed"], b0["bot_speed"], osc0, h0, rot0, b0.get("wait_ms", 1000))
+            await self.set_ball(b0["top_speed"], b0["bot_speed"], b0["oscillation"], b0["height"], b0["rotation"], b0.get("wait_ms", 1000))
             if emit_countdown:
                 self._emit("drill_countdown", {"sec": 1})
             await asyncio.sleep(1.0)
@@ -484,8 +518,8 @@ class Robot:
                     if first_ball_ready:
                         first_ball_ready = False
                     else:
-                        bh, bosc, brot = self.drill_compensate(b["height"], b["oscillation"], b["rotation"])
-                        await self.set_ball(b["top_speed"], b["bot_speed"], bosc, bh, brot, adj_wait)
+                        await self.set_ball(b["top_speed"], b["bot_speed"],
+                                            b["oscillation"], b["height"], b["rotation"], adj_wait)
                         await asyncio.sleep(0.15)
                     await self.throw()
                     thrown += 1

@@ -325,15 +325,13 @@ class TrainingRunner:
                     b = first_drill["balls"][0]
                     wt = max(abs(b["top_speed"]), 200) * (1 if b["top_speed"] >= 0 else -1)
                     wb = max(abs(b["bot_speed"]), 200) * (1 if b["bot_speed"] >= 0 else -1) if b["bot_speed"] != 0 else 0
-                    bh, bosc, brot = robot.drill_compensate(b["height"], b["oscillation"], b["rotation"])
-                    await robot.set_ball(wt, wb, bosc, bh, brot, b.get("wait_ms", 1000))
+                    await robot.set_ball(wt, wb, b["oscillation"], b["height"], b["rotation"], b.get("wait_ms", 1000))
                     self._ball_preloaded = True
                 if sec == 2 and first_drill and self._ball_preloaded:
                     # Phase 2: settle to actual drill params before first throw
                     b = first_drill["balls"][0]
-                    bh, bosc, brot = robot.drill_compensate(b["height"], b["oscillation"], b["rotation"])
                     await robot.set_ball(b["top_speed"], b["bot_speed"],
-                                        bosc, bh, brot,
+                                        b["oscillation"], b["height"], b["rotation"],
                                         b.get("wait_ms", 1000))
                 if sec <= 5:
                     audio.play("beep" if sec > 3 else "beep_high")

@@ -448,8 +448,8 @@ async def _handle(msg: dict, ws: WebSocket):
         addr = robot.device or _load_last_addr()
         cal, was_saved = _load_cal(addr)
         if was_saved and robot.is_connected:
-            await robot.apply_calibration(cal)
-            _log("CAL applied via WS: Q/U/O/R sent — top=%s h=%s osc=%s rot=%s",
+            await robot.commit_calibration(cal)
+            _log("CAL committed via WS: full save sequence (R/U/Q/B/O×2/H/W000) — top=%s h=%s osc=%s rot=%s",
                  cal.get("top_speed"), cal.get("height"), cal.get("oscillation"), cal.get("rotation"))
             broadcast("calibration_loaded", {"cal": cal, "calibrated": True, "addr": addr})
 
