@@ -93,16 +93,27 @@ class Session:
 sessions: Dict[WebSocket, Session] = {}
 
 
+_main_loop: "asyncio.AbstractEventLoop | None" = None
+
+
 def broadcast(event_type: str, data: dict):
+    """Broadcast event to all sessions. Safe to call from sync contexts
+    (e.g. log handler from PUT endpoint) — uses main loop reference.
+
+    Never removes sessions — lifecycle is managed by ws_endpoint's disconnect path.
+    Failed send_text (closed ws) is tolerated; cleanup happens on WebSocketDisconnect."""
     msg = json.dumps({"type": event_type, **data})
-    dead = []
+    loop = _main_loop
     for ws in list(sessions):
         try:
-            asyncio.create_task(ws.send_text(msg))
+            if loop and loop.is_running():
+                try:
+                    asyncio.get_running_loop()
+                    asyncio.create_task(ws.send_text(msg))
+                except RuntimeError:
+                    asyncio.run_coroutine_threadsafe(ws.send_text(msg), loop)
         except Exception:
-            dead.append(ws)
-    for ws in dead:
-        sessions.pop(ws, None)
+            pass
 
 
 async def _send(ws: WebSocket, event_type: str, data: dict):
@@ -238,7 +249,8 @@ async def _standby_loop():
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    global robot, DEFAULT_CAL
+    global robot, DEFAULT_CAL, _main_loop
+    _main_loop = asyncio.get_running_loop()
     _install_ws_log_handler()
     db.init()
     presets.init_presets()
