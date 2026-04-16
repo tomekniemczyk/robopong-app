@@ -150,6 +150,18 @@ def init():
                 UNIQUE(player_id, item_type, item_id)
             )
         """)
+        c.execute("""
+            CREATE TABLE IF NOT EXISTS calibration (
+                addr        TEXT PRIMARY KEY,
+                top_speed   INTEGER NOT NULL,
+                bot_speed   INTEGER NOT NULL,
+                oscillation INTEGER NOT NULL,
+                height      INTEGER NOT NULL,
+                rotation    INTEGER NOT NULL,
+                wait_ms     INTEGER NOT NULL DEFAULT 1000,
+                updated_at  TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            )
+        """)
         # ── Migrations ──────────────────────────────────────────
         _migrate(c)
 
@@ -943,3 +955,43 @@ def get_ball_landings(drill_id: int, player_id: int | None = None) -> list:
 def delete_ball_landing(lid: int):
     with sqlite3.connect(DB) as c:
         c.execute("DELETE FROM ball_landings WHERE id=?", (lid,))
+
+
+# ── Calibration ───────────────────────────────────────────────────────────────
+
+CAL_FIELDS = ("top_speed", "bot_speed", "oscillation", "height", "rotation", "wait_ms")
+
+
+def get_calibration(addr: str = "") -> tuple[dict | None, bool]:
+    """Zwraca (cal_dict, was_saved). Fallback per-device → '' (default).
+    was_saved=True jeśli jakikolwiek wpis istnieje (device lub default)."""
+    with sqlite3.connect(DB) as c:
+        r = c.execute(
+            "SELECT top_speed, bot_speed, oscillation, height, rotation, wait_ms "
+            "FROM calibration WHERE addr=?", (addr,)
+        ).fetchone()
+        if not r and addr:
+            r = c.execute(
+                "SELECT top_speed, bot_speed, oscillation, height, rotation, wait_ms "
+                "FROM calibration WHERE addr=''"
+            ).fetchone()
+        if not r:
+            return None, False
+        return dict(zip(CAL_FIELDS, r)), True
+
+
+def save_calibration(data: dict, addr: str = ""):
+    """Zapisuje kalibrację per-device i kopiuje do default (addr='')."""
+    vals = tuple(data[f] for f in CAL_FIELDS)
+    with sqlite3.connect(DB) as c:
+        for key in {addr, ""}:
+            c.execute(
+                "INSERT INTO calibration (addr, top_speed, bot_speed, oscillation, height, rotation, wait_ms, updated_at) "
+                "VALUES (?,?,?,?,?,?,?,CURRENT_TIMESTAMP) "
+                "ON CONFLICT(addr) DO UPDATE SET "
+                "top_speed=excluded.top_speed, bot_speed=excluded.bot_speed, "
+                "oscillation=excluded.oscillation, height=excluded.height, "
+                "rotation=excluded.rotation, wait_ms=excluded.wait_ms, "
+                "updated_at=CURRENT_TIMESTAMP",
+                (key,) + vals
+            )

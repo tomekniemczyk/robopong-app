@@ -78,12 +78,12 @@ DB/Storage          Robopong 3050XL
 | GitHub Actions | HTTPS | CI/CD pipeline |
 
 ## Database Schema
-- **robopong.db**: 11 tables — scenarios, players, user_trainings, training_history, recordings_meta, voice_notes, ball_landings, ball_exploration, favorites, drill_folders, drills
+- **robopong.db**: 12 tables — scenarios, players, user_trainings, training_history, recordings_meta, voice_notes, ball_landings, ball_exploration, favorites, calibration, drill_folders, drills
 - **presets.db**: Robot calibration presets (separate database)
 - **Schema defined in**: `backend/db.py` (CREATE TABLE statements in `init_db()`)
 
 ## Configuration
-- `.calibration.json` — Per-device calibration (keyed by BLE address)
+- `calibration` table in `robopong.db` — Per-device calibration (PK = address, addr='' = default fallback)
 - `.last_device` — Last connected device for auto-reconnect
 - `*_default.json` — Factory defaults (drills, exercises, trainings)
 - `.*_user.json` — User overrides layered on top of defaults

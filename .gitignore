@@ -14,7 +14,6 @@ re/cabinet/
 re/*.msi
 re/*.cab
 .firecrawl/
-backend/.calibration.json
 backend/.last_device
 backend/uvicorn.log
 backend/recordings/

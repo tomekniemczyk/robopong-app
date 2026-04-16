@@ -136,7 +136,6 @@ def _broadcast_sessions():
 
 
 LAST_ADDR_FILE = Path(__file__).parent / ".last_device"
-CAL_FILE       = Path(__file__).parent / ".calibration.json"
 
 # Domyślne wartości kalibracji z MSI (FillRobot: Top=80, Bot=0, h/osc/rot=128)
 # Używamy bot=80 (nie 0) bo kalibracja wymaga obu silników do oceny lotu piłki.
@@ -146,42 +145,19 @@ DEFAULT_CAL = {"top_speed": 161, "bot_speed": 0, "oscillation": 150, "height": 1
 
 def _load_cal(addr: str = "") -> tuple:
     """Zwraca (cal_dict, was_saved) — was_saved=True jeśli użytkownik zapisał kalibrację dla tego urządzenia."""
-    try:
-        raw = json.loads(CAL_FILE.read_text())
-        # Stary format płaski → automatyczna migracja
-        if "top_speed" in raw:
-            logger.debug("CAL _load_cal(%s): stary format płaski → was_saved=True", addr)
-            return raw, True
-        specific = raw.get(addr)
-        if specific:
-            logger.debug("CAL _load_cal(%s): znaleziono wpis specyficzny dla urządzenia → was_saved=True", addr)
-            return specific, True
-        fallback = raw.get("_default_")
-        if fallback:
-            # _default_ istnieje = użytkownik zapisał kalibrację (nawet bez adresu) → was_saved=True
-            logger.debug("CAL _load_cal(%s): brak wpisu per-device, fallback _default_ → was_saved=True", addr)
-            return fallback, True
-        logger.debug("CAL _load_cal(%s): plik istnieje ale brak danych → DEFAULT_CAL, was_saved=False", addr)
-        return DEFAULT_CAL.copy(), False
-    except Exception as ex:
-        logger.debug("CAL _load_cal(%s): brak pliku lub błąd (%s) → DEFAULT_CAL, was_saved=False", addr, ex)
-        return DEFAULT_CAL.copy(), False
+    cal, was_saved = db.get_calibration(addr)
+    if was_saved:
+        logger.debug("CAL _load_cal(%s): DB hit → was_saved=True", addr)
+        return cal, True
+    logger.debug("CAL _load_cal(%s): brak w DB → DEFAULT_CAL, was_saved=False", addr)
+    return DEFAULT_CAL.copy(), False
 
 
 def _save_cal(data: dict, addr: str = ""):
     try:
-        try:
-            raw = json.loads(CAL_FILE.read_text())
-            if "top_speed" in raw:
-                raw = {"_default_": raw}  # migracja
-        except Exception:
-            raw = {}
-        key = addr or "_default_"
-        raw[key] = data
-        raw["_default_"] = data   # zawsze aktualizuj domyślny przy zapisie
-        CAL_FILE.write_text(json.dumps(raw))
-    except Exception:
-        pass
+        db.save_calibration(data, addr)
+    except Exception as ex:
+        logger.warning("CAL _save_cal(%s) failed: %s", addr, ex)
 
 
 def _load_last_addr() -> str:

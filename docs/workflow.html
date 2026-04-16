@@ -177,10 +177,9 @@
     <div class="arch-box data">
       <h4>Storage</h4>
       <ul>
-        <li>SQLite: robopong.db (11 tabel)</li>
+        <li>SQLite: robopong.db (12 tabel, w tym calibration per-device)</li>
         <li>SQLite: presets.db</li>
         <li>JSON: drills, exercises, trainings</li>
-        <li>.calibration.json (per-device)</li>
         <li>recordings/&lt;player_id&gt;/*.mp4</li>
       </ul>
     </div>
@@ -241,7 +240,7 @@
 <span class="arrow">  │</span>                      <span class="arrow">│</span>                    <span class="arrow">│</span><span class="cmd">──_handshake()─────&gt;</span>  <span class="note">(patrz: Handshake)</span>
 <span class="arrow">  │</span>                      <span class="arrow">│</span>                    <span class="arrow">│</span><span class="cmd">──health_monitor()──&gt;</span>  <span class="note">(co 10s: Z ping)</span>
 <span class="arrow">  │</span>                      <span class="arrow">│</span><span class="resp">&lt;──True──────────</span><span class="arrow">│</span>                    <span class="arrow">│</span>                      <span class="arrow">│</span>
-<span class="arrow">  │</span>                      <span class="arrow">│</span><span class="cmd">──_load_cal(addr)───</span>  <span class="note">.calibration.json</span>
+<span class="arrow">  │</span>                      <span class="arrow">│</span><span class="cmd">──_load_cal(addr)───</span>  <span class="note">DB: calibration</span>
 <span class="arrow">  │</span><span class="ws">&lt;─calibration_loaded─</span><span class="arrow">│</span>                    <span class="arrow">│</span>
 <span class="arrow">  │</span><span class="ws">&lt;─status{connected}──</span><span class="arrow">│</span>                    <span class="arrow">│</span>
 </div></div>
@@ -343,7 +342,7 @@
 <span class="arrow">│</span>                         <span class="arrow">│</span>                  <span class="arrow">│</span>                  <span class="arrow">│</span>
 <span class="note">  ── User zapisuje kalibracje ──</span>
 <span class="arrow">│</span>                         <span class="arrow">│</span>                  <span class="arrow">│</span>
-<span class="arrow">│</span><span class="ws">─PUT /api/calibration──&gt;</span><span class="arrow">│</span><span class="cmd">──.calibration.json (per-device key)──&gt;</span></div></div>
+<span class="arrow">│</span><span class="ws">─PUT /api/calibration──&gt;</span><span class="arrow">│</span><span class="cmd">──DB: calibration (addr key + default)──&gt;</span></div></div>
 
   <h3>Wartosci domyslne kalibracji</h3>
   <table>

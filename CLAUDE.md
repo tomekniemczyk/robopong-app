@@ -84,7 +84,7 @@ venv/bin/pytest tests/test_api.py::nazwa_testu
 - `main.py` — FastAPI app, REST endpoints + WebSocket (`/ws`), broadcast logów, session management (CONTROLLER/OBSERVER/PENDING + takeover)
 - `training.py` — `TrainingRunner`: state machine (start/stop/pause/resume/skip), integracja z Recorder, historia sesji, step notes, percent override
 - `recordings.py` — `Recorder`: ffmpeg subprocess (motion MJPEG → MP4), auto-delete <30s, metadata do SQLite
-- `db.py` — SQLite (`robopong.db`): 11 tabel (patrz niżej)
+- `db.py` — SQLite (`robopong.db`): 12 tabel (patrz niżej)
 - `presets.py` + `presets.db` — osobna baza presetów konfiguracji robota
 - `drills.py`, `exercises.py`, `training.py` — CRUD dla odpowiednich encji (file-based JSON + SQLite hybryd)
 - `players.py` — thin wrapper nad `db.py`, walidacja, cascade delete
@@ -118,6 +118,7 @@ venv/bin/pytest tests/test_api.py::nazwa_testu
 | ball_landings | pozycje lądowania piłek (player, drill, x, y) |
 | ball_exploration | eksploracja parametrów piłki (pełne parametry + ocena) |
 | favorites | ulubione per gracz (training/drill/exercise) |
+| calibration | kalibracja per-device (addr PK, top/bot/osc/h/rot/wait, updated_at; addr='' = default) |
 | drill_folders | foldery drilli (legacy, backward compat) |
 | drills | drille (legacy, backward compat) |
 
@@ -129,7 +130,6 @@ venv/bin/pytest tests/test_api.py::nazwa_testu
 | `drills_default.json` + `.drills_user.json` | factory drille + user overrides/custom |
 | `exercises_default.json` + `.exercises_user.json` | factory ćwiczenia + user duration overrides |
 | `trainings_default.json` | factory treningi (readonly) |
-| `.calibration.json` | kalibracja per-device (keyed by address) |
 | `.last_device` | ostatnio połączone urządzenie |
 
 ## Mapa API
@@ -291,7 +291,7 @@ robopong-app/
 │   ├── main.py         (1152) # REST API + WebSocket /ws + static files
 │   ├── robot.py         (418) # Robot: orkiestracja połączenia, komendy, drill loop
 │   ├── transport.py     (364) # ABC RobotTransport → BLE / USB / Simulation
-│   ├── db.py            (927) # SQLite: 11 tabel (players, history, recordings, ...)
+│   ├── db.py            (993) # SQLite: 12 tabel (players, history, recordings, calibration, ...)
 │   ├── presets.py         (74) # SQLite: presety konfiguracji robota
 │   ├── drills.py         (284) # CRUD drilli (file-based JSON)
 │   ├── exercises.py       (80) # CRUD ćwiczeń (file-based JSON)
@@ -372,7 +372,7 @@ Protokół Robopong 3050XL jest w pełni udokumentowany w `re/`:
 - Przycisk "Wyślij" = rozkręca silniki (trzyma)
 - Przycisk "Rzut" = wyślij + rzut + auto-stop
 - Bez auto-rozgrzewki silników przy wejściu w kalibrację
-- Kalibracja per-device (keyed by device address w `.calibration.json`)
+- Kalibracja per-device (keyed by device address w tabeli `calibration`; wiersz `addr=''` = default fallback)
 - Default kalibracji (Android Gen2): top=160, bot=0, osc=150, h=183, rot=150, wait=1000
 
 ## Claude Code Setup

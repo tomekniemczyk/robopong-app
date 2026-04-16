@@ -28,7 +28,7 @@ Motors MUST stop after calibration throw. No auto motor warmup when entering cal
 
 ### Per-Device Calibration
 
-Calibration is stored per-device, keyed by BLE address in `.calibration.json`. The robot firmware does not persist calibration -- it MUST be sent after every connection.
+Calibration is stored per-device in the SQLite `calibration` table, keyed by BLE/USB address (PK). A row with empty address (`addr=''`) serves as the default fallback when no device-specific entry exists. The robot firmware does not persist calibration -- it MUST be sent after every connection.
 
 Default calibration values (Android Gen2):
 

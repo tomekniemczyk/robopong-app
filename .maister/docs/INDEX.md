@@ -111,7 +111,7 @@ Head center position (150, not 128) for oscillation/rotation/height, parameter r
 Transport terminators (BLE `\r` vs USB `\r\n`), USB initialization (raw `0x5A` byte x2 at 9600 baud, not string), BLE 20-byte payload limit with split/200ms delay, firmware-dependent command selection (B vs A/wTA for FW >= 701).
 
 #### Connection Sequences (`standards/protocol/connection-sequences.md`)
-Connection handshake (Z x3, H, F, I, J02), health monitor ping every 10s, calibration throw sequence with timing (set_ball, 300ms, T, 1500ms, H), per-device calibration persistence (keyed by BLE address in .calibration.json, must resend after every connect), default calibration values (top=160, bot=0, osc=150, h=183, rot=150, wait=1000).
+Connection handshake (Z x3, H, F, I, J02), health monitor ping every 10s, calibration throw sequence with timing (set_ball, 300ms, T, 1500ms, H), per-device calibration persistence (keyed by address in SQLite `calibration` table with addr='' fallback, must resend after every connect), default calibration values (top=160, bot=0, osc=150, h=183, rot=150, wait=1000).
 
 ---
 
