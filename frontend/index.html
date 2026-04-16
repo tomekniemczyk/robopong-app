@@ -2807,7 +2807,7 @@ const _app = createApp({
         trainingIsPaused.value = false
         trainingScenarioName.value = m.name
         trainingTotalSteps.value = m.total_steps
-        if (m.skipped_indices?.length) {
+        if (m.skipped_indices?.length && trainingStepsList.value.length > m.total_steps) {
           const skip = new Set(m.skipped_indices)
           trainingStepsList.value = trainingStepsList.value.filter((_, i) => !skip.has(i))
         }
@@ -3781,8 +3781,20 @@ const _app = createApp({
       trainingIsPaused.value = false
       trainingPhase.value = 'countdown'
       trainingScenarioName.value = tr.name || ''
-      trainingStepsList.value = (tr.steps || []).map(s => ({...s}))
+      let steps = (tr.steps || []).map(s => ({...s}))
+      if (skipWarmup.value) while (steps.length && steps[0].exercise_id) steps.shift()
+      if (skipCooldown.value) while (steps.length && steps[steps.length - 1].exercise_id) steps.pop()
+      trainingStepsList.value = steps
       trainingStep.value = 0
+      trainingDrillName.value = ''
+      trainingBalls.value = []
+      trainingBall.value = 0
+      trainingBallTotal.value = 0
+      trainingTimer.value = 0
+      trainingEstRemaining.value = 0
+      trainingExerciseId.value = null
+      trainingExerciseDesc.value = ''
+      trainingNextDrill.value = ''
       sessionNotes.value = []
       send({ action: 'run_training', id: tr.id, player_id: selectedPlayerId.value, record: recordTraining.value, record_type: recordType.value, start_from_step: resumeFromStep.value || 0, skip_warmup: skipWarmup.value, skip_cooldown: skipCooldown.value })
       trainingStartModal.value = null
