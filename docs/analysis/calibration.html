@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kalibracja — Analiza oryginalnego protokołu Robopong 3050XL</title>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+<style>
+  :root {
+    --bg: #0f1117;
+    --bg-elev: #1a1d29;
+    --bg-card: #242837;
+    --fg: #e4e6eb;
+    --fg-dim: #9ca3b0;
+    --accent: #7aa2f7;
+    --accent-warm: #f7a77a;
+    --accent-ok: #7af7a2;
+    --accent-warn: #f7d77a;
+    --accent-err: #f77a9c;
+    --border: #2d3142;
+    --mono: 'SF Mono', Menlo, Monaco, Consolas, monospace;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--fg);
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    line-height: 1.65;
+  }
+  .container { max-width: 1100px; margin: 0 auto; padding: 40px 24px 80px; }
+  .nav {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 24px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--border);
+    font-size: 0.9rem;
+  }
+  .nav a { color: var(--accent); text-decoration: none; }
+  .nav a:hover { text-decoration: underline; }
+  .nav .sep { color: var(--fg-dim); }
+  h1 { margin: 0 0 8px; font-size: 1.8rem; }
+  .subtitle { color: var(--fg-dim); margin: 0 0 32px; }
+  h2 {
+    font-size: 1.3rem;
+    margin: 40px 0 16px;
+    color: var(--accent);
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 8px;
+  }
+  h3 {
+    font-size: 1.05rem;
+    margin: 28px 0 12px;
+    color: var(--accent-warm);
+  }
+  h4 {
+    font-size: 0.95rem;
+    margin: 20px 0 8px;
+    color: var(--accent-ok);
+  }
+  p { margin: 0 0 16px; }
+  ul, ol { margin: 0 0 16px; padding-left: 24px; }
+  li { margin-bottom: 4px; }
+  code {
+    font-family: var(--mono);
+    background: var(--bg-card);
+    padding: 1px 6px;
+    border-radius: 3px;
+    font-size: 0.9em;
+    color: var(--accent-warm);
+  }
+  pre {
+    background: var(--bg-elev);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 16px 20px;
+    overflow-x: auto;
+    font-family: var(--mono);
+    font-size: 0.85rem;
+    line-height: 1.5;
+  }
+  pre code { background: none; padding: 0; color: var(--fg); }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 16px 0;
+    background: var(--bg-elev);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    overflow: hidden;
+    font-size: 0.9rem;
+  }
+  th, td {
+    text-align: left;
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--border);
+  }
+  th { background: var(--bg-card); color: var(--accent); font-weight: 600; }
+  tr:last-child td { border-bottom: none; }
+  .callout {
+    border-left: 3px solid var(--accent);
+    background: var(--bg-elev);
+    padding: 14px 18px;
+    border-radius: 4px;
+    margin: 20px 0;
+  }
+  .callout.warn { border-color: var(--accent-warn); }
+  .callout.err  { border-color: var(--accent-err); }
+  .callout.ok   { border-color: var(--accent-ok); }
+  .mermaid {
+    background: var(--bg-elev);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 20px;
+    margin: 20px 0;
+    text-align: center;
+  }
+  .source {
+    font-size: 0.8rem;
+    color: var(--fg-dim);
+    font-family: var(--mono);
+    margin-top: -8px;
+    margin-bottom: 16px;
+  }
+  .stages {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 16px;
+    margin: 20px 0;
+  }
+  .stage {
+    background: var(--bg-elev);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 20px;
+    position: relative;
+  }
+  .stage-num {
+    position: absolute;
+    top: -14px;
+    left: 20px;
+    background: var(--accent);
+    color: var(--bg);
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-family: var(--mono);
+  }
+  .stage h3 { margin-top: 12px; }
+  .stage .cmd {
+    font-family: var(--mono);
+    color: var(--accent-warm);
+    font-size: 0.95rem;
+  }
+  .cmd-box {
+    background: var(--bg-card);
+    border-radius: 4px;
+    padding: 10px 14px;
+    margin: 8px 0;
+    font-family: var(--mono);
+    font-size: 0.85rem;
+  }
+  .warn-text { color: var(--accent-warn); }
+  .err-text  { color: var(--accent-err); }
+  .ok-text   { color: var(--accent-ok); }
+  .bug {
+    background: rgba(247, 122, 156, 0.1);
+    border: 1px solid var(--accent-err);
+    border-radius: 6px;
+    padding: 14px 18px;
+    margin: 16px 0;
+  }
+  .bug strong { color: var(--accent-err); }
+</style>
+</head>
+<body>
+<div class="container">
+  <nav class="nav">
+    <a href="index.html">← Index</a>
+    <span class="sep">·</span>
+    <a href="warmup.html">🔥 Warmup</a>
+    <span class="sep">·</span>
+    <a href="calibration.html">🎯 Kalibracja</a>
+    <span class="sep">·</span>
+    <a href="drills.html">🎾 Drille</a>
+  </nav>
+
+  <h1>🎯 Kalibracja — 3-etapowy proces</h1>
+  <p class="subtitle">Rotation → Height → Oscillation + Speed. Pełny flow oryginału z komendami R/U/O/Q/W.</p>
+
+  <div class="callout warn">
+    <strong>⚠ Kluczowe odkrycie:</strong> kalibracja jest <span class="warn-text">3-etapowa</span> (3 osobne ekrany w UI), nie pojedyncza.
+    Każdy etap reguluje inną oś robota.
+  </div>
+  <div class="callout err">
+    <strong>⚠ Firmware NIE persystuje kalibracji!</strong> Wartości zapisane są tylko lokalnie (SharedPreferences / NSUserDefaults / Configuration.xml). Po każdym nowym połączeniu MUSI być re-wysłana.
+    <p class="source" style="margin-top:8px;">Memory: <code>feedback_calibration_required.md</code></p>
+  </div>
+
+  <h2>1. Trzy etapy kalibracji</h2>
+  <div class="stages">
+    <div class="stage">
+      <div class="stage-num">1</div>
+      <h3>Rotation</h3>
+      <p>Regulacja kąta rotacji głowicy.</p>
+      <div class="cmd-box">
+        Ball: zerowe silniki<br>
+        H=50%, Osc=50%, Rot=0°<br>
+        → <span class="cmd">R{raw:000}\r</span>
+      </div>
+      <p><strong>RotCAL</strong> = raw − 150</p>
+    </div>
+    <div class="stage">
+      <div class="stage-num">2</div>
+      <h3>Height</h3>
+      <p>Regulacja wysokości głowicy.</p>
+      <div class="cmd-box">
+        Ball: zerowe silniki<br>
+        H=50%, Osc=50%, Rot=0°<br>
+        → <span class="cmd">U{raw:000}\r</span>
+      </div>
+      <p><strong>HeightCAL</strong> = raw − 150</p>
+    </div>
+    <div class="stage">
+      <div class="stage-num">3</div>
+      <h3>Oscillation + Speed</h3>
+      <p>Oscylacja + prędkość silnika (z testowym rzutem).</p>
+      <div class="cmd-box">
+        Gen2: Top=73%, H=80%, Osc=50%<br>
+        Gen1: Top=77%, H=80%, Osc=50%<br>
+        → <span class="cmd">V\r × 2, Q, B, O × 2, H, W</span>
+      </div>
+      <p><strong>OscCAL</strong> = raw − 150, <strong>SpeedCAL</strong> = raw_top − baseline</p>
+    </div>
+  </div>
+
+  <h2>2. Sequence diagram — pełna sekwencja 3 etapów</h2>
+  <p class="source">Źródło: <code>BUSINESS_LOGIC_COMPLETE.md:306-361</code>, <code>ANDROID_APP_RE.md:676-781</code></p>
+
+  <div class="mermaid">
+sequenceDiagram
+    autonumber
+    participant U as User
+    participant A as App
+    participant R as Robot
+
+    rect rgb(30, 35, 50)
+    Note over U,R: ETAP 1 — ROTATION
+    A->>R: B{zero motors, H=50%, Osc=50%}\r
+    R-->>A: K
+    loop Użytkownik reguluje
+        U->>A: ±1 lub ±2 (zmiana kierunku)
+        A->>R: B{updated rot}\r
+        R-->>A: K
+    end
+    U->>A: Done
+    A->>R: R{raw:000}\r
+    R-->>A: K
+    Note over A: RotCAL = raw - 150 → SharedPreferences
+    end
+
+    rect rgb(30, 50, 40)
+    Note over U,R: ETAP 2 — HEIGHT
+    loop Użytkownik reguluje
+        U->>A: ±1 height
+        A->>R: B{updated height}\r
+        R-->>A: K
+    end
+    U->>A: Done
+    A->>R: U{raw:000}\r
+    R-->>A: K
+    Note over A: HeightCAL = raw - 150
+    end
+
+    rect rgb(50, 40, 30)
+    Note over U,R: ETAP 3 — OSCILLATION + SPEED
+    A->>R: V\r (BeginCalibration #1)
+    Note over A: wait 500ms
+    A->>R: V\r (BeginCalibration #2)
+    A->>R: B{calibration ball}\r
+    R-->>A: K
+    Note over A: Ball: Gen2 Top=73% / Gen1 Top=77%
+    loop Użytkownik reguluje
+        U->>A: ↑↓ TopMotor ±1%
+        U->>A: ←→ Osc ±4 (Android/iOS) lub ±2 (Windows)
+        A->>R: B{updated}\r
+        R-->>A: K
+    end
+    U->>A: ThrowBall (test)
+    A->>R: T\r
+    R-->>A: K (max 7s)
+
+    U->>A: Done → complete()
+    Note over A: Height -= 30 (baseline offset!)
+
+    alt offset_top > 0
+        A->>R: Q{offset:000}\r
+        R-->>A: K
+    end
+
+    A->>R: B{zero motors, h-30}\r
+    R-->>A: K
+    Note over A: wait 500ms
+    A->>R: O{raw:000}\r (AdjustOsc #1)
+    R-->>A: K
+    Note over A: wait 500ms
+    A->>R: O{raw:000}\r (AdjustOsc #2)
+    R-->>A: K
+
+    A->>R: H\r (ClearBall)
+    R-->>A: K
+    A->>R: W000\r (SetAdjustment)
+    R-->>A: K
+    Note over A: IsCalibrated = true
+    end
+  </div>
+
+  <h2>3. Timing table — etap 3 (krytyczny)</h2>
+  <table>
+    <tr><th>Krok</th><th>Komenda</th><th>Delay</th><th>Timeout odp.</th><th>Źródło</th></tr>
+    <tr><td>V #1</td><td><code>V\r</code></td><td>—</td><td>1s</td><td><code>BUSINESS_LOGIC.md:216</code></td></tr>
+    <tr><td>V #2</td><td><code>V\r</code></td><td>500ms po V#1</td><td>1s</td><td><code>WINDOWS_RE.md:294</code></td></tr>
+    <tr><td>setBall kal.</td><td><code>B{params}\r</code></td><td>—</td><td>500ms</td><td><code>BUSINESS_LOGIC.md:217</code></td></tr>
+    <tr><td>User adjusts</td><td><code>B{updated}\r</code></td><td>—</td><td>500ms</td><td>—</td></tr>
+    <tr><td>Test throw</td><td><code>T\r</code></td><td>—</td><td>7s</td><td><code>BUSINESS_LOGIC.md:214</code></td></tr>
+    <tr><td colspan="5" style="background:var(--bg-card); color: var(--accent-warm);"><strong>complete() sequence:</strong></td></tr>
+    <tr><td>Q (if offset&gt;0)</td><td><code>Q{offset:000}\r</code></td><td>—</td><td>500ms</td><td><code>ANDROID_RE.md:727</code></td></tr>
+    <tr><td>SetBall zero</td><td><code>B{zeros}\r</code></td><td>500ms po Q</td><td>500ms</td><td><code>ANDROID_RE.md:744</code></td></tr>
+    <tr><td>O #1</td><td><code>O{raw:000}\r</code></td><td>500ms po B</td><td>1s</td><td><code>ANDROID_RE.md:748</code></td></tr>
+    <tr><td>O #2 <span class="err-text">(×2!)</span></td><td><code>O{raw:000}\r</code></td><td>500ms po #1</td><td>1s</td><td><code>WINDOWS_RE.md:377</code></td></tr>
+    <tr><td>ClearBall</td><td><code>H\r</code></td><td>—</td><td>5s</td><td><code>ANDROID_RE.md:752</code></td></tr>
+    <tr><td>SetAdjustment</td><td><code>W000\r</code></td><td>—</td><td>1s</td><td><code>BUSINESS_LOGIC.md:227</code></td></tr>
+  </table>
+
+  <h2>4. Wartości startowe piłki kalibracyjnej</h2>
+  <table>
+    <tr><th>Wersja robota</th><th>TopMotor %</th><th>BotMotor %</th><th>Height %</th><th>Osc %</th><th>Rot °</th><th>WaitTime</th></tr>
+    <tr><td><strong>SecondRun (Gen2)</strong></td><td>73</td><td>0</td><td>80</td><td>50</td><td>0</td><td>1000 ms</td></tr>
+    <tr><td>Original / Gen1</td><td>77</td><td>0</td><td>80</td><td>50</td><td>0</td><td>1000 ms</td></tr>
+  </table>
+  <p class="source">Źródło: <code>ANDROID_APP_RE.md:680-686</code></p>
+
+  <p>Etapy 1 i 2 (rotacja, wysokość): <em>wszystkie silniki zerowe</em>, Height=50%, Osc=50%, Rot=0°.</p>
+
+  <h2>5. Komendy offsetów kalibracyjnych</h2>
+  <table>
+    <tr><th>Komenda</th><th>Format</th><th>Obliczenie offsetu</th><th>Timeout</th></tr>
+    <tr><td><code>U</code> (height)</td><td><code>U{raw:000}\r</code></td><td>HeightCAL = raw − 150</td><td>1s</td></tr>
+    <tr><td><code>O</code> (oscillation)</td><td><code>O{raw:000}\r</code></td><td>OscCAL = raw − 150</td><td>1s</td></tr>
+    <tr><td><code>R</code> (rotation)</td><td><code>R{raw:000}\r</code></td><td>RotCAL = raw − 150</td><td>1s</td></tr>
+    <tr><td><code>Q</code> (speed)</td><td><code>Q{offset:000}\r</code></td><td>SpeedCAL = raw_top − 170/161 (tylko jeśli &gt; 0)</td><td>500 ms</td></tr>
+    <tr><td><code>W</code> (adjustment)</td><td><code>W000\r</code></td><td>—</td><td>1s</td></tr>
+  </table>
+
+  <h2>6. SpeedCAL — algorytm z baseline</h2>
+  <p class="source">Źródło: <code>ANDROID_APP_RE.md:715-736</code></p>
+
+  <pre><code>def set_speed_cal(ball):
+    robot_ball = advanced_ball_converter.get_robot_ball(ball, left_handed)
+    # robot_ball.TopMotorSpeed to raw (28..210)
+    # np. dla 73% → 28 + 182×0.73 = 161
+
+    if robot_version == SecondRun:         # Gen2
+        offset = robot_ball.TopMotorSpeed - 161  # baseline 161
+    else:                                   # Original / Gen1
+        offset = robot_ball.TopMotorSpeed - 170  # baseline 170
+        # UWAGA: 170 a nie 168 (prawdopodobnie hardkodowany bug,
+        # zaokrąglenie historyczne)
+
+    config["SpeedCAL"] = offset  # zapis lokalny (może być 0/ujemny/dodatni)
+
+    if offset &gt; 0:
+        robot.send(f"Q{offset:03d}\r")  # timeout 500ms
+    # jeśli offset &lt;= 0: TYLKO zapis lokalny, BEZ wysłania do robota
+</code></pre>
+
+  <div class="bug">
+    <strong>🐛 BUG w oryginale:</strong> SpeedCAL jest <span class="err-text">martwym kodem</span>!
+    Wartość odczytana z config w <code>setBall()</code>, ale natychmiast nadpisywana na <code>0</code> przed obliczeniem PWM.
+    Jest wysyłany tylko raz przez komendę <code>Q</code>, nigdy nie wpływa na kolejne komendy B/A.
+    <p class="source" style="margin-top:8px;">Źródło: <code>BUSINESS_LOGIC_COMPLETE.md:503-510</code></p>
+  </div>
+
+  <h2>7. Pseudokod — complete() etap 3</h2>
+  <pre><code>def complete_calibration(ball):
+    # a) przywróć left-handed (w etapie 3 wymuszamy IsLeftHanded=false)
+    is_left_handed = _saved_is_left_handed
+
+    # b) Obniż height o 30 punktów (baseline offset compensation)
+    ball.head_position.height -= 30
+
+    # c) SetSpeedCAL
+    set_speed_cal(ball)               # wysyła Q{offset} jeśli offset > 0
+
+    # d) Zeruj silniki i wyślij piłkę
+    ball.top_motor_speed = 0
+    ball.bottom_motor_speed = 0
+    set_ball(ball, force=True, is_cal=True)
+    wait(500)
+
+    # e) Adjust Oscillation × 2 (z 500ms przerwą)
+    adjust_oscillation(ball)          # O{raw}, OscCAL = raw - 150
+    wait(500)
+    adjust_oscillation(ball)          # powtórka!
+
+    # f) FinishCalibration
+    config["IsCalibrated"] = True
+    clear_ball()                      # H\r
+    set_adjustment()                  # W000\r
+</code></pre>
+
+  <h2>8. Persystencja kalibracji — per platform</h2>
+  <table>
+    <tr><th>Klucz</th><th>Android</th><th>iOS</th><th>Windows</th></tr>
+    <tr><td>SpeedCAL</td><td class="ok-text">SharedPreferences</td><td class="ok-text">NSUserDefaults</td><td class="ok-text">Configuration.xml</td></tr>
+    <tr><td>HeightCAL</td><td class="ok-text">SharedPreferences</td><td class="ok-text">NSUserDefaults</td><td class="err-text">BRAK!</td></tr>
+    <tr><td>OscCAL</td><td class="ok-text">SharedPreferences</td><td class="ok-text">NSUserDefaults</td><td class="err-text">BRAK!</td></tr>
+    <tr><td>RotCAL</td><td class="ok-text">SharedPreferences</td><td class="ok-text">NSUserDefaults</td><td class="err-text">BRAK!</td></tr>
+    <tr><td>IsCalibrated</td><td class="ok-text">SharedPreferences</td><td class="ok-text">NSUserDefaults</td><td class="ok-text">Configuration.xml</td></tr>
+    <tr><td>Generation</td><td class="ok-text">SharedPreferences</td><td class="ok-text">NSUserDefaults</td><td class="err-text">BRAK</td></tr>
+  </table>
+  <p>Windows zapisuje offsety osi tylko w <code>currentconfig.xml</code> (ControlCallibrate), nie w Configuration.xml.</p>
+
+  <h2>9. Różnice między platformami</h2>
+  <table>
+    <tr><th>Aspekt</th><th>Android</th><th>iOS</th><th>Windows</th></tr>
+    <tr><td>Liczba ekranów</td><td>3</td><td>3</td><td>3</td></tr>
+    <tr><td>Krok TopMotor ±1%</td><td>±1</td><td>±1</td><td>±1</td></tr>
+    <tr><td><strong>Krok Oscillation</strong></td><td>±4</td><td>±4</td><td class="warn-text">±2 (WPF)</td></tr>
+    <tr><td>Krok Height</td><td>±1</td><td>±1</td><td>±1</td></tr>
+    <tr><td>Krok Rotation</td><td>±1/±2</td><td>±1/±2</td><td>±1/±2</td></tr>
+    <tr><td>V\r liczba</td><td>2×</td><td>2×</td><td>2×</td></tr>
+    <tr><td>Baseline Gen2</td><td>161</td><td>161</td><td>161</td></tr>
+    <tr><td>Baseline Gen1</td><td>170</td><td>170</td><td>170</td></tr>
+  </table>
+
+  <h2>10. Domyślne wartości (AcePad, Android Gen2)</h2>
+  <div class="callout ok">
+    <p>Zapisane w <code>calibration</code> table SQLite (addr PK, addr='' = fallback):</p>
+    <pre style="margin: 8px 0 0;">top=160  bot=0  osc=150  h=183  rot=150  wait=1000</pre>
+  </div>
+
+  <h2>11. Jak działa AcePad obecnie</h2>
+  <div class="callout">
+    <ul>
+      <li>Tylko 1 ekran kalibracji (nie 3) — uproszczony UI.</li>
+      <li>Persystencja w SQLite, per-device (addr PK).</li>
+      <li>Apply calibration po każdym connect (OK, zgodne z FW).</li>
+      <li>Sekwencja rzutu: <code>set_ball → 300ms → T → 1500ms → H</code> — silniki STOP po rzucie.</li>
+      <li>Brak auto-rozgrzewki przy wejściu w kalibrację.</li>
+    </ul>
+    <p class="warn-text"><strong>Odstępstwo od oryginału:</strong> brak 3-etapowego flow. Pytanie do uzgodnienia — czy wprowadzić, czy zostawić uproszczony model?</p>
+  </div>
+
+  <h2>12. Obszary do weryfikacji</h2>
+  <ul>
+    <li><strong>Delay 500ms po V #1</strong> — RE Windows wymienia, iOS/Android RE nie. Do sprawdzenia na żywo.</li>
+    <li><strong>Height − 30 w complete()</strong> — co to dokładnie robi fizycznie? Baseline offset? Dlaczego akurat 30?</li>
+    <li><strong>Dlaczego O #2?</strong> — komenda adjust_oscillation wywołana 2× z 500ms przerwą. Potrzeba potwierdzenia.</li>
+    <li><strong>Baseline 170 dla Gen1</strong> — matematycznie powinno być 168 (dla 77%). Hardkodowany bug czy celowe zaokrąglenie?</li>
+    <li><strong>Spacja przed LEDs w komendzie B</strong> — przykłady pokazują <code>B0663029700150142150 6\r</code> ze spacją, ale format string C# nie ma spacji. Weryfikacja.</li>
+  </ul>
+
+  <h2>13. Źródła</h2>
+  <ul>
+    <li><code>ANDROID_APP_RE.md:676-781</code> — sekcja 7 kalibracja (CalibrationPage + ControlCallibrate)</li>
+    <li><code>IOS_APP_RE.md:301-335</code> — sekcja 5 (wspólna DLL)</li>
+    <li><code>WINDOWS_APP_RE.md:334-411</code> — sekcja 7 (WPF)</li>
+    <li><code>BUSINESS_LOGIC_COMPLETE.md:306-361</code> — pełna sekwencja 3 etapów</li>
+    <li><code>BUSINESS_LOGIC_COMPLETE.md:586-606</code> — persystencja</li>
+    <li><code>re/protocol-flow.html:228-311</code> — istniejący diagram</li>
+  </ul>
+</div>
+
+<script>
+  mermaid.initialize({
+    startOnLoad: true,
+    theme: 'dark',
+    themeVariables: {
+      darkMode: true,
+      background: '#1a1d29',
+      primaryColor: '#242837',
+      primaryTextColor: '#e4e6eb',
+      primaryBorderColor: '#2d3142',
+      lineColor: '#7aa2f7',
+      secondaryColor: '#1a1d29',
+      tertiaryColor: '#0f1117',
+      actorBkg: '#242837',
+      actorBorder: '#7aa2f7',
+      actorTextColor: '#e4e6eb',
+      sequenceNumberColor: '#0f1117',
+      noteBkgColor: '#f7d77a',
+      noteTextColor: '#0f1117',
+      noteBorderColor: '#f7d77a'
+    }
+  });
+</script>
+</body>
+</html>

@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AcePad — Analiza oryginalnego protokołu Robopong 3050XL</title>
+<style>
+  :root {
+    --bg: #0f1117;
+    --bg-elev: #1a1d29;
+    --bg-card: #242837;
+    --fg: #e4e6eb;
+    --fg-dim: #9ca3b0;
+    --accent: #7aa2f7;
+    --accent-warm: #f7a77a;
+    --accent-ok: #7af7a2;
+    --accent-warn: #f7d77a;
+    --border: #2d3142;
+    --mono: 'SF Mono', Menlo, Monaco, Consolas, monospace;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    padding: 0;
+    background: var(--bg);
+    color: var(--fg);
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    line-height: 1.6;
+  }
+  .container {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 40px 24px 80px;
+  }
+  header {
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 24px;
+    margin-bottom: 40px;
+  }
+  h1 {
+    margin: 0 0 8px;
+    font-size: 2rem;
+    color: var(--fg);
+    font-weight: 700;
+  }
+  .subtitle {
+    color: var(--fg-dim);
+    font-size: 1rem;
+    margin: 0;
+  }
+  .meta {
+    margin-top: 16px;
+    color: var(--fg-dim);
+    font-size: 0.85rem;
+    font-family: var(--mono);
+  }
+  .meta span { margin-right: 16px; }
+  .badge {
+    display: inline-block;
+    padding: 2px 8px;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    font-size: 0.75rem;
+    color: var(--accent);
+  }
+  .intro {
+    background: var(--bg-elev);
+    border-left: 3px solid var(--accent);
+    padding: 16px 20px;
+    margin-bottom: 40px;
+    border-radius: 4px;
+  }
+  .intro p { margin: 0 0 8px; }
+  .intro p:last-child { margin-bottom: 0; }
+  h2 {
+    font-size: 1.25rem;
+    margin: 40px 0 16px;
+    color: var(--accent);
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 8px;
+  }
+  .cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+    margin-top: 24px;
+  }
+  .card {
+    background: var(--bg-elev);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 24px;
+    text-decoration: none;
+    color: inherit;
+    transition: transform 0.15s, border-color 0.15s;
+    display: block;
+  }
+  .card:hover {
+    transform: translateY(-2px);
+    border-color: var(--accent);
+  }
+  .card .icon {
+    font-size: 2rem;
+    margin-bottom: 12px;
+  }
+  .card h3 {
+    margin: 0 0 8px;
+    color: var(--fg);
+    font-size: 1.1rem;
+  }
+  .card p {
+    margin: 0;
+    color: var(--fg-dim);
+    font-size: 0.9rem;
+  }
+  .card .tags {
+    margin-top: 12px;
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+  }
+  .tag {
+    font-size: 0.7rem;
+    font-family: var(--mono);
+    padding: 2px 8px;
+    background: var(--bg-card);
+    border-radius: 3px;
+    color: var(--fg-dim);
+  }
+  .constants {
+    background: var(--bg-elev);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 20px;
+    margin-top: 16px;
+  }
+  .constants table {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: var(--mono);
+    font-size: 0.85rem;
+  }
+  .constants th, .constants td {
+    text-align: left;
+    padding: 8px 12px;
+    border-bottom: 1px solid var(--border);
+  }
+  .constants th {
+    color: var(--accent);
+    font-weight: 600;
+  }
+  .constants tr:last-child td { border-bottom: none; }
+  code {
+    font-family: var(--mono);
+    background: var(--bg-card);
+    padding: 1px 6px;
+    border-radius: 3px;
+    font-size: 0.9em;
+    color: var(--accent-warm);
+  }
+  .warn {
+    color: var(--accent-warn);
+  }
+  .ok {
+    color: var(--accent-ok);
+  }
+  footer {
+    margin-top: 60px;
+    padding-top: 24px;
+    border-top: 1px solid var(--border);
+    color: var(--fg-dim);
+    font-size: 0.85rem;
+    text-align: center;
+  }
+  footer a { color: var(--accent); }
+</style>
+</head>
+<body>
+<div class="container">
+  <header>
+    <h1>AcePad — Analiza oryginalnego protokołu</h1>
+    <p class="subtitle">Reverse engineering aplikacji Newgy/Donic dla robota Robopong 3050XL. Warmup · Kalibracja · Drille.</p>
+    <div class="meta">
+      <span class="badge">Issue #99</span>
+      <span>Android · iOS · Windows</span>
+      <span>FW 701 · Gen2</span>
+      <span>2026-04-16</span>
+    </div>
+  </header>
+
+  <div class="intro">
+    <p><strong>Cel:</strong> pełna zgodność AcePad z oryginalnymi aplikacjami Newgy/Donic. Rozbieżności muszą być świadomie uzgodnione.</p>
+    <p><strong>Źródła RE:</strong> dekompilacja Android (Xamarin ILSpy), iOS (Xamarin), Windows (WPF MSI) + wspólna DLL biznesowa + live testing firmware.</p>
+    <p><strong>Uwaga:</strong> ustalenia z testów na żywo mają <span class="warn">priorytet</span> nad dokumentacją RE.</p>
+  </div>
+
+  <h2>Analizy szczegółowe</h2>
+  <div class="cards">
+    <a href="warmup.html" class="card">
+      <div class="icon">🔥</div>
+      <h3>Warmup / rozgrzewanie silników</h3>
+      <p>Kiedy i jak oryginał rozkręca flywheel. Pre-load ball, setup drill, FillRobot.</p>
+      <div class="tags">
+        <span class="tag">H\r</span>
+        <span class="tag">B × 2</span>
+        <span class="tag">1800ms</span>
+      </div>
+    </a>
+
+    <a href="calibration.html" class="card">
+      <div class="icon">🎯</div>
+      <h3>Kalibracja 3-etapowa</h3>
+      <p>Rotation → Height → Oscillation + Speed. Komendy R/U/O/Q/W, persystencja, timing.</p>
+      <div class="tags">
+        <span class="tag">V × 2</span>
+        <span class="tag">Q/O/R/U</span>
+        <span class="tag">SpeedCAL</span>
+      </div>
+    </a>
+
+    <a href="drills.html" class="card">
+      <div class="icon">🎾</div>
+      <h3>Drille — sync vs async</h3>
+      <p>Tryb SYNC (B+T) i ASYNC (wTA+A+END). Auto-detect firmware, format komend, LEDs.</p>
+      <div class="tags">
+        <span class="tag">B+T</span>
+        <span class="tag">wTA+A+END</span>
+        <span class="tag">FW ≥ 701</span>
+      </div>
+    </a>
+  </div>
+
+  <h2>Stałe globalne (wspólne dla wszystkich sekcji)</h2>
+  <div class="constants">
+    <table>
+      <tr><th>Parametr</th><th>Wartość</th><th>Uwagi</th></tr>
+      <tr><td>Centrum głowicy</td><td>150</td><td><span class="warn">NIE 128!</span> — oscylacja, rotacja, wysokość</td></tr>
+      <tr><td>Oscillation</td><td>127–173</td><td>centrum 150, czasem 120–178 dla InterfaceBall</td></tr>
+      <tr><td>Height</td><td>75–210</td><td>—</td></tr>
+      <tr><td>Rotation</td><td>90–210</td><td>centrum 150</td></tr>
+      <tr><td>PWM formula</td><td><code>raw × 4.016</code></td><td>standardowa (FW ≠ 206)</td></tr>
+      <tr><td>PWM formula (legacy)</td><td><code>raw + 5</code></td><td>tylko FW == 206</td></tr>
+      <tr><td>Baseline silników z %</td><td><code>28 + 182 × (%/100)</code></td><td>dla % &gt; 0</td></tr>
+      <tr><td>Terminator BLE</td><td><code>\r</code> (0x0D)</td><td>Android, iOS</td></tr>
+      <tr><td>Terminator USB Android</td><td><code>\r</code></td><td><span class="warn">wyjątek — nie CRLF!</span></td></tr>
+      <tr><td>Terminator USB Windows</td><td><code>\r\n</code></td><td>FTDI, standardowy CRLF</td></tr>
+      <tr><td>BLE chunk limit</td><td>20 bajtów</td><td>split + 200ms delay między fragmentami</td></tr>
+      <tr><td>Init timeout</td><td>BLE 20s, USB Win 60s</td><td>Windows: retry co 3s, max 20 prób</td></tr>
+      <tr><td>Wersja robota (I)</td><td>0/1/2</td><td>0=OriginalNewFW (Gen1), 1=Original (Gen1), 2=SecondRun (Gen2, dzisiejszy)</td></tr>
+    </table>
+  </div>
+
+  <h2>Najważniejsze odkrycia</h2>
+  <div class="constants">
+    <ol style="margin: 0; padding-left: 20px;">
+      <li><strong>Oryginał NIE ma osobnego warmup.</strong> Zamiast tego setup drilla robi pre-load piłki 2× z odstępem 1800ms — silniki kręcą się ~1.8s przed pierwszym <code>T</code>.</li>
+      <li><strong>Kalibracja jest 3-etapowa</strong> (3 osobne ekrany: Rotation → Height → Oscillation/Speed). Trzeci etap używa <code>V\r</code> × 2.</li>
+      <li><strong>Firmware NIE persystuje kalibracji</strong> — musi być wysłana po każdym połączeniu (SpeedCAL, HeightCAL, OscCAL, RotCAL w config lokalnym).</li>
+      <li><strong>Auto-detect trybu drilla:</strong> <code>FW &lt; 701 || USB</code> → SYNC (B+T), <code>FW ≥ 701 &amp;&amp; BLE</code> → ASYNC (wTA+A+END).</li>
+      <li><strong>Windows zawsze SYNC</strong> — FTDI USB wymusza USB_Mode=true, nigdy nie używa END.</li>
+      <li><strong>BUG w oryginale:</strong> SpeedCAL jest martwym kodem — odczytany z config ale natychmiast nadpisywany na 0 w <code>setBall()</code>.</li>
+      <li><strong>Kompensacja opóźnień</strong> — jeśli <code>T</code> trwa &gt; 625ms, następny wait skracany przez współczynnik <code>0.000125 × waitTime + 0.5625</code>.</li>
+    </ol>
+  </div>
+
+  <footer>
+    <p>AcePad · by tthub.pl · klient Robopong 3050XL<br>
+    Źródła: <code>re/ANDROID_APP_RE.md</code> · <code>re/IOS_APP_RE.md</code> · <code>re/WINDOWS_APP_RE.md</code> · <code>re/BUSINESS_LOGIC_COMPLETE.md</code> · <code>re/PROTOCOL_RE.md</code> · <code>re/FIRMWARE_RE.md</code></p>
+  </footer>
+</div>
+</body>
+</html>

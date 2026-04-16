@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Drille — Analiza oryginalnego protokołu Robopong 3050XL</title>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+<style>
+  :root {
+    --bg: #0f1117;
+    --bg-elev: #1a1d29;
+    --bg-card: #242837;
+    --fg: #e4e6eb;
+    --fg-dim: #9ca3b0;
+    --accent: #7aa2f7;
+    --accent-warm: #f7a77a;
+    --accent-ok: #7af7a2;
+    --accent-warn: #f7d77a;
+    --accent-err: #f77a9c;
+    --border: #2d3142;
+    --mono: 'SF Mono', Menlo, Monaco, Consolas, monospace;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--fg);
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    line-height: 1.65;
+  }
+  .container { max-width: 1100px; margin: 0 auto; padding: 40px 24px 80px; }
+  .nav {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 24px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--border);
+    font-size: 0.9rem;
+  }
+  .nav a { color: var(--accent); text-decoration: none; }
+  .nav a:hover { text-decoration: underline; }
+  .nav .sep { color: var(--fg-dim); }
+  h1 { margin: 0 0 8px; font-size: 1.8rem; }
+  .subtitle { color: var(--fg-dim); margin: 0 0 32px; }
+  h2 {
+    font-size: 1.3rem;
+    margin: 40px 0 16px;
+    color: var(--accent);
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 8px;
+  }
+  h3 {
+    font-size: 1.05rem;
+    margin: 28px 0 12px;
+    color: var(--accent-warm);
+  }
+  h4 {
+    font-size: 0.95rem;
+    margin: 20px 0 8px;
+    color: var(--accent-ok);
+  }
+  p { margin: 0 0 16px; }
+  ul, ol { margin: 0 0 16px; padding-left: 24px; }
+  li { margin-bottom: 4px; }
+  code {
+    font-family: var(--mono);
+    background: var(--bg-card);
+    padding: 1px 6px;
+    border-radius: 3px;
+    font-size: 0.9em;
+    color: var(--accent-warm);
+  }
+  pre {
+    background: var(--bg-elev);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 16px 20px;
+    overflow-x: auto;
+    font-family: var(--mono);
+    font-size: 0.85rem;
+    line-height: 1.5;
+  }
+  pre code { background: none; padding: 0; color: var(--fg); }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 16px 0;
+    background: var(--bg-elev);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    overflow: hidden;
+    font-size: 0.9rem;
+  }
+  th, td {
+    text-align: left;
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--border);
+  }
+  th { background: var(--bg-card); color: var(--accent); font-weight: 600; }
+  tr:last-child td { border-bottom: none; }
+  .callout {
+    border-left: 3px solid var(--accent);
+    background: var(--bg-elev);
+    padding: 14px 18px;
+    border-radius: 4px;
+    margin: 20px 0;
+  }
+  .callout.warn { border-color: var(--accent-warn); }
+  .callout.err  { border-color: var(--accent-err); }
+  .callout.ok   { border-color: var(--accent-ok); }
+  .mermaid {
+    background: var(--bg-elev);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 20px;
+    margin: 20px 0;
+    text-align: center;
+  }
+  .source {
+    font-size: 0.8rem;
+    color: var(--fg-dim);
+    font-family: var(--mono);
+    margin-top: -8px;
+    margin-bottom: 16px;
+  }
+  .modes {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin: 20px 0;
+  }
+  .mode {
+    background: var(--bg-elev);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 20px;
+  }
+  .mode h3 { margin-top: 0; }
+  .mode.sync { border-color: var(--accent-warm); }
+  .mode.async { border-color: var(--accent-ok); }
+  .mode .label {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    font-family: var(--mono);
+    font-weight: 600;
+    margin-bottom: 12px;
+  }
+  .mode.sync .label { background: var(--accent-warm); color: var(--bg); }
+  .mode.async .label { background: var(--accent-ok); color: var(--bg); }
+  .mode ul { padding-left: 20px; }
+  .mode ul li { font-size: 0.9rem; }
+  .format-box {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 16px;
+    font-family: var(--mono);
+    font-size: 0.85rem;
+    margin: 12px 0;
+    overflow-x: auto;
+  }
+  .format-box .label { color: var(--accent-warm); font-weight: 600; }
+  .format-box .field { color: var(--accent-ok); }
+  .format-box .desc { color: var(--fg-dim); margin-top: 8px; font-size: 0.8rem; }
+  .warn-text { color: var(--accent-warn); }
+  .err-text  { color: var(--accent-err); }
+  .ok-text   { color: var(--accent-ok); }
+  .bug {
+    background: rgba(247, 122, 156, 0.1);
+    border: 1px solid var(--accent-err);
+    border-radius: 6px;
+    padding: 14px 18px;
+    margin: 16px 0;
+  }
+  .bug strong { color: var(--accent-err); }
+  .decision-tree {
+    background: var(--bg-elev);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 20px;
+    margin: 20px 0;
+    font-family: var(--mono);
+    font-size: 0.9rem;
+  }
+  @media (max-width: 800px) {
+    .modes { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <nav class="nav">
+    <a href="index.html">← Index</a>
+    <span class="sep">·</span>
+    <a href="warmup.html">🔥 Warmup</a>
+    <span class="sep">·</span>
+    <a href="calibration.html">🎯 Kalibracja</a>
+    <span class="sep">·</span>
+    <a href="drills.html">🎾 Drille</a>
+  </nav>
+
+  <h1>🎾 Drille — SYNC vs ASYNC</h1>
+  <p class="subtitle">Dwa tryby wysyłania drilla, wybierane automatycznie na podstawie firmware i transportu.</p>
+
+  <div class="callout">
+    <strong>🔀 Auto-detect trybu:</strong> oryginał wybiera tryb automatycznie. Użytkownik nie ma przełącznika — decyzja należy do kodu biznesowego.
+  </div>
+
+  <h2>1. Dwa tryby — przegląd</h2>
+  <div class="modes">
+    <div class="mode sync">
+      <span class="label">SYNC</span>
+      <h3>B + T per piłka</h3>
+      <p><strong>Warunek:</strong> <code>FW &lt; 701 || USB_Mode</code></p>
+      <ul>
+        <li>Aplikacja steruje każdym rzutem</li>
+        <li>Każda piłka: osobne <code>B\r</code> + <code>T\r</code></li>
+        <li>Aplikacja zarządza timingiem (WaitTime)</li>
+        <li>Kompensacja opóźnień (throw &gt; 625ms)</li>
+      </ul>
+    </div>
+    <div class="mode async">
+      <span class="label">ASYNC</span>
+      <h3>wTA + A × N + END</h3>
+      <p><strong>Warunek:</strong> <code>FW ≥ 701 &amp;&amp; BLE</code></p>
+      <ul>
+        <li>App ładuje wszystkie piłki do robota</li>
+        <li>Robot sam zarządza rzutami i timingiem</li>
+        <li>App tylko czeka na <code>K</code> per rzut, <code>N</code> na koniec</li>
+        <li>Brak kompensacji — robot optymalizuje</li>
+      </ul>
+    </div>
+  </div>
+
+  <h2>2. Decyzja trybu — drzewo wyboru</h2>
+  <div class="decision-tree">
+    <pre style="margin: 0; background: none; border: none; padding: 0;"><code>run_drill(drill):
+  ├─ <span class="warn-text">transport == USB</span>?
+  │    ├─ YES → <span style="color:var(--accent-warm);">SYNC</span> (USB_Mode=true wymusza stary protokół)
+  │    └─ NO ↓
+  ├─ <span class="warn-text">firmware &lt; 701</span>?
+  │    ├─ YES → <span style="color:var(--accent-warm);">SYNC</span>
+  │    └─ NO ↓
+  └─ <span class="ok-text">ASYNC</span> (BLE + FW ≥ 701)
+
+  Konsekwencja: Windows = zawsze SYNC (FTDI USB, brak BLE)
+               Android USB = zawsze SYNC
+               Android BLE + FW ≥ 701 = ASYNC
+               iOS BLE + FW ≥ 701 = ASYNC</code></pre>
+  </div>
+  <p class="source">Źródło: <code>ANDROID_APP_RE.md:481-483</code>, <code>BUSINESS_LOGIC_COMPLETE.md:488-492</code></p>
+
+  <h2>3. Format komendy B / A (setBall)</h2>
+  <p>B (stary) i A (nowy) mają <strong>identyczny layout</strong> — różnica tylko w prefiksie i momencie wykonania rzutu:</p>
+
+  <div class="format-box">
+<span class="label">B</span><span class="field">{dirTop:1}</span><span class="field">{|topPWM|:3}</span><span class="field">{dirBot:1}</span><span class="field">{|botPWM|:3}</span><span class="field">{osc:3}</span><span class="field">{height:3}</span><span class="field">{rot:3}</span> <span class="field">{leds:1}</span>\r
+<span class="label">A</span><span class="field">{dirTop:1}</span><span class="field">{|topPWM|:3}</span><span class="field">{dirBot:1}</span><span class="field">{|botPWM|:3}</span><span class="field">{osc:3}</span><span class="field">{height:3}</span><span class="field">{rot:3}</span> <span class="field">{leds:1}</span>\r
+
+<span class="desc">Przykład: <span class="label">B</span>0663029700150142150 6\r
+         = Top forward PWM=663, Bot forward PWM=297, Osc=150, H=142, Rot=150, LEDs=6</span>
+  </div>
+
+  <table>
+    <tr><th>Pole</th><th>Długość</th><th>Opis</th></tr>
+    <tr><td>dirTop / dirBot</td><td>1 cyfra</td><td>0 = forward, 1 = reverse (bit kierunku)</td></tr>
+    <tr><td>|topPWM| / |botPWM|</td><td>3 cyfry</td><td>wartość absolutna PWM po przeliczeniu z raw</td></tr>
+    <tr><td>osc, height, rot</td><td>3 cyfry każde</td><td>zero-padded RAW values</td></tr>
+    <tr><td>leds</td><td>1 cyfra</td><td>0–8 (spin indicator)</td></tr>
+  </table>
+
+  <h3>PWM formula</h3>
+  <pre><code># Standard (FW != 206, dzisiejsze roboty)
+pwm = raw_motor × 4.016
+
+# Legacy (FW == 206)
+pwm = raw_motor + 5
+
+# Przykład: TopMotor = 73%
+raw = 28 + 182 × 0.73 = 161
+pwm = 161 × 4.016 = 646.576 → 646 (int konwersja)
+</code></pre>
+
+  <div class="callout warn">
+    <strong>Uwaga:</strong> przykłady w RE pokazują spację przed LEDs (<code>... 150 6\r</code>), ale format string C# nie ma spacji. <span class="warn-text">Do weryfikacji na żywym robocie.</span>
+  </div>
+
+  <h2>4. TRYB SYNC — sequence diagram</h2>
+  <p class="source">Źródło: <code>ANDROID_APP_RE.md:784-864</code>, <code>BUSINESS_LOGIC_COMPLETE.md:282-304</code></p>
+
+  <div class="mermaid">
+sequenceDiagram
+    autonumber
+    participant A as App
+    participant R as Robot
+
+    Note over A,R: Setup (patrz warmup.html)
+    A->>R: H\r (x2)
+    A->>R: B{first_ball}\r (force, x2)
+    Note over A: wait 1800ms — silniki kręcą
+
+    Note over A,R: RunDrill loop (count × balls)
+    loop count in 1..Count
+        loop ball in drill.Balls
+            A->>R: B{ball_params}\r
+            R-->>A: K
+            Note over A: wait WaitTime ms
+            A->>R: T\r (throw!)
+            R-->>A: K (max 7s)
+            Note over A: ballCount++
+            Note over A: jeśli throw > 625ms → kompensacja
+        end
+        alt drill.Delay > 0
+            A->>R: B{first_ball}\r (reset)
+            Note over A: wait Delay × 1000 ms
+        end
+    end
+    A->>R: H\r (cleanup)
+    R-->>A: K
+  </div>
+
+  <h2>5. TRYB ASYNC — sequence diagram</h2>
+  <p class="source">Źródło: <code>BUSINESS_LOGIC_COMPLETE.md:296-298</code>, <code>ANDROID_APP_RE.md:602-661</code></p>
+
+  <div class="mermaid">
+sequenceDiagram
+    autonumber
+    participant A as App
+    participant R as Robot
+
+    Note over A,R: Setup (bez pre-load dla FW ≥ 701)
+    A->>R: H\r
+    A->>R: H\r
+    Note over A: wait 1200ms
+
+    Note over A,R: Ładowanie piłek do robota
+    loop ball in drill.Balls
+        A->>R: wTA{wt/10:3}\r (np. wTA150 = 1500ms)
+        R-->>A: K (max 5s)
+        Note over A: wait 500ms
+        A->>R: A{ball_params}\r
+        R-->>A: K (max 5s)
+        Note over A: wait 250ms między piłkami
+    end
+
+    Note over A,R: Execute — robot przejmuje kontrolę
+    A->>R: END{count:3}{seed:3}{delay×10:3}\r
+    Note over A: np. END050127080<br>= 50 piłek, seed=127, delay=8s
+    loop robot rzuca autonomicznie count piłek
+        R-->>A: K (per piłka)
+    end
+    R-->>A: N (drill complete, DrillRunning=false)
+    A->>R: H\r (cleanup)
+    R-->>A: K
+  </div>
+
+  <h2>6. Format komendy END (tylko ASYNC)</h2>
+  <div class="format-box">
+<span class="label">END</span><span class="field">{count:3}</span><span class="field">{randomSeed:3}</span><span class="field">{delay×10:3}</span>\r
+
+<span class="desc">Przykłady:
+  END050127080\r = 50 piłek, seed=127, delay=8s
+  END010042050\r = 10 piłek, seed=42,  delay=5s</span>
+  </div>
+  <table>
+    <tr><th>Pole</th><th>Format</th><th>Znaczenie</th></tr>
+    <tr><td>count</td><td>3 cyfry</td><td>liczba piłek do wyrzucenia</td></tr>
+    <tr><td>randomSeed</td><td>3 cyfry</td><td><code>random.Next(1, 255)</code> — ziarno sesji</td></tr>
+    <tr><td>delay×10</td><td>3 cyfry</td><td>delay między cyklami w sekundach × 10 (np. 50 = 5s)</td></tr>
+  </table>
+
+  <h2>7. Format komendy wTA (tylko ASYNC)</h2>
+  <div class="format-box">
+<span class="label">wTA</span><span class="field">{waitTime/10:3}</span>\r
+
+<span class="desc">Przykłady:
+  WaitTime = 1500ms → wTA150\r
+  WaitTime = 800ms  → wTA080\r</span>
+  </div>
+
+  <h2>8. Timing tables</h2>
+
+  <h3>Tryb SYNC</h3>
+  <table>
+    <tr><th>Krok</th><th>Komenda</th><th>Delay</th><th>Timeout</th></tr>
+    <tr><td>setBall w loop</td><td><code>B{params}\r</code></td><td>WaitTime ms (z piłki)</td><td>500 ms</td></tr>
+    <tr><td>ThrowBall</td><td><code>T\r</code></td><td>0 (od razu następna)</td><td>7 s</td></tr>
+    <tr><td>Delay między cyklami</td><td><code>B{first}\r</code></td><td>Delay × 1000 ms</td><td>500 ms</td></tr>
+    <tr><td>Cleanup</td><td><code>H\r</code></td><td>—</td><td>5 s</td></tr>
+  </table>
+
+  <h3>Tryb ASYNC</h3>
+  <table>
+    <tr><th>Krok</th><th>Komenda</th><th>Delay</th><th>Timeout</th></tr>
+    <tr><td>wTA (wait time)</td><td><code>wTA{wt/10:3}\r</code></td><td>wait na K + 500 ms</td><td>5 s</td></tr>
+    <tr><td>A (setBall)</td><td><code>A{params}\r</code></td><td>250 ms</td><td>5 s</td></tr>
+    <tr><td>END</td><td><code>END{...}\r</code></td><td>robot autonomiczny</td><td>—</td></tr>
+  </table>
+
+  <h2>9. Kompensacja opóźnień (tylko SYNC)</h2>
+  <p class="source">Źródło: <code>BUSINESS_LOGIC_COMPLETE.md:291-294</code></p>
+  <pre><code>if throw_elapsed > 625ms:
+    excess = (throw_elapsed - 625) ms
+    # Skrócenie następnego wait:
+    next_wait_factor = 0.000125 × waitTime + 0.5625
+    next_wait = waitTime × next_wait_factor
+</code></pre>
+  <p><em>Dokładny moment zastosowania (przed kolejną piłką? po N piłkach?) — niejasny. Weryfikacja potrzebna.</em></p>
+
+  <h2>10. Pełny pseudokod — run_drill</h2>
+  <pre><code>def run_drill(drill):
+    # --- Setup ---
+    clear_ball()                      # H\r
+    wait(200)
+    clear_ball()                      # H\r
+    wait(1000)
+
+    if fw &lt; 701 or usb_mode:          # SYNC
+        set_ball(first_ball, force=True)
+        wait(300)
+        set_ball(first_ball, force=True)
+        wait(1500)
+
+    # --- Run ---
+    if fw &lt; 701 or usb_mode:
+        # TRYB SYNC
+        count = 0
+        while drill_running and count &lt; drill.Count:
+            for ball in drill.Balls:
+                set_ball(ball, force=True)       # B{params}
+                wait(ball.WaitTime)
+                throw_start = now()
+                throw_ball()                     # T → K (max 7s)
+                count += 1
+                if now() - throw_start &gt; 0.625:
+                    # kompensacja
+                    next_wait_factor = 0.000125 × ball.WaitTime + 0.5625
+            if drill.Delay &gt; 0 and count &lt; drill.Count:
+                set_ball(first_ball)
+                wait(drill.Delay × 1000)
+        clear_ball()
+    else:
+        # TRYB ASYNC
+        for ball in drill.Balls:
+            send(f"wTA{ball.WaitTime // 10:03d}\r")
+            wait_response(max=5000)
+            wait(500)
+            send(format_A(ball))
+            wait_response(max=5000)
+            wait(250)
+
+        seed = random.randint(1, 255)
+        send(f"END{drill.Count:03d}{seed:03d}{drill.Delay * 10:03d}\r")
+        # Nasłuchuj: K per rzut, N na koniec
+
+def set_ball(ball, force, is_cal=False):
+    # Skip jeśli !force &amp;&amp; cached == ball
+    if not force and cached_ball.ballNumber == ball.ballNumber:
+        return
+
+    dir_top = 1 if ball.top_motor &lt; 0 else 0
+    dir_bot = 1 if ball.bottom_motor &lt; 0 else 0
+
+    # BUG: SpeedCAL zawsze 0 (martwy kod!)
+    num3 = config["SpeedCAL"] if fw &lt; 221 else 0
+    num3 = 0  # ← nadpisanie!
+
+    if fw == 206:
+        pwm_top = abs(ball.top_motor) + 5
+        pwm_bot = abs(ball.bottom_motor) + 5
+    else:
+        pwm_top = abs(ball.top_motor) × 4.016 + num3
+        pwm_bot = abs(ball.bottom_motor) × 4.016 + num3
+
+    leds = get_leds(ball.top_motor, ball.bottom_motor)
+
+    # Decyzja: SYNC vs ASYNC (poziom setBall!)
+    if fw &lt; 701 or is_cal or usb_mode:
+        send(f"B{dir_top}{int(pwm_top):03d}{dir_bot}{int(pwm_bot):03d}"
+             f"{ball.osc:03d}{ball.height:03d}{ball.rot:03d} {leds}\r")
+        wait_response(max=500)
+    else:
+        send(f"wTA{ball.wait_time // 10:03d}\r")
+        wait_response(max=5000)
+        wait(500)
+        send(f"A{dir_top}{int(pwm_top):03d}{dir_bot}{int(pwm_bot):03d}"
+             f"{ball.osc:03d}{ball.height:03d}{ball.rot:03d} {leds}\r")
+        wait_response(max=5000)
+
+    cached_ball.ballNumber = ball.ballNumber
+</code></pre>
+
+  <h2>11. LEDs formula (spin indicator)</h2>
+  <p class="source">Źródło: <code>BUSINESS_LOGIC_COMPLETE.md:270-280</code>, <code>ANDROID_APP_RE.md</code></p>
+  <pre><code>def get_leds(top_raw, bottom_raw):
+    diff = top_raw - bottom_raw
+    ratio = abs(diff) / 360.0
+
+    if ratio == 0:       return 0  # None
+    if ratio &lt;= 0.10:    return 5 if diff &gt; 0 else 1  # OneTop / OneBottom
+    if ratio &lt;= 0.50:    return 6 if diff &gt; 0 else 2  # TwoTop / TwoBottom
+    if ratio &lt;= 0.75:    return 7 if diff &gt; 0 else 3  # ThreeTop / ThreeBottom
+    return 8 if diff &gt; 0 else 4                       # FourTop / FourBottom
+</code></pre>
+  <div class="callout warn">
+    <strong>Sprzeczność:</strong> <code>protocol-flow.html:697-708</code> ma inne progi (0.08/0.17/.../0.7) — prawdopodobnie przestarzałe. <span class="warn-text">Autorytatywna jest wersja 10/50/75/75+ z BUSINESS_LOGIC.</span>
+  </div>
+
+  <h2>12. Parsowanie odpowiedzi</h2>
+  <table>
+    <tr><th>Odpowiedź</th><th>Znaczenie</th><th>Akcja</th></tr>
+    <tr><td>kończy się na <code>K</code></td><td>OK, piłka wyrzucona</td><td><code>_responseReceived = true; BallThrown = true</code></td></tr>
+    <tr><td>kończy się na <code>N</code></td><td>drill stop / complete</td><td><code>DrillRunning = false</code> (zatrzymuje pętlę)</td></tr>
+    <tr><td>kończy się na <code>M</code></td><td>alternate OK</td><td><code>_responseReceived = true</code></td></tr>
+    <tr><td>3 cyfry (po F)</td><td>firmware version</td><td>parse int</td></tr>
+    <tr><td>1 cyfra (po I)</td><td>robot version</td><td>parse byte (0/1/2)</td></tr>
+  </table>
+
+  <h2>13. Różnice między platformami</h2>
+  <table>
+    <tr><th>Aspekt</th><th>Android BLE</th><th>Android USB</th><th>iOS BLE</th><th>Windows USB</th></tr>
+    <tr><td>Terminator</td><td><code>\r</code></td><td><code>\r</code> <span class="warn-text">(!)</span></td><td><code>\r</code></td><td><code>\r\n</code></td></tr>
+    <tr><td>Tryb FW &lt; 701</td><td>SYNC</td><td>SYNC</td><td>SYNC</td><td>SYNC</td></tr>
+    <tr><td>Tryb FW ≥ 701</td><td class="ok-text">ASYNC</td><td class="warn-text">SYNC (wymuszone)</td><td class="ok-text">ASYNC</td><td class="warn-text">SYNC (wymuszone)</td></tr>
+    <tr><td>BLE chunking &gt;20B</td><td>tak, +200ms</td><td>—</td><td>tak</td><td>—</td></tr>
+    <tr><td>Random mode (Y+P)</td><td>FW≥701, BLE</td><td>nie</td><td>FW≥701</td><td>nie</td></tr>
+    <tr><td>Drill storage</td><td>XML w Personal/</td><td>XML</td><td>XML + iCloud</td><td><code>%MyDocuments%\Newgy3050\Drills\</code></td></tr>
+  </table>
+
+  <div class="callout warn">
+    <strong>Konsekwencja dla Windows:</strong> nowoczesny robot z FW 701 na Windows UX zachowuje się jak "legacy" — zawsze SYNC. Windows UI nie wykorzystuje możliwości firmware 701.
+  </div>
+
+  <h2>14. Random Mode (Y + P) — tylko ASYNC BLE FW≥701</h2>
+  <p class="source">Źródło: <code>ANDROID_APP_RE.md:614-642</code>, <code>BUSINESS_LOGIC_COMPLETE.md:512-524</code></p>
+
+  <h3>Komenda Y (część 1)</h3>
+  <div class="format-box">
+<span class="label">Y</span><span class="field">{numBallsLow:2}</span><span class="field">{numBallsHigh:2}</span><span class="field">{numBallsType:1}</span>
+  <span class="field">{topMotorLow:2}</span><span class="field">{topMotorHigh:2}</span><span class="field">{topMotorType:1}</span>
+  <span class="field">{bottomMotorLow:2}</span><span class="field">{bottomMotorHigh:2}</span><span class="field">{bottomMotorType:1}</span>
+  <span class="field">{heightLow:3}</span><span class="field">{heightHigh:3}</span>\r
+  </div>
+
+  <h3>Komenda P (część 2)</h3>
+  <div class="format-box">
+<span class="label">P</span><span class="field">{heightType:1}</span><span class="field">{oscLow:2}</span><span class="field">{oscHigh:2}</span><span class="field">{oscType:1}</span>
+  <span class="field">{rotLow:2}</span><span class="field">{rotHigh:2}</span><span class="field">{rotType:1}</span>
+  <span class="field">{waitHigh/10:3}</span><span class="field">{waitLow/10:3}</span><span class="field">{waitType:1}</span>
+  <span class="field">{dirTopHigh:1}</span><span class="field">{dirTopLow:1}</span><span class="field">{dirBotHigh:1}</span><span class="field">{dirBotLow:1}</span><span class="field">{dirRotHigh:1}</span><span class="field">{dirRotLow:1}</span>\r
+  </div>
+
+  <p><strong>RandomType:</strong> 1 = Range (losuj z zakresu), 2 = EitherOr (50/50), 3 = None (stały). Wartości 100 clampowane do 99.</p>
+
+  <h2>15. Znane bugi w oryginale</h2>
+
+  <div class="bug">
+    <strong>🐛 BUG #1 — SpeedCAL martwy kod</strong><br>
+    Offset SpeedCAL odczytywany z config w <code>setBall()</code>, ale natychmiast nadpisywany na <code>0</code>. Wpływa tylko na komendę <code>Q</code>, nigdy na B/A.
+    <p class="source" style="margin-top:8px;"><code>BUSINESS_LOGIC.md:503-510</code></p>
+  </div>
+
+  <div class="bug">
+    <strong>🐛 BUG #2 — Random ball clamp</strong><br>
+    Warunek <code>BottomMotorHigh == 100</code> sprawdzany 2× zamiast <code>BottomMotorLow == 100</code> w drugim branchu.
+    <p class="source" style="margin-top:8px;"><code>BUSINESS_LOGIC.md:512-518</code></p>
+  </div>
+
+  <div class="bug">
+    <strong>🐛 BUG #3 — Random ball P-command direction</strong><br>
+    Kierunek dla BottomMotorLow w komendzie P używa TopMotorLow (skopiowany błędny field).
+    <p class="source" style="margin-top:8px;"><code>BUSINESS_LOGIC.md:519-524</code></p>
+  </div>
+
+  <div class="bug">
+    <strong>🐛 BUG #4 — RobotBall.Equals ignoruje WaitTime</strong><br>
+    Dwie piłki z różnym WaitTime uznawane za identyczne (cache skip na <code>_currentBall.ballNumber == ball.ballNumber</code>), więc zmiana samego WaitTime nie triggeruje nowego setBall.
+  </div>
+
+  <h2>16. Jak działa AcePad obecnie</h2>
+  <div class="callout">
+    <ul>
+      <li>Przełącznik <code>drill_mode</code> w UI (sync/async) — <span class="warn-text">w oryginale nie ma!</span></li>
+      <li>Auto-detect firmware zaimplementowany (patrz memory <code>project_drill_modes.md</code>)</li>
+      <li>Własny warmup 3s (patrz <a href="warmup.html">warmup.html</a>)</li>
+    </ul>
+    <p class="warn-text"><strong>Odstępstwo od oryginału:</strong> ręczny przełącznik trybu. Do uzgodnienia — czy zostawić, czy usunąć na rzecz pełnego auto-detect?</p>
+  </div>
+
+  <h2>17. Obszary do weryfikacji</h2>
+  <ul>
+    <li><strong>Spacja przed LEDs w B/A</strong> — RE przykłady ze spacją, format string bez. Testy na żywym robocie.</li>
+    <li><strong>LEDs progi</strong> — rozjazd między HTML (0.08/0.17/...) a BUSINESS_LOGIC (10/50/75/75+).</li>
+    <li><strong>Kompensacja throw &gt; 625ms</strong> — dokładny moment zastosowania współczynnika.</li>
+    <li><strong>USB\r signal</strong> — wysyłana przez Android przy init USB. Czy Windows też?</li>
+    <li><strong>Minimalny delay między chunkami BLE</strong> — RE podaje 200ms. Potwierdzenie.</li>
+  </ul>
+
+  <h2>18. Źródła</h2>
+  <ul>
+    <li><code>ANDROID_APP_RE.md:481-483</code> — decyzja USB_Mode</li>
+    <li><code>ANDROID_APP_RE.md:518-672</code> — komendy B, A, wTA, Y, P, END</li>
+    <li><code>ANDROID_APP_RE.md:784-864</code> — SetupDrill, RunDrill, END format</li>
+    <li><code>BUSINESS_LOGIC_COMPLETE.md:232-267</code> — setBall pełna logika (KRYTYCZNE)</li>
+    <li><code>BUSINESS_LOGIC_COMPLETE.md:282-304</code> — runDrill sync vs async</li>
+    <li><code>BUSINESS_LOGIC_COMPLETE.md:488-524</code> — auto-detect + bugi</li>
+    <li><code>WINDOWS_APP_RE.md:281-330</code> — protokół Windows (zawsze SYNC)</li>
+    <li><code>re/protocol-flow.html:316-414</code> — istniejący diagram</li>
+  </ul>
+</div>
+
+<script>
+  mermaid.initialize({
+    startOnLoad: true,
+    theme: 'dark',
+    themeVariables: {
+      darkMode: true,
+      background: '#1a1d29',
+      primaryColor: '#242837',
+      primaryTextColor: '#e4e6eb',
+      primaryBorderColor: '#2d3142',
+      lineColor: '#7aa2f7',
+      secondaryColor: '#1a1d29',
+      tertiaryColor: '#0f1117',
+      actorBkg: '#242837',
+      actorBorder: '#7aa2f7',
+      actorTextColor: '#e4e6eb',
+      sequenceNumberColor: '#0f1117',
+      noteBkgColor: '#f7d77a',
+      noteTextColor: '#0f1117',
+      noteBorderColor: '#f7d77a'
+    }
+  });
+</script>
+</body>
+</html>

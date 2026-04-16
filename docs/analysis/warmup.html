@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Warmup — Analiza oryginalnego protokołu Robopong 3050XL</title>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+<style>
+  :root {
+    --bg: #0f1117;
+    --bg-elev: #1a1d29;
+    --bg-card: #242837;
+    --fg: #e4e6eb;
+    --fg-dim: #9ca3b0;
+    --accent: #7aa2f7;
+    --accent-warm: #f7a77a;
+    --accent-ok: #7af7a2;
+    --accent-warn: #f7d77a;
+    --accent-err: #f77a9c;
+    --border: #2d3142;
+    --mono: 'SF Mono', Menlo, Monaco, Consolas, monospace;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--fg);
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    line-height: 1.65;
+  }
+  .container { max-width: 1100px; margin: 0 auto; padding: 40px 24px 80px; }
+  .nav {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 24px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--border);
+    font-size: 0.9rem;
+  }
+  .nav a {
+    color: var(--accent);
+    text-decoration: none;
+  }
+  .nav a:hover { text-decoration: underline; }
+  .nav .sep { color: var(--fg-dim); }
+  h1 { margin: 0 0 8px; font-size: 1.8rem; }
+  .subtitle { color: var(--fg-dim); margin: 0 0 32px; }
+  h2 {
+    font-size: 1.3rem;
+    margin: 40px 0 16px;
+    color: var(--accent);
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 8px;
+  }
+  h3 {
+    font-size: 1.05rem;
+    margin: 28px 0 12px;
+    color: var(--accent-warm);
+  }
+  p { margin: 0 0 16px; }
+  ul, ol { margin: 0 0 16px; padding-left: 24px; }
+  li { margin-bottom: 4px; }
+  code {
+    font-family: var(--mono);
+    background: var(--bg-card);
+    padding: 1px 6px;
+    border-radius: 3px;
+    font-size: 0.9em;
+    color: var(--accent-warm);
+  }
+  pre {
+    background: var(--bg-elev);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 16px 20px;
+    overflow-x: auto;
+    font-family: var(--mono);
+    font-size: 0.85rem;
+    line-height: 1.5;
+  }
+  pre code {
+    background: none;
+    padding: 0;
+    color: var(--fg);
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 16px 0;
+    background: var(--bg-elev);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    overflow: hidden;
+    font-size: 0.9rem;
+  }
+  th, td {
+    text-align: left;
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--border);
+  }
+  th {
+    background: var(--bg-card);
+    color: var(--accent);
+    font-weight: 600;
+  }
+  tr:last-child td { border-bottom: none; }
+  .callout {
+    border-left: 3px solid var(--accent);
+    background: var(--bg-elev);
+    padding: 14px 18px;
+    border-radius: 4px;
+    margin: 20px 0;
+  }
+  .callout.warn { border-color: var(--accent-warn); }
+  .callout.err  { border-color: var(--accent-err); }
+  .callout.ok   { border-color: var(--accent-ok); }
+  .callout strong { color: var(--fg); }
+  .mermaid {
+    background: var(--bg-elev);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 20px;
+    margin: 20px 0;
+    text-align: center;
+  }
+  .source {
+    font-size: 0.8rem;
+    color: var(--fg-dim);
+    font-family: var(--mono);
+    margin-top: -8px;
+    margin-bottom: 16px;
+  }
+  .timeline {
+    position: relative;
+    margin: 24px 0;
+    padding-left: 20px;
+    border-left: 2px solid var(--border);
+  }
+  .timeline-item {
+    position: relative;
+    margin-bottom: 18px;
+    padding-left: 16px;
+  }
+  .timeline-item::before {
+    content: '';
+    position: absolute;
+    left: -27px;
+    top: 6px;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: var(--accent);
+    border: 2px solid var(--bg);
+  }
+  .timeline-item.critical::before { background: var(--accent-err); }
+  .timeline-item .t-cmd {
+    font-family: var(--mono);
+    color: var(--accent-warm);
+    font-weight: 600;
+  }
+  .timeline-item .t-delay {
+    color: var(--fg-dim);
+    font-size: 0.85rem;
+    font-family: var(--mono);
+  }
+  .timeline-item .t-desc {
+    font-size: 0.9rem;
+    color: var(--fg-dim);
+    margin-top: 2px;
+  }
+  .warn-text { color: var(--accent-warn); }
+  .err-text  { color: var(--accent-err); }
+  .ok-text   { color: var(--accent-ok); }
+</style>
+</head>
+<body>
+<div class="container">
+  <nav class="nav">
+    <a href="index.html">← Index</a>
+    <span class="sep">·</span>
+    <a href="warmup.html">🔥 Warmup</a>
+    <span class="sep">·</span>
+    <a href="calibration.html">🎯 Kalibracja</a>
+    <span class="sep">·</span>
+    <a href="drills.html">🎾 Drille</a>
+  </nav>
+
+  <h1>🔥 Warmup — rozgrzewanie silników</h1>
+  <p class="subtitle">Kiedy i jak oryginalne aplikacje Newgy/Donic rozkręcają flywheel przed pierwszym rzutem.</p>
+
+  <div class="callout warn">
+    <strong>⚠ Kluczowe odkrycie:</strong> <span class="warn-text">Oryginalne aplikacje NIE mają dedykowanej fazy warmup.</span>
+    Silniki rozkręcają się "przy okazji" — podczas setup drilla wykonywany jest <em>pre-load</em> piłki (2× <code>B</code> z odstępem 1800ms), co zapewnia że flywheel kręci się ~1.8s zanim padnie pierwszy <code>T</code>.
+    AcePad wprowadza własny 3s warmup jako dodatek, bo w testach 2s nie wystarczało.
+  </div>
+
+  <h2>1. Sekwencja setup drilla (de facto warmup)</h2>
+  <p class="source">Źródło: <code>ANDROID_APP_RE.md:814-819</code>, <code>BUSINESS_LOGIC_COMPLETE.md:282-304</code>, <code>WINDOWS_APP_RE.md:337-352</code></p>
+
+  <div class="mermaid">
+sequenceDiagram
+    autonumber
+    participant A as App
+    participant R as Robot
+
+    Note over A,R: SetupDrill() — wykonywane PRZED rozpoczęciem drilla
+    A->>R: H\r (ClearBall)
+    R-->>A: K
+    Note over A: wait 200ms
+    A->>R: H\r
+    R-->>A: K
+    Note over A: wait 1000ms
+
+    Note over A,R: Pre-load first ball (tylko FW < 701)
+    A->>R: B{first_ball}\r (force=true)
+    R-->>A: K
+    Note over A: wait 300ms
+    A->>R: B{first_ball}\r (force=true, identyczne)
+    R-->>A: K
+    Note over A: wait 1500ms — silniki osiągają obroty
+    Note over A,R: Teraz RunDrill() — pierwszy T\r
+  </div>
+
+  <h2>2. Timeline z dokładnymi timingami</h2>
+  <div class="timeline">
+    <div class="timeline-item">
+      <span class="t-cmd">H\r</span> <span class="t-delay">t = 0ms</span>
+      <div class="t-desc">ClearBall — zatrzymanie silników (zabezpieczenie)</div>
+    </div>
+    <div class="timeline-item">
+      <span class="t-cmd">H\r</span> <span class="t-delay">t = +200ms</span>
+      <div class="t-desc">Drugie ClearBall — idempotentne, pewność że zatrzymane</div>
+    </div>
+    <div class="timeline-item critical">
+      <span class="t-cmd">B{first_ball}\r</span> <span class="t-delay">t = +1200ms</span>
+      <div class="t-desc">SetBall z parametrami pierwszej piłki — silniki zaczynają rozkręcać</div>
+    </div>
+    <div class="timeline-item critical">
+      <span class="t-cmd">B{first_ball}\r</span> <span class="t-delay">t = +1500ms</span>
+      <div class="t-desc">Reinforce — drugie wywołanie identyczne (cache-proof)</div>
+    </div>
+    <div class="timeline-item">
+      <span class="t-cmd">T\r</span> <span class="t-delay">t = +3000ms</span>
+      <div class="t-desc"><span class="ok-text">Pierwszy rzut.</span> Silniki kręciły ~1.8s przed tym momentem</div>
+    </div>
+  </div>
+
+  <h2>3. Timing table (FW &lt; 701 / USB)</h2>
+  <table>
+    <tr><th>#</th><th>Komenda</th><th>Delay po</th><th>Opis</th><th>Źródło</th></tr>
+    <tr><td>1</td><td><code>H\r</code></td><td>200 ms</td><td>Clear #1</td><td><code>ANDROID_APP_RE.md:816</code></td></tr>
+    <tr><td>2</td><td><code>H\r</code></td><td>1000 ms</td><td>Clear #2</td><td><code>ANDROID_APP_RE.md:817</code></td></tr>
+    <tr><td>3</td><td><code>B{first_ball}\r</code></td><td>300 ms</td><td>SetBall force=true (rozkręca silniki)</td><td><code>ANDROID_APP_RE.md:818</code></td></tr>
+    <tr><td>4</td><td><code>B{first_ball}\r</code></td><td>1500 ms</td><td>Reinforce identyczny</td><td><code>ANDROID_APP_RE.md:818</code></td></tr>
+    <tr><td>5</td><td><code>T\r</code></td><td>—</td><td class="ok-text">Pierwszy rzut</td><td>start RunDrill loop</td></tr>
+  </table>
+
+  <p><strong>Suma czasu silników kręcących przed pierwszym <code>T</code> ≈ 1800 ms</strong> (300 + 1500).</p>
+
+  <h2>4. Pseudokod algorytmu</h2>
+  <pre><code># FW < 701 lub USB_Mode — SYNC (stary protokół)
+def setup_drill(first_ball):
+    robot.send("H\r")                              # clear #1
+    wait(200)
+    robot.send("H\r")                              # clear #2
+    wait(1000)
+    robot.send(format_B(first_ball, force=True))   # silniki start
+    wait(300)
+    robot.send(format_B(first_ball, force=True))   # reinforce (identyczne!)
+    wait(1500)
+    # od tego momentu RunDrill() — pierwszy T\r
+
+# FW >= 701 BLE — ASYNC (nowy protokół)
+def setup_drill_fw701(first_ball):
+    robot.send("H\r")
+    wait(200)
+    robot.send("H\r")
+    wait(1000)
+    # brak pre-load — używany wTA+A+END, robot sam rozkręca silniki
+    # (patrz: drille.html — tryb ASYNC)
+</code></pre>
+
+  <h2>5. FillRobot — fizyczne ładowanie piłek (NIE warmup!)</h2>
+  <p class="source">Źródło: <code>ANDROID_APP_RE.md:665-673</code>, <code>BUSINESS_LOGIC_COMPLETE.md:363-370</code></p>
+  <p>Oddzielna akcja UI — załadowanie piłek do podajnika. Nie służy rozgrzewaniu flywheelu.</p>
+
+  <pre><code># FillRobot — ładowanie piłek (osobny przycisk w UI)
+setBall: TopMotor=80, BotMotor=0, Height=128, Osc=128, Rot=128, WaitTime=1000
+         # UWAGA: wartości RAW tu, nie procenty!
+for i in 1..11:
+    robot.send("T\r")
+    wait(1000)
+robot.send("H\r")  # ClearBall
+</code></pre>
+
+  <h2>6. Różnice między platformami</h2>
+  <table>
+    <tr>
+      <th>Aspekt</th>
+      <th>Android BLE</th>
+      <th>Android USB</th>
+      <th>iOS BLE</th>
+      <th>Windows USB</th>
+    </tr>
+    <tr>
+      <td>Dedykowany warmup</td>
+      <td class="err-text">brak</td>
+      <td class="err-text">brak</td>
+      <td class="err-text">brak</td>
+      <td class="err-text">brak</td>
+    </tr>
+    <tr>
+      <td>Pre-load (B × 2 + 1800ms)</td>
+      <td>FW &lt; 701: tak<br>FW ≥ 701: nie</td>
+      <td>zawsze tak</td>
+      <td>FW &lt; 701: tak<br>FW ≥ 701: nie</td>
+      <td>zawsze tak (USB=SYNC)</td>
+    </tr>
+    <tr>
+      <td>FillRobot</td>
+      <td class="ok-text">tak</td>
+      <td class="ok-text">tak</td>
+      <td class="ok-text">tak</td>
+      <td class="ok-text">tak</td>
+    </tr>
+    <tr>
+      <td>Setup time</td>
+      <td>~3s</td>
+      <td>~3s</td>
+      <td>~3s</td>
+      <td>~3s</td>
+    </tr>
+  </table>
+
+  <h2>7. Co robi AcePad (stan obecny)</h2>
+  <div class="callout">
+    <p><strong>AcePad dodaje 3s warmup (2 fazy: boosted RPM + settle)</strong> przed pierwszym rzutem — bo w testach flywheel nie osiągał obrotów w 2s.</p>
+    <p class="source">Memory: <code>feedback_motor_warmup.md</code></p>
+    <p>Jest to <span class="warn-text">odstępstwo od oryginału</span> — należy świadomie uzgodnić:</p>
+    <ul>
+      <li>Czy warmup 3s jest rzeczywiście potrzebny, czy wynika z błędu w timingu setup (brak 1800ms pre-load)?</li>
+      <li>Jeśli 3s warmup zostaje — czy użyć boosted RPM (wyższe niż drill), czy parametrów pierwszej piłki?</li>
+      <li>Jak to współgra z trybem ASYNC (FW ≥ 701), gdzie robot sam zarządza silnikami?</li>
+    </ul>
+  </div>
+
+  <h2>8. Obszary do weryfikacji</h2>
+  <ul>
+    <li><strong>Minimalny czas rozkręcania flywheelu</strong> — w RE brak danych o timingu RPM. Potrzebny pomiar na żywo (debug output <code>TOP: 0\r\nBOTTOM: 838\r\n</code> z <code>FIRMWARE_RE.md:126</code> pokazuje tylko idle).</li>
+    <li><strong>Czy pre-load 1800ms wystarcza</strong> — oryginał nie ma warmup, więc prawdopodobnie tak. AcePad ma krótszy setup → stąd potrzeba własnego warmup.</li>
+    <li><strong>Delay 300ms między dwoma B</strong> — dlaczego dwa identyczne setBall? Cache-proof? Potwierdzenie odpowiedzi?</li>
+  </ul>
+
+  <h2>9. Źródła</h2>
+  <ul>
+    <li><code>ANDROID_APP_RE.md:814-819</code> — SetupDrill</li>
+    <li><code>ANDROID_APP_RE.md:665-673</code> — FillRobot</li>
+    <li><code>BUSINESS_LOGIC_COMPLETE.md:282-304</code> — runDrill</li>
+    <li><code>BUSINESS_LOGIC_COMPLETE.md:363-370</code> — FillRobot (wspólna DLL)</li>
+    <li><code>WINDOWS_APP_RE.md:337-352</code> — FillRobot Windows</li>
+    <li><code>re/protocol-flow.html:317-328</code> — istniejący diagram referencyjny</li>
+  </ul>
+</div>
+
+<script>
+  mermaid.initialize({
+    startOnLoad: true,
+    theme: 'dark',
+    themeVariables: {
+      darkMode: true,
+      background: '#1a1d29',
+      primaryColor: '#242837',
+      primaryTextColor: '#e4e6eb',
+      primaryBorderColor: '#2d3142',
+      lineColor: '#7aa2f7',
+      secondaryColor: '#1a1d29',
+      tertiaryColor: '#0f1117',
+      actorBkg: '#242837',
+      actorBorder: '#7aa2f7',
+      actorTextColor: '#e4e6eb',
+      sequenceNumberColor: '#0f1117',
+      noteBkgColor: '#f7d77a',
+      noteTextColor: '#0f1117',
+      noteBorderColor: '#f7d77a'
+    }
+  });
+</script>
+</body>
+</html>
