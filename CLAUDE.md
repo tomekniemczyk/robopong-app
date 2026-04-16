@@ -72,7 +72,7 @@ venv/bin/pytest tests/test_api.py::nazwa_testu
 ### Stack
 - **Backend:** FastAPI + Bleak (BLE) + pyserial (USB FTDI) + SQLite + file-based JSON
 - **Frontend:** Vue 3 CDN (no build step, no router), single-file SPA
-- **Serwer produkcyjny:** Raspberry Pi `192.168.1.73`, user `robopong`, port `8001`
+- **Serwer produkcyjny:** Raspberry Pi `10.0.0.45`, user `robopong`, port `8001`
 - **Kamera:** motion, port `8081`, nagrywanie przez ffmpeg (MJPEG → H.264 MP4)
 - **Deploy:** `./deploy.sh` — polling co 15s, deploy tylko po CI pass (`gh run`)
 - **CI:** GitHub Actions — Python 3.11, pytest
