@@ -31,17 +31,33 @@ def test_ball_negative_speed():
 
 def test_ball_speed_too_high():
     with pytest.raises(ValidationError):
-        Ball(top_speed=250)
+        Ball(top_speed=211)
 
 
 def test_ball_speed_too_low():
     with pytest.raises(ValidationError):
-        Ball(top_speed=-250)
+        Ball(top_speed=-211)
 
 
 def test_ball_oscillation_out_of_range():
     with pytest.raises(ValidationError):
-        Ball(oscillation=256)
+        Ball(oscillation=174)
+    with pytest.raises(ValidationError):
+        Ball(oscillation=126)
+
+
+def test_ball_height_out_of_range():
+    with pytest.raises(ValidationError):
+        Ball(height=211)
+    with pytest.raises(ValidationError):
+        Ball(height=74)
+
+
+def test_ball_rotation_out_of_range():
+    with pytest.raises(ValidationError):
+        Ball(rotation=211)
+    with pytest.raises(ValidationError):
+        Ball(rotation=89)
 
 
 def test_ball_wait_ms_too_low():
@@ -55,9 +71,9 @@ def test_ball_wait_ms_too_high():
 
 
 def test_ball_boundary_values():
-    b = Ball(top_speed=249, bot_speed=-249, oscillation=0, height=0, rotation=0, wait_ms=200)
-    assert b.top_speed == 249
-    b2 = Ball(top_speed=-249, bot_speed=249, oscillation=255, height=255, rotation=255, wait_ms=10000)
+    b = Ball(top_speed=210, bot_speed=-210, oscillation=127, height=75, rotation=90, wait_ms=200)
+    assert b.top_speed == 210
+    b2 = Ball(top_speed=-210, bot_speed=210, oscillation=173, height=210, rotation=210, wait_ms=10000)
     assert b2.wait_ms == 10000
 
 

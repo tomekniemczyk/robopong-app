@@ -9,12 +9,13 @@ import re
 # Oscillation: % 0-100  -> raw 127-173 (center=150 at 50%)
 # Height:      % 0-100  -> raw 75-210
 # Rotation:    deg -90..+90 -> raw 90-210 (center=150 at 0)
-# Motor:       % -100..+100 -> app -249..+249
+# Motor:       % -100..+100 -> raw -210..+210
+# (matches original Newgy getMotorSpeed max=210; SAFE_MOTOR_RAW_MAX in robot.py)
 
 def osc_to_raw(pct): return round(127 + (pct / 100) * 46)
 def height_to_raw(pct): return round(75 + (pct / 100) * 135)
 def rot_to_raw(deg): return round(150 + (deg / 90) * 60)
-def motor_to_app(pct): return round(pct * 2.49)
+def motor_to_app(pct): return round(pct * 2.10)
 
 
 def parse_ball(ball_el):
@@ -49,12 +50,12 @@ def parse_ball(ball_el):
         h   = height_to_raw((hl + hh) / 2)
         rot = rot_to_raw((rl + rh) / 2)
 
-    # clamp
-    top = max(-249, min(249, top))
-    bot = max(-249, min(249, bot))
-    osc = max(0, min(255, osc))
-    h   = max(0, min(255, h))
-    rot = max(0, min(255, rot))
+    # clamp to SAFE limits from robot.py
+    top = max(-210, min(210, top))
+    bot = max(-210, min(210, bot))
+    osc = max(127, min(173, osc))
+    h   = max(75, min(210, h))
+    rot = max(90, min(210, rot))
     wait_ms = max(200, min(10000, wait_ms))
 
     return {"top_speed": top, "bot_speed": bot, "oscillation": osc,
@@ -113,7 +114,7 @@ output = {"folders": folders}
 total = sum(len(f["drills"]) for f in folders)
 print(f"Converted {total} drills in {len(folders)} folders")
 
-with open("../frontend/drills_default.json", "w", encoding="utf-8") as f:
+with open("../backend/drills_default.json", "w", encoding="utf-8") as f:
     json.dump(output, f, ensure_ascii=False, indent=2)
 
-print("Written to ../frontend/drills_default.json")
+print("Written to ../backend/drills_default.json")

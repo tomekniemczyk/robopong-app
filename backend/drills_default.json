@@ -1893,7 +1893,7 @@
               "wait_ms": 1400
             },
             {
-              "top_speed": 249,
+              "top_speed": 210,
               "bot_speed": 0,
               "oscillation": 150,
               "height": 167,
@@ -2017,7 +2017,7 @@
           "delay_s": 0.0,
           "balls": [
             {
-              "top_speed": 249,
+              "top_speed": 210,
               "bot_speed": 0,
               "oscillation": 143,
               "height": 167,
@@ -2036,7 +2036,7 @@
           "delay_s": 0.0,
           "balls": [
             {
-              "top_speed": 249,
+              "top_speed": 210,
               "bot_speed": 0,
               "oscillation": 161,
               "height": 167,
@@ -2131,7 +2131,7 @@
           "delay_s": 0.0,
           "balls": [
             {
-              "top_speed": 237,
+              "top_speed": 200,
               "bot_speed": 37,
               "oscillation": 140,
               "height": 159,
@@ -2139,7 +2139,7 @@
               "wait_ms": 1320
             },
             {
-              "top_speed": 212,
+              "top_speed": 179,
               "bot_speed": -125,
               "oscillation": 140,
               "height": 176,
@@ -2705,7 +2705,7 @@
               "wait_ms": 1150
             },
             {
-              "top_speed": 214,
+              "top_speed": 180,
               "bot_speed": 0,
               "oscillation": 150,
               "height": 170,
@@ -2829,7 +2829,7 @@
               "wait_ms": 1150
             },
             {
-              "top_speed": 237,
+              "top_speed": 200,
               "bot_speed": 80,
               "oscillation": 150,
               "height": 160,
@@ -2875,7 +2875,7 @@
           "delay_s": 0.0,
           "balls": [
             {
-              "top_speed": 237,
+              "top_speed": 200,
               "bot_speed": 55,
               "oscillation": 144,
               "height": 160,
@@ -2883,7 +2883,7 @@
               "wait_ms": 900
             },
             {
-              "top_speed": 237,
+              "top_speed": 200,
               "bot_speed": 55,
               "oscillation": 159,
               "height": 160,
@@ -2902,7 +2902,7 @@
           "delay_s": 0.0,
           "balls": [
             {
-              "top_speed": 237,
+              "top_speed": 200,
               "bot_speed": 55,
               "oscillation": 151,
               "height": 160,
@@ -3099,8 +3099,8 @@
           "delay_s": 0.0,
           "balls": [
             {
-              "top_speed": 237,
-              "bot_speed": -219,
+              "top_speed": 200,
+              "bot_speed": -185,
               "oscillation": 138,
               "height": 171,
               "rotation": 150,
@@ -3365,7 +3365,7 @@
           "delay_s": 0.0,
           "balls": [
             {
-              "top_speed": -212,
+              "top_speed": -179,
               "bot_speed": 129,
               "oscillation": 150,
               "height": 113,
@@ -3384,7 +3384,7 @@
           "delay_s": 0.0,
           "balls": [
             {
-              "top_speed": -224,
+              "top_speed": -189,
               "bot_speed": 125,
               "oscillation": 150,
               "height": 113,
@@ -3457,7 +3457,7 @@
           "delay_s": 0.0,
           "balls": [
             {
-              "top_speed": -212,
+              "top_speed": -179,
               "bot_speed": 115,
               "oscillation": 150,
               "height": 196,

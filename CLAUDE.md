@@ -325,7 +325,6 @@ robopong-app/
 │   ├── i18n.js           (603) # tłumaczenia UI (PL/EN/DE/FR/ZH)
 │   ├── content_i18n.js   (526) # tłumaczenia treści (ćwiczenia, drille, treningi)
 │   ├── manifest.json           # PWA manifest
-│   ├── drills_default.json     # domyślne drille (kopia frontend)
 │   └── img/                    # SVG ikony (height, oscillation, rotation)
 │
 ├── re/                         # reverse engineering protokołu (16MB)

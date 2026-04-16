@@ -3,11 +3,13 @@ from typing import List, Optional
 
 
 class Ball(BaseModel):
-    top_speed:   int = Field(default=80,   ge=-249, le=249)
-    bot_speed:   int = Field(default=0,    ge=-249, le=249)
-    oscillation: int = Field(default=150,  ge=0,    le=255)
-    height:      int = Field(default=150,  ge=0,    le=255)
-    rotation:    int = Field(default=150,  ge=0,    le=255)
+    # Zakresy dopasowane do Robot.SAFE_* (robot.py:158-165) — fail fast w 422
+    # zamiast runtime SafetyError. Źródło: RE oryginalnej appki Newgy.
+    top_speed:   int = Field(default=80,   ge=-210, le=210)
+    bot_speed:   int = Field(default=0,    ge=-210, le=210)
+    oscillation: int = Field(default=150,  ge=127,  le=173)
+    height:      int = Field(default=150,  ge=75,   le=210)
+    rotation:    int = Field(default=150,  ge=90,   le=210)
     wait_ms:     int = Field(default=1000, ge=200,  le=10000)
 
 
