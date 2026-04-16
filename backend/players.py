@@ -33,7 +33,3 @@ def update_player(player_id: int, name: str | None = None,
     if handedness is not None and handedness not in ("right", "left"):
         handedness = "right"
     return db.update_player(player_id, name=name, handedness=handedness, lang=lang)
-
-
-def delete_player(player_id: int) -> bool:
-    return db.delete_player(player_id)

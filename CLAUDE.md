@@ -84,10 +84,10 @@ venv/bin/pytest tests/test_api.py::nazwa_testu
 - `main.py` — FastAPI app, REST endpoints + WebSocket (`/ws`), broadcast logów, session management (CONTROLLER/OBSERVER/PENDING + takeover)
 - `training.py` — `TrainingRunner`: state machine (start/stop/pause/resume/skip), integracja z Recorder, historia sesji, step notes, percent override
 - `recordings.py` — `Recorder`: ffmpeg subprocess (motion MJPEG → MP4), auto-delete <30s, metadata do SQLite
-- `db.py` — SQLite (`robopong.db`): 12 tabel (patrz niżej)
+- `db.py` — SQLite (`robopong.db`): 10 tabel (patrz niżej)
 - `presets.py` + `presets.db` — osobna baza presetów konfiguracji robota
 - `drills.py`, `exercises.py`, `training.py` — CRUD dla odpowiednich encji (file-based JSON + SQLite hybryd)
-- `players.py` — thin wrapper nad `db.py`, walidacja, cascade delete
+- `players.py` — thin wrapper nad `db.py`, walidacja (cascade delete via `db.delete_player_cascade`)
 - `audio.py` — dźwięki WAV przez `aplay` (pliki w `backend/sounds/`)
 - `models.py` — Pydantic models (Ball, ScenarioIn, DrillIn, TrainingStep, etc.)
 
@@ -119,8 +119,6 @@ venv/bin/pytest tests/test_api.py::nazwa_testu
 | ball_exploration | eksploracja parametrów piłki (pełne parametry + ocena) |
 | favorites | ulubione per gracz (training/drill/exercise) |
 | calibration | kalibracja per-device (addr PK, top/bot/osc/h/rot/wait, updated_at; addr='' = default) |
-| drill_folders | foldery drilli (legacy, backward compat) |
-| drills | drille (legacy, backward compat) |
 
 **SQLite `presets.db`:** presety kalibracji robota
 
@@ -291,7 +289,7 @@ robopong-app/
 │   ├── main.py         (1152) # REST API + WebSocket /ws + static files
 │   ├── robot.py         (418) # Robot: orkiestracja połączenia, komendy, drill loop
 │   ├── transport.py     (364) # ABC RobotTransport → BLE / USB / Simulation
-│   ├── db.py            (993) # SQLite: 12 tabel (players, history, recordings, calibration, ...)
+│   ├── db.py            (816) # SQLite: 10 tabel (players, history, recordings, calibration, ...)
 │   ├── presets.py         (74) # SQLite: presety konfiguracji robota
 │   ├── drills.py         (284) # CRUD drilli (file-based JSON)
 │   ├── exercises.py       (80) # CRUD ćwiczeń (file-based JSON)

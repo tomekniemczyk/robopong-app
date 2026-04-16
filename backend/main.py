@@ -174,6 +174,16 @@ def _save_last_addr(addr: str):
         pass
 
 
+async def _apply_calibration_with_reset(cal: dict):
+    """V×2 (reset_head) + apply Q/U/O/R. Wywoływane po każdym connect/usb_connect
+    oraz po begin_calibration — V resetuje firmware U/O/R offsets do 150."""
+    await robot.reset_head()
+    await asyncio.sleep(0.5)
+    await robot.reset_head()
+    await asyncio.sleep(0.7)
+    await robot.apply_calibration(cal)
+
+
 async def _do_connect(addr: str) -> bool:
     """Łączy z robotem i broadcastuje calibration_loaded po udanym połączeniu."""
     if addr.startswith("USB:"):
@@ -186,11 +196,7 @@ async def _do_connect(addr: str) -> bool:
                     addr, was_saved, cal.get("top_speed"), cal.get("bot_speed"),
                     cal.get("oscillation"), cal.get("height"), cal.get("rotation"))
         broadcast("calibration_loaded", {"cal": cal, "calibrated": was_saved, "addr": addr})
-        await robot.reset_head()
-        await asyncio.sleep(0.5)
-        await robot.reset_head()
-        await asyncio.sleep(0.7)
-        await robot.apply_calibration(cal)
+        await _apply_calibration_with_reset(cal)
         logger.info("CAL V×2 + applied after connect: Q/U/O/R sent to robot")
     else:
         logger.warning("CAL _do_connect(%s): połączenie nieudane", addr)
@@ -367,11 +373,7 @@ async def _handle(msg: dict, ws: WebSocket):
             _log("CAL connect BLE %s: was_saved=%s top=%s bot=%s osc=%s h=%s rot=%s",
                  addr, was_saved, cal.get("top_speed"), cal.get("bot_speed"),
                  cal.get("oscillation"), cal.get("height"), cal.get("rotation"))
-            await robot.reset_head()
-            await asyncio.sleep(0.5)
-            await robot.reset_head()
-            await asyncio.sleep(0.7)
-            await robot.apply_calibration(cal)
+            await _apply_calibration_with_reset(cal)
             _log("CAL V×2 + applied after BLE connect: R/U/O/Q sent")
             broadcast("calibration_loaded", {"cal": cal, "calibrated": was_saved, "addr": addr})
         else:
@@ -401,11 +403,7 @@ async def _handle(msg: dict, ws: WebSocket):
             _log("CAL connect USB %s: was_saved=%s top=%s bot=%s osc=%s h=%s rot=%s",
                  addr, was_saved, cal.get("top_speed"), cal.get("bot_speed"),
                  cal.get("oscillation"), cal.get("height"), cal.get("rotation"))
-            await robot.reset_head()
-            await asyncio.sleep(0.5)
-            await robot.reset_head()
-            await asyncio.sleep(0.7)
-            await robot.apply_calibration(cal)
+            await _apply_calibration_with_reset(cal)
             _log("CAL V×2 + applied after USB connect: R/U/O/Q sent")
             broadcast("calibration_loaded", {"cal": cal, "calibrated": was_saved, "addr": addr})
 
@@ -457,15 +455,14 @@ async def _handle(msg: dict, ws: WebSocket):
 
     elif action == "begin_calibration":
         _log("Begin calibration — V (reset head)")
-        await robot.reset_head()
-        await asyncio.sleep(0.5)
-        await robot.reset_head()
-        await asyncio.sleep(0.7)
-        # V resets firmware U/O/R offsets — re-apply calibration immediately
         cal = robot._calibration
         if cal:
-            await robot.apply_calibration(cal)
+            await _apply_calibration_with_reset(cal)
             _log("CAL re-applied after V×2: h=%s osc=%s rot=%s", cal.get("height"), cal.get("oscillation"), cal.get("rotation"))
+        else:
+            await robot.reset_head()
+            await asyncio.sleep(0.5)
+            await robot.reset_head()
 
     elif action == "run_scenario":
         s = db.get_scenario(msg["id"])
