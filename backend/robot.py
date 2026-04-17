@@ -32,6 +32,13 @@ class Robot:
         self._drill_response_queue: Optional[asyncio.Queue] = None
         self._tracking_drill_responses: bool = False
         self._calibration: Optional[dict] = None   # stored after apply_calibration, re-applied on reconnect
+        # ── OPTIONAL: drill compensation (AcePad deviation from original Newgy) ──
+        # When True, drill B-commands are adjusted so firmware effective positions
+        # match designer's intent regardless of user's calibration. Default False
+        # = faithful to original Newgy behavior (drills play differently with
+        # different calibrations). User toggles via set_drill_compensation WS action.
+        # Easy to remove: delete this flag, drill_compensate method, and 3 call sites.
+        self.drill_compensation: bool = False
 
     # ── listener API ──────────────────────────────────────────────────────────
 
@@ -346,6 +353,28 @@ class Robot:
         logger.info("Calibration committed: R=%d U=%d O=%d Q=%d + B{zeros,h-30} + O×2 + H + W000",
                     rot, h, osc, speed_cal)
 
+    # ── OPTIONAL drill compensation (not in original) ─────────────────────────
+    # Original Newgy sends drill B values as-is; firmware effective position =
+    # B + (user_cal - 150), which makes drills play differently per calibration.
+    # When drill_compensation flag is ON, we pre-adjust B values so effective
+    # positions match designer's intent (assumes drills designed at factory:
+    # h=183, osc=150, rot=150). To remove this feature entirely: delete this
+    # method, delete self.drill_compensation, remove 3 call sites in drill loops.
+
+    FACTORY_CAL_H, FACTORY_CAL_OSC, FACTORY_CAL_ROT = 183, 150, 150
+
+    def drill_compensate(self, h: int, osc: int, rot: int) -> tuple:
+        """Pass-through when compensation disabled; subtract (user_cal - factory) when enabled."""
+        if not self.drill_compensation or not self._calibration:
+            return h, osc, rot
+        cal_h   = self._calibration.get("height",      self.FACTORY_CAL_H)
+        cal_osc = self._calibration.get("oscillation", self.FACTORY_CAL_OSC)
+        cal_rot = self._calibration.get("rotation",    self.FACTORY_CAL_ROT)
+        comp_h   = max(self.SAFE_HEIGHT_MIN, min(self.SAFE_HEIGHT_MAX, h   + (self.FACTORY_CAL_H   - cal_h)))
+        comp_osc = max(self.SAFE_OSC_MIN,    min(self.SAFE_OSC_MAX,    osc + (self.FACTORY_CAL_OSC - cal_osc)))
+        comp_rot = max(self.SAFE_ROT_MIN,    min(self.SAFE_ROT_MAX,    rot + (self.FACTORY_CAL_ROT - cal_rot)))
+        return comp_h, comp_osc, comp_rot
+
     # ── drill runner ──────────────────────────────────────────────────────────
 
     async def run_drill(self, balls: List[Dict], repeat: int = 1, count: int = 0, percent: int = 100, skip_warmup: bool = False, emit_countdown: bool = True):
@@ -372,9 +401,9 @@ class Robot:
         ball_cmds = []
         for b in balls:
             try:
+                h, osc, rot = self.drill_compensate(b["height"], b["oscillation"], b["rotation"])
                 params = self._build_ball_params(
-                    b["top_speed"], b["bot_speed"],
-                    b["oscillation"], b["height"], b["rotation"])
+                    b["top_speed"], b["bot_speed"], osc, h, rot)
             except Robot.SafetyError as e:
                 logger.error("SAFETY STOP in drill: %s", e)
                 await self._write("H")
@@ -511,18 +540,19 @@ class Robot:
         first_ball_ready = False
         if not skip_warmup:
             b0 = balls[0]
+            h0, osc0, rot0 = self.drill_compensate(b0["height"], b0["oscillation"], b0["rotation"])
             await self._write("H")
             await asyncio.sleep(0.1)
             warmup_top = min(abs(b0["top_speed"]), self.SAFE_MOTOR_RAW_MAX) * (1 if b0["top_speed"] >= 0 else -1)
             warmup_bot = min(abs(b0["bot_speed"]), self.SAFE_MOTOR_RAW_MAX) * (1 if b0["bot_speed"] >= 0 else -1) if b0["bot_speed"] != 0 else 0
-            await self.set_ball(warmup_top, warmup_bot, b0["oscillation"], b0["height"], b0["rotation"], b0.get("wait_ms", 1000))
+            await self.set_ball(warmup_top, warmup_bot, osc0, h0, rot0, b0.get("wait_ms", 1000))
             if emit_countdown:
                 self._emit("drill_countdown", {"sec": 3})
             await asyncio.sleep(1.0)
             if emit_countdown:
                 self._emit("drill_countdown", {"sec": 2})
             await asyncio.sleep(1.0)
-            await self.set_ball(b0["top_speed"], b0["bot_speed"], b0["oscillation"], b0["height"], b0["rotation"], b0.get("wait_ms", 1000))
+            await self.set_ball(b0["top_speed"], b0["bot_speed"], osc0, h0, rot0, b0.get("wait_ms", 1000))
             if emit_countdown:
                 self._emit("drill_countdown", {"sec": 1})
             await asyncio.sleep(1.0)
@@ -540,8 +570,9 @@ class Robot:
                     if first_ball_ready:
                         first_ball_ready = False
                     else:
+                        bh, bosc, brot = self.drill_compensate(b["height"], b["oscillation"], b["rotation"])
                         await self.set_ball(b["top_speed"], b["bot_speed"],
-                                            b["oscillation"], b["height"], b["rotation"], adj_wait)
+                                            bosc, bh, brot, adj_wait)
                         await asyncio.sleep(0.15)
                     await self.throw()
                     thrown += 1

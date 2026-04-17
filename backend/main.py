@@ -631,6 +631,12 @@ async def _handle(msg: dict, ws: WebSocket):
             _log("Drill mode set to: %s (effective: %s)", mode, robot._effective_drill_mode())
             broadcast("info", {"message": f"Drill mode: {robot._effective_drill_mode()}"})
 
+    elif action == "set_drill_compensation":
+        enabled = bool(msg.get("enabled", False))
+        robot.drill_compensation = enabled
+        _log("Drill compensation: %s", "ON" if enabled else "OFF")
+        broadcast("drill_compensation", {"enabled": enabled})
+
     # ── Zarządzanie sesjami ──────────────────────────────────────────────────
 
     elif action == "request_takeover":

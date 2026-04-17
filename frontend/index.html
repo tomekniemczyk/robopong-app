@@ -472,6 +472,15 @@
         <button class="btn btn-success" style="padding:14px 28px;font-size:15px;font-weight:700" @click="wizStart()">
           🧙 {{ t('wizard.title') }}
         </button>
+        <div style="margin-top:32px;padding:14px;background:var(--panel);border-radius:8px;text-align:left;max-width:400px;margin-left:auto;margin-right:auto">
+          <label style="display:flex;align-items:center;gap:10px;cursor:pointer">
+            <input type="checkbox" v-model="drillCompensation" @change="onCompensationToggle" style="width:18px;height:18px">
+            <span style="font-size:13px;color:var(--fg)">Kompensacja kalibracji dla drilli</span>
+          </label>
+          <div style="font-size:11px;color:var(--muted);margin-top:6px;line-height:1.4">
+            Dostosuje wartości drilli tak, aby efektywna pozycja głowicy była taka sama niezależnie od Twojej kalibracji (odchylenie od oryginalnego Newgy — wyłączone domyślnie).
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -2640,6 +2649,12 @@ const _app = createApp({
     const robotNameEdit = ref('')
     const camErr        = ref(false)
     const camSrc        = `http://${window.location.hostname}:8081/stream`
+    // Drill compensation toggle (AcePad deviation from original Newgy — off by default)
+    const drillCompensation = ref(localStorage.getItem('drill_compensation') === '1')
+    function onCompensationToggle() {
+      localStorage.setItem('drill_compensation', drillCompensation.value ? '1' : '0')
+      send({ action: 'set_drill_compensation', enabled: drillCompensation.value })
+    }
     // On-demand recording
     const odName        = ref('')
     const odDurH        = ref(0)
@@ -2728,6 +2743,10 @@ const _app = createApp({
           console.debug('[CAL] status: lastAddr pusty, uzupełniam z device=%s', m.device)
           lastAddr.value = m.device
           localStorage.setItem('lastAddr', m.device)
+        }
+        // Wyślij preferencję kompensacji do serwera (jest w localStorage)
+        if (drillCompensation.value) {
+          send({ action: 'set_drill_compensation', enabled: true })
         }
 
       } else if (m.type === 'kicked') {
@@ -5268,6 +5287,7 @@ const _app = createApp({
       cal, calDirty, isCalibrated,
       expDrillId, expDrillData, expBallIdx, loadExpDrill, loadExpBall, saveExpToDrill, saveExpAsNew,
       lastAddr, robotName, editingName, robotNameEdit, camErr, camSrc,
+      drillCompensation, onCompensationToggle,
       transport, deployTime, usbPorts, usbScanning, simulationMode, toggleSimulation,
       myRole, mySessionId, sessionsList, showSessions, showServiceMenu, showDeviceInfo, copyDiagReport, diagModalText, diagModalOpen, diagModalCopy, sessionAge, parseUA,
       takeoverReq, takeoverCountdown, takeoverCooldown,

@@ -805,6 +805,48 @@ class TestCommitCalibration:
 # HANDSHAKE SEQUENCE TESTS
 # ═══════════════════════════════════════════════════════════════════════════════
 
+class TestDrillCompensate:
+    """Optional drill compensation — off by default (faithful to original Newgy).
+    When enabled, adjusts B values so firmware effective matches designer's intent."""
+
+    @pytest.fixture(autouse=True)
+    def setup_robot(self):
+        from robot import Robot
+        self.robot = Robot()
+
+    def test_default_is_off(self):
+        """Compensation flag defaults to False (original behavior)."""
+        assert self.robot.drill_compensation is False
+
+    def test_off_passes_through_even_with_cal(self):
+        """When compensation OFF, drill values sent unchanged regardless of cal."""
+        self.robot._calibration = {"height": 199, "oscillation": 143, "rotation": 152}
+        self.robot.drill_compensation = False
+        assert self.robot.drill_compensate(113, 162, 150) == (113, 162, 150)
+
+    def test_on_with_factory_cal_no_change(self):
+        """Factory cal (183/150/150) → no adjustment needed."""
+        self.robot._calibration = {"height": 183, "oscillation": 150, "rotation": 150}
+        self.robot.drill_compensation = True
+        assert self.robot.drill_compensate(113, 162, 150) == (113, 162, 150)
+
+    def test_on_with_high_user_cal_subtracts(self):
+        """User cal_h=199 + compensation ON → drill h=113 sent as 97."""
+        self.robot._calibration = {"height": 199, "oscillation": 143, "rotation": 152}
+        self.robot.drill_compensation = True
+        h, osc, rot = self.robot.drill_compensate(113, 162, 150)
+        assert h == 97    # 113 + (183-199) = 97, firmware: 97+49 = 146 (designer's)
+        assert osc == 169  # 162 + (150-143) = 169, firmware: 169-7 = 162 (designer's)
+        assert rot == 148  # 150 + (150-152) = 148, firmware: 148+2 = 150 (designer's)
+
+    def test_on_clamps_to_safe_range(self):
+        """Compensation can't push below SAFE_HEIGHT_MIN."""
+        self.robot._calibration = {"height": 210, "oscillation": 150, "rotation": 150}
+        self.robot.drill_compensation = True
+        h, _, _ = self.robot.drill_compensate(80, 150, 150)
+        assert h >= self.robot.SAFE_HEIGHT_MIN
+
+
 class TestHandshakeSequence:
     """Handshake must match original app sequence.
     Source: BUSINESS_LOGIC_COMPLETE.md:371-375, ANDROID_APP_RE.md:60-86"""
