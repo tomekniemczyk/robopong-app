@@ -70,6 +70,7 @@ def _install_ws_log_handler():
 
 
 FRONTEND = Path(__file__).parent.parent / "frontend"
+FRONTEND_V2 = Path(__file__).parent.parent / "frontend-v2"
 
 robot: Robot
 
@@ -1381,6 +1382,9 @@ _exercises_dir = FRONTEND / "static" / "exercises"
 if _exercises_dir.exists():
     app.mount("/static/exercises", StaticFiles(directory=str(_exercises_dir)), name="exercises")
 app.mount("/static", StaticFiles(directory=str(FRONTEND)), name="static")
+
+if FRONTEND_V2.exists():
+    app.mount("/v2", StaticFiles(directory=str(FRONTEND_V2), html=True), name="v2")
 
 
 @app.get("/{full_path:path}")
