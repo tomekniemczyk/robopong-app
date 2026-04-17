@@ -220,11 +220,16 @@ class Robot:
             audio.play("sim_motor_start")
 
     def _effective_drill_mode(self) -> str:
-        """Determine drill mode: async for BLE FW>=701, sync otherwise."""
+        """Determine drill mode. Default: sync (app-controlled timing via B+T).
+
+        Async mode (wTA+A+END, robot-managed) has unresolved issues on Gen2/FW701:
+        robot sends N after loaded-ball-count throws (not END count), causing
+        drill to restart every few balls (head lowers and drill begins again).
+        Until the firmware behavior is better understood, sync is the safe default.
+
+        User can opt in to async via `set_drill_mode` WS action for testing."""
         if self.drill_mode != "auto":
             return self.drill_mode
-        if self.transport_type == "ble" and self.firmware >= 701:
-            return "async"
         return "sync"
 
     async def throw(self):

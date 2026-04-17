@@ -507,7 +507,9 @@ class TestDrillModeDetection:
     """Drill mode auto-detection based on firmware and transport.
     Source: robot.py _effective_drill_mode"""
 
-    def test_ble_fw701_is_async(self):
+    def test_ble_fw701_defaults_to_sync(self):
+        """Default is sync for safety; async can be enabled via set_drill_mode.
+        Async mode has unresolved restart-on-N issue on Gen2/FW701."""
         robot = Robot()
         robot.drill_mode = "auto"
         robot.firmware = 701
@@ -516,6 +518,12 @@ class TestDrillModeDetection:
         mock_transport.transport_type = "ble"
         mock_transport.is_connected = True
         robot._transport = mock_transport
+        assert robot._effective_drill_mode() == "sync"
+
+    def test_explicit_async_override(self):
+        """User can explicitly enable async via drill_mode='async'."""
+        robot = Robot()
+        robot.drill_mode = "async"
         assert robot._effective_drill_mode() == "async"
 
     def test_usb_is_sync(self):
