@@ -4386,8 +4386,9 @@ const _app = createApp({
       videoCompare.others = []
       videoCompare.rightFile = ''
       videoCompare.rightLabel = ''
-      videoCompare.fullscreen = window.innerWidth < 768
+      videoCompare.fullscreen = _isTouchDevice()
       videoCompare.show = true
+      nextTick(() => _applyInlineVideoAttrs())
       let url = '/api/recordings/compare?'
       if (rec.drill_id) url += `drill_id=${rec.drill_id}`
       else if (rec.exercise_id) url += `exercise_id=${rec.exercise_id}`
@@ -4411,8 +4412,9 @@ const _app = createApp({
       videoCompare.others = []
       videoCompare.rightFile = ''
       videoCompare.rightLabel = ''
-      videoCompare.fullscreen = window.innerWidth < 768
+      videoCompare.fullscreen = _isTouchDevice()
       videoCompare.show = true
+      nextTick(() => _applyInlineVideoAttrs())
       let url = `/api/recordings/compare?ondemand=true&player_id=${rec.player_id}&exclude_filename=${encodeURIComponent(rec.filename)}`
       const r = await fetch(url)
       const others = await r.json()
@@ -4427,6 +4429,18 @@ const _app = createApp({
       videoCompare.fullscreen = false
       if (vidLeft.value) vidLeft.value.pause()
       if (vidRight.value) vidRight.value.pause()
+    }
+    function _isTouchDevice() {
+      return ('ontouchstart' in window) || (window.matchMedia && window.matchMedia('(pointer: coarse)').matches)
+    }
+    function _applyInlineVideoAttrs() {
+      for (const v of [vidLeft.value, vidRight.value]) {
+        if (!v) continue
+        v.playsInline = true
+        v.setAttribute('playsinline', '')
+        v.setAttribute('webkit-playsinline', '')
+        if ('disablePictureInPicture' in v) v.disablePictureInPicture = true
+      }
     }
     function toggleCompareFullscreen() {
       videoCompare.fullscreen = !videoCompare.fullscreen
