@@ -83,6 +83,8 @@ window.I18N = {
                    zh:'全选（Ctrl+A）并复制（Ctrl+C）' },
   'diag.copy':   { pl:'Kopiuj',  en:'Copy',     de:'Kopieren',  fr:'Copier',   zh:'复制' },
   'diag.close':  { pl:'Zamknij', en:'Close',    de:'Schließen', fr:'Fermer',   zh:'关闭' },
+  'btn.fullscreen':      { pl:'Pełny ekran', en:'Fullscreen', de:'Vollbild',   fr:'Plein écran',    zh:'全屏' },
+  'btn.exit_fullscreen': { pl:'Wyjdź z pełnego ekranu', en:'Exit fullscreen', de:'Vollbild verlassen', fr:'Quitter le plein écran', zh:'退出全屏' },
 
   // ── Observer / Pending banners ─────────────────────────────────────
   'banner.observing':  { pl:'👁 Obserwujesz — robot jest kontrolowany przez inną sesję.',

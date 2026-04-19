@@ -101,6 +101,45 @@
     .speed-btn { background:var(--surface); border:1px solid var(--border); border-radius:6px; padding:3px 8px; font-size:11px; color:var(--text); cursor:pointer; }
     .speed-btn.active { background:var(--accent); border-color:var(--accent); color:#fff; }
 
+    /* ── Compare fullscreen ─────────────────────────────────── */
+    .modal-sheet.compare-fs {
+      position:fixed; inset:0; width:100vw; height:100vh;
+      max-width:none; max-height:none; border-radius:0;
+      padding:0; margin:0; display:flex; flex-direction:column;
+      background:#000;
+    }
+    .compare-fs .compare-fs-header {
+      display:flex; align-items:center; gap:8px; padding:6px 10px;
+      background:rgba(0,0,0,.55); position:absolute; top:0; left:0; right:0; z-index:3;
+    }
+    .compare-fs .vid-compare {
+      flex:1; gap:2px; padding:40px 0 110px 0; min-height:0;
+    }
+    .compare-fs .vid-compare > div {
+      display:flex; flex-direction:column; flex:1; min-width:0; min-height:0;
+    }
+    .compare-fs .vid-compare video {
+      width:100%; height:100%; max-height:none; border-radius:0; flex:1; min-height:0;
+    }
+    .compare-fs .vid-label-fs {
+      position:absolute; top:44px; font-size:11px; color:#fff;
+      background:rgba(0,0,0,.5); padding:3px 8px; border-radius:4px;
+      max-width:48vw; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+      pointer-events:none; z-index:2;
+    }
+    .compare-fs .vid-label-fs.left { left:8px; }
+    .compare-fs .vid-label-fs.right { right:8px; pointer-events:auto; }
+    .compare-fs .compare-fs-controls {
+      position:absolute; bottom:0; left:0; right:0; z-index:3;
+      background:rgba(0,0,0,.6); padding:8px 10px;
+      display:flex; flex-direction:column; gap:6px;
+      padding-bottom:calc(8px + env(safe-area-inset-bottom));
+    }
+    .compare-fs .compare-fs-controls .vid-controls { margin:0; flex-wrap:wrap; }
+    @media (max-width: 680px) and (orientation: portrait) {
+      .compare-fs .vid-compare { padding:40px 0 170px 0; }
+    }
+
     /* ── Service menu ──────────────────────────────────────── */
     .service-backdrop { position:fixed; inset:0; z-index:140; }
     .service-menu {
@@ -2244,26 +2283,28 @@
 
   <!-- ── Video compare modal ──────────────────────────────────────────── -->
   <div v-if="videoCompare.show" class="modal-overlay" @click.self="closeVideoCompare()" style="z-index:250">
-    <div class="modal-sheet" style="max-width:95vw;width:800px">
-      <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
-        <h3 style="flex:1;font-size:14px">{{ t('stats.compare_video') }}: {{ videoCompare.stepName }}</h3>
-        <button class="btn btn-ghost" style="font-size:14px;padding:2px 6px" @click="closeVideoCompare()">✕</button>
+    <div class="modal-sheet" :class="{'compare-fs': videoCompare.fullscreen}" :style="videoCompare.fullscreen ? '' : 'max-width:95vw;width:800px'">
+      <div :class="videoCompare.fullscreen ? 'compare-fs-header' : ''" :style="videoCompare.fullscreen ? '' : 'display:flex;align-items:center;gap:8px;margin-bottom:8px'">
+        <h3 :style="videoCompare.fullscreen ? 'flex:1;font-size:12px;color:#fff;margin:0' : 'flex:1;font-size:14px'">{{ t('stats.compare_video') }}: {{ videoCompare.stepName }}</h3>
+        <button class="btn btn-ghost" :style="videoCompare.fullscreen ? 'font-size:16px;padding:4px 10px;color:#fff' : 'font-size:14px;padding:2px 6px'" @click="toggleCompareFullscreen()" :title="videoCompare.fullscreen ? t('btn.exit_fullscreen') : t('btn.fullscreen')">{{ videoCompare.fullscreen ? '⤦' : '⛶' }}</button>
+        <button class="btn btn-ghost" :style="videoCompare.fullscreen ? 'font-size:16px;padding:4px 10px;color:#fff' : 'font-size:14px;padding:2px 6px'" @click="closeVideoCompare()">✕</button>
       </div>
-      <!-- Speed controls -->
-      <div class="vid-controls">
+      <!-- Speed controls (normal mode only, in FS they move to bottom overlay) -->
+      <div v-if="!videoCompare.fullscreen" class="vid-controls">
         <span style="font-size:11px;color:var(--muted)">{{ t('stats.speed') }}:</span>
         <button v-for="s in [0.25, 0.5, 0.75, 1]" :key="s" class="speed-btn" :class="{active: videoCompare.speed === s}" @click="setVideoSpeed(s)">{{ s }}x</button>
       </div>
       <!-- Side by side videos -->
       <div class="vid-compare">
-        <div style="flex:1;text-align:center">
-          <div style="font-size:10px;color:var(--muted);margin-bottom:3px">{{ videoCompare.leftLabel }}</div>
-          <video ref="vidLeft" :src="'/api/recordings/' + videoCompare.leftFile" controls
-            style="width:100%;border-radius:6px;max-height:40vh;background:#000"
+        <div :style="videoCompare.fullscreen ? '' : 'flex:1;text-align:center'">
+          <div v-if="!videoCompare.fullscreen" style="font-size:10px;color:var(--muted);margin-bottom:3px">{{ videoCompare.leftLabel }}</div>
+          <div v-else class="vid-label-fs left">{{ videoCompare.leftLabel }}</div>
+          <video ref="vidLeft" :src="'/api/recordings/' + videoCompare.leftFile" :controls="!videoCompare.fullscreen" playsinline webkit-playsinline controlslist="nofullscreen" disablepictureinpicture
+            :style="videoCompare.fullscreen ? '' : 'width:100%;border-radius:6px;max-height:40vh;background:#000'"
             @play="syncVideos('play')" @pause="syncVideos('pause')" @seeked="syncVideos('seek')"></video>
         </div>
-        <div style="flex:1;text-align:center">
-          <div style="font-size:10px;color:var(--muted);margin-bottom:3px">
+        <div :style="videoCompare.fullscreen ? '' : 'flex:1;text-align:center'">
+          <div v-if="!videoCompare.fullscreen" style="font-size:10px;color:var(--muted);margin-bottom:3px">
             <select v-if="videoCompare.others.length > 1" v-model="videoCompare.rightFile"
               style="background:var(--surface);color:var(--text);border:1px solid var(--border);border-radius:6px;padding:2px 6px;font-size:10px">
               <option v-for="r in videoCompare.others" :key="r.filename" :value="r.filename">
@@ -2272,26 +2313,48 @@
             </select>
             <span v-else>{{ videoCompare.rightLabel }}</span>
           </div>
-          <video ref="vidRight" :src="'/api/recordings/' + videoCompare.rightFile" controls
-            style="width:100%;border-radius:6px;max-height:40vh;background:#000"></video>
+          <div v-else class="vid-label-fs right">
+            <select v-if="videoCompare.others.length > 1" v-model="videoCompare.rightFile"
+              style="background:transparent;color:#fff;border:1px solid rgba(255,255,255,.3);border-radius:4px;padding:1px 4px;font-size:10px;max-width:46vw">
+              <option v-for="r in videoCompare.others" :key="r.filename" :value="r.filename" style="color:#000">
+                {{ getPlayerName(r.player_id) }} · {{ new Date(r.started_at).toLocaleDateString() }}
+              </option>
+            </select>
+            <span v-else>{{ videoCompare.rightLabel }}</span>
+          </div>
+          <video ref="vidRight" :src="'/api/recordings/' + videoCompare.rightFile" :controls="!videoCompare.fullscreen" playsinline webkit-playsinline controlslist="nofullscreen" disablepictureinpicture
+            :style="videoCompare.fullscreen ? '' : 'width:100%;border-radius:6px;max-height:40vh;background:#000'"></video>
         </div>
       </div>
-      <div v-if="!videoCompare.others.length" style="text-align:center;color:var(--muted);font-size:12px;padding:20px 0">
+      <div v-if="!videoCompare.others.length && !videoCompare.fullscreen" style="text-align:center;color:var(--muted);font-size:12px;padding:20px 0">
         {{ t('stats.no_compare') }}
       </div>
-      <!-- Sync offset -->
-      <div v-if="videoCompare.others.length" class="vid-controls" style="margin-top:8px;flex-wrap:wrap;gap:8px">
-        <span style="font-size:11px;color:var(--muted)">{{ t('compare.sync_offset') }}:</span>
-        <label style="font-size:11px;color:var(--muted)">L</label>
-        <input type="number" v-model.number="videoCompare.offsetL" step="0.5" min="-60" max="60" style="width:60px;padding:3px 6px;font-size:12px;text-align:center" @change="applySyncOffset">
-        <label style="font-size:11px;color:var(--muted)">R</label>
-        <input type="number" v-model.number="videoCompare.offsetR" step="0.5" min="-60" max="60" style="width:60px;padding:3px 6px;font-size:12px;text-align:center" @change="applySyncOffset">
-        <span style="font-size:11px;color:var(--muted)">s</span>
+      <div v-if="!videoCompare.others.length && videoCompare.fullscreen" style="position:absolute;right:12px;top:50%;transform:translateY(-50%);width:calc(50vw - 20px);text-align:center;color:#ccc;font-size:13px;z-index:2">
+        {{ t('stats.no_compare') }}
       </div>
-      <!-- Play/pause both -->
-      <div class="vid-controls" style="margin-top:8px">
-        <button class="btn btn-primary" style="font-size:12px;padding:5px 16px" @click="toggleBothVideos()">&#9199; Play/Pause</button>
-        <button class="btn btn-ghost" style="font-size:12px;padding:5px 12px" @click="restartBothVideos()">&#9198; Restart</button>
+      <!-- Controls block (normal mode: inline; FS: overlay at bottom) -->
+      <div :class="videoCompare.fullscreen ? 'compare-fs-controls' : ''">
+        <!-- Speed in FS -->
+        <div v-if="videoCompare.fullscreen" class="vid-controls">
+          <span style="font-size:11px;color:#ccc">{{ t('stats.speed') }}:</span>
+          <button v-for="s in [0.25, 0.5, 0.75, 1]" :key="s" class="speed-btn" :class="{active: videoCompare.speed === s}" @click="setVideoSpeed(s)">{{ s }}x</button>
+        </div>
+        <!-- Sync offset -->
+        <div v-if="videoCompare.others.length" class="vid-controls" :style="videoCompare.fullscreen ? 'flex-wrap:wrap;gap:8px' : 'margin-top:8px;flex-wrap:wrap;gap:8px'">
+          <span :style="videoCompare.fullscreen ? 'font-size:11px;color:#ccc' : 'font-size:11px;color:var(--muted)'">{{ t('compare.sync_offset') }}:</span>
+          <label :style="videoCompare.fullscreen ? 'font-size:11px;color:#ccc' : 'font-size:11px;color:var(--muted)'">L</label>
+          <input type="number" v-model.number="videoCompare.offsetL" step="0.5" min="-60" max="60" style="width:60px;padding:3px 6px;font-size:12px;text-align:center" @change="applySyncOffset">
+          <label :style="videoCompare.fullscreen ? 'font-size:11px;color:#ccc' : 'font-size:11px;color:var(--muted)'">R</label>
+          <input type="number" v-model.number="videoCompare.offsetR" step="0.5" min="-60" max="60" style="width:60px;padding:3px 6px;font-size:12px;text-align:center" @change="applySyncOffset">
+          <span :style="videoCompare.fullscreen ? 'font-size:11px;color:#ccc' : 'font-size:11px;color:var(--muted)'">s</span>
+        </div>
+        <!-- Play/pause both -->
+        <div class="vid-controls" :style="videoCompare.fullscreen ? '' : 'margin-top:8px'">
+          <button class="btn btn-ghost" style="font-size:13px;padding:5px 14px" @click="skipBoth(-5)">⏪ -5s</button>
+          <button class="btn btn-primary" style="font-size:12px;padding:5px 16px" @click="toggleBothVideos()">&#9199; Play/Pause</button>
+          <button class="btn btn-ghost" style="font-size:13px;padding:5px 14px" @click="skipBoth(5)">+5s ⏩</button>
+          <button class="btn btn-ghost" style="font-size:12px;padding:5px 12px" @click="restartBothVideos()">&#9198;</button>
+        </div>
       </div>
     </div>
   </div>
@@ -3524,7 +3587,7 @@ const _app = createApp({
     const compareIdB = ref(null)
     const compareStatsA = ref(null)
     const compareStatsB = ref(null)
-    const videoCompare = reactive({ show: false, leftFile: '', rightFile: '', others: [], stepName: '', leftLabel: '', rightLabel: '', speed: 1, offsetL: 0, offsetR: 0 })
+    const videoCompare = reactive({ show: false, leftFile: '', rightFile: '', others: [], stepName: '', leftLabel: '', rightLabel: '', speed: 1, offsetL: 0, offsetR: 0, fullscreen: false })
     const vidLeft = ref(null)
     const vidRight = ref(null)
     const videoPlay = reactive({ show: false, file: '', label: '', speed: 1 })
@@ -4323,6 +4386,7 @@ const _app = createApp({
       videoCompare.others = []
       videoCompare.rightFile = ''
       videoCompare.rightLabel = ''
+      videoCompare.fullscreen = window.innerWidth < 768
       videoCompare.show = true
       let url = '/api/recordings/compare?'
       if (rec.drill_id) url += `drill_id=${rec.drill_id}`
@@ -4347,6 +4411,7 @@ const _app = createApp({
       videoCompare.others = []
       videoCompare.rightFile = ''
       videoCompare.rightLabel = ''
+      videoCompare.fullscreen = window.innerWidth < 768
       videoCompare.show = true
       let url = `/api/recordings/compare?ondemand=true&player_id=${rec.player_id}&exclude_filename=${encodeURIComponent(rec.filename)}`
       const r = await fetch(url)
@@ -4359,8 +4424,16 @@ const _app = createApp({
     }
     function closeVideoCompare() {
       videoCompare.show = false
+      videoCompare.fullscreen = false
       if (vidLeft.value) vidLeft.value.pause()
       if (vidRight.value) vidRight.value.pause()
+    }
+    function toggleCompareFullscreen() {
+      videoCompare.fullscreen = !videoCompare.fullscreen
+    }
+    function skipBoth(secs) {
+      if (vidLeft.value) vidLeft.value.currentTime = Math.max(0, vidLeft.value.currentTime + secs)
+      if (vidRight.value) _syncRightToLeft()
     }
     function setVideoSpeed(s) {
       videoCompare.speed = s
@@ -5326,7 +5399,7 @@ const _app = createApp({
       expandedHistoryId, playerHistoryTotal, playerFavorites, playerStats, showActivity, statsMaxWeek,
       showCompareModal, compareIdA, compareIdB, compareStatsA, compareStatsB,
       compareMetrics, compareNameA, compareNameB, compare30A, compare30B, openCompare, loadCompareStats,
-      videoCompare, vidLeft, vidRight, openVideoCompare, openVideoCompareOndemand, closeVideoCompare, setVideoSpeed, syncVideos, applySyncOffset, toggleBothVideos, restartBothVideos,
+      videoCompare, vidLeft, vidRight, openVideoCompare, openVideoCompareOndemand, closeVideoCompare, setVideoSpeed, syncVideos, applySyncOffset, toggleBothVideos, restartBothVideos, toggleCompareFullscreen, skipBoth,
       favTrainings, favDrills, favExercises,
       getTrainingSteps, getStepRecording, getDrillName, getExerciseName, getHistoryLabel,
       landingMode, pendingLandings, drillLandings, handleLandingClick, saveLandings,
