@@ -107,6 +107,7 @@ class Recorder:
                     "-c:v", "libx264",
                     "-preset", "ultrafast",
                     "-crf", "18",
+                    "-movflags", "+faststart",
                     "-t", str(max_duration_sec),
                     str(filepath),
                 ],

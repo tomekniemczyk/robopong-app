@@ -136,6 +136,36 @@
       padding-bottom:calc(8px + env(safe-area-inset-bottom));
     }
     .compare-fs .compare-fs-controls .vid-controls { margin:0; flex-wrap:wrap; }
+
+    /* ── Compare prebuffer overlay ──────────────────────────── */
+    .compare-buffer-overlay {
+      position:absolute; inset:0; z-index:10;
+      display:flex; align-items:center; justify-content:center;
+      background:rgba(0,0,0,.72); border-radius:inherit;
+    }
+    .compare-buffer-overlay.fs { border-radius:0; }
+    .compare-buffer-box {
+      background:rgba(20,20,22,.95); border:1px solid var(--border); border-radius:12px;
+      padding:16px 20px; min-width:260px; max-width:90vw;
+      display:flex; flex-direction:column; align-items:center; gap:8px;
+    }
+    .compare-buffer-title { font-size:13px; color:#fff; margin-bottom:4px; }
+    .compare-buffer-spinner {
+      width:28px; height:28px; border-radius:50%;
+      border:3px solid rgba(255,255,255,.15); border-top-color:var(--accent);
+      animation:bufSpin .9s linear infinite;
+    }
+    @keyframes bufSpin { to { transform: rotate(360deg); } }
+    .compare-buffer-row {
+      display:flex; align-items:center; gap:8px; width:100%; font-size:11px; color:#ccc;
+    }
+    .compare-buffer-side { width:14px; font-weight:600; color:#fff; }
+    .compare-buffer-bar {
+      flex:1; height:6px; background:rgba(255,255,255,.1); border-radius:3px; overflow:hidden;
+    }
+    .compare-buffer-bar > div { height:100%; background:var(--accent); transition:width .2s; }
+    .compare-buffer-pct { width:32px; text-align:right; color:#fff; }
+    .compare-buffer-speed { width:70px; text-align:right; color:var(--muted); font-variant-numeric:tabular-nums; }
     @media (max-width: 680px) and (orientation: portrait) {
       .compare-fs .vid-compare { padding:40px 0 170px 0; }
     }
@@ -2327,9 +2357,11 @@
         <div :style="videoCompare.fullscreen ? '' : 'flex:1;text-align:center'">
           <div v-if="!videoCompare.fullscreen" style="font-size:10px;color:var(--muted);margin-bottom:3px">{{ videoCompare.leftLabel }}</div>
           <div v-else class="vid-label-fs left">{{ videoCompare.leftLabel }}</div>
-          <video ref="vidLeft" :src="'/api/recordings/' + videoCompare.leftFile" :controls="!videoCompare.fullscreen" playsinline webkit-playsinline controlslist="nofullscreen" disablepictureinpicture
+          <video ref="vidLeft" :src="'/api/recordings/' + videoCompare.leftFile" :controls="!videoCompare.fullscreen" playsinline webkit-playsinline controlslist="nofullscreen" disablepictureinpicture preload="auto"
             :style="videoCompare.fullscreen ? '' : 'width:100%;border-radius:6px;max-height:40vh;background:#000'"
-            @play="syncVideos('play')" @pause="syncVideos('pause')" @seeked="syncVideos('seek')"></video>
+            @play="syncVideos('play')" @pause="syncVideos('pause')" @seeked="syncVideos('seek')"
+            @loadstart="_onVideoLoadStart('left')" @loadedmetadata="_onVideoMetadata('left')"
+            @progress="_onVideoProgress('left')" @canplay="_onVideoCanPlay('left')"></video>
         </div>
         <div :style="videoCompare.fullscreen ? '' : 'flex:1;text-align:center'">
           <div v-if="!videoCompare.fullscreen" style="font-size:10px;color:var(--muted);margin-bottom:3px">
@@ -2350,8 +2382,10 @@
             </select>
             <span v-else>{{ videoCompare.rightLabel }}</span>
           </div>
-          <video ref="vidRight" :src="'/api/recordings/' + videoCompare.rightFile" :controls="!videoCompare.fullscreen" playsinline webkit-playsinline controlslist="nofullscreen" disablepictureinpicture
-            :style="videoCompare.fullscreen ? '' : 'width:100%;border-radius:6px;max-height:40vh;background:#000'"></video>
+          <video ref="vidRight" :src="'/api/recordings/' + videoCompare.rightFile" :controls="!videoCompare.fullscreen" playsinline webkit-playsinline controlslist="nofullscreen" disablepictureinpicture preload="auto"
+            :style="videoCompare.fullscreen ? '' : 'width:100%;border-radius:6px;max-height:40vh;background:#000'"
+            @loadstart="_onVideoLoadStart('right')" @loadedmetadata="_onVideoMetadata('right')"
+            @progress="_onVideoProgress('right')" @canplay="_onVideoCanPlay('right')"></video>
         </div>
       </div>
       <div v-if="!videoCompare.others.length && !videoCompare.fullscreen" style="text-align:center;color:var(--muted);font-size:12px;padding:20px 0">
@@ -2359,6 +2393,26 @@
       </div>
       <div v-if="!videoCompare.others.length && videoCompare.fullscreen" style="position:absolute;right:12px;top:50%;transform:translateY(-50%);width:calc(50vw - 20px);text-align:center;color:#ccc;font-size:13px;z-index:2">
         {{ t('stats.no_compare') }}
+      </div>
+      <!-- Buffering overlay -->
+      <div v-if="videoCompare.buffering" class="compare-buffer-overlay" :class="{'fs': videoCompare.fullscreen}">
+        <div class="compare-buffer-box">
+          <div class="compare-buffer-spinner"></div>
+          <div class="compare-buffer-title">{{ t('compare.buffering') }}</div>
+          <div class="compare-buffer-row">
+            <span class="compare-buffer-side">L</span>
+            <div class="compare-buffer-bar"><div :style="{width: (videoCompare.leftBuffered*100).toFixed(0)+'%'}"></div></div>
+            <span class="compare-buffer-pct">{{ (videoCompare.leftBuffered*100).toFixed(0) }}%</span>
+            <span class="compare-buffer-speed">{{ _fmtSpeed(videoCompare.leftSpeed) }}</span>
+          </div>
+          <div v-if="videoCompare.rightFile" class="compare-buffer-row">
+            <span class="compare-buffer-side">R</span>
+            <div class="compare-buffer-bar"><div :style="{width: (videoCompare.rightBuffered*100).toFixed(0)+'%'}"></div></div>
+            <span class="compare-buffer-pct">{{ (videoCompare.rightBuffered*100).toFixed(0) }}%</span>
+            <span class="compare-buffer-speed">{{ _fmtSpeed(videoCompare.rightSpeed) }}</span>
+          </div>
+          <button class="btn btn-ghost" style="margin-top:10px;font-size:12px" @click="forceStartCompare()">{{ t('compare.play_anyway') }}</button>
+        </div>
       </div>
       <!-- Controls block (normal mode: inline; FS: overlay at bottom) -->
       <div :class="videoCompare.fullscreen ? 'compare-fs-controls' : ''">
@@ -3615,7 +3669,16 @@ const _app = createApp({
     const compareIdB = ref(null)
     const compareStatsA = ref(null)
     const compareStatsB = ref(null)
-    const videoCompare = reactive({ show: false, leftFile: '', rightFile: '', others: [], stepName: '', leftLabel: '', rightLabel: '', speed: 1, offsetL: 0, offsetR: 0, fullscreen: false })
+    const videoCompare = reactive({
+      show: false, leftFile: '', rightFile: '', others: [], stepName: '',
+      leftLabel: '', rightLabel: '', speed: 1, offsetL: 0, offsetR: 0, fullscreen: false,
+      buffering: false, bufferMode: 'auto',
+      leftSize: 0, rightSize: 0, leftDuration: 0, rightDuration: 0,
+      leftBuffered: 0, rightBuffered: 0,
+      leftSpeed: 0, rightSpeed: 0,
+      leftReady: false, rightReady: false,
+      leftStartTs: 0, rightStartTs: 0,
+    })
     const vidLeft = ref(null)
     const vidRight = ref(null)
     const videoPlay = reactive({ show: false, file: '', label: '', speed: 1 })
@@ -4405,15 +4468,10 @@ const _app = createApp({
       return `${name} · ${trn} · ${d.toLocaleDateString()} ${d.toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'})}`
     }
     async function openVideoCompare(rec) {
+      _resetCompareBuffer(rec)
       videoCompare.leftFile = rec.filename
       videoCompare.stepName = rec.step_name
       videoCompare.leftLabel = _recLabel(rec)
-      videoCompare.speed = 1
-      videoCompare.offsetL = 0
-      videoCompare.offsetR = 0
-      videoCompare.others = []
-      videoCompare.rightFile = ''
-      videoCompare.rightLabel = ''
       videoCompare.fullscreen = _isTouchDevice()
       videoCompare.show = true
       nextTick(() => _applyInlineVideoAttrs())
@@ -4431,15 +4489,10 @@ const _app = createApp({
       }
     }
     async function openVideoCompareOndemand(rec) {
+      _resetCompareBuffer(rec)
       videoCompare.leftFile = rec.filename
       videoCompare.stepName = rec.custom_name || rec.step_name
       videoCompare.leftLabel = _recLabel(rec)
-      videoCompare.speed = 1
-      videoCompare.offsetL = 0
-      videoCompare.offsetR = 0
-      videoCompare.others = []
-      videoCompare.rightFile = ''
-      videoCompare.rightLabel = ''
       videoCompare.fullscreen = _isTouchDevice()
       videoCompare.show = true
       nextTick(() => _applyInlineVideoAttrs())
@@ -4452,9 +4505,104 @@ const _app = createApp({
         videoCompare.rightLabel = _recLabel(videoCompare.others[0])
       }
     }
+    function _resetCompareBuffer(leftRec) {
+      videoCompare.speed = 1
+      videoCompare.offsetL = 0
+      videoCompare.offsetR = 0
+      videoCompare.others = []
+      videoCompare.rightFile = ''
+      videoCompare.rightLabel = ''
+      videoCompare.leftSize = leftRec?.size_bytes || 0
+      videoCompare.rightSize = 0
+      videoCompare.leftDuration = leftRec?.duration_sec || 0
+      videoCompare.rightDuration = 0
+      videoCompare.leftBuffered = 0
+      videoCompare.rightBuffered = 0
+      videoCompare.leftSpeed = 0
+      videoCompare.rightSpeed = 0
+      videoCompare.leftReady = false
+      videoCompare.rightReady = false
+      videoCompare.buffering = true
+      videoCompare.bufferMode = 'auto'
+      videoCompare.leftStartTs = Date.now()
+      videoCompare.rightStartTs = 0
+    }
+    function _onVideoProgress(side) {
+      const v = side === 'left' ? vidLeft.value : vidRight.value
+      if (!v || !v.duration || !isFinite(v.duration)) return
+      const buf = v.buffered.length ? v.buffered.end(v.buffered.length - 1) : 0
+      const pct = Math.min(1, buf / v.duration)
+      const size = side === 'left' ? videoCompare.leftSize : videoCompare.rightSize
+      const startTs = side === 'left' ? videoCompare.leftStartTs : videoCompare.rightStartTs
+      const bytes = size ? size * pct : 0
+      const elapsed = Math.max(0.3, (Date.now() - startTs) / 1000)
+      const bps = bytes / elapsed
+      if (side === 'left') {
+        videoCompare.leftBuffered = pct
+        videoCompare.leftSpeed = bps
+      } else {
+        videoCompare.rightBuffered = pct
+        videoCompare.rightSpeed = bps
+      }
+      _evaluateBufferMode()
+    }
+    function _onVideoCanPlay(side) {
+      if (side === 'left') videoCompare.leftReady = true
+      else videoCompare.rightReady = true
+      _evaluateBufferMode()
+    }
+    function _onVideoLoadStart(side) {
+      const now = Date.now()
+      if (side === 'left') {
+        videoCompare.leftBuffered = 0; videoCompare.leftSpeed = 0; videoCompare.leftReady = false
+        videoCompare.leftStartTs = now
+      } else {
+        videoCompare.rightBuffered = 0; videoCompare.rightSpeed = 0; videoCompare.rightReady = false
+        videoCompare.rightStartTs = now
+      }
+      videoCompare.buffering = true
+    }
+    function _onVideoMetadata(side) {
+      const v = side === 'left' ? vidLeft.value : vidRight.value
+      if (!v) return
+      if (side === 'left') videoCompare.leftDuration = v.duration || videoCompare.leftDuration
+      else videoCompare.rightDuration = v.duration || videoCompare.rightDuration
+      // Jeśli backend nie dał size, bitrate przyjmujemy domyślnie 2 Mbps.
+      if (side === 'right' && !videoCompare.rightSize) {
+        const rec = videoCompare.others.find(r => r.filename === videoCompare.rightFile)
+        if (rec) videoCompare.rightSize = rec.size_bytes || 0
+      }
+    }
+    function _evaluateBufferMode() {
+      const needRight = !!videoCompare.rightFile
+      const leftDone = videoCompare.leftBuffered >= 0.995
+      const rightDone = !needRight || videoCompare.rightBuffered >= 0.995
+      if (leftDone && rightDone) { videoCompare.buffering = false; videoCompare.bufferMode = 'cached'; return }
+      // Live-mode heuristic: obie gotowe (canplay) + przepustowość >= 1.5× sumaryczny bitrate.
+      if (videoCompare.leftReady && (!needRight || videoCompare.rightReady)) {
+        const lBr = videoCompare.leftSize && videoCompare.leftDuration ? videoCompare.leftSize / videoCompare.leftDuration : 0
+        const rBr = needRight && videoCompare.rightSize && videoCompare.rightDuration ? videoCompare.rightSize / videoCompare.rightDuration : 0
+        const totalBr = lBr + rBr
+        const totalBps = videoCompare.leftSpeed + videoCompare.rightSpeed
+        if (totalBr > 0 && totalBps > totalBr * 1.5) {
+          videoCompare.buffering = false
+          videoCompare.bufferMode = 'live'
+        }
+      }
+    }
+    function forceStartCompare() {
+      videoCompare.buffering = false
+      videoCompare.bufferMode = 'forced'
+    }
+    function _fmtSpeed(bps) {
+      if (!bps || bps < 1024) return '…'
+      if (bps < 1024 * 1024) return (bps / 1024).toFixed(0) + ' kB/s'
+      return (bps / (1024 * 1024)).toFixed(1) + ' MB/s'
+    }
     function closeVideoCompare() {
       videoCompare.show = false
       videoCompare.fullscreen = false
+      videoCompare.buffering = false
       if (vidLeft.value) vidLeft.value.pause()
       if (vidRight.value) vidRight.value.pause()
     }
@@ -5461,6 +5609,7 @@ const _app = createApp({
       showCompareModal, compareIdA, compareIdB, compareStatsA, compareStatsB,
       compareMetrics, compareNameA, compareNameB, compare30A, compare30B, openCompare, loadCompareStats,
       videoCompare, vidLeft, vidRight, openVideoCompare, openVideoCompareOndemand, closeVideoCompare, setVideoSpeed, syncVideos, applySyncOffset, toggleBothVideos, restartBothVideos, toggleCompareFullscreen, skipBoth,
+      _onVideoProgress, _onVideoCanPlay, _onVideoMetadata, _onVideoLoadStart, forceStartCompare, _fmtSpeed,
       favTrainings, favDrills, favExercises,
       getTrainingSteps, getStepRecording, getDrillName, getExerciseName, getHistoryLabel,
       landingMode, pendingLandings, drillLandings, handleLandingClick, saveLandings,

@@ -1127,7 +1127,11 @@ def get_recording(player_id: int, filename: str):
     path = recordings.get_recording_path(f"{player_id}/{filename}")
     if not path:
         raise HTTPException(404)
-    return FileResponse(path, media_type="video/mp4", filename=filename)
+    # Unikalna nazwa z timestampem → immutable. 3h pokrywa jedną sesję.
+    return FileResponse(
+        path, media_type="video/mp4", filename=filename,
+        headers={"Cache-Control": "public, max-age=10800, immutable"},
+    )
 
 
 @app.delete("/api/recordings/{player_id}/{filename}", status_code=204)

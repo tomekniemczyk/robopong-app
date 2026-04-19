@@ -85,6 +85,8 @@ window.I18N = {
   'diag.close':  { pl:'Zamknij', en:'Close',    de:'Schließen', fr:'Fermer',   zh:'关闭' },
   'btn.fullscreen':      { pl:'Pełny ekran', en:'Fullscreen', de:'Vollbild',   fr:'Plein écran',    zh:'全屏' },
   'btn.exit_fullscreen': { pl:'Wyjdź z pełnego ekranu', en:'Exit fullscreen', de:'Vollbild verlassen', fr:'Quitter le plein écran', zh:'退出全屏' },
+  'compare.buffering':   { pl:'Buforowanie nagrań…', en:'Buffering videos…', de:'Puffere Videos…', fr:'Mise en mémoire tampon…', zh:'正在缓冲视频…' },
+  'compare.play_anyway': { pl:'Graj mimo to', en:'Play anyway', de:'Trotzdem abspielen', fr:'Lire quand même', zh:'仍然播放' },
 
   // ── Observer / Pending banners ─────────────────────────────────────
   'banner.observing':  { pl:'👁 Obserwujesz — robot jest kontrolowany przez inną sesję.',
