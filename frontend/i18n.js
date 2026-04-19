@@ -574,6 +574,7 @@ window.I18N = {
   'ondemand.saved':          { pl:'Nagranie zapisane',   en:'Recording saved',      de:'Aufnahme gespeichert',   fr:'Enregistrement sauvegardé', zh:'录制已保存' },
   'ondemand.player':         { pl:'Gracz',               en:'Player',               de:'Spieler',                fr:'Joueur',                   zh:'球员' },
   'history.ondemand':        { pl:'Nagrania własne',     en:'On-demand recordings', de:'Eigene Aufnahmen',       fr:'Enregistrements manuels',  zh:'手动录制' },
+  'history.recordings_by_drill': { pl:'Nagrania wg drilli', en:'Recordings by drill', de:'Aufnahmen nach Drill',  fr:'Enregistrements par lancer', zh:'按训练分组的录像' },
   'compare.sync_offset':     { pl:'Offset synchronizacji', en:'Sync offset',        de:'Sync-Offset',            fr:'Décalage sync',            zh:'同步偏移' },
 
   // ── Exploration ─────────────────────────────────────────────────────

@@ -2214,6 +2214,34 @@
         </div>
       </div>
 
+      <!-- Tree: Nagrania wg drilli -->
+      <div v-if="recordingsByDrill.total" style="margin-bottom:8px">
+        <div style="font-size:13px;font-weight:600;padding:6px 0;cursor:pointer;display:flex;align-items:center;gap:6px" @click="toggleHistNode('rbd')">
+          <span style="font-size:10px">{{ histSearch || historyExpanded.has('rbd') ? '▼' : '▶' }}</span>
+          🎥 {{ t('history.recordings_by_drill') }} <span style="font-weight:400;color:var(--muted);font-size:11px">({{ recordingsByDrill.total }})</span>
+        </div>
+        <div v-if="histSearch || historyExpanded.has('rbd')" style="padding-left:12px">
+          <div v-for="g in recordingsByDrill.groups" :key="'rbd-'+g.name">
+            <div style="font-size:12px;padding:4px 0;cursor:pointer;display:flex;align-items:center;gap:5px" @click="toggleHistNode('rbd-'+g.name)">
+              <span style="font-size:9px">{{ histSearch || historyExpanded.has('rbd-'+g.name) ? '▼' : '▶' }}</span>
+              {{ g.name }} <span style="color:var(--muted);font-size:10px">({{ g.count }})</span>
+            </div>
+            <div v-if="histSearch || historyExpanded.has('rbd-'+g.name)" style="padding-left:14px">
+              <div v-for="rec in g.entries" :key="'rbd-r-'+rec.id"
+                   style="font-size:11px;padding:4px 0;border-bottom:1px solid rgba(255,255,255,.02);display:flex;align-items:center;gap:5px;flex-wrap:wrap">
+                <span v-if="historyPlayerId === null" style="font-weight:500">{{ getPlayerName(rec.player_id) }}</span>
+                <span style="color:var(--muted);font-size:10px">{{ rec.started_at ? new Date(rec.started_at).toLocaleString([], {day:'2-digit', month:'short', year:'numeric', hour:'2-digit', minute:'2-digit'}) : '' }}</span>
+                <span style="font-size:10px">⏱{{ fmtDur(rec.duration_sec) }}</span>
+                <button class="btn btn-ghost" style="font-size:9px;padding:1px 4px;color:#ff3b30" :title="t('tooltip.play')" @click.stop="openVideoPlay(rec)">🎥▶</button>
+                <a :href="'/api/recordings/' + rec.filename" :download="rec.filename.replace('/', '_')" class="btn btn-ghost" style="font-size:9px;padding:1px 4px" :title="t('tooltip.download')" @click.stop>⬇</a>
+                <button class="btn btn-ghost" style="font-size:9px;padding:1px 4px" :title="t('tooltip.compare')" @click.stop="rec.is_ondemand ? openVideoCompareOndemand(rec) : openVideoCompare(rec)">🔀</button>
+                <button class="btn btn-ghost" style="font-size:9px;padding:1px 4px;color:var(--danger)" :title="t('tooltip.delete_rec')" @click.stop="deleteOndemandRec(rec)">🗑</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <!-- Tree: Nagrania własne (on-demand) -->
       <div v-if="ondemandRecordings.length" style="margin-bottom:8px">
         <div style="font-size:13px;font-weight:600;padding:6px 0;cursor:pointer;display:flex;align-items:center;gap:6px" @click="toggleHistNode('od')">
@@ -4666,6 +4694,25 @@ const _app = createApp({
       )
     })
 
+    // Wszystkie nagrania pogrupowane po nazwie drilla (custom_name || step_name), sortowane po dacie desc
+    const recordingsByDrill = computed(() => {
+      const all = [...allRecordings.value, ...ondemandRecordings.value]
+      const q = histSearch.value.trim().toLowerCase()
+      const groups = {}
+      for (const r of all) {
+        const name = (r.custom_name || r.step_name || '').trim() || (r.drill_id ? 'Drill #' + r.drill_id : t('recordings.title'))
+        if (q && !name.toLowerCase().includes(q)) continue
+        if (!groups[name]) groups[name] = []
+        groups[name].push(r)
+      }
+      const arr = Object.entries(groups).map(([name, entries]) => {
+        entries.sort((a, b) => (b.started_at || '').localeCompare(a.started_at || ''))
+        return { name, entries, count: entries.length, lastDate: entries[0]?.started_at || '' }
+      })
+      arr.sort((a, b) => b.lastDate.localeCompare(a.lastDate))
+      return { groups: arr, total: all.length }
+    })
+
     const filteredHistoryTree = computed(() => {
       const q = histSearch.value.trim().toLowerCase()
       if (!q) return historyTree.value
@@ -5427,7 +5474,7 @@ const _app = createApp({
       // Historia tab
       historyPlayerId, allHistory, allRecordings, historyExpanded, historySort,
       loadAllHistory, toggleHistNode, histHasRec, histGetStepRec, histDateRange, historyTree, leaderboard,
-      histSearch, filteredHistoryTree, filteredOndemandRecordings,
+      histSearch, filteredHistoryTree, filteredOndemandRecordings, recordingsByDrill,
       videoPlay, vidSingle, openVideoPlay, closeVideoPlay, setPlaySpeed, skipVideo, toggleSingleVideo,
       // On-demand recording
       odName, odDurH, odDurM, odDurS, odDelayH, odDelayM, odDelayS, odPlayerId,
