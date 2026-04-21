@@ -52,7 +52,7 @@ ci_passed() {
     fi
 }
 
-pgrep -f "uvicorn main:app.*$PORT" >/dev/null 2>&1 || restart_server
+pgrep -f "venv/bin/uvicorn main:app.*$PORT" >/dev/null 2>&1 || restart_server
 
 # Initialize deployed SHA with current running version
 CURRENT_HEAD=$(cd "$APP_DIR" && git rev-parse HEAD)
