@@ -885,7 +885,7 @@
         </div>
       </div>
 
-      <button class="btn btn-primary" style="width:100%" @click="saveCamCfg" :disabled="camSaving || !_camCfgChanged">
+      <button class="btn btn-primary" style="width:100%" @click="saveCamCfg" :disabled="camSaving || !camCfgChanged">
         {{ camSaving ? t('camera.saving') : t('camera.save') }}
       </button>
       <div v-if="camSaveMsg" :style="{marginTop:'6px',fontSize:'12px',color: camSaveError ? 'var(--danger)' : 'var(--success)',textAlign:'center'}">
@@ -2394,8 +2394,8 @@
           <video ref="vidLeft" :src="'/api/recordings/' + videoCompare.leftFile" :controls="!videoCompare.fullscreen" playsinline webkit-playsinline controlslist="nofullscreen" disablepictureinpicture preload="auto"
             :style="videoCompare.fullscreen ? '' : 'width:100%;border-radius:6px;max-height:40vh;background:#000'"
             @play="syncVideos('play')" @pause="syncVideos('pause')" @seeked="syncVideos('seek')"
-            @loadstart="_onVideoLoadStart('left')" @loadedmetadata="_onVideoMetadata('left')"
-            @progress="_onVideoProgress('left')" @canplay="_onVideoCanPlay('left')"></video>
+            @loadstart="onVideoLoadStart('left')" @loadedmetadata="onVideoMetadata('left')"
+            @progress="onVideoProgress('left')" @canplay="onVideoCanPlay('left')"></video>
         </div>
         <div :style="videoCompare.fullscreen ? '' : 'flex:1;text-align:center'">
           <div v-if="!videoCompare.fullscreen" style="font-size:10px;color:var(--muted);margin-bottom:3px">
@@ -2418,8 +2418,8 @@
           </div>
           <video ref="vidRight" :src="'/api/recordings/' + videoCompare.rightFile" :controls="!videoCompare.fullscreen" playsinline webkit-playsinline controlslist="nofullscreen" disablepictureinpicture preload="auto"
             :style="videoCompare.fullscreen ? '' : 'width:100%;border-radius:6px;max-height:40vh;background:#000'"
-            @loadstart="_onVideoLoadStart('right')" @loadedmetadata="_onVideoMetadata('right')"
-            @progress="_onVideoProgress('right')" @canplay="_onVideoCanPlay('right')"></video>
+            @loadstart="onVideoLoadStart('right')" @loadedmetadata="onVideoMetadata('right')"
+            @progress="onVideoProgress('right')" @canplay="onVideoCanPlay('right')"></video>
         </div>
       </div>
       <div v-if="!videoCompare.others.length && !videoCompare.fullscreen" style="text-align:center;color:var(--muted);font-size:12px;padding:20px 0">
@@ -2437,13 +2437,13 @@
             <span class="compare-buffer-side">L</span>
             <div class="compare-buffer-bar"><div :style="{width: (videoCompare.leftBuffered*100).toFixed(0)+'%'}"></div></div>
             <span class="compare-buffer-pct">{{ (videoCompare.leftBuffered*100).toFixed(0) }}%</span>
-            <span class="compare-buffer-speed">{{ _fmtSpeed(videoCompare.leftSpeed) }}</span>
+            <span class="compare-buffer-speed">{{ fmtSpeed(videoCompare.leftSpeed) }}</span>
           </div>
           <div v-if="videoCompare.rightFile" class="compare-buffer-row">
             <span class="compare-buffer-side">R</span>
             <div class="compare-buffer-bar"><div :style="{width: (videoCompare.rightBuffered*100).toFixed(0)+'%'}"></div></div>
             <span class="compare-buffer-pct">{{ (videoCompare.rightBuffered*100).toFixed(0) }}%</span>
-            <span class="compare-buffer-speed">{{ _fmtSpeed(videoCompare.rightSpeed) }}</span>
+            <span class="compare-buffer-speed">{{ fmtSpeed(videoCompare.rightSpeed) }}</span>
           </div>
           <button class="btn btn-ghost" style="margin-top:10px;font-size:12px" @click="forceStartCompare()">{{ t('compare.play_anyway') }}</button>
         </div>
@@ -2839,7 +2839,7 @@ const _app = createApp({
       const f = camFormats.value.find(x => x.resolution === camCfg.resolution)
       return f ? f.fps_options : []
     })
-    const _camCfgChanged = computed(() =>
+    const camCfgChanged = computed(() =>
       camCfg.device !== camSavedCfg.device
       || camCfg.resolution !== camSavedCfg.resolution
       || camCfg.fps !== camSavedCfg.fps
@@ -4641,7 +4641,7 @@ const _app = createApp({
       videoCompare.leftStartTs = Date.now()
       videoCompare.rightStartTs = 0
     }
-    function _onVideoProgress(side) {
+    function onVideoProgress(side) {
       const v = side === 'left' ? vidLeft.value : vidRight.value
       if (!v || !v.duration || !isFinite(v.duration)) return
       const buf = v.buffered.length ? v.buffered.end(v.buffered.length - 1) : 0
@@ -4660,12 +4660,12 @@ const _app = createApp({
       }
       _evaluateBufferMode()
     }
-    function _onVideoCanPlay(side) {
+    function onVideoCanPlay(side) {
       if (side === 'left') videoCompare.leftReady = true
       else videoCompare.rightReady = true
       _evaluateBufferMode()
     }
-    function _onVideoLoadStart(side) {
+    function onVideoLoadStart(side) {
       const now = Date.now()
       if (side === 'left') {
         videoCompare.leftBuffered = 0; videoCompare.leftSpeed = 0; videoCompare.leftReady = false
@@ -4676,7 +4676,7 @@ const _app = createApp({
       }
       videoCompare.buffering = true
     }
-    function _onVideoMetadata(side) {
+    function onVideoMetadata(side) {
       const v = side === 'left' ? vidLeft.value : vidRight.value
       if (!v) return
       if (side === 'left') videoCompare.leftDuration = v.duration || videoCompare.leftDuration
@@ -4708,7 +4708,7 @@ const _app = createApp({
       videoCompare.buffering = false
       videoCompare.bufferMode = 'forced'
     }
-    function _fmtSpeed(bps) {
+    function fmtSpeed(bps) {
       if (!bps || bps < 1024) return '…'
       if (bps < 1024 * 1024) return (bps / 1024).toFixed(0) + ' kB/s'
       return (bps / (1024 * 1024)).toFixed(1) + ' MB/s'
@@ -5684,7 +5684,7 @@ const _app = createApp({
       cal, calDirty, isCalibrated,
       expDrillId, expDrillData, expBallIdx, loadExpDrill, loadExpBall, saveExpToDrill, saveExpAsNew,
       lastAddr, robotName, editingName, robotNameEdit, camErr, camSrc,
-      camDevices, camFormats, camCfg, camFpsOptions, _camCfgChanged, camSaving, camSaveMsg, camSaveError,
+      camDevices, camFormats, camCfg, camFpsOptions, camCfgChanged, camSaving, camSaveMsg, camSaveError,
       loadCameraDevices, loadCameraFormats, loadCameraConfig, initCameraSettings, onCamDeviceChange, onCamResolutionChange, saveCamCfg,
       drillCompensation, onCompensationToggle,
       transport, deployTime, usbPorts, usbScanning, simulationMode, toggleSimulation,
@@ -5726,7 +5726,7 @@ const _app = createApp({
       showCompareModal, compareIdA, compareIdB, compareStatsA, compareStatsB,
       compareMetrics, compareNameA, compareNameB, compare30A, compare30B, openCompare, loadCompareStats,
       videoCompare, vidLeft, vidRight, openVideoCompare, openVideoCompareOndemand, closeVideoCompare, setVideoSpeed, syncVideos, applySyncOffset, toggleBothVideos, restartBothVideos, toggleCompareFullscreen, skipBoth,
-      _onVideoProgress, _onVideoCanPlay, _onVideoMetadata, _onVideoLoadStart, forceStartCompare, _fmtSpeed,
+      onVideoProgress, onVideoCanPlay, onVideoMetadata, onVideoLoadStart, forceStartCompare, fmtSpeed,
       favTrainings, favDrills, favExercises,
       getTrainingSteps, getStepRecording, getDrillName, getExerciseName, getHistoryLabel,
       landingMode, pendingLandings, drillLandings, handleLandingClick, saveLandings,
