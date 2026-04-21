@@ -12,6 +12,7 @@ import zipfile
 from datetime import datetime
 from pathlib import Path
 
+import camera_config
 import db
 
 logger = logging.getLogger(__name__)
@@ -99,11 +100,14 @@ class Recorder:
         try:
             log_path = filepath.with_suffix(".log")
             self._log_file = open(log_path, "w")
+            # FPS musi być zgodny z realnym outputem ustreamera — inaczej setpts
+            # rozsynchronizuje czas i nagranie gra w zwolnionym/przyspieszonym tempie.
+            fps = int(camera_config.load_config().get("fps", 60))
             self._proc = subprocess.Popen(
                 [
                     "ffmpeg", "-y",
                     "-i", MOTION_STREAM,
-                    "-vf", "setpts=N/15/TB,fps=15",
+                    "-vf", f"setpts=N/{fps}/TB,fps={fps}",
                     "-c:v", "libx264",
                     "-preset", "ultrafast",
                     "-crf", "18",
