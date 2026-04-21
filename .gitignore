@@ -17,3 +17,5 @@ re/*.cab
 backend/.last_device
 backend/uvicorn.log
 backend/recordings/
+backend/camera_config.json
+backend/ustreamer.env

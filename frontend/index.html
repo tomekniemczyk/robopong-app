@@ -858,6 +858,40 @@
         &#10003; {{ t('ondemand.saved') }}
       </div>
     </div>
+
+    <!-- Camera settings -->
+    <div class="card">
+      <div style="font-size:13px;font-weight:600;margin-bottom:10px">⚙ {{ t('camera.settings_title') }}</div>
+
+      <div v-if="camDevices.length > 1" style="margin-bottom:8px">
+        <label style="font-size:12px;color:var(--muted);display:block;margin-bottom:3px">{{ t('camera.device') }}</label>
+        <select v-model="camCfg.device" @change="onCamDeviceChange" style="width:100%;padding:6px;font-size:13px">
+          <option v-for="d in camDevices" :key="d.device" :value="d.device">{{ d.name }}</option>
+        </select>
+      </div>
+
+      <div style="display:flex;gap:8px;margin-bottom:8px">
+        <div style="flex:2">
+          <label style="font-size:12px;color:var(--muted);display:block;margin-bottom:3px">{{ t('camera.resolution') }}</label>
+          <select v-model="camCfg.resolution" @change="onCamResolutionChange" style="width:100%;padding:6px;font-size:13px">
+            <option v-for="f in camFormats" :key="f.resolution" :value="f.resolution">{{ f.resolution }}</option>
+          </select>
+        </div>
+        <div style="flex:1">
+          <label style="font-size:12px;color:var(--muted);display:block;margin-bottom:3px">{{ t('camera.fps') }}</label>
+          <select v-model.number="camCfg.fps" style="width:100%;padding:6px;font-size:13px">
+            <option v-for="fps in camFpsOptions" :key="fps" :value="fps">{{ fps }}</option>
+          </select>
+        </div>
+      </div>
+
+      <button class="btn btn-primary" style="width:100%" @click="saveCamCfg" :disabled="camSaving || !_camCfgChanged">
+        {{ camSaving ? t('camera.saving') : t('camera.save') }}
+      </button>
+      <div v-if="camSaveMsg" :style="{marginTop:'6px',fontSize:'12px',color: camSaveError ? 'var(--danger)' : 'var(--success)',textAlign:'center'}">
+        {{ camSaveMsg }}
+      </div>
+    </div>
   </div>
 
   <!-- ── Połącz ─────────────────────────────────────────────────────────── -->
@@ -2794,6 +2828,86 @@ const _app = createApp({
     const robotNameEdit = ref('')
     const camErr        = ref(false)
     const camSrc        = `http://${window.location.hostname}:8081/stream`
+    const camDevices    = ref([])
+    const camFormats    = ref([])
+    const camCfg        = reactive({ device: '', resolution: '', fps: 60 })
+    const camSavedCfg   = reactive({ device: '', resolution: '', fps: 60 })
+    const camSaving     = ref(false)
+    const camSaveMsg    = ref('')
+    const camSaveError  = ref(false)
+    const camFpsOptions = computed(() => {
+      const f = camFormats.value.find(x => x.resolution === camCfg.resolution)
+      return f ? f.fps_options : []
+    })
+    const _camCfgChanged = computed(() =>
+      camCfg.device !== camSavedCfg.device
+      || camCfg.resolution !== camSavedCfg.resolution
+      || camCfg.fps !== camSavedCfg.fps
+    )
+    async function loadCameraDevices() {
+      const r = await fetch('/api/camera/devices')
+      camDevices.value = await r.json()
+    }
+    async function loadCameraFormats(device) {
+      if (!device) { camFormats.value = []; return }
+      const r = await fetch('/api/camera/formats?device=' + encodeURIComponent(device))
+      camFormats.value = await r.json()
+    }
+    async function loadCameraConfig() {
+      const r = await fetch('/api/camera/config')
+      const cfg = await r.json()
+      Object.assign(camCfg, cfg)
+      Object.assign(camSavedCfg, cfg)
+    }
+    async function initCameraSettings() {
+      await Promise.all([loadCameraDevices(), loadCameraConfig()])
+      await loadCameraFormats(camCfg.device)
+    }
+    async function onCamDeviceChange() {
+      await loadCameraFormats(camCfg.device)
+      // dopasuj rozdzielczość/fps do dostępnych na nowym urządzeniu
+      const avail = camFormats.value
+      if (!avail.find(f => f.resolution === camCfg.resolution)) {
+        camCfg.resolution = avail[0]?.resolution || ''
+      }
+      onCamResolutionChange()
+    }
+    function onCamResolutionChange() {
+      const f = camFormats.value.find(x => x.resolution === camCfg.resolution)
+      if (f && !f.fps_options.includes(camCfg.fps)) {
+        camCfg.fps = Math.max(...f.fps_options)
+      }
+    }
+    async function saveCamCfg() {
+      camSaving.value = true
+      camSaveMsg.value = ''
+      camSaveError.value = false
+      try {
+        const r = await fetch('/api/camera/config', {
+          method: 'PUT',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({device: camCfg.device, resolution: camCfg.resolution, fps: camCfg.fps}),
+        })
+        if (!r.ok) {
+          const err = await r.json().catch(() => ({}))
+          throw new Error(err.detail || 'HTTP ' + r.status)
+        }
+        const cfg = await r.json()
+        Object.assign(camSavedCfg, cfg)
+        camSaveMsg.value = t('camera.saved')
+        // wymuś reload streamu — nowy rozmiar
+        camErr.value = false
+        setTimeout(() => {
+          const img = document.getElementById('cam-img')
+          if (img) img.src = camSrc + '?t=' + Date.now()
+        }, 800)
+      } catch (e) {
+        camSaveError.value = true
+        camSaveMsg.value = t('camera.save_failed') + ': ' + e.message
+      } finally {
+        camSaving.value = false
+      }
+    }
     // Drill compensation toggle (AcePad deviation from original Newgy — off by default)
     const drillCompensation = ref(localStorage.getItem('drill_compensation') === '1')
     function onCompensationToggle() {
@@ -5412,6 +5526,7 @@ const _app = createApp({
 
     watch(page, (p) => {
       if (p === 'exploration') loadExpHistory()
+      if (p === 'camera') initCameraSettings()
       if (p === 'calibration') {
         if (connected.value && myRole.value === 'controller') {
           wizStart()
@@ -5569,6 +5684,8 @@ const _app = createApp({
       cal, calDirty, isCalibrated,
       expDrillId, expDrillData, expBallIdx, loadExpDrill, loadExpBall, saveExpToDrill, saveExpAsNew,
       lastAddr, robotName, editingName, robotNameEdit, camErr, camSrc,
+      camDevices, camFormats, camCfg, camFpsOptions, _camCfgChanged, camSaving, camSaveMsg, camSaveError,
+      loadCameraDevices, loadCameraFormats, loadCameraConfig, initCameraSettings, onCamDeviceChange, onCamResolutionChange, saveCamCfg,
       drillCompensation, onCompensationToggle,
       transport, deployTime, usbPorts, usbScanning, simulationMode, toggleSimulation,
       myRole, mySessionId, sessionsList, showSessions, showServiceMenu, showDeviceInfo, copyDiagReport, diagModalText, diagModalOpen, diagModalCopy, sessionAge, parseUA,

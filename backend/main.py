@@ -13,6 +13,7 @@ from fastapi.responses import FileResponse, StreamingResponse
 from fastapi.staticfiles import StaticFiles
 
 import audio
+import camera_config
 import db
 import drills
 import exercises
@@ -1352,6 +1353,38 @@ def set_volume(body: dict):
 def test_volume():
     audio.play("beep_high")
     return {"ok": True}
+
+
+# ── Camera config ──────────────────────────────────────────────────────────────
+
+@app.get("/api/camera/devices")
+def camera_devices():
+    return camera_config.list_devices()
+
+
+@app.get("/api/camera/formats")
+def camera_formats(device: str):
+    return camera_config.list_formats(device)
+
+
+@app.get("/api/camera/config")
+def camera_get_config():
+    return camera_config.load_config()
+
+
+@app.put("/api/camera/config")
+def camera_set_config(body: dict):
+    device = body.get("device")
+    resolution = body.get("resolution")
+    fps = body.get("fps")
+    if not device or not resolution or not fps:
+        raise HTTPException(400, "device, resolution, fps required")
+    cfg = {"device": device, "resolution": resolution, "fps": int(fps)}
+    camera_config.save_config(cfg)
+    ok, err = camera_config.restart_ustreamer()
+    if not ok:
+        raise HTTPException(500, f"restart failed: {err}")
+    return cfg
 
 
 # ── Ball exploration ──────────────────────────────────────────────────────────

@@ -249,6 +249,14 @@ window.I18N = {
   // ── Camera ─────────────────────────────────────────────────────────
   'camera.unavailable': { pl:'Kamera niedostępna (motion :8081)',  en:'Camera unavailable (motion :8081)',  de:'Kamera nicht verfügbar (motion :8081)',  fr:'Caméra indisponible (motion :8081)',  zh:'摄像头不可用（motion :8081）' },
   'camera.stream_info': { pl:'Stream motion — port 8081',  en:'Motion stream — port 8081',  de:'Motion-Stream — Port 8081',  fr:'Flux motion — port 8081',  zh:'Motion 视频流 — 端口 8081' },
+  'camera.settings_title': { pl:'Ustawienia kamery', en:'Camera settings', de:'Kameraeinstellungen', fr:'Paramètres de la caméra', zh:'摄像头设置' },
+  'camera.device':       { pl:'Urządzenie',   en:'Device',     de:'Gerät',       fr:'Appareil',     zh:'设备' },
+  'camera.resolution':   { pl:'Rozdzielczość', en:'Resolution', de:'Auflösung',   fr:'Résolution',   zh:'分辨率' },
+  'camera.fps':          { pl:'FPS',          en:'FPS',        de:'FPS',         fr:'IPS',          zh:'帧率' },
+  'camera.save':         { pl:'Zapisz i zrestartuj kamerę', en:'Save & restart camera', de:'Speichern & Kamera neustarten', fr:'Enregistrer et redémarrer', zh:'保存并重启摄像头' },
+  'camera.saving':       { pl:'Zapisywanie…', en:'Saving…',    de:'Speichern…',  fr:'Enregistrement…', zh:'保存中…' },
+  'camera.saved':        { pl:'Zapisano — kamera zrestartowana', en:'Saved — camera restarted', de:'Gespeichert — Kamera neu gestartet', fr:'Enregistré — caméra redémarrée', zh:'已保存 — 摄像头已重启' },
+  'camera.save_failed':  { pl:'Błąd zapisu',  en:'Save failed', de:'Speichern fehlgeschlagen', fr:'Échec de l\'enregistrement', zh:'保存失败' },
 
   // ── Drills ─────────────────────────────────────────────────────────
   'drills.title':        { pl:'Drille',       en:'Drills',        de:'Drills',         fr:'Lancers',         zh:'训练方案' },
