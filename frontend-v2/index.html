@@ -1600,18 +1600,20 @@
                   </span>
                 </div>
               </div>
-              <svg width="120" height="68" viewBox="0 0 120 68" style="flex-shrink:0;border-radius:6px">
-                <rect x="2" y="2" width="116" height="64" rx="3" fill="#1c4d8a" stroke="#fff" stroke-width="1" opacity="0.85"/>
-                <line x1="2" y1="34" x2="118" y2="34" stroke="#fff" stroke-width="1.5"/>
-                <line x1="60" y1="2" x2="60" y2="66" stroke="#fff" stroke-width="0.7" stroke-dasharray="2,2" opacity="0.6"/>
-                <text x="60" y="14" text-anchor="middle" fill="#fff" font-size="7" opacity="0.5">{{ t('serves.opponent') }}</text>
-                <text x="60" y="62" text-anchor="middle" fill="#fff" font-size="7" opacity="0.5">{{ t('serves.you') }}</text>
-                <circle :cx="2 + selectedServe.placement.x * 116" :cy="2 + (1 - selectedServe.placement.y) * 32" r="5" fill="#ffeb3b" stroke="#ff5722" stroke-width="1.5"/>
+              <svg width="140" height="82" viewBox="0 0 140 82" style="flex-shrink:0;border-radius:6px">
+                <rect x="2" y="2" width="136" height="78" rx="3" fill="#1c4d8a" stroke="#fff" stroke-width="1" opacity="0.85"/>
+                <line x1="2" y1="41" x2="138" y2="41" stroke="#fff" stroke-width="1.5"/>
+                <line x1="70" y1="2" x2="70" y2="80" stroke="#fff" stroke-width="0.7" stroke-dasharray="2,2" opacity="0.6"/>
+                <text x="70" y="12" text-anchor="middle" fill="#fff" font-size="7" opacity="0.6">{{ t('serves.opponent') }}</text>
+                <text x="22" y="24" text-anchor="middle" fill="#fff" font-size="6.5" opacity="0.45">FH</text>
+                <text x="118" y="24" text-anchor="middle" fill="#fff" font-size="6.5" opacity="0.45">BH</text>
+                <text x="70" y="76" text-anchor="middle" fill="#fff" font-size="7" opacity="0.6">{{ t('serves.you') }}</text>
+                <circle :cx="2 + (1 - selectedServe.placement.x) * 136" :cy="2 + (1 - selectedServe.placement.y) * 78" r="5" fill="#ffeb3b" stroke="#ff5722" stroke-width="1.5"/>
               </svg>
             </div>
             <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
               <span style="font-size:11px;color:var(--muted)">⏱ {{ t('serves.duration') }}</span>
-              <input type="number" v-model.number="selectedServe.duration_sec" min="30" max="3600" style="width:70px;text-align:center">
+              <input type="number" v-model.number="selectedServe.duration_sec" min="60" max="3600" step="60" style="width:70px;text-align:center">
               <span style="font-size:11px;color:var(--muted)">{{ t('ex.sec') }}</span>
               <button v-if="selectedServe.modified" class="btn btn-ghost" style="padding:4px 8px;font-size:11px" @click="resetServeDuration(selectedServe)">{{ t('serves.reset') }}</button>
               <button class="btn btn-ghost" style="padding:4px 8px;font-size:11px;margin-left:auto" @click="saveServeDuration(selectedServe)">{{ t('btn.save') }}</button>

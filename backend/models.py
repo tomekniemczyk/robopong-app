@@ -79,7 +79,7 @@ class ServeIn(BaseModel):
     spin_strength:  int = Field(default=0, ge=0, le=5)
     length:         Literal["short", "half_long", "long"] = "short"
     placement:      ServePlacement = Field(default_factory=ServePlacement)
-    duration_sec:   int = Field(default=180, ge=30, le=3600)
+    duration_sec:   int = Field(default=1200, ge=60, le=3600)
     responses:      List[ServeResponse] = Field(default_factory=list)
     youtube_id:     str = ""
     sort_order:     int = Field(default=0, ge=0)
