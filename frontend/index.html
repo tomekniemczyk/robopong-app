@@ -624,7 +624,8 @@
       <line x1="170" y1="55" x2="170" y2="594" stroke="#fff" stroke-width="0.5" opacity="0.2"/>
 
       <!-- D-pad: ▲▼◀▶ skupione pod robotem na stole (cx=170, cy=100) -->
-      <g @click.stop="wizManualStep('height',-1)" style="cursor:pointer">
+      <!-- ▲▼ regulują prędkość silnika górnego (dystans) zgodnie z logiką Android Newgy -->
+      <g @click.stop="wizManualStep('top_speed',-1)" style="cursor:pointer">
         <rect x="154" y="58" width="32" height="28" rx="4" fill="rgba(94,158,255,0.2)"/>
         <text x="170" y="77" text-anchor="middle" fill="var(--accent,#5e9eff)" font-size="16" font-weight="700">▲</text>
       </g>
@@ -636,7 +637,7 @@
         <rect x="190" y="88" width="32" height="28" rx="4" fill="rgba(94,158,255,0.2)"/>
         <text x="206" y="107" text-anchor="middle" fill="var(--accent,#5e9eff)" font-size="16" font-weight="700">▶</text>
       </g>
-      <g @click.stop="wizManualStep('height',1)" style="cursor:pointer">
+      <g @click.stop="wizManualStep('top_speed',1)" style="cursor:pointer">
         <rect x="154" y="118" width="32" height="28" rx="4" fill="rgba(94,158,255,0.2)"/>
         <text x="170" y="137" text-anchor="middle" fill="var(--accent,#5e9eff)" font-size="16" font-weight="700">▼</text>
       </g>
@@ -5591,6 +5592,7 @@ const _app = createApp({
       cal[key] += delta
       if (key === 'oscillation') cal[key] = Math.max(127, Math.min(173, cal[key]))
       else if (key === 'height') cal[key] = Math.max(75, Math.min(210, cal[key]))
+      else if (key === 'top_speed') cal[key] = Math.max(0, Math.min(210, cal[key]))
       clearTimeout(_wizManualTimer)
       clearTimeout(_calIdleTimer)
       _wizManualTimer = setTimeout(() => {
