@@ -8,7 +8,8 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Dict
 
-from fastapi import FastAPI, Form, HTTPException, UploadFile, WebSocket, WebSocketDisconnect
+from typing import List
+from fastapi import Body, FastAPI, Form, HTTPException, UploadFile, WebSocket, WebSocketDisconnect
 from fastapi.responses import FileResponse, StreamingResponse
 from fastapi.staticfiles import StaticFiles
 
@@ -17,6 +18,7 @@ import camera_config
 import db
 import drills
 import exercises
+import serves
 import training
 import players
 import recordings
@@ -349,7 +351,7 @@ async def ws_endpoint(ws: WebSocket):
         _broadcast_sessions()
 
 
-ROBOT_ACTIONS  = {"set_ball", "throw", "throw_ball", "run_scenario", "run_drill", "run_training", "begin_calibration", "apply_calibration", "run_drill_solo", "run_exercise_solo", "run_step_solo", "stop_training", "pause_training", "resume_training", "skip_training"}
+ROBOT_ACTIONS  = {"set_ball", "throw", "throw_ball", "run_scenario", "run_drill", "run_training", "begin_calibration", "apply_calibration", "run_drill_solo", "run_exercise_solo", "run_serve_solo", "run_step_solo", "stop_training", "pause_training", "resume_training", "skip_training"}
 STANDBY_SECS   = 5 * 60
 _last_activity: float = 0.0
 _training_runner = training.TrainingRunner()
@@ -558,6 +560,37 @@ async def _handle(msg: dict, ws: WebSocket):
         }
         _training_runner.start(mini, robot, broadcast, player_id=player_id,
                                record=record, solo_exercise_id=ex["id"])
+
+    elif action == "run_serve_solo":
+        sv = serves.get_serve(msg["serve_id"])
+        if not sv:
+            await _send(ws, "error", {"message": "Nie znaleziono serwisu"})
+            return
+        player_id = msg.get("player_id")
+        _apply_player_handedness(robot, player_id)
+        record = msg.get("record", False)
+        duration = msg.get("duration_sec") or sv.get("duration_sec", 180)
+        mode = msg.get("mode", "timer")
+        response_filter = msg.get("response_filter")
+        random_responses = bool(msg.get("random_responses", False))
+        interval_sec = msg.get("interval_sec")
+        _log("Serve solo: \"%s\" mode=%s %ds player=%s record=%s", sv.get("name", "?"), mode, duration, player_id, record)
+        mini = {
+            "name": sv.get("name", "Serwis"),
+            "countdown_sec": 3,
+            "steps": [{
+                "serve_id": sv["id"],
+                "serve_name": sv.get("name", ""),
+                "serve_mode": mode,
+                "response_filter": response_filter,
+                "random_responses": random_responses,
+                "interval_sec": interval_sec,
+                "duration_sec": duration,
+                "pause_after_sec": 0,
+            }],
+        }
+        _training_runner.start(mini, robot, broadcast, player_id=player_id,
+                               record=record, solo_serve_id=sv["id"])
 
     elif action == "run_step_solo":
         step = msg.get("step", {})
@@ -928,6 +961,99 @@ def set_exercise_duration(eid: int, body: dict):
 def reset_all_exercises():
     exercises.reset_all()
     return {"ok": True}
+
+
+# ── REST — serwisy ────────────────────────────────────────────────────────────
+
+@app.get("/api/serves/tree")
+def get_serves_tree():
+    return serves.get_tree()
+
+
+@app.post("/api/serves/reset-all")
+def reset_all_serves():
+    serves.reset_all()
+    return {"ok": True}
+
+
+@app.put("/api/serves/reorder")
+def reorder_serves_endpoint(body: List[dict] = Body(...)):
+    serves.reorder_serves(body)
+
+
+@app.post("/api/serves/groups", status_code=201)
+def create_serve_group(body: dict):
+    return serves.create_group(body.get("name", "New group"))
+
+
+@app.put("/api/serves/groups/reorder")
+def reorder_serve_groups(body: List[dict] = Body(...)):
+    serves.reorder_groups(body)
+
+
+@app.put("/api/serves/groups/{gid}")
+def rename_serve_group(gid: int, body: dict):
+    if not serves.rename_group(gid, body.get("name", "")):
+        raise HTTPException(404)
+
+
+@app.delete("/api/serves/groups/{gid}", status_code=204)
+def delete_serve_group(gid: int):
+    tree = serves.get_tree()
+    group = next((g for g in tree.get("groups", []) if g.get("id") == gid), None)
+    if group and group.get("readonly"):
+        raise HTTPException(403, "Cannot delete readonly group")
+    serves.delete_group(gid)
+
+
+@app.post("/api/serves", status_code=201)
+def create_serve_endpoint(body: dict):
+    try:
+        new_id = serves.create_custom_serve(body)
+    except ValueError as e:
+        raise HTTPException(400, str(e))
+    return serves.get_serve(new_id)
+
+
+@app.get("/api/serves/{sid}")
+def get_serve_endpoint(sid: int):
+    s = serves.get_serve(sid)
+    if not s:
+        raise HTTPException(404)
+    return s
+
+
+@app.put("/api/serves/{sid}")
+def update_serve_endpoint(sid: int, body: dict):
+    sv = serves.get_serve(sid)
+    if not sv:
+        raise HTTPException(404)
+    if sv.get("readonly"):
+        raise HTTPException(403, "Cannot modify readonly serve")
+    serves.update_custom_serve(sid, body)
+    return serves.get_serve(sid)
+
+
+@app.put("/api/serves/{sid}/duration")
+def set_serve_duration(sid: int, body: dict):
+    if not serves.save_duration_override(sid, body["duration_sec"]):
+        raise HTTPException(404)
+    return {"ok": True}
+
+
+@app.put("/api/serves/{sid}/reset")
+def reset_serve_endpoint(sid: int):
+    if not serves.reset_duration(sid):
+        raise HTTPException(404)
+    return {"ok": True}
+
+
+@app.delete("/api/serves/{sid}", status_code=204)
+def delete_serve_endpoint(sid: int):
+    sv = serves.get_serve(sid)
+    if sv and sv.get("readonly"):
+        raise HTTPException(403, "Cannot delete readonly serve")
+    serves.delete_custom_serve(sid)
 
 
 # ── REST — treningi ───────────────────────────────────────────────────────────

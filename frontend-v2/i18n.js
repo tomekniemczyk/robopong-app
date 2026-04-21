@@ -8,6 +8,7 @@ window.I18N = {
   'nav.drills':    { pl:'Drille',    en:'Drills',    de:'Drills',     fr:'Lancers',        zh:'训练方案' },
   'nav.training':  { pl:'Trening',   en:'Training',  de:'Training',   fr:'Entraînement',   zh:'训练计划' },
   'nav.exercises': { pl:'Ćwiczenia', en:'Exercises', de:'Übungen',    fr:'Exercices',      zh:'体能训练' },
+  'nav.serves':    { pl:'Serwy',     en:'Serves',    de:'Aufschläge', fr:'Services',       zh:'发球' },
   'nav.camera':    { pl:'Kamera',    en:'Camera',    de:'Kamera',     fr:'Caméra',         zh:'摄像头' },
   'nav.logs':      { pl:'Logi',      en:'Logs',      de:'Protokolle', fr:'Journaux',       zh:'日志' },
   'nav.service':   { pl:'Serwis',    en:'Service',   de:'Service',    fr:'Service',        zh:'服务' },
@@ -83,6 +84,8 @@ window.I18N = {
                    zh:'全选（Ctrl+A）并复制（Ctrl+C）' },
   'diag.copy':   { pl:'Kopiuj',  en:'Copy',     de:'Kopieren',  fr:'Copier',   zh:'复制' },
   'diag.close':  { pl:'Zamknij', en:'Close',    de:'Schließen', fr:'Fermer',   zh:'关闭' },
+  'btn.fullscreen':      { pl:'Pełny ekran', en:'Fullscreen', de:'Vollbild',   fr:'Plein écran',    zh:'全屏' },
+  'btn.exit_fullscreen': { pl:'Wyjdź z pełnego ekranu', en:'Exit fullscreen', de:'Vollbild verlassen', fr:'Quitter le plein écran', zh:'退出全屏' },
 
   // ── Observer / Pending banners ─────────────────────────────────────
   'banner.observing':  { pl:'👁 Obserwujesz — robot jest kontrolowany przez inną sesję.',
@@ -572,6 +575,7 @@ window.I18N = {
   'ondemand.saved':          { pl:'Nagranie zapisane',   en:'Recording saved',      de:'Aufnahme gespeichert',   fr:'Enregistrement sauvegardé', zh:'录制已保存' },
   'ondemand.player':         { pl:'Gracz',               en:'Player',               de:'Spieler',                fr:'Joueur',                   zh:'球员' },
   'history.ondemand':        { pl:'Nagrania własne',     en:'On-demand recordings', de:'Eigene Aufnahmen',       fr:'Enregistrements manuels',  zh:'手动录制' },
+  'history.recordings_by_drill': { pl:'Nagrania wg drilli', en:'Recordings by drill', de:'Aufnahmen nach Drill',  fr:'Enregistrements par lancer', zh:'按训练分组的录像' },
   'compare.sync_offset':     { pl:'Offset synchronizacji', en:'Sync offset',        de:'Sync-Offset',            fr:'Décalage sync',            zh:'同步偏移' },
 
   // ── Exploration ─────────────────────────────────────────────────────
@@ -620,5 +624,37 @@ window.I18N = {
   'wizard.preset_label': { pl:'Nazwa presetu',        en:'Preset name',          de:'Preset-Name',             fr:'Nom du préréglage',        zh:'预设名称' },
   'wizard.save_default': { pl:'Zapisz domyślnie',     en:'Save as default',      de:'Standard speichern',      fr:'Enreg. par défaut',        zh:'保存为默认' },
   'wizard.save_named':   { pl:'Zapisz z nazwą',       en:'Save with name',       de:'Mit Name speichern',      fr:'Enreg. avec nom',          zh:'命名保存' },
+
+  // ── Serves ──────────────────────────────────────────────────────────
+  'serves.title':           { pl:'Serwy',              en:'Serves',              de:'Aufschläge',             fr:'Services',              zh:'发球' },
+  'serves.btn_timer':       { pl:'Tylko czas',         en:'Timer only',          de:'Nur Timer',              fr:'Minuteur seul',         zh:'仅计时' },
+  'serves.btn_response':    { pl:'Z odpowiedzią',      en:'With response',       de:'Mit Antwort',            fr:'Avec réponse',          zh:'带回球' },
+  'serves.responses':       { pl:'Odpowiedzi przeciwnika', en:'Opponent responses', de:'Gegnerische Antworten', fr:'Réponses adversaire', zh:'对手回应' },
+  'serves.random':          { pl:'Losowo',             en:'Random',              de:'Zufällig',               fr:'Aléatoire',             zh:'随机' },
+  'serves.interval':        { pl:'Interwał',           en:'Interval',            de:'Intervall',              fr:'Intervalle',            zh:'间隔' },
+  'serves.spin_strength':   { pl:'Siła rotacji',       en:'Spin strength',       de:'Spinstärke',             fr:'Force de rotation',     zh:'旋转强度' },
+  'serves.spin':            { pl:'Rotacja',            en:'Spin',                de:'Spin',                   fr:'Rotation',              zh:'旋转' },
+  'serves.technique':       { pl:'Technika',           en:'Technique',           de:'Technik',                fr:'Technique',             zh:'技术' },
+  'serves.duration':        { pl:'Czas treningu',      en:'Training duration',   de:'Trainingsdauer',         fr:'Durée d\'entraînement', zh:'训练时长' },
+  'serves.reset':           { pl:'Reset',              en:'Reset',               de:'Zurück',                 fr:'Réinit.',               zh:'重置' },
+  'serves.mode':            { pl:'Tryb',               en:'Mode',                de:'Modus',                  fr:'Mode',                  zh:'模式' },
+  'serves.opponent':        { pl:'Przeciwnik',         en:'Opponent',            de:'Gegner',                 fr:'Adversaire',            zh:'对手' },
+  'serves.you':             { pl:'Ty',                 en:'You',                 de:'Du',                     fr:'Vous',                  zh:'你' },
+  'serve_length.short':     { pl:'krótki',             en:'short',               de:'kurz',                   fr:'court',                 zh:'短' },
+  'serve_length.half_long': { pl:'półdługi',           en:'half-long',           de:'halblang',               fr:'mi-long',               zh:'半长' },
+  'serve_length.long':      { pl:'długi',              en:'long',                de:'lang',                   fr:'long',                  zh:'长' },
+  'serves.technique_pendulum':         { pl:'Pendulum',           en:'Pendulum',           de:'Pendel',           fr:'Pendule',           zh:'钟摆' },
+  'serves.technique_reverse_pendulum': { pl:'Reverse Pendulum',   en:'Reverse Pendulum',   de:'Reverse Pendel',   fr:'Pendule inversé',   zh:'反钟摆' },
+  'serves.technique_tomahawk':         { pl:'Tomahawk',           en:'Tomahawk',           de:'Tomahawk',         fr:'Tomahawk',          zh:'战斧' },
+  'serves.technique_backhand':         { pl:'Backhand',           en:'Backhand',           de:'Rückhand',         fr:'Revers',            zh:'反手' },
+  'serves.technique_shovel':           { pl:'Shovel',             en:'Shovel',             de:'Schaufel',         fr:'Pelle',             zh:'铲式' },
+  'serves.technique_squat':            { pl:'Squat',              en:'Squat',              de:'Hocke',            fr:'Accroupi',          zh:'蹲式' },
+  'serves.technique_other':            { pl:'Inny',               en:'Other',              de:'Andere',           fr:'Autre',             zh:'其他' },
+  'serves.spin_sidespin':              { pl:'sidespin',           en:'sidespin',           de:'Seitspin',         fr:'effet latéral',     zh:'侧旋' },
+  'serves.spin_backspin':              { pl:'backspin',           en:'backspin',           de:'Unterspin',        fr:'effet rétro',       zh:'下旋' },
+  'serves.spin_topspin':               { pl:'topspin',            en:'topspin',            de:'Topspin',          fr:'effet lifté',       zh:'上旋' },
+  'serves.spin_sidespin_backspin':     { pl:'side+backspin',      en:'side+backspin',      de:'Seit+Unterspin',   fr:'latéral+rétro',     zh:'侧下旋' },
+  'serves.spin_sidespin_topspin':      { pl:'side+topspin',       en:'side+topspin',       de:'Seit+Topspin',     fr:'latéral+lifté',     zh:'侧上旋' },
+  'serves.spin_no_spin':               { pl:'bez rotacji',        en:'no spin',            de:'ohne Spin',        fr:'sans effet',        zh:'无旋' },
 
 }

@@ -7,11 +7,14 @@ import time
 from pathlib import Path
 from typing import Callable, Optional
 
+import random
+
 import audio
 import db
 import drills
 import exercises
 import recordings
+import serves
 
 logger = logging.getLogger(__name__)
 
@@ -39,7 +42,7 @@ def _load_defaults() -> list:
 # ── Training CRUD (defaults + user) ──────────────────────────────────────────
 
 def _enrich_step_names(training: dict) -> dict:
-    """Resolve drill_name/exercise_name from source data so names are always current."""
+    """Resolve drill_name/exercise_name/serve_name from source data so names are always current."""
     for step in training.get("steps", []):
         if step.get("drill_id"):
             drill = drills.get_drill(step["drill_id"])
@@ -47,6 +50,9 @@ def _enrich_step_names(training: dict) -> dict:
         if step.get("exercise_id"):
             ex = exercises.get_exercise(step["exercise_id"])
             step["exercise_name"] = ex["name"] if ex else f"Exercise #{step['exercise_id']}"
+        if step.get("serve_id"):
+            sv = serves.get_serve(step["serve_id"])
+            step["serve_name"] = sv["name"] if sv else f"Serve #{step['serve_id']}"
     return training
 
 
@@ -99,6 +105,11 @@ def get_trainings_referencing_exercise(exercise_id) -> list[str]:
             if any(s.get("exercise_id") == exercise_id for s in t.get("steps", []))]
 
 
+def get_trainings_referencing_serve(serve_id) -> list[str]:
+    return [t["name"] for t in get_trainings()
+            if any(s.get("serve_id") == serve_id for s in t.get("steps", []))]
+
+
 # ── History ──────────────────────────────────────────────────────────────────
 
 def record_run(training_id, player_id: int | None, elapsed_sec: int,
@@ -107,10 +118,12 @@ def record_run(training_id, player_id: int | None, elapsed_sec: int,
                step_notes: list[dict] | None = None,
                solo_drill_id: int | None = None,
                solo_exercise_id: int | None = None,
+               solo_serve_id: int | None = None,
                total_balls: int | None = None) -> int:
     return db.record_training_run(training_id, player_id, elapsed_sec, status,
                                   steps_completed, steps_total, steps_skipped, step_notes,
                                   solo_drill_id=solo_drill_id, solo_exercise_id=solo_exercise_id,
+                                  solo_serve_id=solo_serve_id,
                                   total_balls=total_balls)
 
 
@@ -153,6 +166,7 @@ class TrainingRunner:
               start_from_step: int = 0,
               solo_drill_id: int | None = None,
               solo_exercise_id: int | None = None,
+              solo_serve_id: int | None = None,
               skip_warmup: bool = False,
               skip_cooldown: bool = False):
         if self.running:
@@ -174,6 +188,7 @@ class TrainingRunner:
         self._history_id = None
         self._solo_drill_id = solo_drill_id
         self._solo_exercise_id = solo_exercise_id
+        self._solo_serve_id = solo_serve_id
         self._skip_warmup = skip_warmup
         self._skip_cooldown = skip_cooldown
         self._task = asyncio.create_task(self._run(scenario, robot, broadcast))
@@ -295,6 +310,7 @@ class TrainingRunner:
             scenario.get("id"), self._player_id, 0, "running",
             0, total_steps, solo_drill_id=self._solo_drill_id,
             solo_exercise_id=self._solo_exercise_id,
+            solo_serve_id=self._solo_serve_id,
         )
         broadcast("history_created", {
             "history_id": self._history_id, "training_id": scenario.get("id"),
@@ -353,6 +369,12 @@ class TrainingRunner:
                     self._steps_completed = step_idx + 1
                     continue
 
+                is_serve = bool(step.get("serve_id"))
+                if is_serve:
+                    await self._run_serve_step(step_idx, orig_idx, step, steps, total_steps, broadcast, scenario, robot)
+                    self._steps_completed = step_idx + 1
+                    continue
+
                 drill = self._resolve_drill(step)
                 if not drill:
                     logger.warning("Drill %s not found, skipping", step.get("drill_id"))
@@ -364,7 +386,7 @@ class TrainingRunner:
                 self._percent_override = None
                 pause_sec = step.get("pause_after_sec", 30)
 
-                remaining_balls = sum(s.get("count", 60) for s in steps[step_idx:] if not s.get("exercise_id"))
+                remaining_balls = sum(s.get("count", 60) for s in steps[step_idx:] if not (s.get("exercise_id") or s.get("serve_id")))
                 avg_wait = 1.5
                 est_remaining = int(remaining_balls * avg_wait + sum(s.get("pause_after_sec", 30) for s in steps[step_idx+1:]))
 
@@ -599,6 +621,154 @@ class TrainingRunner:
                     audio.play("beep_high")
                 await asyncio.sleep(1)
 
+    async def _run_serve_step(self, step_idx, orig_idx, step, steps, total_steps, broadcast, scenario, robot):
+        sv = serves.get_serve(step["serve_id"])
+        if not sv:
+            logger.warning("Serve %s not found, skipping", step.get("serve_id"))
+            return
+        name = sv.get("name", "?")
+        duration = step.get("duration_sec") or sv.get("duration_sec", 180)
+        pause_sec = step.get("pause_after_sec", 30)
+        mode = step.get("serve_mode", "timer")
+        all_responses = sv.get("responses", []) or []
+        response_filter = step.get("response_filter")
+        if response_filter is not None and response_filter != []:
+            active_responses = [r for i, r in enumerate(all_responses) if i in response_filter]
+        else:
+            active_responses = list(all_responses)
+        random_order = bool(step.get("random_responses", False))
+        interval_sec = step.get("interval_sec")
+        if interval_sec is None and active_responses:
+            interval_sec = max(3, min(10, int(active_responses[0]["balls"][0].get("wait_ms", 6000) / 1000)))
+        elif interval_sec is None:
+            interval_sec = 6
+
+        broadcast("training_step", {
+            "step": step_idx + 1, "total": total_steps,
+            "drill_name": f"🎾 {name}", "phase": "serve",
+            "serve": sv, "duration_sec": duration,
+            "serve_mode": mode, "interval_sec": interval_sec,
+            "completed_steps": step_idx,
+        })
+        audio.play("beep")
+
+        self._start_recording(scenario, orig_idx, name, drill_id=None, exercise_id=None)
+
+        if mode == "timer" or not active_responses:
+            skipped = await self._serve_timer_loop(step_idx, total_steps, name, sv, duration, broadcast)
+        else:
+            skipped = await self._serve_response_loop(step_idx, total_steps, name, sv, duration,
+                                                     active_responses, random_order, interval_sec,
+                                                     broadcast, robot)
+
+        if skipped:
+            self._steps_skipped.append(orig_idx)
+        self._stop_recording(skipped=skipped)
+
+        audio.play("drill_finished")
+        broadcast("training_step_done", {
+            "step": step_idx + 1, "total": total_steps,
+            "drill_name": f"🎾 {name}",
+        })
+
+        if step_idx < total_steps - 1 and pause_sec > 0 and not skipped:
+            next_step = steps[step_idx + 1]
+            for sec in range(pause_sec, 0, -1):
+                if self._stopped: return
+                if self._consume_skip(): break
+                await self._wait_unpaused()
+                broadcast("training_pause", {
+                    "sec": sec, "total": pause_sec,
+                    "step": step_idx + 1, "total_steps": total_steps,
+                    "next_drill": self._resolve_step_name(next_step),
+                })
+                if sec <= 3:
+                    audio.play("beep_high")
+                await asyncio.sleep(1)
+
+    async def _serve_timer_loop(self, step_idx, total_steps, name, sv, duration, broadcast) -> bool:
+        for sec in range(duration, 0, -1):
+            if self._stopped: return False
+            if self._consume_skip():
+                return True
+            await self._wait_unpaused()
+            broadcast("training_exercise_progress", {
+                "step": step_idx + 1, "total_steps": total_steps,
+                "exercise_name": name, "sec": sec, "total_sec": duration,
+                "exercise_id": None, "serve_id": sv.get("id"),
+                "description": sv.get("description", ""),
+                "serve_mode": "timer",
+            })
+            if sec <= 3:
+                audio.play("beep_high")
+            await asyncio.sleep(1)
+        return False
+
+    async def _serve_response_loop(self, step_idx, total_steps, name, sv, duration,
+                                    responses, random_order, interval_sec,
+                                    broadcast, robot) -> bool:
+        start = time.monotonic()
+        idx = 0
+        while True:
+            if self._stopped: return False
+            if self._consume_skip(): return True
+            await self._wait_unpaused()
+            elapsed = int(time.monotonic() - start)
+            remaining = duration - elapsed
+            if remaining <= 0:
+                return False
+
+            if random_order:
+                resp = random.choice(responses)
+            else:
+                resp = responses[idx % len(responses)]
+                idx += 1
+
+            ball = resp["balls"][0]
+            broadcast("training_serve_response", {
+                "step": step_idx + 1, "total_steps": total_steps,
+                "serve_name": name, "serve_id": sv.get("id"),
+                "response_name": resp.get("name", ""),
+                "response_description": resp.get("description", ""),
+                "remaining_sec": remaining,
+                "total_sec": duration,
+                "interval_sec": interval_sec,
+            })
+
+            try:
+                await robot.set_ball(ball["top_speed"], ball["bot_speed"],
+                                     ball["oscillation"], ball["height"], ball["rotation"],
+                                     ball.get("wait_ms", 1000))
+                await asyncio.sleep(1.0)
+                if self._stopped: return False
+                await robot.throw()
+                audio.play("beep")
+            except Exception as e:
+                logger.error("Serve response throw failed: %s", e)
+
+            wait_until = time.monotonic() + interval_sec
+            while time.monotonic() < wait_until:
+                if self._stopped: return False
+                if self._consume_skip():
+                    try: await robot.stop()
+                    except Exception: pass
+                    return True
+                await self._wait_unpaused()
+                tick_remaining = int(wait_until - time.monotonic())
+                total_remaining = int(duration - (time.monotonic() - start))
+                broadcast("training_exercise_progress", {
+                    "step": step_idx + 1, "total_steps": total_steps,
+                    "exercise_name": name, "sec": max(0, total_remaining),
+                    "total_sec": duration, "serve_id": sv.get("id"),
+                    "serve_mode": "response",
+                    "interval_remaining": max(0, tick_remaining),
+                    "description": sv.get("description", ""),
+                })
+                await asyncio.sleep(0.5)
+
+            try: await robot.stop()
+            except Exception: pass
+
     def _count_balls(self, steps: list) -> int:
         total = 0
         for i, step in enumerate(steps):
@@ -606,14 +776,18 @@ class TrainingRunner:
                 break
             if i in self._steps_skipped:
                 continue
-            if not step.get("exercise_id"):
-                total += step.get("count", 60)
+            if step.get("exercise_id") or step.get("serve_id"):
+                continue
+            total += step.get("count", 60)
         return total
 
     def _resolve_step_name(self, step: dict) -> str:
         if step.get("exercise_id"):
             ex = exercises.get_exercise(step["exercise_id"])
             return ex["name"] if ex else "?"
+        if step.get("serve_id"):
+            sv = serves.get_serve(step["serve_id"])
+            return sv["name"] if sv else "?"
         if step.get("drill_id"):
             drill = drills.get_drill(step["drill_id"])
             return drill["name"] if drill else "?"

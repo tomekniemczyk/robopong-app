@@ -1667,6 +1667,100 @@
     </div>
   </div>
 
+  <!-- ── Serwisy ──────────────────────────────────────────────────────────── -->
+  <div class="page" v-show="page === 'serves'">
+    <div class="row" style="margin-bottom:8px">
+      <span class="section-title" style="margin-bottom:0">🎾 {{ t('serves.title') }}</span>
+    </div>
+    <div style="margin-bottom:10px">
+      <input v-model="serveSearch" type="search" :placeholder="t('search.placeholder')" style="width:100%;background:var(--surface);color:var(--text);border:1px solid var(--border);border-radius:8px;padding:7px 10px;font-size:13px;box-sizing:border-box">
+    </div>
+    <div v-for="group in filteredServeGroups" :key="group.id" class="drill-folder">
+      <div class="drill-folder-header" @click="toggleServeGroup(group.id)">
+        <span class="drill-folder-arrow">{{ openServeGroups.has(group.id) ? '▼' : '▶' }}</span>
+        <span class="drill-folder-name">{{ group.icon || '🎾' }} {{ tc('serve_groups', group.name) }}</span>
+        <span class="chip">{{ group.serves.length }}</span>
+      </div>
+      <div v-if="serveSearch || openServeGroups.has(group.id)" class="drill-list">
+        <div v-for="sv in group.serves" :key="sv.id">
+          <div class="drill-row" @click="selectedServe = selectedServe?.id === sv.id ? null : sv" style="cursor:pointer">
+            <span v-if="selectedPlayerId" style="cursor:pointer;margin-right:4px" @click.stop="toggleFavorite('serve', sv.id)">{{ isFavorite('serve', sv.id) ? '★' : '☆' }}</span>
+            <span class="drill-name">{{ tc('serves', sv.name) }}</span>
+            <span class="serve-tag" :data-len="sv.length" style="font-size:10px;padding:1px 6px;border-radius:4px;background:var(--surface);color:var(--muted);margin-left:4px">{{ t('serve_length.' + sv.length) }}</span>
+            <span class="time-badge">⏱ {{ fmtDur(sv.duration_sec) }}</span>
+          </div>
+          <!-- Panel serwisu -->
+          <div v-if="selectedServe && selectedServe.id === sv.id"
+            style="background:var(--card);border:1px solid var(--border);border-radius:0 0 12px 12px;margin-top:-4px;padding:12px;margin-bottom:6px">
+            <!-- Opis -->
+            <div style="font-size:12px;color:var(--muted);line-height:1.5;margin-bottom:10px">{{ tc('serve_desc', selectedServe.description) }}</div>
+            <!-- Metadata + table SVG -->
+            <div style="display:flex;gap:12px;align-items:flex-start;margin-bottom:10px">
+              <div style="flex:1;display:flex;flex-direction:column;gap:6px">
+                <div style="font-size:11px"><span style="color:var(--muted)">{{ t('serves.technique') }}:</span> <strong>{{ t('serves.technique_' + selectedServe.technique) }}</strong></div>
+                <div style="font-size:11px"><span style="color:var(--muted)">{{ t('serves.spin') }}:</span> <strong>{{ t('serves.spin_' + selectedServe.spin_type) }}</strong></div>
+                <div style="font-size:11px;display:flex;align-items:center;gap:6px">
+                  <span style="color:var(--muted)">{{ t('serves.spin_strength') }}:</span>
+                  <span class="serve-spin-bars">
+                    <span v-for="i in 5" :key="i" class="serve-spin-bar" :class="{ active: i <= selectedServe.spin_strength }"></span>
+                  </span>
+                </div>
+              </div>
+              <!-- Mini-stół z punktem placement -->
+              <svg width="120" height="68" viewBox="0 0 120 68" style="flex-shrink:0;border-radius:6px">
+                <rect x="2" y="2" width="116" height="64" rx="3" fill="#1c4d8a" stroke="#fff" stroke-width="1" opacity="0.85"/>
+                <line x1="2" y1="34" x2="118" y2="34" stroke="#fff" stroke-width="1.5"/>
+                <line x1="60" y1="2" x2="60" y2="66" stroke="#fff" stroke-width="0.7" stroke-dasharray="2,2" opacity="0.6"/>
+                <text x="60" y="14" text-anchor="middle" fill="#fff" font-size="7" opacity="0.5">{{ t('serves.opponent') }}</text>
+                <text x="60" y="62" text-anchor="middle" fill="#fff" font-size="7" opacity="0.5">{{ t('serves.you') }}</text>
+                <circle :cx="2 + selectedServe.placement.x * 116" :cy="2 + (1 - selectedServe.placement.y) * 32" r="5" fill="#ffeb3b" stroke="#ff5722" stroke-width="1.5"/>
+              </svg>
+            </div>
+            <!-- Czas trwania -->
+            <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
+              <span style="font-size:11px;color:var(--muted)">⏱ {{ t('serves.duration') }}</span>
+              <input type="number" v-model.number="selectedServe.duration_sec" min="30" max="3600" style="width:70px;text-align:center">
+              <span style="font-size:11px;color:var(--muted)">{{ t('ex.sec') }}</span>
+              <button v-if="selectedServe.modified" class="btn btn-ghost" style="padding:4px 8px;font-size:11px" @click="resetServeDuration(selectedServe)">{{ t('serves.reset') }}</button>
+              <button class="btn btn-ghost" style="padding:4px 8px;font-size:11px;margin-left:auto" @click="saveServeDuration(selectedServe)">{{ t('btn.save') }}</button>
+            </div>
+            <!-- Lista odpowiedzi (tryb 2) -->
+            <div v-if="selectedServe.responses && selectedServe.responses.length" style="border-top:1px solid var(--border);padding-top:10px;margin-top:8px">
+              <div style="font-size:12px;font-weight:600;margin-bottom:6px">🤖 {{ t('serves.responses') }}</div>
+              <div style="display:flex;flex-direction:column;gap:4px;margin-bottom:8px">
+                <label v-for="(resp, ri) in selectedServe.responses" :key="ri" style="display:flex;align-items:center;gap:6px;font-size:12px;cursor:pointer">
+                  <input type="checkbox" :value="ri" v-model="serveSelectedResponses">
+                  <span>{{ tc('serve_response_names', resp.name) }}</span>
+                </label>
+              </div>
+              <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;font-size:12px">
+                <label style="display:flex;align-items:center;gap:4px;cursor:pointer">
+                  <input type="checkbox" v-model="serveRandomResponses">
+                  {{ t('serves.random') }}
+                </label>
+                <span style="color:var(--muted)">{{ t('serves.interval') }}:</span>
+                <input type="range" min="3" max="10" v-model.number="serveIntervalSec" style="flex:1;max-width:120px">
+                <span style="font-family:monospace;min-width:32px">{{ serveIntervalSec }}s</span>
+              </div>
+            </div>
+            <!-- Przyciski startu -->
+            <div style="display:flex;gap:6px;margin-top:8px">
+              <label v-if="selectedPlayerId" style="font-size:11px;display:flex;align-items:center;gap:4px;cursor:pointer;color:var(--text2)">
+                <input type="checkbox" v-model="recordTraining"> 🎥
+              </label>
+              <button class="btn btn-ghost" style="flex:1;padding:8px;font-size:13px"
+                :disabled="!connected || myRole !== 'controller'"
+                @click="runServeSolo(selectedServe, 'timer')">🧘 {{ t('serves.btn_timer') }}</button>
+              <button class="btn btn-success" style="flex:1;padding:8px;font-size:13px"
+                :disabled="!connected || myRole !== 'controller' || !selectedServe.responses?.length || !serveSelectedResponses.length"
+                @click="runServeSolo(selectedServe, 'response')">🤖 {{ t('serves.btn_response') }}</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- ── Eksploracja robota ──────────────────────────────────────────────── -->
   <div class="page" v-show="page === 'exploration'">
     <div class="card">
@@ -2582,8 +2676,11 @@
             <optgroup v-for="cat in exerciseCategories" :label="cat.icon+' '+tc('categories', cat.name)" :key="'ex-'+cat.id">
               <option v-for="ex in cat.exercises" :value="'exercise:'+ex.id" :key="'ex-'+ex.id" :selected="step.exercise_id===ex.id">{{ tc('exercises', ex.name) }}</option>
             </optgroup>
+            <optgroup v-for="g in (serveTree.groups || [])" :label="'🎾 '+(g.readonly ? tc('serve_groups', g.name) : g.name)" :key="'sg-'+g.id">
+              <option v-for="sv in (g.serves || [])" :value="'serve:'+sv.id" :key="'sv-'+sv.id" :selected="step.serve_id===sv.id">{{ sv.readonly ? tc('serves', sv.name) : sv.name }}</option>
+            </optgroup>
           </select>
-          <template v-if="!step.exercise_id">
+          <template v-if="!step.exercise_id && !step.serve_id">
             <div style="display:flex;align-items:center;gap:4px;font-size:11px">
               <label style="color:var(--muted)">{{ t('tr.count') }}</label>
               <input type="number" v-model.number="step.count" min="1" max="999" style="width:50px;text-align:center">
@@ -2596,9 +2693,35 @@
           <template v-else>
             <div style="display:flex;align-items:center;gap:4px;font-size:11px">
               <label style="color:var(--muted)">{{ t('tr.time') }}</label>
-              <input type="number" v-model.number="step.duration_sec" min="10" max="600" style="width:50px;text-align:center">
+              <input type="number" v-model.number="step.duration_sec" min="10" max="3600" style="width:55px;text-align:center">
               <span style="color:var(--muted)">s</span>
             </div>
+          </template>
+          <template v-if="step.serve_id">
+            <div style="display:flex;align-items:center;gap:4px;font-size:11px">
+              <label style="color:var(--muted)">{{ t('serves.mode') }}</label>
+              <select v-model="step.serve_mode" style="background:var(--surface);color:var(--text);border:1px solid var(--border);border-radius:6px;padding:3px 6px;font-size:11px">
+                <option value="timer">🧘 {{ t('serves.btn_timer') }}</option>
+                <option value="response">🤖 {{ t('serves.btn_response') }}</option>
+              </select>
+            </div>
+            <template v-if="step.serve_mode === 'response'">
+              <div style="width:100%;display:flex;flex-wrap:wrap;gap:6px;font-size:11px;margin-top:4px;padding-top:6px;border-top:1px dashed var(--border)">
+                <label v-for="(resp, ri) in (serveResponseList(step.serve_id))" :key="ri" style="display:flex;align-items:center;gap:3px;cursor:pointer">
+                  <input type="checkbox" :value="ri" v-model="step.response_filter">
+                  <span>{{ tc('serve_response_names', resp.name) }}</span>
+                </label>
+              </div>
+              <div style="display:flex;align-items:center;gap:6px;font-size:11px">
+                <label style="display:flex;align-items:center;gap:3px;cursor:pointer">
+                  <input type="checkbox" v-model="step.random_responses">
+                  {{ t('serves.random') }}
+                </label>
+                <label style="color:var(--muted)">{{ t('serves.interval') }}</label>
+                <input type="number" v-model.number="step.interval_sec" min="3" max="10" style="width:42px;text-align:center">
+                <span style="color:var(--muted)">s</span>
+              </div>
+            </template>
           </template>
           <div style="display:flex;align-items:center;gap:4px;font-size:11px">
             <label style="color:var(--muted)">{{ t('tr.pause_label') }}</label>
@@ -2681,6 +2804,9 @@
     </button>
     <button :class="{active: page==='exercises'}" @click="page='exercises'">
       <span class="nav-icon">🏋</span>{{ t('nav.exercises') }}
+    </button>
+    <button :class="{active: page==='serves'}" :style="connected && !isCalibrated ? 'opacity:0.4' : ''" @click="connected && !isCalibrated ? (showToast(t('toast.cal_required')), page='calibration') : page='serves'" :title="connected && !isCalibrated ? t('toast.cal_required') : ''">
+      <span class="nav-icon">🎾</span>{{ t('nav.serves') }}
     </button>
     <!-- Players button hidden — access via avatar in topbar -->
     <button :class="{ active: page === 'history' }" @click="page='history'; loadAllHistory()">
@@ -3286,6 +3412,8 @@ const _app = createApp({
         step.drill_id = parseInt(val.split(':')[1])
         step.exercise_id = null
         step.exercise_name = ''
+        step.serve_id = null
+        step.serve_name = ''
         for (const f of (drillTree.folders || [])) {
           for (const d of f.drills) {
             if (d.id === step.drill_id) { step.drill_name = d.name; return }
@@ -3295,12 +3423,106 @@ const _app = createApp({
         step.exercise_id = parseInt(val.split(':')[1])
         step.drill_id = null
         step.drill_name = ''
+        step.serve_id = null
+        step.serve_name = ''
         for (const cat of exerciseCategories.value) {
           for (const ex of cat.exercises) {
             if (ex.id === step.exercise_id) { step.exercise_name = ex.name; step.duration_sec = ex.duration_sec; return }
           }
         }
+      } else if (val.startsWith('serve:')) {
+        step.serve_id = parseInt(val.split(':')[1])
+        step.drill_id = null; step.drill_name = ''
+        step.exercise_id = null; step.exercise_name = ''
+        step.serve_mode = step.serve_mode || 'timer'
+        for (const g of (serveTree.value.groups || [])) {
+          for (const sv of (g.serves || [])) {
+            if (sv.id === step.serve_id) {
+              step.serve_name = sv.name
+              step.duration_sec = sv.duration_sec
+              step.response_filter = sv.responses?.map((_, i) => i) || []
+              step.random_responses = false
+              step.interval_sec = sv.responses?.[0]?.balls?.[0]?.wait_ms ? Math.max(3, Math.min(10, Math.round(sv.responses[0].balls[0].wait_ms / 1000))) : 6
+              return
+            }
+          }
+        }
       }
+    }
+
+    // ── Serves ─────────────────────────────────────────────────
+    const serveTree = ref({ groups: [] })
+    const openServeGroups = reactive(new Set())
+    const selectedServe = ref(null)
+    const serveSearch = ref('')
+    const serveSelectedResponses = ref([])
+    const serveRandomResponses = ref(false)
+    const serveIntervalSec = ref(6)
+
+    const filteredServeGroups = computed(() => {
+      const q = serveSearch.value.trim().toLowerCase()
+      if (!q) return serveTree.value.groups || []
+      return (serveTree.value.groups || []).map(g => ({
+        ...g,
+        serves: (g.serves || []).filter(sv => tc('serves', sv.name).toLowerCase().includes(q))
+      })).filter(g => g.serves.length)
+    })
+
+    function toggleServeGroup(id) {
+      openServeGroups.has(id) ? openServeGroups.delete(id) : openServeGroups.add(id)
+    }
+
+    async function loadServes() {
+      const r = await fetch('/api/serves/tree')
+      const d = await r.json()
+      serveTree.value = d || { groups: [] }
+    }
+
+    watch(selectedServe, (sv) => {
+      if (sv && sv.responses?.length) {
+        serveSelectedResponses.value = sv.responses.map((_, i) => i)
+        serveIntervalSec.value = Math.max(3, Math.min(10, Math.round((sv.responses[0]?.balls?.[0]?.wait_ms || 6000) / 1000)))
+      } else {
+        serveSelectedResponses.value = []
+      }
+    })
+
+    async function saveServeDuration(sv) {
+      await fetch(`/api/serves/${sv.id}/duration`, {
+        method: 'PUT', headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({ duration_sec: sv.duration_sec })
+      })
+      await loadServes()
+    }
+
+    async function resetServeDuration(sv) {
+      await fetch(`/api/serves/${sv.id}/reset`, { method: 'PUT' })
+      await loadServes()
+      const fresh = serveTree.value.groups.flatMap(g => g.serves).find(s => s.id === sv.id)
+      if (fresh) selectedServe.value = fresh
+    }
+
+    function serveResponseList(sid) {
+      for (const g of (serveTree.value.groups || [])) {
+        for (const sv of (g.serves || [])) {
+          if (sv.id === sid) return sv.responses || []
+        }
+      }
+      return []
+    }
+
+    function runServeSolo(sv, mode) {
+      send({
+        action: 'run_serve_solo',
+        serve_id: sv.id,
+        mode,
+        duration_sec: sv.duration_sec,
+        response_filter: mode === 'response' ? serveSelectedResponses.value : null,
+        random_responses: serveRandomResponses.value,
+        interval_sec: serveIntervalSec.value,
+        player_id: selectedPlayerId.value,
+        record: recordTraining.value,
+      })
     }
 
     async function loadDrillTree() {
@@ -5651,7 +5873,7 @@ const _app = createApp({
       toastTimer = setTimeout(() => { toast.value = '' }, 2500)
     }
     onMounted(async () => {
-      wsConnect(); loadScenarios(); loadCal(); loadDrillTree(); loadTrainings(); loadExercises(); loadTrainingHistory(); loadVolume()
+      wsConnect(); loadScenarios(); loadCal(); loadDrillTree(); loadTrainings(); loadExercises(); loadServes(); loadTrainingHistory(); loadVolume()
       await loadPlayers()
       // Restore saved player silently (no modal yet — wait for connection)
       const savedPid = parseInt(localStorage.getItem('robopong_player_id'))
@@ -5737,6 +5959,8 @@ const _app = createApp({
       isLeftHanded, newPlayerName, newPlayerHand, newPlayerLang,
       deleteRecording, loadPlayers, loadTrainingHistory, trainingHistory,
       exerciseCategories, exSearch, filteredExCategories, openExCats, selectedExercise, toggleExCat, loadExercises, onStepTypeSelect, getExFrameSrc, exAnimFrame,
+      serveTree, serveSearch, filteredServeGroups, openServeGroups, selectedServe, toggleServeGroup, loadServes,
+      serveSelectedResponses, serveRandomResponses, serveIntervalSec, runServeSolo, saveServeDuration, resetServeDuration, serveResponseList,
       // Historia tab
       historyPlayerId, allHistory, allRecordings, historyExpanded, historySort,
       loadAllHistory, toggleHistNode, histHasRec, histGetStepRec, histDateRange, historyTree, leaderboard,

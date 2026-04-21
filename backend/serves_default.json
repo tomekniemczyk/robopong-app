@@ -1,0 +1,260 @@
+{
+  "groups": [
+    {
+      "name": "Pendulum",
+      "icon": "🎾",
+      "description": "Pendulum serve — forehand, wrist motion right→left generating sidespin or sidespin-backspin. Racket swings like a pendulum low across the body. The most common serve in modern table tennis.",
+      "serves": [
+        {
+          "name": "Pendulum Short Sidespin",
+          "description": "Short sidespin pendulum serve targeting opponent backhand half. Contact ball at the lowest point of the swing, brush right→left across the back of the ball. Keep second bounce inside table (short). The ball curves left in the air (from server's view). Purpose: prevents loop attack, forces controlled return.",
+          "technique": "pendulum",
+          "spin_type": "sidespin",
+          "spin_strength": 3,
+          "length": "short",
+          "placement": {"x": 0.30, "y": 0.75},
+          "duration_sec": 300,
+          "responses": [
+            {"name": "Push long to BH", "description": "Opponent pushes long with backspin to your backhand — prepare to attack with BH loop/flip.", "balls": [{"top_speed": 30, "bot_speed": 100, "oscillation": 140, "height": 110, "rotation": 150, "wait_ms": 6000}]},
+            {"name": "Push short middle", "description": "Opponent pushes short to middle — step in and flick or push short again.", "balls": [{"top_speed": 20, "bot_speed": 90, "oscillation": 150, "height": 90, "rotation": 150, "wait_ms": 6500}]},
+            {"name": "Flip attack to FH", "description": "Opponent reads spin and flicks aggressively to your forehand — block or counter-attack.", "balls": [{"top_speed": 130, "bot_speed": 20, "oscillation": 162, "height": 130, "rotation": 150, "wait_ms": 5500}]}
+          ]
+        },
+        {
+          "name": "Pendulum Short Sidespin-Backspin",
+          "description": "Short serve blending sidespin and backspin. Contact under the ball with a brushing motion that goes right→left and slightly down. Very deceptive — looks like sidespin but drops short on opponent side. Great for low skill-level opponents.",
+          "technique": "pendulum",
+          "spin_type": "sidespin_backspin",
+          "spin_strength": 4,
+          "length": "short",
+          "placement": {"x": 0.25, "y": 0.78},
+          "duration_sec": 300,
+          "responses": [
+            {"name": "Push long heavy BH", "description": "Heavy backspin push long to your backhand — open with BH loop over spin.", "balls": [{"top_speed": 20, "bot_speed": 140, "oscillation": 140, "height": 105, "rotation": 150, "wait_ms": 6500}]},
+            {"name": "Push short tight", "description": "Opponent controls with a short push to your forehand — flick or push short back.", "balls": [{"top_speed": 15, "bot_speed": 100, "oscillation": 160, "height": 85, "rotation": 150, "wait_ms": 7000}]},
+            {"name": "Lift into net", "description": "Opponent misreads backspin and lifts — ball floats high, easy put-away.", "balls": [{"top_speed": 60, "bot_speed": 40, "oscillation": 150, "height": 160, "rotation": 150, "wait_ms": 5500}]}
+          ]
+        },
+        {
+          "name": "Pendulum Long Fast FH",
+          "description": "Long fast pendulum serve down the forehand line. Full body rotation, contact ball at table height, follow through fast. Used as a surprise third-ball attack setup. Ball lands deep on opponent forehand.",
+          "technique": "pendulum",
+          "spin_type": "topspin",
+          "spin_strength": 2,
+          "length": "long",
+          "placement": {"x": 0.75, "y": 0.95},
+          "duration_sec": 240,
+          "responses": [
+            {"name": "Block to middle", "description": "Opponent blocks the fast serve back to middle — step around and loop with FH.", "balls": [{"top_speed": 90, "bot_speed": 30, "oscillation": 150, "height": 125, "rotation": 150, "wait_ms": 5000}]},
+            {"name": "Counter-attack to BH", "description": "Strong opponent counter-loops to your backhand — block or counter with BH.", "balls": [{"top_speed": 150, "bot_speed": 40, "oscillation": 138, "height": 135, "rotation": 150, "wait_ms": 4500}]}
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Reverse Pendulum",
+      "icon": "🔄",
+      "description": "Reverse pendulum (hook) serve — forehand, wrist motion left→right. Opposite direction to standard pendulum. Produces reverse sidespin that curves right (from server's view). Harder to execute but breaks opponent rhythm.",
+      "serves": [
+        {
+          "name": "Reverse Pendulum Short BH",
+          "description": "Short reverse sidespin serve to opponent backhand. Wrist snaps left→right at contact. Ball curves right after the bounce. Opponent's push tends to go to your forehand side — prepare for FH attack.",
+          "technique": "reverse_pendulum",
+          "spin_type": "sidespin",
+          "spin_strength": 3,
+          "length": "short",
+          "placement": {"x": 0.22, "y": 0.78},
+          "duration_sec": 300,
+          "responses": [
+            {"name": "Push long to FH", "description": "Opponent's push drifts right (from your view) and lands on your forehand long — open with FH loop.", "balls": [{"top_speed": 30, "bot_speed": 110, "oscillation": 165, "height": 115, "rotation": 150, "wait_ms": 6000}]},
+            {"name": "Push short to middle", "description": "Controlled short push to middle — step around and flick FH.", "balls": [{"top_speed": 20, "bot_speed": 100, "oscillation": 150, "height": 90, "rotation": 150, "wait_ms": 6500}]},
+            {"name": "Flip long to FH", "description": "Aggressive flip targeting your wide forehand — counter-attack.", "balls": [{"top_speed": 140, "bot_speed": 30, "oscillation": 170, "height": 135, "rotation": 150, "wait_ms": 5000}]}
+          ]
+        },
+        {
+          "name": "Reverse Pendulum Short Sidespin-Backspin",
+          "description": "Short reverse pendulum with sidespin and backspin mixed. Contact underneath with left→right brushing motion. Very tricky for opponents used to standard pendulum — the opposite curve disrupts their timing.",
+          "technique": "reverse_pendulum",
+          "spin_type": "sidespin_backspin",
+          "spin_strength": 4,
+          "length": "short",
+          "placement": {"x": 0.25, "y": 0.78},
+          "duration_sec": 300,
+          "responses": [
+            {"name": "Push long heavy FH", "description": "Heavy backspin push to your forehand long — loop with FH over heavy spin.", "balls": [{"top_speed": 20, "bot_speed": 140, "oscillation": 165, "height": 105, "rotation": 150, "wait_ms": 6500}]},
+            {"name": "Short push to BH", "description": "Opponent pushes tight short to your backhand — flick with BH or push short.", "balls": [{"top_speed": 15, "bot_speed": 95, "oscillation": 140, "height": 88, "rotation": 150, "wait_ms": 7000}]}
+          ]
+        },
+        {
+          "name": "Reverse Pendulum Long FH",
+          "description": "Long fast reverse pendulum down the forehand. Used as a third-ball setup — aggressive follow-up with FH loop expected. Ball lands deep and curves right after the bounce.",
+          "technique": "reverse_pendulum",
+          "spin_type": "sidespin_topspin",
+          "spin_strength": 2,
+          "length": "long",
+          "placement": {"x": 0.80, "y": 0.93},
+          "duration_sec": 240,
+          "responses": [
+            {"name": "Block short to BH", "description": "Opponent blocks back to your backhand short — step in and BH flick.", "balls": [{"top_speed": 70, "bot_speed": 20, "oscillation": 138, "height": 115, "rotation": 150, "wait_ms": 5000}]},
+            {"name": "Counter loop to FH", "description": "Strong counter-loop to your forehand — block or counter-loop.", "balls": [{"top_speed": 160, "bot_speed": 40, "oscillation": 165, "height": 140, "rotation": 150, "wait_ms": 4500}]}
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Tomahawk",
+      "icon": "🪓",
+      "description": "Tomahawk serve — forehand, racket held high above the head, chopping motion downward. Creates strong sidespin in the opposite direction to pendulum. Unusual angle makes it hard to read. Often used as a variation.",
+      "serves": [
+        {
+          "name": "Tomahawk Short FH",
+          "description": "Short tomahawk serve to opponent forehand. Racket starts high, contact ball at table level with top edge of racket moving right→left (from server's view — creates reverse sidespin visually similar to reverse pendulum).",
+          "technique": "tomahawk",
+          "spin_type": "sidespin",
+          "spin_strength": 3,
+          "length": "short",
+          "placement": {"x": 0.72, "y": 0.76},
+          "duration_sec": 300,
+          "responses": [
+            {"name": "Push long to BH", "description": "Opponent pushes long to your backhand — BH loop or flick opportunity.", "balls": [{"top_speed": 30, "bot_speed": 110, "oscillation": 140, "height": 115, "rotation": 150, "wait_ms": 6000}]},
+            {"name": "Flick to middle", "description": "Aggressive flick to middle — hard to decide FH/BH, step around early.", "balls": [{"top_speed": 130, "bot_speed": 25, "oscillation": 150, "height": 130, "rotation": 150, "wait_ms": 5500}]}
+          ]
+        },
+        {
+          "name": "Tomahawk Long BH",
+          "description": "Long tomahawk serve deep into opponent backhand. Used as surprise — sudden speed and angle makes third-ball attack easier. Ball travels with a curve distinct from standard pendulum.",
+          "technique": "tomahawk",
+          "spin_type": "sidespin_topspin",
+          "spin_strength": 2,
+          "length": "long",
+          "placement": {"x": 0.20, "y": 0.95},
+          "duration_sec": 240,
+          "responses": [
+            {"name": "Block to FH", "description": "Block to your forehand — loop with FH.", "balls": [{"top_speed": 80, "bot_speed": 20, "oscillation": 165, "height": 125, "rotation": 150, "wait_ms": 5000}]},
+            {"name": "Counter-attack BH", "description": "Counter-attack to your backhand — counter-loop or block.", "balls": [{"top_speed": 150, "bot_speed": 40, "oscillation": 140, "height": 140, "rotation": 150, "wait_ms": 4500}]}
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Backhand",
+      "icon": "↩",
+      "description": "Backhand serve — body faces the table, contact on the backhand side of the body. Fast service motion and short stroke make it excellent for quick service execution and continuous pressure.",
+      "serves": [
+        {
+          "name": "Backhand Short Sidespin",
+          "description": "Short backhand serve with sidespin. Racket brushes the ball left→right across the back. Ball curves right in air (from server view). Excellent for BH-dominant players and third-ball setups.",
+          "technique": "backhand",
+          "spin_type": "sidespin",
+          "spin_strength": 3,
+          "length": "short",
+          "placement": {"x": 0.50, "y": 0.78},
+          "duration_sec": 300,
+          "responses": [
+            {"name": "Push long to BH", "description": "Opponent pushes long to your BH — BH loop opening.", "balls": [{"top_speed": 30, "bot_speed": 100, "oscillation": 140, "height": 110, "rotation": 150, "wait_ms": 6000}]},
+            {"name": "Flick to FH", "description": "Opponent flicks to your forehand — counter-attack.", "balls": [{"top_speed": 130, "bot_speed": 30, "oscillation": 165, "height": 130, "rotation": 150, "wait_ms": 5500}]},
+            {"name": "Short push BH", "description": "Controlled short push back — flick or push short.", "balls": [{"top_speed": 20, "bot_speed": 90, "oscillation": 145, "height": 88, "rotation": 150, "wait_ms": 7000}]}
+          ]
+        },
+        {
+          "name": "Backhand Short No-Spin",
+          "description": "Deceptive no-spin backhand serve. Contact with a stiff racket, minimum brushing. Looks like it has spin but doesn't — opponents over-commit and pop up the ball. Classic 'trick' serve.",
+          "technique": "backhand",
+          "spin_type": "no_spin",
+          "spin_strength": 0,
+          "length": "short",
+          "placement": {"x": 0.45, "y": 0.80},
+          "duration_sec": 300,
+          "responses": [
+            {"name": "Float return high", "description": "Opponent reads spin wrong — ball floats high, easy smash.", "balls": [{"top_speed": 80, "bot_speed": 20, "oscillation": 150, "height": 170, "rotation": 150, "wait_ms": 5500}]},
+            {"name": "Short flick BH", "description": "Skilled opponent flicks short to BH — step in and loop.", "balls": [{"top_speed": 100, "bot_speed": 20, "oscillation": 138, "height": 120, "rotation": 150, "wait_ms": 5500}]}
+          ]
+        },
+        {
+          "name": "Backhand Long Fast",
+          "description": "Long fast backhand serve to opponent BH corner. Used as variation against opponents expecting short. Causes weak return or passive block — perfect third-ball loop opportunity.",
+          "technique": "backhand",
+          "spin_type": "topspin",
+          "spin_strength": 2,
+          "length": "long",
+          "placement": {"x": 0.15, "y": 0.95},
+          "duration_sec": 240,
+          "responses": [
+            {"name": "Passive block BH", "description": "Opponent blocks passively to BH — BH loop or step around FH loop.", "balls": [{"top_speed": 70, "bot_speed": 20, "oscillation": 140, "height": 115, "rotation": 150, "wait_ms": 5000}]},
+            {"name": "Counter-attack FH", "description": "Strong counter to FH — block or counter-loop.", "balls": [{"top_speed": 155, "bot_speed": 40, "oscillation": 165, "height": 135, "rotation": 150, "wait_ms": 4500}]}
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Shovel",
+      "icon": "🥄",
+      "description": "Shovel (chiquita-style) serve — contact point below table, racket shovels under the ball with upward brushing motion. Creates heavy backspin. Rare but effective at lower levels.",
+      "serves": [
+        {
+          "name": "Shovel Short Backspin",
+          "description": "Short shovel serve with heavy backspin. Ball contacts low, scooping upward motion. Second bounce lands right at the end-line or over — forcing opponent to either flick or push long.",
+          "technique": "shovel",
+          "spin_type": "backspin",
+          "spin_strength": 4,
+          "length": "short",
+          "placement": {"x": 0.50, "y": 0.82},
+          "duration_sec": 300,
+          "responses": [
+            {"name": "Heavy push long BH", "description": "Opponent pushes long with heavy backspin — loop over spin with BH.", "balls": [{"top_speed": 15, "bot_speed": 150, "oscillation": 140, "height": 100, "rotation": 150, "wait_ms": 6500}]},
+            {"name": "Lift into high ball", "description": "Opponent misreads and lifts — ball pops up, easy smash.", "balls": [{"top_speed": 50, "bot_speed": 30, "oscillation": 150, "height": 175, "rotation": 150, "wait_ms": 5500}]}
+          ]
+        },
+        {
+          "name": "Shovel Long No-Spin",
+          "description": "Long shovel serve with minimal spin — deceptive because shovel motion implies backspin. Ball travels deep and slow. Opponent's push goes long — surprise attack opportunity.",
+          "technique": "shovel",
+          "spin_type": "no_spin",
+          "spin_strength": 1,
+          "length": "long",
+          "placement": {"x": 0.50, "y": 0.92},
+          "duration_sec": 240,
+          "responses": [
+            {"name": "Passive push long", "description": "Opponent pushes without spin — loop easily.", "balls": [{"top_speed": 40, "bot_speed": 50, "oscillation": 145, "height": 130, "rotation": 150, "wait_ms": 5500}]},
+            {"name": "Flat hit to FH", "description": "Opponent smashes flat to FH — block or counter.", "balls": [{"top_speed": 170, "bot_speed": 30, "oscillation": 165, "height": 145, "rotation": 150, "wait_ms": 4500}]}
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Squat",
+      "icon": "⬇",
+      "description": "Squat serve (Chinese origin, e.g. Werner Schlager, Cai Zhenhua) — server squats deep at contact, racket makes a pendulum motion from very low height. Unusual low contact point creates extreme spin and deceptive trajectory.",
+      "serves": [
+        {
+          "name": "Squat Short Sidespin",
+          "description": "Short squat serve with strong sidespin. Deep knee bend, contact ball very low (below knee level) — makes the brushing motion hard to read. Heavy spin curves the ball sharply after the bounce.",
+          "technique": "squat",
+          "spin_type": "sidespin",
+          "spin_strength": 5,
+          "length": "short",
+          "placement": {"x": 0.30, "y": 0.77},
+          "duration_sec": 300,
+          "responses": [
+            {"name": "Push drifts long FH", "description": "Push curves and lands on your FH long — FH loop over spin.", "balls": [{"top_speed": 25, "bot_speed": 110, "oscillation": 165, "height": 115, "rotation": 150, "wait_ms": 6000}]},
+            {"name": "Short flick BH", "description": "Opponent flicks BH short — step in and counter.", "balls": [{"top_speed": 120, "bot_speed": 20, "oscillation": 140, "height": 125, "rotation": 150, "wait_ms": 5500}]}
+          ]
+        },
+        {
+          "name": "Squat Long Sidespin-Topspin",
+          "description": "Long squat serve with sidespin-topspin. Surprise variation — looks like a short serve setup but extends long. Opponent caught off-guard, weak return expected.",
+          "technique": "squat",
+          "spin_type": "sidespin_topspin",
+          "spin_strength": 3,
+          "length": "long",
+          "placement": {"x": 0.30, "y": 0.94},
+          "duration_sec": 240,
+          "responses": [
+            {"name": "Block short to BH", "description": "Opponent blocks short to BH — step in and BH flick.", "balls": [{"top_speed": 70, "bot_speed": 20, "oscillation": 140, "height": 115, "rotation": 150, "wait_ms": 5000}]},
+            {"name": "Counter-loop FH", "description": "Aggressive counter-loop to FH — counter or block.", "balls": [{"top_speed": 160, "bot_speed": 40, "oscillation": 165, "height": 140, "rotation": 150, "wait_ms": 4500}]}
+          ]
+        }
+      ]
+    }
+  ]
+}

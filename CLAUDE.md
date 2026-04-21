@@ -86,7 +86,8 @@ venv/bin/pytest tests/test_api.py::nazwa_testu
 - `recordings.py` — `Recorder`: ffmpeg subprocess (motion MJPEG → MP4), auto-delete <30s, metadata do SQLite
 - `db.py` — SQLite (`robopong.db`): 10 tabel (patrz niżej)
 - `presets.py` + `presets.db` — osobna baza presetów konfiguracji robota
-- `drills.py`, `exercises.py`, `training.py` — CRUD dla odpowiednich encji (file-based JSON + SQLite hybryd)
+- `drills.py`, `exercises.py`, `serves.py`, `training.py` — CRUD dla odpowiednich encji (file-based JSON + SQLite hybryd)
+- `serves.py` — biblioteka serwisów pogrupowanych po technice (Pendulum, Reverse Pendulum, Tomahawk, Backhand, Shovel, Squat). Każdy serw ma metadane (technique/spin/length/placement) + listę typowych odpowiedzi robota dla trybu Response. Override tylko `duration_sec`.
 - `players.py` — thin wrapper nad `db.py`, walidacja (cascade delete via `db.delete_player_cascade`)
 - `audio.py` — dźwięki WAV przez `aplay` (pliki w `backend/sounds/`)
 - `models.py` — Pydantic models (Ball, ScenarioIn, DrillIn, TrainingStep, etc.)
@@ -95,7 +96,8 @@ venv/bin/pytest tests/test_api.py::nazwa_testu
 
 - **Vue 3 CDN** — `frontend/index.html` (~5000 linii), brak build tooling, brak Vue Router
 - **Nawigacja:** tab-based przez `page` ref z `v-show` (NIE `v-if` — zachowuje stan)
-- **Widoki:** scenarios, connect, drills, training, exercises, camera, logs, calibration
+- **Widoki:** scenarios, connect, drills, training, exercises, serves, camera, logs, calibration
+- **v2 UI:** `frontend-v2/` (mount `/v2/`) — identyczna logika Vue, inny design system. Każda zmiana logiki MUSI być propagowana zarówno do `frontend/` jak i `frontend-v2/`.
 - **Komunikacja:** hybrid WebSocket (real-time events) + REST (CRUD)
 - **Stan:** 100+ reactive refs w `setup()`, computed properties, watchers
 - **i18n:** `t(key)` dla UI (`i18n.js`), `tc(type, key)` dla treści (`content_i18n.js`), 5 języków (PL/EN/DE/FR/ZH)
@@ -127,6 +129,7 @@ venv/bin/pytest tests/test_api.py::nazwa_testu
 |------|------|
 | `drills_default.json` + `.drills_user.json` | factory drille + user overrides/custom |
 | `exercises_default.json` + `.exercises_user.json` | factory ćwiczenia + user duration overrides |
+| `serves_default.json` + `.serves_user.json` | factory serwisy + user duration overrides + custom groups/serves |
 | `trainings_default.json` | factory treningi (readonly) |
 | `.last_device` | ostatnio połączone urządzenie |
 
@@ -179,6 +182,21 @@ PUT    /api/drills/reorder
 GET  /api/exercises
 PUT  /api/exercises/{id}/duration
 POST /api/exercises/reset-all
+
+# Serwisy
+GET    /api/serves/tree
+GET    /api/serves/{id}
+POST   /api/serves
+PUT    /api/serves/{id}
+PUT    /api/serves/{id}/duration
+PUT    /api/serves/{id}/reset
+DELETE /api/serves/{id}
+POST   /api/serves/reset-all
+POST   /api/serves/groups
+PUT    /api/serves/groups/{id}
+PUT    /api/serves/groups/reorder
+DELETE /api/serves/groups/{id}
+PUT    /api/serves/reorder
 
 # Treningi
 GET    /api/trainings
@@ -241,7 +259,7 @@ scan, connect, disconnect, usb_scan, usb_connect, usb_disconnect, reset_ble, set
 
 # Sterowanie robotem (wymaga roli CONTROLLER)
 set_ball, throw, throw_ball, stop, begin_calibration
-run_scenario, run_drill, run_drill_solo, run_exercise_solo, run_step_solo
+run_scenario, run_drill, run_drill_solo, run_exercise_solo, run_serve_solo, run_step_solo
 
 # Sterowanie treningiem
 run_training, stop_training, pause_training, resume_training, skip_training
@@ -263,7 +281,7 @@ session_role, sessions, takeover_request, takeover_response
 training_info, training_countdown, training_step, training_drill_progress
 training_exercise_progress, training_step_done, training_pause
 training_paused, training_resumed, training_skipped, training_percent_changed
-training_ended
+training_ended, training_serve_response
 
 # Historia i nagrania
 history_created, history_updated, recording_started, recording_saved
@@ -293,7 +311,8 @@ robopong-app/
 │   ├── presets.py         (74) # SQLite: presety konfiguracji robota
 │   ├── drills.py         (284) # CRUD drilli (file-based JSON)
 │   ├── exercises.py       (80) # CRUD ćwiczeń (file-based JSON)
-│   ├── training.py       (532) # TrainingRunner + CRUD treningów (file + SQLite)
+│   ├── serves.py         (220) # CRUD serwisów (file-based JSON, grupy + override)
+│   ├── training.py       (660) # TrainingRunner + CRUD treningów (file + SQLite, obsługa serve steps)
 │   ├── recordings.py     (197) # Recorder: ffmpeg MJPEG → MP4
 │   ├── players.py         (39) # profile graczy (wrapper nad db.py)
 │   ├── models.py          (66) # Pydantic: Ball, ScenarioIn, DrillIn, TrainingStep
@@ -315,17 +334,33 @@ robopong-app/
 │       ├── test_presets.py            # unit: presety
 │       ├── test_drills.py             # unit: drills storage
 │       ├── test_exercises.py          # unit: exercises storage
+│       ├── test_serves.py             # unit: serves storage (CRUD, override, custom)
+│       ├── test_api_serves.py         # integracja: /api/serves/* endpointy
 │       ├── test_training_storage.py   # unit: training storage
 │       ├── test_transport.py          # unit: transport layer
 │       └── test_models.py            # unit: Pydantic validation
 │
-├── frontend/                   # Vue 3 (CDN, SPA)
-│   ├── index.html       (4996) # cała aplikacja Vue (single file)
-│   ├── style.css         (561) # dark theme, mobile-first CSS
-│   ├── i18n.js           (603) # tłumaczenia UI (PL/EN/DE/FR/ZH)
-│   ├── content_i18n.js   (526) # tłumaczenia treści (ćwiczenia, drille, treningi)
+├── frontend/                   # Vue 3 (CDN, SPA) — v1
+│   ├── index.html       (5180) # cała aplikacja Vue (single file)
+│   ├── style.css         (590) # dark theme, mobile-first CSS
+│   ├── i18n.js           (640) # tłumaczenia UI (PL/EN/DE/FR/ZH)
+│   ├── content_i18n.js   (610) # tłumaczenia treści (drille, exercises, serwisy, treningi)
 │   ├── manifest.json           # PWA manifest
 │   └── img/                    # SVG ikony (height, oscillation, rotation)
+│
+├── frontend-v2/                # Vue 3 (CDN, SPA) — v2 design system, mount /v2/
+│   ├── index.html              # 1:1 logika z v1, paths → /v2/
+│   ├── style.css               # nowy design system (glassmorphism, dark space)
+│   ├── i18n.js, content_i18n.js # identyczne z v1
+│   └── manifest.json
+│
+├── e2e/                        # Playwright smoke suite (post-deploy verification)
+│   ├── conftest.py             # browser fixture, JS error filtering
+│   ├── test_v1_smoke.py        # v1 nav, Serves, detail, language switch
+│   ├── test_v2_smoke.py        # v2 parity check
+│   ├── test_serves_flow.py     # simulation flow: serve solo, training composer
+│   ├── setup.sh, run.sh        # bootstrap + run scripts
+│   └── requirements.txt        # playwright, pytest
 │
 ├── re/                         # reverse engineering protokołu (16MB)
 │   ├── ANDROID_APP_RE.md       # RE aplikacji Android
@@ -434,6 +469,7 @@ Zasady:
 - **Piłki:** zawsze `tr.balls_label` z i18n, format `thrown/total`
 - **Pauza/Stop/Play:** `⏸` / `⏹` / `▶` — te same znaki w całej aplikacji
 - **Notatki:** `💬`, **Mikrofon:** `🎙`
+- **Serwisy:** `🎾` (tab + nagłówek panelu), tryb Timer: `🧘`, tryb Response: `🤖`
 - Przy dodawaniu nowej ikony — sprawdź czy istnieje już konwencja w systemie i użyj tej samej
 - Fonty w overlay'ach: kluczowe dane (counter, czas) muszą być czytelne z 3m (~28px+)
 

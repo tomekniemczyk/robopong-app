@@ -148,6 +148,8 @@ def _migrate(c):
         c.execute("ALTER TABLE training_history ADD COLUMN solo_drill_id INTEGER")
     if "solo_exercise_id" not in cols:
         c.execute("ALTER TABLE training_history ADD COLUMN solo_exercise_id INTEGER")
+    if "solo_serve_id" not in cols:
+        c.execute("ALTER TABLE training_history ADD COLUMN solo_serve_id INTEGER")
     if "total_balls" not in cols:
         c.execute("ALTER TABLE training_history ADD COLUMN total_balls INTEGER")
     player_cols = {r[1] for r in c.execute("PRAGMA table_info(players)").fetchall()}
@@ -314,16 +316,16 @@ def delete_user_training(tid: int):
 
 def record_training_run(training_id, player_id, elapsed_sec, status,
                         steps_completed, steps_total, steps_skipped=None, step_notes=None,
-                        solo_drill_id=None, solo_exercise_id=None,
+                        solo_drill_id=None, solo_exercise_id=None, solo_serve_id=None,
                         total_balls=None) -> int:
     with sqlite3.connect(DB) as c:
         cur = c.execute(
             "INSERT INTO training_history (training_id, player_id, elapsed_sec, status, "
-            "steps_completed, steps_total, steps_skipped, step_notes, solo_drill_id, solo_exercise_id, total_balls) "
-            "VALUES (?,?,?,?,?,?,?,?,?,?,?)",
+            "steps_completed, steps_total, steps_skipped, step_notes, solo_drill_id, solo_exercise_id, solo_serve_id, total_balls) "
+            "VALUES (?,?,?,?,?,?,?,?,?,?,?,?)",
             (training_id or 0, player_id, elapsed_sec, status, steps_completed, steps_total,
              json.dumps(steps_skipped or []), json.dumps(step_notes or []),
-             solo_drill_id, solo_exercise_id, total_balls)
+             solo_drill_id, solo_exercise_id, solo_serve_id, total_balls)
         )
         return cur.lastrowid
 
@@ -345,14 +347,14 @@ def get_training_history(training_id=None, player_id=None, limit=None, offset=0,
     with sqlite3.connect(DB) as c:
         q = ("SELECT id, training_id, player_id, started_at, elapsed_sec, status, "
              "steps_completed, steps_total, steps_skipped, step_notes, session_comment, "
-             "solo_drill_id, solo_exercise_id, total_balls FROM training_history WHERE status != 'running'")
+             "solo_drill_id, solo_exercise_id, solo_serve_id, total_balls FROM training_history WHERE status != 'running'")
         params = []
         if training_id is not None:
             q += " AND training_id=?"; params.append(training_id)
         if player_id is not None:
             q += " AND player_id=?"; params.append(player_id)
         if solo_only:
-            q += " AND (solo_drill_id IS NOT NULL OR solo_exercise_id IS NOT NULL)"
+            q += " AND (solo_drill_id IS NOT NULL OR solo_exercise_id IS NOT NULL OR solo_serve_id IS NOT NULL)"
         q += " ORDER BY started_at DESC"
         if limit is not None:
             q += " LIMIT ? OFFSET ?"; params.extend([limit, offset])
@@ -365,7 +367,7 @@ def get_history_entry(hid: int):
         r = c.execute(
             "SELECT id, training_id, player_id, started_at, elapsed_sec, status, "
             "steps_completed, steps_total, steps_skipped, step_notes, session_comment, "
-            "solo_drill_id, solo_exercise_id, total_balls FROM training_history WHERE id=?", (hid,)
+            "solo_drill_id, solo_exercise_id, solo_serve_id, total_balls FROM training_history WHERE id=?", (hid,)
         ).fetchone()
         return _history_row(r) if r else None
 
@@ -377,7 +379,8 @@ def _history_row(r):
             "step_notes": json.loads(r[9] or "[]"),
             "session_comment": r[10] or "",
             "solo_drill_id": r[11], "solo_exercise_id": r[12],
-            "total_balls": r[13]}
+            "solo_serve_id": r[13],
+            "total_balls": r[14]}
 
 
 def update_session_comment(history_id: int, comment: str):

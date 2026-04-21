@@ -1539,3 +1539,28 @@ button:focus-visible, a:focus-visible {
   outline: 2px solid var(--accent);
   outline-offset: 2px;
 }
+}
+
+/* Serves */
+.serve-spin-bars {
+  display: inline-flex;
+  gap: 2px;
+  align-items: flex-end;
+}
+.serve-spin-bar {
+  display: inline-block;
+  width: 4px;
+  height: 8px;
+  background: var(--border);
+  border-radius: 1px;
+}
+.serve-spin-bar:nth-child(2) { height: 10px; }
+.serve-spin-bar:nth-child(3) { height: 12px; }
+.serve-spin-bar:nth-child(4) { height: 14px; }
+.serve-spin-bar:nth-child(5) { height: 16px; }
+.serve-spin-bar.active {
+  background: var(--success, #34c759);
+}
+.serve-tag[data-len="short"] { background: rgba(0, 217, 163, 0.15) !important; color: #00d9a3 !important; }
+.serve-tag[data-len="half_long"] { background: rgba(255, 196, 0, 0.15) !important; color: #ffc400 !important; }
+.serve-tag[data-len="long"] { background: rgba(255, 107, 53, 0.15) !important; color: #ff6b35 !important; }
