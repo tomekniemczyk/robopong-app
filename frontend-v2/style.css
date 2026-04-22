@@ -1,10 +1,10 @@
 /* =======================================================================
-   AcePad V2 — Sport Premium Design System
-   Dark space background · Electric accents · Glass surfaces
+   AcePad V2 — Sport Mechanical Design System
+   Deep space · Electric accents · Glass surfaces · LED readouts
    Keeps all v1 class names for zero-template-change compat
    ======================================================================= */
 
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@500;700&family=Space+Grotesk:wght@500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap');
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -21,7 +21,8 @@
   /* Brand — electric sport */
   --accent:    #5b7cf7;
   --accent2:   #7c5bf7;
-  --accent-glow: rgba(91, 124, 247, 0.45);
+  --accent-glow: rgba(91, 124, 247, 0.55);
+  --accent-edge: rgba(91, 124, 247, 0.9);
 
   /* Spin palette */
   --topspin:   #ff6b35;
@@ -46,10 +47,12 @@
   --r-lg:      18px;
   --r-xl:      24px;
 
-  --font:      'Inter', system-ui, -apple-system, sans-serif;
+  /* Typography — Chakra Petch body (sport-mechanical), JetBrains Mono
+     for numerical readouts (calibration, counts, timers). */
+  --font:         'Chakra Petch', system-ui, -apple-system, sans-serif;
   --font-display: 'Space Grotesk', var(--font);
-  --font-mono: 'JetBrains Mono', 'SF Mono', monospace;
-  --nav-h:     60px;
+  --font-mono:    'JetBrains Mono', 'SF Mono', ui-monospace, monospace;
+  --nav-h:        60px;
 }
 
 html { height: -webkit-fill-available; }
@@ -1564,3 +1567,181 @@ button:focus-visible, a:focus-visible {
 .serve-tag[data-len="short"] { background: rgba(0, 217, 163, 0.15) !important; color: #00d9a3 !important; }
 .serve-tag[data-len="half_long"] { background: rgba(255, 196, 0, 0.15) !important; color: #ffc400 !important; }
 .serve-tag[data-len="long"] { background: rgba(255, 107, 53, 0.15) !important; color: #ff6b35 !important; }
+
+/* =======================================================================
+   Differentiation layer — makes V2 visually distinct from V1
+   Segment display, neon accents, tabular numerics, hairline dividers
+   ======================================================================= */
+
+/* Numeric tabular everywhere by default */
+body { font-feature-settings: 'tnum' 1, 'cv11' 1; }
+
+/* All mono readouts get tabular-nums + slab feel */
+code, kbd, samp, pre, .mono,
+[style*="font-family:monospace"],
+[style*="font-family: monospace"],
+[style*="'SF Mono'"],
+[style*="'Fira Code'"] {
+  font-family: var(--font-mono) !important;
+  font-feature-settings: 'tnum' 1, 'zero' 1, 'ss01' 1;
+  letter-spacing: 0.01em;
+}
+
+/* Upgrade the brand wordmark to Space Grotesk + tighten */
+.topbar h1 {
+  font-family: var(--font-display) !important;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  font-weight: 700;
+}
+
+/* ── SEGMENT DISPLAY — LED-style readout for critical numbers ────────── */
+/* Wrap with class "seg" on any numeric element to get the mechanical vibe.
+   Auto-applies to elements that matter most: ball counters, timers, speeds. */
+.seg,
+[data-seg],
+[data-role="counter"] {
+  font-family: var(--font-mono);
+  font-weight: 700;
+  font-feature-settings: 'tnum' 1, 'zero' 1;
+  letter-spacing: 0.04em;
+  color: var(--accent);
+  text-shadow:
+    0 0 8px var(--accent-glow),
+    0 0 22px var(--accent-glow),
+    0 0 2px rgba(255,255,255,0.25);
+  background-image: linear-gradient(180deg, #ffffff 0%, var(--accent) 70%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.seg[data-tone="warn"]    { --accent: var(--warning); --accent-glow: rgba(255,176,32,.55); }
+.seg[data-tone="danger"]  { --accent: var(--danger);  --accent-glow: rgba(255,59,92,.55); }
+.seg[data-tone="success"] { --accent: var(--success); --accent-glow: rgba(0,217,163,.55); }
+
+/* Training overlay ball counter / timer — auto-upgrade by size cue */
+.training-overlay .ball-counter,
+.training-overlay .counter-big,
+.training-overlay .countdown,
+.overlay-counter-num,
+[data-role="ball-count"],
+[data-role="countdown"] {
+  font-family: var(--font-mono);
+  font-weight: 800;
+  font-feature-settings: 'tnum' 1, 'zero' 1;
+  letter-spacing: 0.03em;
+  color: #ffffff;
+  text-shadow:
+    0 0 12px var(--accent-glow),
+    0 0 28px var(--accent-glow);
+}
+
+/* ── HAIRLINE TOP ACCENT on key surfaces ─────────────────────────────── */
+.panel, .card, .page > section, .training-overlay,
+.drill-card, .training-card, .exercise-card, .serve-card {
+  position: relative;
+}
+.panel::before, .card::before,
+.drill-card::before, .training-card::before,
+.exercise-card::before, .serve-card::before,
+.training-overlay::before {
+  content: "";
+  position: absolute;
+  top: 0; left: 10%; right: 10%;
+  height: 1px;
+  background: linear-gradient(90deg,
+    transparent,
+    var(--accent-edge) 50%,
+    transparent);
+  opacity: 0.55;
+  pointer-events: none;
+}
+
+/* ── PRIMARY BUTTON — neon edge glow ─────────────────────────────────── */
+.btn-success, .btn-primary {
+  box-shadow:
+    0 0 0 1px var(--accent-edge) inset,
+    0 8px 26px -10px var(--accent-glow),
+    0 0 0 0 var(--accent-glow);
+  transition: box-shadow 180ms ease, transform 80ms ease;
+  font-family: var(--font-display);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  font-weight: 700;
+}
+.btn-success:hover, .btn-primary:hover {
+  box-shadow:
+    0 0 0 1px var(--accent-edge) inset,
+    0 12px 34px -10px var(--accent-glow),
+    0 0 0 3px rgba(91, 124, 247, 0.18);
+}
+.btn-success:active, .btn-primary:active { transform: translateY(1px); }
+
+/* Secondary ghost buttons — keep subtle but branded */
+.btn-ghost {
+  font-family: var(--font-display);
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  font-weight: 600;
+}
+
+/* ── SECTION HEADS — sport scoreboard feel ───────────────────────────── */
+h2, h3, .section-title, .page-title,
+.drill-section-header, .training-section-header {
+  font-family: var(--font-display);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  font-weight: 700;
+}
+
+/* ── BLE/CONNECTION pills — slight slab ──────────────────────────────── */
+.ble-pill, .role-pill {
+  font-family: var(--font-mono);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  font-weight: 700;
+}
+
+/* ── NAV labels ──────────────────────────────────────────────────────── */
+.nav-btn, nav button, .tab-btn {
+  font-family: var(--font-display);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  font-weight: 600;
+}
+
+/* ── Inputs — monospaced values, italic placeholders ─────────────────── */
+input[type="number"], input[type="text"], textarea, select {
+  font-family: var(--font);
+  letter-spacing: 0.01em;
+}
+input[type="number"] {
+  font-family: var(--font-mono);
+  font-feature-settings: 'tnum' 1;
+  letter-spacing: 0.02em;
+}
+
+/* ── Pulsing REC indicator enhancement ───────────────────────────────── */
+@keyframes recPulseV2 {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(255,59,92,0.8), 0 0 18px rgba(255,59,92,0.55); }
+  50%      { box-shadow: 0 0 0 8px rgba(255,59,92,0), 0 0 24px rgba(255,59,92,0.7); }
+}
+.rec-dot, .recording-indicator {
+  animation: recPulseV2 1.6s ease-in-out infinite;
+}
+
+/* ── Subtle scanline overlay for training overlay only ───────────────── */
+.training-overlay::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent 0px,
+    transparent 2px,
+    rgba(255, 255, 255, 0.014) 2px,
+    rgba(255, 255, 255, 0.014) 3px);
+  mix-blend-mode: overlay;
+  z-index: 0;
+}
