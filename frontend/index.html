@@ -3012,6 +3012,7 @@
     <div class="modal-sheet" style="max-width:95vw;width:600px">
       <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
         <h3 style="flex:1;font-size:14px">🎥 {{ videoPlay.label }}</h3>
+        <button class="btn btn-ghost" style="font-size:16px;padding:2px 6px;color:var(--danger)" @click="deleteRecording(videoPlay.file)" :title="t('tooltip.delete_rec')">🗑</button>
         <button class="btn btn-ghost" style="font-size:14px;padding:2px 6px" @click="closeVideoPlay()">✕</button>
       </div>
       <div class="vid-controls">
@@ -5689,6 +5690,7 @@ const _app = createApp({
       const doDelete = async () => {
         await fetch(`/api/recordings/${filename}`, { method: 'DELETE' })
         if (playingRecording.value === filename) playingRecording.value = null
+        if (videoPlay.file === filename && videoPlay.show) closeVideoPlay()
         if (playerDetail.value) await openPlayerDetail(playerDetail.value)
       }
       showConfirmWithDownload(
