@@ -84,7 +84,7 @@ venv/bin/pytest tests/test_api.py::nazwa_testu
 - `main.py` — FastAPI app, REST endpoints + WebSocket (`/ws`), broadcast logów, session management (CONTROLLER/OBSERVER/PENDING + takeover)
 - `training.py` — `TrainingRunner`: state machine (start/stop/pause/resume/skip), integracja z Recorder, historia sesji, step notes, percent override
 - `recordings.py` — `Recorder`: ffmpeg subprocess (motion MJPEG → MP4), auto-delete <30s, metadata do SQLite
-- `db.py` — SQLite (`robopong.db`): 10 tabel (patrz niżej)
+- `db.py` — SQLite (`robopong.db`): 12 tabel (patrz niżej)
 - `presets.py` + `presets.db` — osobna baza presetów konfiguracji robota
 - `drills.py`, `exercises.py`, `serves.py`, `training.py` — CRUD dla odpowiednich encji (file-based JSON + SQLite hybryd)
 - `serves.py` — biblioteka serwisów pogrupowanych po technice (Pendulum, Reverse Pendulum, Tomahawk, Backhand, Shovel, Squat). Każdy serw ma metadane (technique/spin/length/placement) + listę typowych odpowiedzi robota dla trybu Response. Override tylko `duration_sec`.
@@ -97,7 +97,7 @@ venv/bin/pytest tests/test_api.py::nazwa_testu
 - **Vue 3 CDN** — `frontend/index.html` (~5000 linii), brak build tooling, brak Vue Router
 - **Nawigacja:** tab-based przez `page` ref z `v-show` (NIE `v-if` — zachowuje stan)
 - **Widoki:** scenarios, connect, drills, training, exercises, serves, camera, logs, calibration
-- **v2 UI:** `frontend-v2/` (mount `/v2/`) — identyczna logika Vue, inny design system. Każda zmiana logiki MUSI być propagowana zarówno do `frontend/` jak i `frontend-v2/`.
+- **Design system:** sport-mechanical (Chakra Petch, LED readouts, neon accents) — `style.css` (617 linii). Jedyna wersja, brak `frontend-v2/`.
 - **Komunikacja:** hybrid WebSocket (real-time events) + REST (CRUD)
 - **Stan:** 100+ reactive refs w `setup()`, computed properties, watchers
 - **i18n:** `t(key)` dla UI (`i18n.js`), `tc(type, key)` dla treści (`content_i18n.js`), 5 języków (PL/EN/DE/FR/ZH)
@@ -119,8 +119,10 @@ venv/bin/pytest tests/test_api.py::nazwa_testu
 | voice_notes | notatki głosowe WebM (player, step, duration) |
 | ball_landings | pozycje lądowania piłek (player, drill, x, y) |
 | ball_exploration | eksploracja parametrów piłki (pełne parametry + ocena) |
-| favorites | ulubione per gracz (training/drill/exercise) |
+| favorites | ulubione per gracz (training/drill/exercise/serve) |
 | calibration | kalibracja per-device (addr PK, top/bot/osc/h/rot/wait, updated_at; addr='' = default) |
+| opponents | profile przeciwników (per-player, styl gry, okładziny, poziom) |
+| match_journal | wpisy dziennika meczów (wynik, co działało, błędy, taktyki, oceny 1-5, plany) |
 
 **SQLite `presets.db`:** presety kalibracji robota
 
@@ -304,10 +306,11 @@ robopong-app/
 │       └── tasks.md            # /tasks — wyświetlanie boardu Issues
 │
 ├── backend/                    # FastAPI + robot control
-│   ├── main.py         (1152) # REST API + WebSocket /ws + static files
+│   ├── main.py         (1310) # REST API + WebSocket /ws + static files
 │   ├── robot.py         (418) # Robot: orkiestracja połączenia, komendy, drill loop
 │   ├── transport.py     (364) # ABC RobotTransport → BLE / USB / Simulation
-│   ├── db.py            (816) # SQLite: 10 tabel (players, history, recordings, calibration, ...)
+│   ├── db.py            (900) # SQLite: 12 tabel (+ opponents, match_journal)
+│   ├── journal.py       (455) # CRUD dziennika meczów (opponents + match_journal + H2H stats)
 │   ├── presets.py         (74) # SQLite: presety konfiguracji robota
 │   ├── drills.py         (284) # CRUD drilli (file-based JSON)
 │   ├── exercises.py       (80) # CRUD ćwiczeń (file-based JSON)
@@ -322,7 +325,7 @@ robopong-app/
 │   ├── sounds/                 # pliki WAV (beepy, countdown, training events)
 │   ├── requirements.txt        # zależności produkcyjne
 │   ├── requirements-test.txt   # zależności testowe (pytest, httpx)
-│   └── tests/                  # 196 testów (pytest)
+│   └── tests/                  # 220 testów (pytest)
 │       ├── conftest.py                # shared fixtures
 │       ├── test_api.py                # integracja: scenariusze, kalibracja, presety
 │       ├── test_api_drills.py         # integracja: CRUD drilli
@@ -336,28 +339,22 @@ robopong-app/
 │       ├── test_exercises.py          # unit: exercises storage
 │       ├── test_serves.py             # unit: serves storage (CRUD, override, custom)
 │       ├── test_api_serves.py         # integracja: /api/serves/* endpointy
+│       ├── test_journal.py            # integracja: dziennik meczów (opponents + matches + H2H)
 │       ├── test_training_storage.py   # unit: training storage
 │       ├── test_transport.py          # unit: transport layer
 │       └── test_models.py            # unit: Pydantic validation
 │
-├── frontend/                   # Vue 3 (CDN, SPA) — v1
-│   ├── index.html       (5180) # cała aplikacja Vue (single file)
-│   ├── style.css         (590) # dark theme, mobile-first CSS
-│   ├── i18n.js           (640) # tłumaczenia UI (PL/EN/DE/FR/ZH)
-│   ├── content_i18n.js   (610) # tłumaczenia treści (drille, exercises, serwisy, treningi)
+├── frontend/                   # Vue 3 (CDN, SPA) — sport-mechanical design
+│   ├── index.html       (6648) # cała aplikacja Vue (single file)
+│   ├── style.css         (617) # sport-mechanical: Chakra Petch, LED readouts, neon accents
+│   ├── i18n.js           (748) # tłumaczenia UI (PL/EN/DE/FR/ZH)
+│   ├── content_i18n.js   (736) # tłumaczenia treści (drille, exercises, serwisy, treningi)
 │   ├── manifest.json           # PWA manifest
 │   └── img/                    # SVG ikony (height, oscillation, rotation)
-│
-├── frontend-v2/                # Vue 3 (CDN, SPA) — v2 design system, mount /v2/
-│   ├── index.html              # 1:1 logika z v1, paths → /v2/
-│   ├── style.css               # nowy design system (glassmorphism, dark space)
-│   ├── i18n.js, content_i18n.js # identyczne z v1
-│   └── manifest.json
 │
 ├── e2e/                        # Playwright smoke suite (post-deploy verification)
 │   ├── conftest.py             # browser fixture, JS error filtering
 │   ├── test_v1_smoke.py        # v1 nav, Serves, detail, language switch
-│   ├── test_v2_smoke.py        # v2 parity check
 │   ├── test_serves_flow.py     # simulation flow: serve solo, training composer
 │   ├── setup.sh, run.sh        # bootstrap + run scripts
 │   └── requirements.txt        # playwright, pytest
