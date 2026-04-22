@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
 # Dev server starter — background z PID file, logi do pliku.
-# Port konfigurowalny przez $PORT (domyślnie 8000).
+# Port konfigurowalny przez $PORT (domyślnie 8001).
 set -e
 
 APP_DIR="$(cd "$(dirname "$0")" && pwd)"
 BACKEND="$APP_DIR/backend"
-PORT="${PORT:-8000}"
+PORT="${PORT:-8001}"
 PIDFILE="/tmp/robopong-dev.pid"
 LOGFILE="$BACKEND/uvicorn-dev.log"
 
