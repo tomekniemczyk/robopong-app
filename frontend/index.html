@@ -5913,8 +5913,10 @@ const _app = createApp({
     })
 
     // Wszystkie nagrania pogrupowane po nazwie drilla (custom_name || step_name), sortowane po dacie desc
+    // Tylko nagrania drillowe — bez ćwiczeń (exercise_id) i bez serwisów (drill_id=null, exercise_id=null)
     const recordingsByDrill = computed(() => {
-      const all = [...allRecordings.value.filter(r => !r.is_ondemand), ...ondemandRecordings.value]
+      const isDrillRec = r => !!r.drill_id && !r.exercise_id
+      const all = [...allRecordings.value.filter(r => !r.is_ondemand && isDrillRec(r)), ...ondemandRecordings.value.filter(isDrillRec)]
       const q = histSearch.value.trim().toLowerCase()
       const groups = {}
       for (const r of all) {
