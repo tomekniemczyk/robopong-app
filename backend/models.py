@@ -74,14 +74,15 @@ class ServeIn(BaseModel):
     group_id:       Optional[int] = None
     name:           str
     description:    str = ""
-    technique:      Literal["pendulum", "reverse_pendulum", "tomahawk", "backhand", "shovel", "squat", "other"] = "other"
-    spin_type:      Literal["sidespin", "backspin", "topspin", "sidespin_backspin", "sidespin_topspin", "no_spin"] = "no_spin"
+    technique:      Literal["pendulum", "reverse_pendulum", "tomahawk", "reverse_tomahawk", "backhand", "hook", "shovel", "squat", "high_toss", "ghost", "corkscrew", "windshield", "other"] = "other"
+    spin_type:      Literal["sidespin", "backspin", "topspin", "sidespin_backspin", "sidespin_topspin", "corkspin", "no_spin"] = "no_spin"
     spin_strength:  int = Field(default=0, ge=0, le=5)
     length:         Literal["short", "half_long", "long"] = "short"
     placement:      ServePlacement = Field(default_factory=ServePlacement)
     duration_sec:   int = Field(default=1200, ge=60, le=3600)
     responses:      List[ServeResponse] = Field(default_factory=list)
     youtube_id:     str = ""
+    signature_players: List[str] = Field(default_factory=list)
     sort_order:     int = Field(default=0, ge=0)
 
 

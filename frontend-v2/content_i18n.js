@@ -643,6 +643,10 @@ window.CONTENT_I18N = {
     "Backhand":          { pl: "Backhand",         de: "Rückhand",        fr: "Revers",           zh: "反手" },
     "Shovel":            { pl: "Shovel",           de: "Schaufel",        fr: "Pelle",            zh: "铲式" },
     "Squat":             { pl: "Squat",            de: "Hocke",           fr: "Accroupi",         zh: "蹲式" },
+    "Reverse Tomahawk":  { pl: "Reverse Tomahawk", de: "Reverse Tomahawk",fr: "Tomahawk inversé", zh: "反战斧" },
+    "Hook":              { pl: "Hook",             de: "Hook",            fr: "Hook",             zh: "钩式" },
+    "High Toss":         { pl: "High Toss",        de: "Hoher Wurf",      fr: "Lancer haut",      zh: "高抛" },
+    "Special / Trick":   { pl: "Trickowe",         de: "Spezial/Trick",   fr: "Spéciaux",         zh: "特殊/技巧" },
   },
 
   serves: {
@@ -661,6 +665,21 @@ window.CONTENT_I18N = {
     "Shovel Long No-Spin":                { pl: "Shovel długi bez rotacji",        de: "Schaufel lang ohne Spin",        fr: "Pelle longue sans effet",        zh: "铲式长不转" },
     "Squat Short Sidespin":               { pl: "Squat krótki sidespin",           de: "Hocke kurz Seitspin",            fr: "Accroupi court latéral",         zh: "蹲式短侧旋" },
     "Squat Long Sidespin-Topspin":        { pl: "Squat długi side+topspin",        de: "Hocke lang Seit+Topspin",        fr: "Accroupi long lat+lifté",        zh: "蹲式长侧上旋" },
+    "Pendulum Short No-Spin":             { pl: "Pendulum krótki bez rotacji",     de: "Pendel kurz ohne Spin",          fr: "Pendule court sans effet",       zh: "钟摆短不转" },
+    "Pendulum Long Fast BH":              { pl: "Pendulum długi szybki BH",        de: "Pendel lang schnell RH",         fr: "Pendule long rapide revers",     zh: "钟摆长快反手" },
+    "Reverse Pendulum Short Middle":      { pl: "Reverse Pendulum krótki środek",  de: "Reverse Pendel kurz Mitte",      fr: "Pendule inversé court centre",   zh: "反钟摆短中路" },
+    "Tomahawk Short Middle":              { pl: "Tomahawk krótki środek",          de: "Tomahawk kurz Mitte",            fr: "Tomahawk court centre",          zh: "战斧短中路" },
+    "Reverse Tomahawk Short FH":          { pl: "Reverse Tomahawk krótki FH",      de: "Reverse Tomahawk kurz VH",       fr: "Tomahawk inversé court CD",      zh: "反战斧短正手" },
+    "Reverse Tomahawk Long BH":           { pl: "Reverse Tomahawk długi BH",       de: "Reverse Tomahawk lang RH",       fr: "Tomahawk inversé long revers",   zh: "反战斧长反手" },
+    "Backhand Heavy Chop":                { pl: "Backhand ciężki chop",            de: "Rückhand schwerer Chop",         fr: "Revers chop lourd",              zh: "反手重削" },
+    "Hook Short FH":                      { pl: "Hook krótki FH",                  de: "Hook kurz VH",                   fr: "Hook court CD",                  zh: "钩式短正手" },
+    "Hook Long Punch BH":                 { pl: "Hook długi punch BH",             de: "Hook lang Punch RH",             fr: "Hook long punch revers",         zh: "钩式长反手" },
+    "High Toss Pendulum":                 { pl: "High Toss Pendulum",              de: "Hoher Wurf Pendel",              fr: "Lancer haut pendule",            zh: "高抛钟摆" },
+    "High Toss Pendulum Long":            { pl: "High Toss Pendulum długi",        de: "Hoher Wurf Pendel lang",         fr: "Lancer haut pendule long",       zh: "高抛钟摆长" },
+    "Fake High Toss":                     { pl: "Fake High Toss",                  de: "Fake Hoher Wurf",                fr: "Faux lancer haut",               zh: "假高抛" },
+    "Ghost Serve (Ma Lin)":               { pl: "Ghost Serve (Ma Lin)",            de: "Geist-Aufschlag (Ma Lin)",       fr: "Service fantôme (Ma Lin)",       zh: "鬼球 (马琳)" },
+    "Corkscrew Serve":                    { pl: "Corkscrew",                       de: "Korkenzieher-Aufschlag",         fr: "Service tire-bouchon",           zh: "螺旋球" },
+    "Windshield Wiper (Lollipop)":        { pl: "Windshield Wiper (Lollipop)",     de: "Scheibenwischer (Lollipop)",     fr: "Essuie-glace (sucette)",         zh: "雨刷 (棒棒糖)" },
   },
 
   serve_desc: {

@@ -86,6 +86,8 @@ window.I18N = {
   'diag.close':  { pl:'Zamknij', en:'Close',    de:'Schließen', fr:'Fermer',   zh:'关闭' },
   'btn.fullscreen':      { pl:'Pełny ekran', en:'Fullscreen', de:'Vollbild',   fr:'Plein écran',    zh:'全屏' },
   'btn.exit_fullscreen': { pl:'Wyjdź z pełnego ekranu', en:'Exit fullscreen', de:'Vollbild verlassen', fr:'Quitter le plein écran', zh:'退出全屏' },
+  'compare.buffering':   { pl:'Buforowanie nagrań…', en:'Buffering videos…', de:'Puffere Videos…', fr:'Mise en mémoire tampon…', zh:'正在缓冲视频…' },
+  'compare.play_anyway': { pl:'Graj mimo to', en:'Play anyway', de:'Trotzdem abspielen', fr:'Lire quand même', zh:'仍然播放' },
 
   // ── Observer / Pending banners ─────────────────────────────────────
   'banner.observing':  { pl:'👁 Obserwujesz — robot jest kontrolowany przez inną sesję.',
@@ -248,6 +250,14 @@ window.I18N = {
   // ── Camera ─────────────────────────────────────────────────────────
   'camera.unavailable': { pl:'Kamera niedostępna (motion :8081)',  en:'Camera unavailable (motion :8081)',  de:'Kamera nicht verfügbar (motion :8081)',  fr:'Caméra indisponible (motion :8081)',  zh:'摄像头不可用（motion :8081）' },
   'camera.stream_info': { pl:'Stream motion — port 8081',  en:'Motion stream — port 8081',  de:'Motion-Stream — Port 8081',  fr:'Flux motion — port 8081',  zh:'Motion 视频流 — 端口 8081' },
+  'camera.settings_title': { pl:'Ustawienia kamery', en:'Camera settings', de:'Kameraeinstellungen', fr:'Paramètres de la caméra', zh:'摄像头设置' },
+  'camera.device':       { pl:'Urządzenie',   en:'Device',     de:'Gerät',       fr:'Appareil',     zh:'设备' },
+  'camera.resolution':   { pl:'Rozdzielczość', en:'Resolution', de:'Auflösung',   fr:'Résolution',   zh:'分辨率' },
+  'camera.fps':          { pl:'FPS',          en:'FPS',        de:'FPS',         fr:'IPS',          zh:'帧率' },
+  'camera.save':         { pl:'Zapisz i zrestartuj kamerę', en:'Save & restart camera', de:'Speichern & Kamera neustarten', fr:'Enregistrer et redémarrer', zh:'保存并重启摄像头' },
+  'camera.saving':       { pl:'Zapisywanie…', en:'Saving…',    de:'Speichern…',  fr:'Enregistrement…', zh:'保存中…' },
+  'camera.saved':        { pl:'Zapisano — kamera zrestartowana', en:'Saved — camera restarted', de:'Gespeichert — Kamera neu gestartet', fr:'Enregistré — caméra redémarrée', zh:'已保存 — 摄像头已重启' },
+  'camera.save_failed':  { pl:'Błąd zapisu',  en:'Save failed', de:'Speichern fehlgeschlagen', fr:'Échec de l\'enregistrement', zh:'保存失败' },
 
   // ── Drills ─────────────────────────────────────────────────────────
   'drills.title':        { pl:'Drille',       en:'Drills',        de:'Drills',         fr:'Lancers',         zh:'训练方案' },
@@ -649,12 +659,21 @@ window.I18N = {
   'serves.technique_backhand':         { pl:'Backhand',           en:'Backhand',           de:'Rückhand',         fr:'Revers',            zh:'反手' },
   'serves.technique_shovel':           { pl:'Shovel',             en:'Shovel',             de:'Schaufel',         fr:'Pelle',             zh:'铲式' },
   'serves.technique_squat':            { pl:'Squat',              en:'Squat',              de:'Hocke',            fr:'Accroupi',          zh:'蹲式' },
+  'serves.technique_reverse_tomahawk': { pl:'Reverse Tomahawk',   en:'Reverse Tomahawk',   de:'Reverse Tomahawk', fr:'Tomahawk inversé',  zh:'反战斧' },
+  'serves.technique_hook':             { pl:'Hook',               en:'Hook',               de:'Hook',             fr:'Hook',              zh:'钩式' },
+  'serves.technique_high_toss':        { pl:'High Toss',          en:'High Toss',          de:'Hoher Wurf',       fr:'Lancer haut',       zh:'高抛' },
+  'serves.technique_ghost':            { pl:'Ghost',              en:'Ghost',              de:'Geist',            fr:'Fantôme',           zh:'鬼球' },
+  'serves.technique_corkscrew':        { pl:'Corkscrew',          en:'Corkscrew',          de:'Korkenzieher',     fr:'Tire-bouchon',      zh:'螺旋' },
+  'serves.technique_windshield':       { pl:'Windshield',         en:'Windshield',         de:'Scheibenwischer',  fr:'Essuie-glace',      zh:'雨刷' },
   'serves.technique_other':            { pl:'Inny',               en:'Other',              de:'Andere',           fr:'Autre',             zh:'其他' },
   'serves.spin_sidespin':              { pl:'sidespin',           en:'sidespin',           de:'Seitspin',         fr:'effet latéral',     zh:'侧旋' },
   'serves.spin_backspin':              { pl:'backspin',           en:'backspin',           de:'Unterspin',        fr:'effet rétro',       zh:'下旋' },
   'serves.spin_topspin':               { pl:'topspin',            en:'topspin',            de:'Topspin',          fr:'effet lifté',       zh:'上旋' },
   'serves.spin_sidespin_backspin':     { pl:'side+backspin',      en:'side+backspin',      de:'Seit+Unterspin',   fr:'latéral+rétro',     zh:'侧下旋' },
   'serves.spin_sidespin_topspin':      { pl:'side+topspin',       en:'side+topspin',       de:'Seit+Topspin',     fr:'latéral+lifté',     zh:'侧上旋' },
+  'serves.spin_corkspin':              { pl:'corkspin',           en:'corkspin',           de:'Korkenzieher-Spin',fr:'effet tire-bouchon',zh:'螺旋旋' },
   'serves.spin_no_spin':               { pl:'bez rotacji',        en:'no spin',            de:'ohne Spin',        fr:'sans effet',        zh:'无旋' },
+  'serves.signature_players':          { pl:'Mistrzowie',         en:'Masters',            de:'Meister',          fr:'Maîtres',           zh:'大师' },
+  'serves.watch_tutorial':             { pl:'Zobacz tutorial',    en:'Watch tutorial',     de:'Tutorial ansehen', fr:'Voir le tutoriel',  zh:'观看教程' },
 
 }

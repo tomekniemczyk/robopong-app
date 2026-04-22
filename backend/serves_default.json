@@ -3,7 +3,7 @@
     {
       "name": "Pendulum",
       "icon": "🎾",
-      "description": "Pendulum serve — forehand, wrist motion right→left generating sidespin or sidespin-backspin. Racket swings like a pendulum low across the body. The most common serve in modern table tennis.",
+      "description": "Pendulum serve — forehand, wrist motion right→left generating sidespin or sidespin-backspin. Racket swings like a pendulum low across the body. The most common serve in modern table tennis, used by nearly every top-100 player.",
       "serves": [
         {
           "name": "Pendulum Short Sidespin",
@@ -14,6 +14,8 @@
           "length": "short",
           "placement": {"x": 0.30, "y": 0.75},
           "duration_sec": 1200,
+          "signature_players": ["Ma Long", "Fan Zhendong", "Timo Boll"],
+          "youtube_id": "twNlkfRRafw",
           "responses": [
             {"name": "Push long to BH", "description": "Opponent pushes long with backspin to your backhand — prepare to attack with BH loop/flip.", "balls": [{"top_speed": 30, "bot_speed": 100, "oscillation": 140, "height": 110, "rotation": 150, "wait_ms": 6000}]},
             {"name": "Push short middle", "description": "Opponent pushes short to middle — step in and flick or push short again.", "balls": [{"top_speed": 20, "bot_speed": 90, "oscillation": 150, "height": 90, "rotation": 150, "wait_ms": 6500}]},
@@ -22,13 +24,15 @@
         },
         {
           "name": "Pendulum Short Sidespin-Backspin",
-          "description": "Short serve blending sidespin and backspin. Contact under the ball with a brushing motion that goes right→left and slightly down. Very deceptive — looks like sidespin but drops short on opponent side. Great for low skill-level opponents.",
+          "description": "Short serve blending sidespin and backspin. Contact under the ball with a brushing motion that goes right→left and slightly down. Very deceptive — looks like sidespin but drops short on opponent side. Sun Yingsha's go-to setup for backhand attack.",
           "technique": "pendulum",
           "spin_type": "sidespin_backspin",
           "spin_strength": 4,
           "length": "short",
           "placement": {"x": 0.25, "y": 0.78},
           "duration_sec": 1200,
+          "signature_players": ["Sun Yingsha", "Ma Lin", "Wang Hao"],
+          "youtube_id": "3oRpomibvQc",
           "responses": [
             {"name": "Push long heavy BH", "description": "Heavy backspin push long to your backhand — open with BH loop over spin.", "balls": [{"top_speed": 20, "bot_speed": 140, "oscillation": 140, "height": 105, "rotation": 150, "wait_ms": 6500}]},
             {"name": "Push short tight", "description": "Opponent controls with a short push to your forehand — flick or push short back.", "balls": [{"top_speed": 15, "bot_speed": 100, "oscillation": 160, "height": 85, "rotation": 150, "wait_ms": 7000}]},
@@ -36,17 +40,52 @@
           ]
         },
         {
+          "name": "Pendulum Short No-Spin",
+          "description": "Deceptive no-spin pendulum — identical motion to sidespin pendulum but contact at the racket handle (minimum speed = minimum spin) instead of the tip. Looks identical to heavy sidespin, but the ball is 'dead'. Ma Long's most feared variation — opponents over-commit and pop the ball up.",
+          "technique": "pendulum",
+          "spin_type": "no_spin",
+          "spin_strength": 0,
+          "length": "short",
+          "placement": {"x": 0.40, "y": 0.78},
+          "duration_sec": 1200,
+          "signature_players": ["Ma Long", "Jan-Ove Waldner", "Fan Zhendong"],
+          "youtube_id": "3oRpomibvQc",
+          "responses": [
+            {"name": "Float return high", "description": "Opponent reads spin wrong — ball floats high and slow, easy smash to open corner.", "balls": [{"top_speed": 70, "bot_speed": 20, "oscillation": 150, "height": 170, "rotation": 150, "wait_ms": 5500}]},
+            {"name": "Push long BH", "description": "Careful opponent pushes long to BH — attack with BH loop.", "balls": [{"top_speed": 40, "bot_speed": 80, "oscillation": 140, "height": 115, "rotation": 150, "wait_ms": 6000}]},
+            {"name": "Flick BH", "description": "Skilled opponent flicks despite the trick — counter or block.", "balls": [{"top_speed": 120, "bot_speed": 20, "oscillation": 142, "height": 125, "rotation": 150, "wait_ms": 5500}]}
+          ]
+        },
+        {
           "name": "Pendulum Long Fast FH",
-          "description": "Long fast pendulum serve down the forehand line. Full body rotation, contact ball at table height, follow through fast. Used as a surprise third-ball attack setup. Ball lands deep on opponent forehand.",
+          "description": "Long fast pendulum serve down the forehand line. Full body rotation, contact ball at table height, follow through fast. Used as a surprise third-ball attack setup — 10-20% of serves should be long to keep opponent honest on short serves (Alois Rosario rule).",
           "technique": "pendulum",
           "spin_type": "topspin",
           "spin_strength": 2,
           "length": "long",
           "placement": {"x": 0.75, "y": 0.95},
           "duration_sec": 1500,
+          "signature_players": ["Ma Long", "Hugo Calderano", "Wang Chuqin"],
+          "youtube_id": "lb1CR7WBPNY",
           "responses": [
             {"name": "Block to middle", "description": "Opponent blocks the fast serve back to middle — step around and loop with FH.", "balls": [{"top_speed": 90, "bot_speed": 30, "oscillation": 150, "height": 125, "rotation": 150, "wait_ms": 5000}]},
             {"name": "Counter-attack to BH", "description": "Strong opponent counter-loops to your backhand — block or counter with BH.", "balls": [{"top_speed": 150, "bot_speed": 40, "oscillation": 138, "height": 135, "rotation": 150, "wait_ms": 4500}]}
+          ]
+        },
+        {
+          "name": "Pendulum Long Fast BH",
+          "description": "Long fast pendulum down the opponent backhand corner — Timo Boll's surprise weapon. Wide angle forces BH block or late BH loop from compressed position. Deadly against backhand-dominant players who expect short to BH.",
+          "technique": "pendulum",
+          "spin_type": "sidespin_topspin",
+          "spin_strength": 2,
+          "length": "long",
+          "placement": {"x": 0.20, "y": 0.95},
+          "duration_sec": 1500,
+          "signature_players": ["Timo Boll", "Dimitrij Ovtcharov"],
+          "youtube_id": "twNlkfRRafw",
+          "responses": [
+            {"name": "BH block cross", "description": "Opponent blocks BH cross-court to your BH — counter-topspin.", "balls": [{"top_speed": 85, "bot_speed": 25, "oscillation": 140, "height": 120, "rotation": 150, "wait_ms": 5000}]},
+            {"name": "BH loop down-the-line", "description": "Strong BH loop down-the-line to your FH — step around or block.", "balls": [{"top_speed": 145, "bot_speed": 35, "oscillation": 168, "height": 135, "rotation": 150, "wait_ms": 4500}]}
           ]
         }
       ]
@@ -54,17 +93,19 @@
     {
       "name": "Reverse Pendulum",
       "icon": "🔄",
-      "description": "Reverse pendulum (hook) serve — forehand, wrist motion left→right. Opposite direction to standard pendulum. Produces reverse sidespin that curves right (from server's view). Harder to execute but breaks opponent rhythm.",
+      "description": "Reverse pendulum (hook) serve — forehand, wrist motion left→right. Opposite direction to standard pendulum. Produces reverse sidespin that curves right (from server's view) and pulls the return toward server's middle — perfect setup for backhand-dominant attackers. Zhang Jike defined this era.",
       "serves": [
         {
           "name": "Reverse Pendulum Short BH",
-          "description": "Short reverse sidespin serve to opponent backhand. Wrist snaps left→right at contact. Ball curves right after the bounce. Opponent's push tends to go to your forehand side — prepare for FH attack.",
+          "description": "Short reverse sidespin serve to opponent backhand. Wrist snaps left→right at contact. Ball curves right after the bounce. Opponent's push tends to go to your forehand side — prepare for FH attack. Wang Chuqin's serve of choice.",
           "technique": "reverse_pendulum",
           "spin_type": "sidespin",
           "spin_strength": 3,
           "length": "short",
           "placement": {"x": 0.22, "y": 0.78},
           "duration_sec": 1200,
+          "signature_players": ["Zhang Jike", "Fan Zhendong", "Wang Chuqin"],
+          "youtube_id": "Gmj_pOs1dY0",
           "responses": [
             {"name": "Push long to FH", "description": "Opponent's push drifts right (from your view) and lands on your forehand long — open with FH loop.", "balls": [{"top_speed": 30, "bot_speed": 110, "oscillation": 165, "height": 115, "rotation": 150, "wait_ms": 6000}]},
             {"name": "Push short to middle", "description": "Controlled short push to middle — step around and flick FH.", "balls": [{"top_speed": 20, "bot_speed": 100, "oscillation": 150, "height": 90, "rotation": 150, "wait_ms": 6500}]},
@@ -73,16 +114,34 @@
         },
         {
           "name": "Reverse Pendulum Short Sidespin-Backspin",
-          "description": "Short reverse pendulum with sidespin and backspin mixed. Contact underneath with left→right brushing motion. Very tricky for opponents used to standard pendulum — the opposite curve disrupts their timing.",
+          "description": "Short reverse pendulum with sidespin and backspin mixed. Contact underneath with left→right brushing motion using the 'scooping upwards' technique (TableTennisDaily). The hardest variant to execute but the most effective — the opposite curve disrupts timing of opponents used to standard pendulum.",
           "technique": "reverse_pendulum",
           "spin_type": "sidespin_backspin",
           "spin_strength": 4,
           "length": "short",
           "placement": {"x": 0.25, "y": 0.78},
           "duration_sec": 1200,
+          "signature_players": ["Zhang Jike", "Timo Boll", "Tomokazu Harimoto"],
+          "youtube_id": "W_YYLpkVUBc",
           "responses": [
             {"name": "Push long heavy FH", "description": "Heavy backspin push to your forehand long — loop with FH over heavy spin.", "balls": [{"top_speed": 20, "bot_speed": 140, "oscillation": 165, "height": 105, "rotation": 150, "wait_ms": 6500}]},
             {"name": "Short push to BH", "description": "Opponent pushes tight short to your backhand — flick with BH or push short.", "balls": [{"top_speed": 15, "bot_speed": 95, "oscillation": 140, "height": 88, "rotation": 150, "wait_ms": 7000}]}
+          ]
+        },
+        {
+          "name": "Reverse Pendulum Short Middle",
+          "description": "Short reverse pendulum targeting opponent's crossover point (elbow) — the 'zone of indecision' where opponent must choose FH or BH under time pressure. Fan Zhendong's signature placement when opponent expects wide. Timo Boll won vs Ma Long on match point using this exact placement (WC 2017 semifinal).",
+          "technique": "reverse_pendulum",
+          "spin_type": "sidespin",
+          "spin_strength": 3,
+          "length": "short",
+          "placement": {"x": 0.50, "y": 0.80},
+          "duration_sec": 1200,
+          "signature_players": ["Fan Zhendong", "Timo Boll"],
+          "youtube_id": "Gmj_pOs1dY0",
+          "responses": [
+            {"name": "Rushed BH flick", "description": "Opponent indecisive — weak BH flick to middle, easy attack.", "balls": [{"top_speed": 90, "bot_speed": 20, "oscillation": 150, "height": 130, "rotation": 150, "wait_ms": 5500}]},
+            {"name": "Push long to middle", "description": "Opponent pushes long to middle — loop with FH from around the body.", "balls": [{"top_speed": 40, "bot_speed": 100, "oscillation": 150, "height": 115, "rotation": 150, "wait_ms": 6000}]}
           ]
         },
         {
@@ -94,8 +153,10 @@
           "length": "long",
           "placement": {"x": 0.80, "y": 0.93},
           "duration_sec": 1500,
+          "signature_players": ["Tomokazu Harimoto", "Dimitrij Ovtcharov"],
+          "youtube_id": "W_YYLpkVUBc",
           "responses": [
-            {"name": "Block short to BH", "description": "Opponent blocks back to your backhand short — step in and BH flick.", "balls": [{"top_speed": 70, "bot_speed": 20, "oscillation": 138, "height": 115, "rotation": 150, "wait_ms": 5000}]},
+            {"name": "Block short to BH", "description": "Opponent blocks short to BH — step in and BH flick.", "balls": [{"top_speed": 70, "bot_speed": 20, "oscillation": 138, "height": 115, "rotation": 150, "wait_ms": 5000}]},
             {"name": "Counter loop to FH", "description": "Strong counter-loop to your forehand — block or counter-loop.", "balls": [{"top_speed": 160, "bot_speed": 40, "oscillation": 165, "height": 140, "rotation": 150, "wait_ms": 4500}]}
           ]
         }
@@ -104,31 +165,51 @@
     {
       "name": "Tomahawk",
       "icon": "🪓",
-      "description": "Tomahawk serve — forehand, racket held high above the head, chopping motion downward. Creates strong sidespin in the opposite direction to pendulum. Unusual angle makes it hard to read. Often used as a variation.",
+      "description": "Tomahawk serve — forehand, racket held high above the head (tip pointing up), chopping motion downward. Unusual geometry — same spin direction as reverse pendulum but from a completely different body position. Ovtcharov made the Butterfly tutorial; Matsudaira is the most complete user.",
       "serves": [
         {
           "name": "Tomahawk Short FH",
-          "description": "Short tomahawk serve to opponent forehand. Racket starts high, contact ball at table level with top edge of racket moving right→left (from server's view — creates reverse sidespin visually similar to reverse pendulum).",
+          "description": "Short tomahawk serve to opponent forehand. Racket starts high near ear level, contact ball at table height with top edge of racket moving right→left (from server's view). Especially effective short to FH — forces unnatural wrist angle on flick return.",
           "technique": "tomahawk",
           "spin_type": "sidespin",
           "spin_strength": 3,
           "length": "short",
           "placement": {"x": 0.72, "y": 0.76},
           "duration_sec": 1200,
+          "signature_players": ["Dimitrij Ovtcharov", "Kenta Matsudaira", "Alexis Lebrun"],
+          "youtube_id": "hHqUS1xCpqU",
           "responses": [
             {"name": "Push long to BH", "description": "Opponent pushes long to your backhand — BH loop or flick opportunity.", "balls": [{"top_speed": 30, "bot_speed": 110, "oscillation": 140, "height": 115, "rotation": 150, "wait_ms": 6000}]},
             {"name": "Flick to middle", "description": "Aggressive flick to middle — hard to decide FH/BH, step around early.", "balls": [{"top_speed": 130, "bot_speed": 25, "oscillation": 150, "height": 130, "rotation": 150, "wait_ms": 5500}]}
           ]
         },
         {
+          "name": "Tomahawk Short Middle",
+          "description": "Short tomahawk into opponent's crossover point. The deep crouch and wrist snap disguise the spin — opponent can't read it AND can't decide FH/BH. One of the toughest short serves to return at elite level.",
+          "technique": "tomahawk",
+          "spin_type": "sidespin",
+          "spin_strength": 3,
+          "length": "short",
+          "placement": {"x": 0.50, "y": 0.78},
+          "duration_sec": 1200,
+          "signature_players": ["Kenta Matsudaira", "Vladimir Samsonov"],
+          "youtube_id": "hHqUS1xCpqU",
+          "responses": [
+            {"name": "Rushed push middle", "description": "Opponent pushes softly to middle from crossover — attack with FH loop.", "balls": [{"top_speed": 35, "bot_speed": 90, "oscillation": 150, "height": 115, "rotation": 150, "wait_ms": 6500}]},
+            {"name": "BH flick short", "description": "Short flick BH from middle — step in and counter-loop.", "balls": [{"top_speed": 110, "bot_speed": 20, "oscillation": 148, "height": 120, "rotation": 150, "wait_ms": 5500}]}
+          ]
+        },
+        {
           "name": "Tomahawk Long BH",
-          "description": "Long tomahawk serve deep into opponent backhand. Used as surprise — sudden speed and angle makes third-ball attack easier. Ball travels with a curve distinct from standard pendulum.",
+          "description": "Long tomahawk serve deep into opponent backhand. Used as surprise — sudden speed and angle makes third-ball attack easier. Ball travels with a dramatic corkscrew-adjacent curve after the second bounce.",
           "technique": "tomahawk",
           "spin_type": "sidespin_topspin",
           "spin_strength": 2,
           "length": "long",
           "placement": {"x": 0.20, "y": 0.95},
           "duration_sec": 1500,
+          "signature_players": ["Dimitrij Ovtcharov", "Wang Liqin"],
+          "youtube_id": "hHqUS1xCpqU",
           "responses": [
             {"name": "Block to FH", "description": "Block to your forehand — loop with FH.", "balls": [{"top_speed": 80, "bot_speed": 20, "oscillation": 165, "height": 125, "rotation": 150, "wait_ms": 5000}]},
             {"name": "Counter-attack BH", "description": "Counter-attack to your backhand — counter-loop or block.", "balls": [{"top_speed": 150, "bot_speed": 40, "oscillation": 140, "height": 140, "rotation": 150, "wait_ms": 4500}]}
@@ -137,19 +218,60 @@
       ]
     },
     {
+      "name": "Reverse Tomahawk",
+      "icon": "🔁",
+      "description": "Reverse tomahawk — identical backswing to classic tomahawk (racket high, tip up) but at contact the racket is rotated to hit with the backhand rubber. Spin breaks the same way as classic pendulum (clockwise). Pairs with regular tomahawk for the most deceiving one-two combo in the arsenal: same backswing, opposite spin. Ding Ning's signature weapon.",
+      "serves": [
+        {
+          "name": "Reverse Tomahawk Short FH",
+          "description": "Short reverse tomahawk to opponent forehand. Contact moves from upper-left to lower-right of the ball. Combined with regular tomahawk, creates a 50/50 guessing game for the receiver — same motion, opposite curve. Ding Ning won multiple major titles setting up BH attacks with this.",
+          "technique": "reverse_tomahawk",
+          "spin_type": "sidespin_backspin",
+          "spin_strength": 3,
+          "length": "short",
+          "placement": {"x": 0.70, "y": 0.78},
+          "duration_sec": 1200,
+          "signature_players": ["Ding Ning", "Kenta Matsudaira", "Koki Niwa"],
+          "youtube_id": "2GZRr6pVQzc",
+          "responses": [
+            {"name": "Push long to BH diagonal", "description": "Reverse sidespin pulls push toward BH — attack with BH loop or step-around FH.", "balls": [{"top_speed": 30, "bot_speed": 105, "oscillation": 138, "height": 112, "rotation": 150, "wait_ms": 6000}]},
+            {"name": "Confused flick", "description": "Opponent mistimes flick thinking it's tomahawk — pops up high, easy smash.", "balls": [{"top_speed": 80, "bot_speed": 20, "oscillation": 155, "height": 165, "rotation": 150, "wait_ms": 5500}]}
+          ]
+        },
+        {
+          "name": "Reverse Tomahawk Long BH",
+          "description": "Long reverse tomahawk deep into opponent's backhand corner. Combined with its short version and regular tomahawk, creates a 3-way guess. Niwa and Matsudaira use this as a surprise in tight matches.",
+          "technique": "reverse_tomahawk",
+          "spin_type": "sidespin_topspin",
+          "spin_strength": 2,
+          "length": "long",
+          "placement": {"x": 0.18, "y": 0.93},
+          "duration_sec": 1500,
+          "signature_players": ["Ding Ning", "Koki Niwa"],
+          "youtube_id": "cuaDkFSKb6g",
+          "responses": [
+            {"name": "BH block cross", "description": "Opponent blocks BH cross — counter-loop with FH.", "balls": [{"top_speed": 80, "bot_speed": 25, "oscillation": 140, "height": 120, "rotation": 150, "wait_ms": 5000}]},
+            {"name": "Late BH loop", "description": "Late loop attempt lands short on your FH — attack.", "balls": [{"top_speed": 110, "bot_speed": 25, "oscillation": 165, "height": 125, "rotation": 150, "wait_ms": 5200}]}
+          ]
+        }
+      ]
+    },
+    {
       "name": "Backhand",
       "icon": "↩",
-      "description": "Backhand serve — body faces the table, contact on the backhand side of the body. Fast service motion and short stroke make it excellent for quick service execution and continuous pressure.",
+      "description": "Backhand serve — body faces the table, contact on the backhand side. The fastest recovery to ready position (no grip change, no body rotation). Choice of backhand-dominant players: Ovtcharov's crouch BH serve was named 'one of the 50 best inventions of 2008' by Time Magazine. He trains 45 min/day on serves alone.",
       "serves": [
         {
           "name": "Backhand Short Sidespin",
-          "description": "Short backhand serve with sidespin. Racket brushes the ball left→right across the back. Ball curves right in air (from server view). Excellent for BH-dominant players and third-ball setups.",
+          "description": "Short backhand serve with sidespin. Racket brushes the ball left→right across the back. Ball curves right in air (from server view). Excellent for BH-dominant players and third-ball setups. Wang Chuqin won WTT Finals Fukuoka with this exact serve against Franziska.",
           "technique": "backhand",
           "spin_type": "sidespin",
           "spin_strength": 3,
           "length": "short",
           "placement": {"x": 0.50, "y": 0.78},
           "duration_sec": 1200,
+          "signature_players": ["Wang Chuqin", "Dimitrij Ovtcharov", "Tomokazu Harimoto"],
+          "youtube_id": "V_QaDx51vQM",
           "responses": [
             {"name": "Push long to BH", "description": "Opponent pushes long to your BH — BH loop opening.", "balls": [{"top_speed": 30, "bot_speed": 100, "oscillation": 140, "height": 110, "rotation": 150, "wait_ms": 6000}]},
             {"name": "Flick to FH", "description": "Opponent flicks to your forehand — counter-attack.", "balls": [{"top_speed": 130, "bot_speed": 30, "oscillation": 165, "height": 130, "rotation": 150, "wait_ms": 5500}]},
@@ -158,13 +280,15 @@
         },
         {
           "name": "Backhand Short No-Spin",
-          "description": "Deceptive no-spin backhand serve. Contact with a stiff racket, minimum brushing. Looks like it has spin but doesn't — opponents over-commit and pop up the ball. Classic 'trick' serve.",
+          "description": "Deceptive no-spin backhand serve. Contact with a stiff racket, minimum brushing. Looks like it has spin but doesn't — opponents over-commit and pop up the ball. Classic 'trick' serve, Timo Boll uses subtle variations of this.",
           "technique": "backhand",
           "spin_type": "no_spin",
           "spin_strength": 0,
           "length": "short",
           "placement": {"x": 0.45, "y": 0.80},
           "duration_sec": 1200,
+          "signature_players": ["Timo Boll", "Dimitrij Ovtcharov"],
+          "youtube_id": "V_QaDx51vQM",
           "responses": [
             {"name": "Float return high", "description": "Opponent reads spin wrong — ball floats high, easy smash.", "balls": [{"top_speed": 80, "bot_speed": 20, "oscillation": 150, "height": 170, "rotation": 150, "wait_ms": 5500}]},
             {"name": "Short flick BH", "description": "Skilled opponent flicks short to BH — step in and loop.", "balls": [{"top_speed": 100, "bot_speed": 20, "oscillation": 138, "height": 120, "rotation": 150, "wait_ms": 5500}]}
@@ -172,16 +296,74 @@
         },
         {
           "name": "Backhand Long Fast",
-          "description": "Long fast backhand serve to opponent BH corner. Used as variation against opponents expecting short. Causes weak return or passive block — perfect third-ball loop opportunity.",
+          "description": "Long fast backhand serve to opponent BH corner. Used as variation against opponents expecting short. Causes weak return or passive block — perfect third-ball loop opportunity. Fastest recovery of all long serves because body is already front-facing.",
           "technique": "backhand",
           "spin_type": "topspin",
           "spin_strength": 2,
           "length": "long",
           "placement": {"x": 0.15, "y": 0.95},
           "duration_sec": 1500,
+          "signature_players": ["Dimitrij Ovtcharov", "Wang Chuqin"],
+          "youtube_id": "wXX5Di9bJxo",
           "responses": [
             {"name": "Passive block BH", "description": "Opponent blocks passively to BH — BH loop or step around FH loop.", "balls": [{"top_speed": 70, "bot_speed": 20, "oscillation": 140, "height": 115, "rotation": 150, "wait_ms": 5000}]},
             {"name": "Counter-attack FH", "description": "Strong counter to FH — block or counter-loop.", "balls": [{"top_speed": 155, "bot_speed": 40, "oscillation": 165, "height": 135, "rotation": 150, "wait_ms": 4500}]}
+          ]
+        },
+        {
+          "name": "Backhand Heavy Chop",
+          "description": "Backhand serve with extremely heavy pure backspin (chop style). Racket opened almost flat, contact directly under the ball with maximum brushing. Short follow-through to hide the amount of spin. Forces long push return — perfect setup for third-ball loop. Used by defenders (Filus, Joo Sae-hyuk) and as surprise by attackers.",
+          "technique": "backhand",
+          "spin_type": "backspin",
+          "spin_strength": 5,
+          "length": "short",
+          "placement": {"x": 0.40, "y": 0.82},
+          "duration_sec": 1200,
+          "signature_players": ["Joo Sae-hyuk", "Ruwen Filus", "Timo Boll"],
+          "youtube_id": "Moe9igcf4ZI",
+          "responses": [
+            {"name": "Heavy push long BH", "description": "Heavy backspin push to your backhand — loop over spin with BH.", "balls": [{"top_speed": 15, "bot_speed": 150, "oscillation": 140, "height": 102, "rotation": 150, "wait_ms": 6500}]},
+            {"name": "Lift into net", "description": "Opponent misreads and lifts — pops up high, put-away smash.", "balls": [{"top_speed": 55, "bot_speed": 35, "oscillation": 150, "height": 175, "rotation": 150, "wait_ms": 5500}]},
+            {"name": "Push short tight", "description": "Defensive short push — flick or push back short.", "balls": [{"top_speed": 18, "bot_speed": 100, "oscillation": 145, "height": 90, "rotation": 150, "wait_ms": 7000}]}
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Hook",
+      "icon": "🪝",
+      "description": "Hook serve — forehand variant resembling a boxing hook. Key difference vs reverse pendulum: hook uses ACTIVE elbow motion + body weight + gravity as the main force, not the wrist. Very low stance, chest pointing toward floor at contact (EmRatThich). Ideal for long serves with forward momentum. Known as 'punch serve' in PingSkills terminology. Polish player Lucjan Błaszczyk is cited on PingSkills as an example of an effective hook server.",
+      "serves": [
+        {
+          "name": "Hook Short FH",
+          "description": "Short hook serve to opponent forehand. Despite being 'long-optimized' technique, short hook works because the unnatural body position (chest down) hides spin direction. Mima Ito uses this; Liu Shiwen added wrist finesse to the classic Wang Liqin hook.",
+          "technique": "hook",
+          "spin_type": "sidespin",
+          "spin_strength": 3,
+          "length": "short",
+          "placement": {"x": 0.72, "y": 0.78},
+          "duration_sec": 1200,
+          "signature_players": ["Liu Shiwen", "Mima Ito", "Lucjan Błaszczyk"],
+          "youtube_id": "rXoAFp4yjK0",
+          "responses": [
+            {"name": "Push long to BH", "description": "Opponent pushes long diagonal to BH — BH loop opening.", "balls": [{"top_speed": 30, "bot_speed": 105, "oscillation": 140, "height": 115, "rotation": 150, "wait_ms": 6000}]},
+            {"name": "Flick short middle", "description": "Risky flick from FH wide position — counter-attack middle.", "balls": [{"top_speed": 115, "bot_speed": 20, "oscillation": 150, "height": 125, "rotation": 150, "wait_ms": 5500}]}
+          ]
+        },
+        {
+          "name": "Hook Long Punch BH",
+          "description": "Long hook down opponent BH — the ideal use of this technique. Body weight transfer + gravity give the ball extra speed and forward momentum. Wang Hao (penhold) and Wang Liqin made this serve famous. Lands deep on opponent's BH corner with heavy side-topspin.",
+          "technique": "hook",
+          "spin_type": "sidespin_topspin",
+          "spin_strength": 3,
+          "length": "long",
+          "placement": {"x": 0.18, "y": 0.95},
+          "duration_sec": 1500,
+          "signature_players": ["Wang Liqin", "Wang Hao", "Jim Butler"],
+          "youtube_id": "FivF-6no_mI",
+          "responses": [
+            {"name": "BH block late", "description": "Late BH block to middle — step around and FH loop.", "balls": [{"top_speed": 75, "bot_speed": 20, "oscillation": 150, "height": 120, "rotation": 150, "wait_ms": 5000}]},
+            {"name": "BH counter-loop", "description": "Strong counter-loop to your FH — block or counter.", "balls": [{"top_speed": 150, "bot_speed": 40, "oscillation": 168, "height": 140, "rotation": 150, "wait_ms": 4500}]}
           ]
         }
       ]
@@ -189,17 +371,19 @@
     {
       "name": "Shovel",
       "icon": "🥄",
-      "description": "Shovel (chiquita-style) serve — contact point below table, racket shovels under the ball with upward brushing motion. Creates heavy backspin. Rare but effective at lower levels.",
+      "description": "Shovel serve — Larry Hodges calls it 'one of the 5 biggest technical changes of the past decade'. Advanced pendulum variant: from the same backswing, the server chooses at the LAST MILLISECOND between pendulum sidespin, reverse pendulum sidespin, pure backspin, or no-spin. 4-5 different spins from one identical motion — the pinnacle of deception.",
       "serves": [
         {
           "name": "Shovel Short Backspin",
-          "description": "Short shovel serve with heavy backspin. Ball contacts low, scooping upward motion. Second bounce lands right at the end-line or over — forcing opponent to either flick or push long.",
+          "description": "Short shovel serve with heavy backspin. Ball contacts low, scooping upward motion. Second bounce lands right at the end-line or over — forcing opponent to either flick or push long. The power of shovel is that this can morph into sidespin at the last moment (you won't know until it's too late).",
           "technique": "shovel",
           "spin_type": "backspin",
           "spin_strength": 4,
           "length": "short",
           "placement": {"x": 0.50, "y": 0.82},
           "duration_sec": 1200,
+          "signature_players": ["Xu Xin", "Ma Long", "Jan-Ove Waldner"],
+          "youtube_id": "r9KQPlfpJZE",
           "responses": [
             {"name": "Heavy push long BH", "description": "Opponent pushes long with heavy backspin — loop over spin with BH.", "balls": [{"top_speed": 15, "bot_speed": 150, "oscillation": 140, "height": 100, "rotation": 150, "wait_ms": 6500}]},
             {"name": "Lift into high ball", "description": "Opponent misreads and lifts — ball pops up, easy smash.", "balls": [{"top_speed": 50, "bot_speed": 30, "oscillation": 150, "height": 175, "rotation": 150, "wait_ms": 5500}]}
@@ -207,13 +391,15 @@
         },
         {
           "name": "Shovel Long No-Spin",
-          "description": "Long shovel serve with minimal spin — deceptive because shovel motion implies backspin. Ball travels deep and slow. Opponent's push goes long — surprise attack opportunity.",
+          "description": "Long shovel serve with minimal spin — deceptive because shovel motion implies backspin. Ball travels deep and slow. Opponent's push goes long — surprise attack opportunity. Mima Ito uses long shovel variants with unique backspin/topspin switching.",
           "technique": "shovel",
           "spin_type": "no_spin",
           "spin_strength": 1,
           "length": "long",
           "placement": {"x": 0.50, "y": 0.92},
           "duration_sec": 1500,
+          "signature_players": ["Mima Ito", "Xu Xin", "Werner Schlager"],
+          "youtube_id": "r9KQPlfpJZE",
           "responses": [
             {"name": "Passive push long", "description": "Opponent pushes without spin — loop easily.", "balls": [{"top_speed": 40, "bot_speed": 50, "oscillation": 145, "height": 130, "rotation": 150, "wait_ms": 5500}]},
             {"name": "Flat hit to FH", "description": "Opponent smashes flat to FH — block or counter.", "balls": [{"top_speed": 170, "bot_speed": 30, "oscillation": 165, "height": 145, "rotation": 150, "wait_ms": 4500}]}
@@ -224,7 +410,7 @@
     {
       "name": "Squat",
       "icon": "⬇",
-      "description": "Squat serve (Chinese origin, e.g. Werner Schlager, Cai Zhenhua) — server squats deep at contact, racket makes a pendulum motion from very low height. Unusual low contact point creates extreme spin and deceptive trajectory.",
+      "description": "Squat serve (Chinese origin) — server squats deep at contact, racket makes a pendulum motion from very low height. Unusual low contact point creates extreme spin and deceptive trajectory. Werner Schlager was a classic practitioner.",
       "serves": [
         {
           "name": "Squat Short Sidespin",
@@ -235,6 +421,8 @@
           "length": "short",
           "placement": {"x": 0.30, "y": 0.77},
           "duration_sec": 1200,
+          "signature_players": ["Werner Schlager", "Cai Zhenhua"],
+          "youtube_id": "",
           "responses": [
             {"name": "Push drifts long FH", "description": "Push curves and lands on your FH long — FH loop over spin.", "balls": [{"top_speed": 25, "bot_speed": 110, "oscillation": 165, "height": 115, "rotation": 150, "wait_ms": 6000}]},
             {"name": "Short flick BH", "description": "Opponent flicks BH short — step in and counter.", "balls": [{"top_speed": 120, "bot_speed": 20, "oscillation": 140, "height": 125, "rotation": 150, "wait_ms": 5500}]}
@@ -249,9 +437,121 @@
           "length": "long",
           "placement": {"x": 0.30, "y": 0.94},
           "duration_sec": 1500,
+          "signature_players": ["Werner Schlager"],
+          "youtube_id": "",
           "responses": [
             {"name": "Block short to BH", "description": "Opponent blocks short to BH — step in and BH flick.", "balls": [{"top_speed": 70, "bot_speed": 20, "oscillation": 140, "height": 115, "rotation": 150, "wait_ms": 5000}]},
             {"name": "Counter-loop FH", "description": "Aggressive counter-loop to FH — counter or block.", "balls": [{"top_speed": 160, "bot_speed": 40, "oscillation": 165, "height": 140, "rotation": 150, "wait_ms": 4500}]}
+          ]
+        }
+      ]
+    },
+    {
+      "name": "High Toss",
+      "icon": "🎯",
+      "description": "High-toss serve — popularized by Chinese coaches in the 1980s. Ball is tossed 2-5 meters; every additional 40 cm roughly doubles impact speed, producing massive spin including corkscrew elements, and disrupting the receiver's timing via long waiting. Disadvantages: longer flight = more time to read spin. Liang Jingkun revived this weapon at WTTC 2025 (led Lin Shidong 2-0).",
+      "serves": [
+        {
+          "name": "High Toss Pendulum",
+          "description": "Classic high-toss pendulum — Hugo Calderano's signature. Toss 1-2 meters, then standard pendulum motion as the ball falls. Massive sidespin from the extra kinetic energy. On Qatar Open 2018 Lin Gaoyuan couldn't read Calderano's FH high-toss despite being world-class.",
+          "technique": "high_toss",
+          "spin_type": "sidespin",
+          "spin_strength": 5,
+          "length": "short",
+          "placement": {"x": 0.30, "y": 0.77},
+          "duration_sec": 1200,
+          "signature_players": ["Hugo Calderano", "Ma Long", "Jun Mizutani"],
+          "youtube_id": "emXu07v8uVY",
+          "responses": [
+            {"name": "Mistimed push", "description": "Opponent mistimed the extra spin — weak push to middle, attack.", "balls": [{"top_speed": 30, "bot_speed": 95, "oscillation": 150, "height": 120, "rotation": 150, "wait_ms": 6500}]},
+            {"name": "Flick high", "description": "Over-committed flick goes high — easy put-away.", "balls": [{"top_speed": 90, "bot_speed": 15, "oscillation": 152, "height": 165, "rotation": 150, "wait_ms": 5500}]}
+          ]
+        },
+        {
+          "name": "High Toss Pendulum Long",
+          "description": "Long high-toss pendulum deep into BH. Liang Jingkun used this at WTTC 2025 to take a 2-0 lead over Lin Shidong before adaptation. The high toss plus forward body momentum creates incredible depth and spin.",
+          "technique": "high_toss",
+          "spin_type": "sidespin_topspin",
+          "spin_strength": 3,
+          "length": "long",
+          "placement": {"x": 0.20, "y": 0.95},
+          "duration_sec": 1500,
+          "signature_players": ["Liang Jingkun", "Hugo Calderano"],
+          "youtube_id": "emXu07v8uVY",
+          "responses": [
+            {"name": "Late block", "description": "Late block to middle — step around FH loop.", "balls": [{"top_speed": 75, "bot_speed": 20, "oscillation": 150, "height": 122, "rotation": 150, "wait_ms": 5000}]},
+            {"name": "Rushed counter", "description": "Rushed counter-loop goes into net or long — attack recovery.", "balls": [{"top_speed": 140, "bot_speed": 45, "oscillation": 145, "height": 145, "rotation": 150, "wait_ms": 4500}]}
+          ]
+        },
+        {
+          "name": "Fake High Toss",
+          "description": "Deceptive variant — high toss (2-3 m), but contact at the LOW point with minimum spin. Looks like a massive-spin serve, actually a no-spin float. Jan-Ove Waldner popularized this in the pre-2002 era. Opponents over-commit to spin-handling and pop the ball up.",
+          "technique": "high_toss",
+          "spin_type": "no_spin",
+          "spin_strength": 0,
+          "length": "short",
+          "placement": {"x": 0.40, "y": 0.80},
+          "duration_sec": 1200,
+          "signature_players": ["Jan-Ove Waldner", "Ma Long"],
+          "youtube_id": "emXu07v8uVY",
+          "responses": [
+            {"name": "Float pops up", "description": "Opponent treats as heavy spin, pops up — smash.", "balls": [{"top_speed": 85, "bot_speed": 15, "oscillation": 150, "height": 175, "rotation": 150, "wait_ms": 5500}]},
+            {"name": "Cautious push", "description": "Extra-cautious short push — flick BH or attack short.", "balls": [{"top_speed": 18, "bot_speed": 85, "oscillation": 148, "height": 90, "rotation": 150, "wait_ms": 7000}]}
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Special / Trick",
+      "icon": "👻",
+      "description": "Non-standard serves — legendary tricks, legacy moves, and exotic spins. Low frequency in modern elite play but devastating on the rare occasion they appear. Include Ma Lin's ghost serve, corkscrew spin, and Alexis Lebrun's theatrical 'lollipop'.",
+      "serves": [
+        {
+          "name": "Ghost Serve (Ma Lin)",
+          "description": "Ma Lin's iconic signature — short serve with such extreme backspin that the ball ROLLS BACKWARDS after bouncing on opponent's side, sometimes returning over the net. Contact directly under the ball with flat racket, zero forward momentum, all energy into rotation. Rare in modern elite play (great players just flick it), but psychologically devastating after a topspin setup.",
+          "technique": "ghost",
+          "spin_type": "backspin",
+          "spin_strength": 5,
+          "length": "short",
+          "placement": {"x": 0.50, "y": 0.72},
+          "duration_sec": 1200,
+          "signature_players": ["Ma Lin"],
+          "youtube_id": "J7gJwbsXEFM",
+          "responses": [
+            {"name": "Heavy defensive push", "description": "Opponent makes desperate backspin push long — loop over spin.", "balls": [{"top_speed": 15, "bot_speed": 160, "oscillation": 148, "height": 100, "rotation": 150, "wait_ms": 7000}]},
+            {"name": "Flick attempt high", "description": "Risky flick goes high and slow — smash.", "balls": [{"top_speed": 75, "bot_speed": 25, "oscillation": 152, "height": 170, "rotation": 150, "wait_ms": 5500}]}
+          ]
+        },
+        {
+          "name": "Corkscrew Serve",
+          "description": "The 'Unknown Spin' — axis of rotation is HORIZONTAL and pointing at the opponent, so the ball literally drills through the air like a corkscrew. After bouncing, the ball jumps 45-90° SIDEWAYS — not curves, JUMPS. He Zhi Wen ('Juanito') is the most famous modern practitioner. Racket moves VERTICALLY (not horizontally) alongside the ball for a thin grazing contact.",
+          "technique": "corkscrew",
+          "spin_type": "corkspin",
+          "spin_strength": 4,
+          "length": "long",
+          "placement": {"x": 0.60, "y": 0.90},
+          "duration_sec": 1500,
+          "signature_players": ["He Zhi Wen (Juanito)", "Ma Lin", "Jiang Jialiang"],
+          "youtube_id": "Bdt5YBY_82E",
+          "responses": [
+            {"name": "Push jumps sideways", "description": "Opponent tries to push — ball jumps off racket sideways into net.", "balls": [{"top_speed": 25, "bot_speed": 100, "oscillation": 168, "height": 110, "rotation": 150, "wait_ms": 6500}]},
+            {"name": "Flat smash into axis", "description": "Flat smash hits the spin axis — ball returns straight to server.", "balls": [{"top_speed": 90, "bot_speed": 25, "oscillation": 150, "height": 135, "rotation": 150, "wait_ms": 5000}]}
+          ]
+        },
+        {
+          "name": "Windshield Wiper (Lollipop)",
+          "description": "Alexis Lebrun's theatrical variant — racket moves in a wide arc like a car wiper (or held overhead like a lollipop). Same motion produces 3 different spins depending on phase: early (down) = side-backspin, middle (level) = pure sidespin, end (up) = side-topspin. Used in clutch moments as psychological weapon (WTT Champions Macao 2022 vs Lin Yun-Ju).",
+          "technique": "windshield",
+          "spin_type": "sidespin",
+          "spin_strength": 3,
+          "length": "short",
+          "placement": {"x": 0.50, "y": 0.78},
+          "duration_sec": 1200,
+          "signature_players": ["Alexis Lebrun"],
+          "youtube_id": "",
+          "responses": [
+            {"name": "Confused flick", "description": "Opponent misreads phase, flick goes long — counter.", "balls": [{"top_speed": 115, "bot_speed": 25, "oscillation": 150, "height": 130, "rotation": 150, "wait_ms": 5500}]},
+            {"name": "Push to wrong side", "description": "Opponent pushes expecting wrong spin direction — attack open side.", "balls": [{"top_speed": 35, "bot_speed": 95, "oscillation": 165, "height": 115, "rotation": 150, "wait_ms": 6000}]}
           ]
         }
       ]
