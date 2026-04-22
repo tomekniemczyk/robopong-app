@@ -2129,6 +2129,7 @@
                           <button class="btn btn-ghost" style="font-size:9px;padding:1px 4px;color:#ff3b30" @click.stop="openVideoPlay(profileGetStepRec(e, si))">🎥▶</button>
                           <button class="btn btn-ghost" style="font-size:9px;padding:1px 4px" @click.stop="openVideoCompare(profileGetStepRec(e, si))">🔀</button>
                           <a :href="'/api/recordings/' + profileGetStepRec(e, si).filename" :download="profileGetStepRec(e, si).filename.replace('/', '_')" class="btn btn-ghost" style="font-size:9px;padding:1px 4px" @click.stop>⬇</a>
+                          <button class="btn btn-ghost" style="font-size:9px;padding:1px 4px;color:var(--danger)" :title="t('tooltip.delete_rec')" @click.stop="deleteRecording(profileGetStepRec(e, si).filename)">🗑</button>
                         </template>
                       </div>
                     </div>
@@ -2782,6 +2783,7 @@
                             @click.stop="openVideoPlay(histGetStepRec(e, si))">🎥▶</button>
                           <a :href="'/api/recordings/' + histGetStepRec(e, si).filename" :download="histGetStepRec(e, si).filename.replace('/', '_')" class="btn btn-ghost" style="font-size:9px;padding:1px 4px" :title="t('tooltip.download')" @click.stop>⬇</a>
                           <button class="btn btn-ghost" style="font-size:9px;padding:1px 4px" :title="t('tooltip.compare')" @click.stop="openVideoCompare(histGetStepRec(e, si))">🔀</button>
+                          <button class="btn btn-ghost" style="font-size:9px;padding:1px 4px;color:var(--danger)" :title="t('tooltip.delete_rec')" @click.stop="deleteRecording(histGetStepRec(e, si).filename)">🗑</button>
                         </template>
                       </div>
                     </div>
@@ -4994,10 +4996,7 @@ const _app = createApp({
     }
 
     async function deleteOndemandRec(rec) {
-      showConfirm(t('recordings.delete') + '?', async () => {
-        await fetch(`/api/recordings/${rec.filename}`, { method: 'DELETE' })
-        await loadAllHistory()
-      }, t('btn.delete'), '#e53e3e')
+      deleteRecording(rec.filename)
     }
 
     function openTrainingStartModal(tr, fromStep = 0) {
@@ -5762,9 +5761,12 @@ const _app = createApp({
     async function deleteRecording(filename) {
       const doDelete = async () => {
         await fetch(`/api/recordings/${filename}`, { method: 'DELETE' })
+        // Filter local reactive stores — tree/video-only views re-render, 🎥 icons and REC badges disappear
+        allRecordings.value = allRecordings.value.filter(r => r.filename !== filename)
+        playerRecordings.value = playerRecordings.value.filter(r => r.filename !== filename)
+        ondemandRecordings.value = ondemandRecordings.value.filter(r => r.filename !== filename)
         if (playingRecording.value === filename) playingRecording.value = null
         if (videoPlay.file === filename && videoPlay.show) closeVideoPlay()
-        if (playerDetail.value) await openPlayerDetail(playerDetail.value)
       }
       showConfirmWithDownload(
         t('recordings.delete') + '?', '',
