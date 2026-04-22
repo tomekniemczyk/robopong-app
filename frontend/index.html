@@ -2514,7 +2514,7 @@
                   <input type="number" class="input" v-model.number="matchForm.set_scores[si][1]" style="width:34px;font-size:12px;padding:2px 3px;text-align:center" min="0" max="30">
                   <button class="btn btn-ghost btn-icon" style="font-size:11px;padding:1px 3px" @click="matchForm.set_scores[si][1]++">+</button>
                 </div>
-                <button class="btn btn-ghost btn-icon" style="font-size:10px;padding:1px 4px;margin-left:auto" @click="matchForm.set_scores.splice(si,1); matchForm.set_comments.splice(si,1)">✕</button>
+                <button class="btn btn-ghost btn-icon" style="font-size:10px;padding:1px 4px;margin-left:auto" @click="showConfirm(t('confirm.delete_set'), () => { matchForm.set_scores.splice(si,1); matchForm.set_comments.splice(si,1) })">✕</button>
               </div>
               <div style="padding-left:26px">
                 <input class="input" v-model="matchForm.set_comments[si]" placeholder="komentarz do seta..." style="width:100%;font-size:11px;padding:2px 6px;box-sizing:border-box">
@@ -2530,7 +2530,7 @@
         <div>
           <label style="font-size:12px;color:var(--success);display:block;margin-bottom:4px">✅ {{ t('journal.what_worked') }}</label>
           <div style="display:flex;flex-wrap:wrap;gap:4px;margin-bottom:6px">
-            <span v-for="(w,i) in matchForm.what_worked" :key="'w'+i" class="chip" style="background:rgba(52,199,89,.15);border-color:rgba(52,199,89,.3);cursor:pointer" @click="matchForm.what_worked.splice(i,1)">{{ w }} ✕</span>
+            <span v-for="(w,i) in matchForm.what_worked" :key="'w'+i" class="chip" style="background:rgba(52,199,89,.15);border-color:rgba(52,199,89,.3);cursor:pointer" @click="showConfirm(t('confirm.delete_item'), () => matchForm.what_worked.splice(i,1))">{{ w }} ✕</span>
           </div>
           <div style="display:flex;gap:4px">
             <input class="input" v-model="workedInput" @keydown.enter.prevent="addWorked" style="flex:1;font-size:12px" :placeholder="t('journal.add_item')">
@@ -2540,7 +2540,7 @@
         <div>
           <label style="font-size:12px;color:var(--danger);display:block;margin-bottom:4px">❌ {{ t('journal.what_failed') }}</label>
           <div style="display:flex;flex-wrap:wrap;gap:4px;margin-bottom:6px">
-            <span v-for="(f,i) in matchForm.what_failed" :key="'f'+i" class="chip" style="background:rgba(255,59,48,.12);border-color:rgba(255,59,48,.3);cursor:pointer" @click="matchForm.what_failed.splice(i,1)">{{ f }} ✕</span>
+            <span v-for="(f,i) in matchForm.what_failed" :key="'f'+i" class="chip" style="background:rgba(255,59,48,.12);border-color:rgba(255,59,48,.3);cursor:pointer" @click="showConfirm(t('confirm.delete_item'), () => matchForm.what_failed.splice(i,1))">{{ f }} ✕</span>
           </div>
           <div style="display:flex;gap:4px">
             <input class="input" v-model="failedInput" @keydown.enter.prevent="addFailed" style="flex:1;font-size:12px" :placeholder="t('journal.add_item')">
@@ -2560,7 +2560,7 @@
               </select>
               <input class="input" v-model="matchForm.mistakes[i].description" style="font-size:11px;padding:2px 6px;width:100%" :placeholder="t('journal.mistake_desc')">
             </div>
-            <button class="btn btn-ghost btn-icon" style="font-size:11px;flex-shrink:0" @click="matchForm.mistakes.splice(i,1)">✕</button>
+            <button class="btn btn-ghost btn-icon" style="font-size:11px;flex-shrink:0" @click="showConfirm(t('confirm.delete_item'), () => matchForm.mistakes.splice(i,1))">✕</button>
           </div>
           <button class="btn btn-ghost" style="font-size:11px;padding:3px 10px" @click="matchForm.mistakes.push({category:'taktyczny',description:''})">+ {{ t('journal.add_mistake') }}</button>
         </div>
@@ -2573,7 +2573,7 @@
                 <option v-for="f in ['rzadko','czasami','często','zawsze']" :key="f" :value="f">{{ f }}</option>
               </select>
             </div>
-            <button class="btn btn-ghost btn-icon" style="font-size:11px;flex-shrink:0" @click="matchForm.opponent_tactics.splice(i,1)">✕</button>
+            <button class="btn btn-ghost btn-icon" style="font-size:11px;flex-shrink:0" @click="showConfirm(t('confirm.delete_item'), () => matchForm.opponent_tactics.splice(i,1))">✕</button>
           </div>
           <button class="btn btn-ghost" style="font-size:11px;padding:3px 10px" @click="matchForm.opponent_tactics.push({pattern:'',frequency:'czasami'})">+ {{ t('journal.add_tactic') }}</button>
         </div>
@@ -2601,7 +2601,7 @@
         <div v-for="(p,i) in matchForm.next_plan" :key="'p'+i" style="display:flex;align-items:center;gap:6px">
           <input type="checkbox" v-model="matchForm.next_plan[i].done">
           <input class="input" v-model="matchForm.next_plan[i].text" style="flex:1;font-size:12px" :style="{textDecoration: p.done ? 'line-through' : 'none', opacity: p.done ? 0.5 : 1}">
-          <button class="btn btn-ghost btn-icon" style="font-size:11px" @click="matchForm.next_plan.splice(i,1)">✕</button>
+          <button class="btn btn-ghost btn-icon" style="font-size:11px" @click="showConfirm(t('confirm.delete_item'), () => matchForm.next_plan.splice(i,1))">✕</button>
         </div>
         <button class="btn btn-ghost" style="font-size:11px;padding:3px 10px" @click="matchForm.next_plan.push({text:'',done:false})">+ {{ t('journal.add_plan_item') }}</button>
       </div>
@@ -4677,8 +4677,10 @@ const _app = createApp({
     }
 
     async function deleteMatch(mid) {
-      await fetch(`/api/players/${selectedPlayerId.value}/journal/${mid}`, {method:'DELETE'})
-      await loadJournal()
+      showConfirm(t('confirm.delete_match'), async () => {
+        await fetch(`/api/players/${selectedPlayerId.value}/journal/${mid}`, {method:'DELETE'})
+        await loadJournal()
+      })
     }
 
     function openOpponentModal(opp) {
@@ -6636,7 +6638,7 @@ const _app = createApp({
       activeDrill, drillRunCount, drillRunPercent, liveBall, drillEstSec, drillRemainSec,
       openDrillPanel, prevDrill, nextDrill, startDrill, navigateToDrill, navigateToExercise,
       ballTableX, ballTableY,
-      confirmMsg, confirmExtra, confirmOkLabel, confirmOkColor, confirmCb, confirmDownloadCb, runConfirm, runDownloadAndDelete,
+      confirmMsg, confirmExtra, confirmOkLabel, confirmOkColor, confirmCb, confirmDownloadCb, runConfirm, runDownloadAndDelete, showConfirm,
       showDrillModal, drillModalId, openDrillModal, saveDrillModal,
       showTrainingModal, openTrainingModal,
       editId, editName, editDesc, editRepeat, editBalls,
