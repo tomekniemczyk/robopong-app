@@ -27,6 +27,12 @@ def _opponent_row(r):
         "handedness": r[3], "grip": r[4], "style": r[5],
         "rubber_fh": r[6], "rubber_bh": r[7], "rating_level": r[8],
         "general_notes": r[9], "created_at": r[10], "updated_at": r[11],
+        "first_name": r[12] if len(r) > 12 else "",
+        "second_name": r[13] if len(r) > 13 else "",
+        "nickname": r[14] if len(r) > 14 else "",
+        "city": r[15] if len(r) > 15 else "",
+        "club": r[16] if len(r) > 16 else "",
+        "elo": r[17] if len(r) > 17 else None,
     }
 
 
@@ -47,15 +53,17 @@ def _journal_row(r):
         "free_notes": r[21] or "",
         "video_paths": _j(r[22]), "recording_ids": _j(r[23]),
         "created_at": r[24], "updated_at": r[25],
+        "set_comments": _j(r[26]) if len(r) > 26 else [],
+        "player_overall": r[27] if len(r) > 27 else None,
     }
 
 
-_OPPONENT_COLS = "id, created_by_player_id, name, handedness, grip, style, rubber_fh, rubber_bh, rating_level, general_notes, created_at, updated_at"
+_OPPONENT_COLS = "id, created_by_player_id, name, handedness, grip, style, rubber_fh, rubber_bh, rating_level, general_notes, created_at, updated_at, first_name, second_name, nickname, city, club, elo"
 _JOURNAL_COLS = ("id, player_id, opponent_id, match_date, match_type, tournament_name, duration_min, "
                  "sets_me, sets_op, set_scores, result, what_worked, what_failed, mistakes, "
                  "opponent_tactics, next_plan, self_technical, self_tactical, self_mental, "
                  "self_physical, opponent_difficulty, free_notes, video_paths, recording_ids, "
-                 "created_at, updated_at")
+                 "created_at, updated_at, set_comments, player_overall")
 
 
 # ── Opponents ─────────────────────────────────────────────────────────────────
@@ -85,15 +93,27 @@ def get_opponent(player_id: int, opponent_id: int) -> dict | None:
         return opp
 
 
+def _build_opponent_name(data: dict) -> str:
+    first = (data.get("first_name") or "").strip()
+    second = (data.get("second_name") or "").strip()
+    if first or second:
+        return f"{first} {second}".strip()
+    return (data.get("name") or "").strip()
+
+
 def create_opponent(player_id: int, data: dict) -> dict:
+    name = _build_opponent_name(data)
     with sqlite3.connect(_db.DB) as c:
         cur = c.execute(
             "INSERT INTO opponents (created_by_player_id, name, handedness, grip, style, "
-            "rubber_fh, rubber_bh, rating_level, general_notes) VALUES (?,?,?,?,?,?,?,?,?)",
-            (player_id, data["name"], data.get("handedness", "right"),
+            "rubber_fh, rubber_bh, rating_level, general_notes, first_name, second_name, nickname, city, club, elo) "
+            "VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
+            (player_id, name, data.get("handedness", "right"),
              data.get("grip", "shakehand"), data.get("style", "allround"),
              data.get("rubber_fh", ""), data.get("rubber_bh", ""),
-             data.get("rating_level", ""), data.get("general_notes", ""))
+             data.get("rating_level", ""), data.get("general_notes", ""),
+             data.get("first_name", ""), data.get("second_name", ""), data.get("nickname", ""),
+             data.get("city", ""), data.get("club", ""), data.get("elo"))
         )
         r = c.execute(f"SELECT {_OPPONENT_COLS} FROM opponents WHERE id=?", (cur.lastrowid,)).fetchone()
     opp = _opponent_row(r)
@@ -102,9 +122,13 @@ def create_opponent(player_id: int, data: dict) -> dict:
 
 
 def update_opponent(player_id: int, opponent_id: int, data: dict) -> dict | None:
+    if "first_name" in data or "second_name" in data:
+        data = dict(data)
+        data["name"] = _build_opponent_name(data)
     fields = {k: v for k, v in data.items() if k in (
         "name", "handedness", "grip", "style", "rubber_fh",
-        "rubber_bh", "rating_level", "general_notes"
+        "rubber_bh", "rating_level", "general_notes",
+        "first_name", "second_name", "nickname", "city", "club", "elo"
     )}
     if not fields:
         return get_opponent(player_id, opponent_id)
@@ -265,8 +289,8 @@ def create_match(player_id: int, data: dict) -> dict:
             "INSERT INTO match_journal (player_id, opponent_id, match_date, match_type, tournament_name, "
             "duration_min, sets_me, sets_op, set_scores, result, what_worked, what_failed, mistakes, "
             "opponent_tactics, next_plan, self_technical, self_tactical, self_mental, self_physical, "
-            "opponent_difficulty, free_notes, video_paths, recording_ids) "
-            "VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
+            "opponent_difficulty, free_notes, video_paths, recording_ids, set_comments, player_overall) "
+            "VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
             (player_id, data["opponent_id"], data["match_date"],
              data.get("match_type", "sparing"), data.get("tournament_name", ""),
              data.get("duration_min"), sets_me, sets_op,
@@ -278,7 +302,8 @@ def create_match(player_id: int, data: dict) -> dict:
              data.get("self_mental"), data.get("self_physical"),
              data.get("opponent_difficulty"),
              data.get("free_notes", ""),
-             json.dumps(data.get("video_paths", [])), json.dumps(data.get("recording_ids", [])))
+             json.dumps(data.get("video_paths", [])), json.dumps(data.get("recording_ids", [])),
+             json.dumps(data.get("set_comments", [])), data.get("player_overall"))
         )
         mid = cur.lastrowid
         r = c.execute(f"SELECT {_JOURNAL_COLS} FROM match_journal WHERE id=?", (mid,)).fetchone()
@@ -296,11 +321,11 @@ def update_match(player_id: int, match_id: int, data: dict) -> dict | None:
     sets_op = data.get("sets_op", existing["sets_op"])
     result = _compute_result(sets_me, sets_op)
 
-    json_fields = {"set_scores", "what_worked", "what_failed", "mistakes", "opponent_tactics", "next_plan", "video_paths", "recording_ids"}
+    json_fields = {"set_scores", "set_comments", "what_worked", "what_failed", "mistakes", "opponent_tactics", "next_plan", "video_paths", "recording_ids"}
     scalar_fields = {
         "opponent_id", "match_date", "match_type", "tournament_name", "duration_min",
         "sets_me", "sets_op", "self_technical", "self_tactical",
-        "self_mental", "self_physical", "opponent_difficulty", "free_notes"
+        "self_mental", "self_physical", "opponent_difficulty", "free_notes", "player_overall"
     }
     sets_clause = []
     vals = []

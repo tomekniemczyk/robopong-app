@@ -214,6 +214,24 @@ def _migrate(c):
         c.execute("ALTER TABLE recordings_meta ADD COLUMN is_ondemand INTEGER DEFAULT 0")
     if "custom_name" not in rec_cols:
         c.execute("ALTER TABLE recordings_meta ADD COLUMN custom_name TEXT DEFAULT ''")
+    opp_cols = {r[1] for r in c.execute("PRAGMA table_info(opponents)").fetchall()}
+    if "first_name" not in opp_cols:
+        c.execute("ALTER TABLE opponents ADD COLUMN first_name TEXT DEFAULT ''")
+    if "second_name" not in opp_cols:
+        c.execute("ALTER TABLE opponents ADD COLUMN second_name TEXT DEFAULT ''")
+    if "nickname" not in opp_cols:
+        c.execute("ALTER TABLE opponents ADD COLUMN nickname TEXT DEFAULT ''")
+    if "city" not in opp_cols:
+        c.execute("ALTER TABLE opponents ADD COLUMN city TEXT DEFAULT ''")
+    if "club" not in opp_cols:
+        c.execute("ALTER TABLE opponents ADD COLUMN club TEXT DEFAULT ''")
+    if "elo" not in opp_cols:
+        c.execute("ALTER TABLE opponents ADD COLUMN elo INTEGER")
+    jrnl_cols = {r[1] for r in c.execute("PRAGMA table_info(match_journal)").fetchall()}
+    if "set_comments" not in jrnl_cols:
+        c.execute("ALTER TABLE match_journal ADD COLUMN set_comments TEXT DEFAULT '[]'")
+    if "player_overall" not in jrnl_cols:
+        c.execute("ALTER TABLE match_journal ADD COLUMN player_overall INTEGER")
 
 
 # ── Scenarios ──────────────────────────────────────────────────────────────

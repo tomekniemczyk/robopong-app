@@ -2419,6 +2419,20 @@
 
       <!-- Tab 0: Podstawowe -->
       <div v-show="matchTab===0" style="display:flex;flex-direction:column;gap:10px">
+
+        <!-- Ogólna ocena gry -->
+        <div style="padding:10px;background:rgba(255,255,255,.04);border-radius:8px">
+          <label style="font-size:12px;color:var(--muted);display:block;margin-bottom:8px">⭐ Ogólna ocena mojej gry</label>
+          <div style="display:flex;gap:2px;justify-content:space-between">
+            <button v-for="n in 10" :key="n" class="btn btn-ghost"
+              :style="{fontSize:'13px',padding:'4px 0',flex:1,background:matchForm.player_overall===n?'rgba(255,204,0,.25)':'transparent',borderColor:matchForm.player_overall===n?'rgba(255,204,0,.7)':'var(--border)',color:matchForm.player_overall===n?'#ffcc00':'var(--muted)',fontWeight:matchForm.player_overall===n?'700':'400'}"
+              @click="matchForm.player_overall = matchForm.player_overall===n ? null : n">{{ n }}</button>
+          </div>
+          <div style="text-align:center;font-size:11px;color:var(--accent);margin-top:6px;min-height:16px">
+            {{ ['','Fatalnie','Bardzo słabo','Słabo','Poniżej przeciętnej','Przeciętnie','Powyżej przeciętnej','Dobrze','Bardzo dobrze','Świetnie','Wybitnie'][matchForm.player_overall] || '' }}
+          </div>
+        </div>
+
         <div>
           <label style="font-size:12px;color:var(--muted)">👤 {{ t('journal.opponent') }}</label>
           <div style="display:flex;gap:6px;margin-top:4px">
@@ -2437,49 +2451,75 @@
           <label style="font-size:12px;color:var(--muted)">📅 {{ t('journal.date') }}</label>
           <input type="date" class="input" v-model="matchForm.match_date" style="margin-top:4px;width:100%;font-size:12px">
         </div>
-        <div style="display:flex;gap:8px">
-          <div style="flex:1">
-            <label style="font-size:12px;color:var(--muted)">{{ t('journal.match_type') }}</label>
-            <select class="input" v-model="matchForm.match_type" style="margin-top:4px;width:100%;font-size:12px">
-              <option v-for="mt in ['sparing','turniej','liga','towarzyski']" :key="mt" :value="mt">{{ mt }}</option>
-            </select>
-          </div>
-          <div style="flex:1">
-            <label style="font-size:12px;color:var(--muted)">⏱ {{ t('journal.duration') }}</label>
-            <input type="number" class="input" v-model.number="matchForm.duration_min" :placeholder="t('journal.duration_min')" style="margin-top:4px;width:100%;font-size:12px">
-          </div>
+        <div>
+          <label style="font-size:12px;color:var(--muted)">{{ t('journal.match_type') }}</label>
+          <select class="input" v-model="matchForm.match_type" style="margin-top:4px;width:100%;font-size:12px">
+            <option v-for="mt in ['sparing','turniej','liga','towarzyski']" :key="mt" :value="mt">{{ mt }}</option>
+          </select>
         </div>
         <div v-if="matchForm.match_type === 'turniej'">
           <label style="font-size:12px;color:var(--muted)">🏆 {{ t('journal.tournament') }}</label>
           <input class="input" v-model="matchForm.tournament_name" style="margin-top:4px;width:100%;font-size:12px">
         </div>
-        <!-- Score -->
+
+        <!-- Wynik meczu -->
         <div>
-          <label style="font-size:12px;color:var(--muted);display:block;margin-bottom:4px">🎯 {{ t('journal.score') }}</label>
-          <div style="display:flex;align-items:center;gap:8px">
-            <button class="btn btn-ghost btn-icon" @click="matchForm.sets_me=Math.max(0,(matchForm.sets_me||0)-1)">−</button>
-            <span style="font-size:20px;font-weight:700;min-width:20px;text-align:center">{{ matchForm.sets_me ?? '?' }}</span>
-            <span style="font-size:16px;color:var(--muted)">:</span>
-            <span style="font-size:20px;font-weight:700;min-width:20px;text-align:center">{{ matchForm.sets_op ?? '?' }}</span>
-            <button class="btn btn-ghost btn-icon" @click="matchForm.sets_op=Math.max(0,(matchForm.sets_op||0)-1)">−</button>
-            <span style="font-size:11px;color:var(--muted);margin-left:4px">ty:rywal</span>
-          </div>
-          <div style="display:flex;align-items:center;gap:8px;margin-top:4px">
-            <button class="btn btn-ghost btn-icon" @click="matchForm.sets_me=(matchForm.sets_me||0)+1">+</button>
-            <span style="flex:1;text-align:center;font-size:10px;color:var(--muted)">{{ matchForm.sets_me > matchForm.sets_op ? '✅ '+t('journal.win') : matchForm.sets_me < matchForm.sets_op ? '❌ '+t('journal.loss') : '' }}</span>
-            <button class="btn btn-ghost btn-icon" @click="matchForm.sets_op=(matchForm.sets_op||0)+1">+</button>
-          </div>
-          <!-- Set scores detail -->
-          <div style="margin-top:6px">
-            <div style="font-size:11px;color:var(--muted);margin-bottom:3px">{{ t('journal.set_scores_detail') }}</div>
-            <div v-for="(ss, si) in matchForm.set_scores" :key="si" style="display:flex;align-items:center;gap:4px;margin-bottom:3px">
-              <span style="font-size:10px;color:var(--muted);width:20px">{{ si+1 }}.</span>
-              <input type="number" class="input" v-model.number="matchForm.set_scores[si][0]" style="width:44px;font-size:12px;padding:2px 4px" min="0" max="30">
-              <span style="font-size:11px;color:var(--muted)">:</span>
-              <input type="number" class="input" v-model.number="matchForm.set_scores[si][1]" style="width:44px;font-size:12px;padding:2px 4px" min="0" max="30">
-              <button class="btn btn-ghost btn-icon" style="font-size:10px" @click="matchForm.set_scores.splice(si,1)">✕</button>
+          <label style="font-size:12px;color:var(--muted);display:block;margin-bottom:8px">🎯 {{ t('journal.score') }}</label>
+          <div style="display:flex;align-items:flex-end;justify-content:center;gap:16px">
+            <!-- Ty -->
+            <div style="display:flex;flex-direction:column;align-items:center;gap:4px">
+              <span style="font-size:10px;color:var(--muted);letter-spacing:.5px;text-transform:uppercase">Ty</span>
+              <div style="display:flex;align-items:center;gap:4px">
+                <button class="btn btn-ghost btn-icon" style="font-size:16px" @click="matchForm.sets_me=Math.max(0,(matchForm.sets_me||0)-1)">−</button>
+                <span style="font-size:26px;font-weight:700;min-width:32px;text-align:center;line-height:1">{{ matchForm.sets_me ?? '?' }}</span>
+                <button class="btn btn-ghost btn-icon" style="font-size:16px" @click="matchForm.sets_me=(matchForm.sets_me||0)+1">+</button>
+              </div>
             </div>
-            <button class="btn btn-ghost" style="font-size:10px;padding:2px 8px" @click="matchForm.set_scores.push([0,0])">+ {{ t('journal.add_set') }}</button>
+            <span style="font-size:22px;color:var(--muted);padding-bottom:6px">:</span>
+            <!-- Przeciwnik -->
+            <div style="display:flex;flex-direction:column;align-items:center;gap:4px">
+              <span style="font-size:10px;color:var(--muted);letter-spacing:.5px;text-transform:uppercase">Przeciwnik</span>
+              <div style="display:flex;align-items:center;gap:4px">
+                <button class="btn btn-ghost btn-icon" style="font-size:16px" @click="matchForm.sets_op=Math.max(0,(matchForm.sets_op||0)-1)">−</button>
+                <span style="font-size:26px;font-weight:700;min-width:32px;text-align:center;line-height:1">{{ matchForm.sets_op ?? '?' }}</span>
+                <button class="btn btn-ghost btn-icon" style="font-size:16px" @click="matchForm.sets_op=(matchForm.sets_op||0)+1">+</button>
+              </div>
+            </div>
+          </div>
+          <div style="text-align:center;font-size:11px;color:var(--muted);margin-top:6px;min-height:16px">
+            {{ matchForm.sets_me > matchForm.sets_op ? '✅ '+t('journal.win') : matchForm.sets_me < matchForm.sets_op ? '❌ '+t('journal.loss') : '' }}
+          </div>
+
+          <!-- Sety szczegółowe -->
+          <div style="margin-top:8px">
+            <div style="display:flex;align-items:center;gap:6px;margin-bottom:4px">
+              <span style="font-size:11px;color:var(--muted)">{{ t('journal.set_scores_detail') }}</span>
+              <div style="flex:1"></div>
+              <span style="font-size:10px;color:var(--muted);width:80px;text-align:center">Ty</span>
+              <span style="font-size:10px;color:var(--muted);width:80px;text-align:center">Przeciwnik</span>
+              <div style="width:24px"></div>
+            </div>
+            <div v-for="(ss, si) in matchForm.set_scores" :key="si" style="margin-bottom:4px">
+              <div style="display:flex;align-items:center;gap:6px;margin-bottom:2px">
+                <span style="font-size:10px;color:var(--muted);min-width:20px">{{ si+1 }}.</span>
+                <div style="display:flex;align-items:center;gap:2px;width:80px;justify-content:center">
+                  <button class="btn btn-ghost btn-icon" style="font-size:11px;padding:1px 3px" @click="matchForm.set_scores[si][0]=Math.max(0,matchForm.set_scores[si][0]-1)">−</button>
+                  <input type="number" class="input" v-model.number="matchForm.set_scores[si][0]" style="width:34px;font-size:12px;padding:2px 3px;text-align:center" min="0" max="30">
+                  <button class="btn btn-ghost btn-icon" style="font-size:11px;padding:1px 3px" @click="matchForm.set_scores[si][0]++">+</button>
+                </div>
+                <span style="font-size:11px;color:var(--muted)">:</span>
+                <div style="display:flex;align-items:center;gap:2px;width:80px;justify-content:center">
+                  <button class="btn btn-ghost btn-icon" style="font-size:11px;padding:1px 3px" @click="matchForm.set_scores[si][1]=Math.max(0,matchForm.set_scores[si][1]-1)">−</button>
+                  <input type="number" class="input" v-model.number="matchForm.set_scores[si][1]" style="width:34px;font-size:12px;padding:2px 3px;text-align:center" min="0" max="30">
+                  <button class="btn btn-ghost btn-icon" style="font-size:11px;padding:1px 3px" @click="matchForm.set_scores[si][1]++">+</button>
+                </div>
+                <button class="btn btn-ghost btn-icon" style="font-size:10px;padding:1px 4px;margin-left:auto" @click="matchForm.set_scores.splice(si,1); matchForm.set_comments.splice(si,1)">✕</button>
+              </div>
+              <div style="padding-left:26px">
+                <input class="input" v-model="matchForm.set_comments[si]" placeholder="komentarz do seta..." style="width:100%;font-size:11px;padding:2px 6px;box-sizing:border-box">
+              </div>
+            </div>
+            <button class="btn btn-ghost" style="font-size:10px;padding:2px 8px" @click="matchForm.set_scores.push([0,0]); matchForm.set_comments.push('')">+ {{ t('journal.add_set') }}</button>
           </div>
         </div>
       </div>
@@ -2538,19 +2578,8 @@
         </div>
       </div>
 
-      <!-- Tab 3: Plan -->
-      <div v-show="matchTab===3" style="display:flex;flex-direction:column;gap:8px">
-        <label style="font-size:12px;color:var(--muted);display:block">📋 {{ t('journal.next_plan') }}</label>
-        <div v-for="(p,i) in matchForm.next_plan" :key="'p'+i" style="display:flex;align-items:center;gap:6px">
-          <input type="checkbox" v-model="matchForm.next_plan[i].done">
-          <input class="input" v-model="matchForm.next_plan[i].text" style="flex:1;font-size:12px" :style="{textDecoration: p.done ? 'line-through' : 'none', opacity: p.done ? 0.5 : 1}">
-          <button class="btn btn-ghost btn-icon" style="font-size:11px" @click="matchForm.next_plan.splice(i,1)">✕</button>
-        </div>
-        <button class="btn btn-ghost" style="font-size:11px;padding:3px 10px" @click="matchForm.next_plan.push({text:'',done:false})">+ {{ t('journal.add_plan_item') }}</button>
-      </div>
-
-      <!-- Tab 4: Oceny + notatki -->
-      <div v-show="matchTab===4" style="display:flex;flex-direction:column;gap:10px">
+      <!-- Tab 3: Oceny + notatki -->
+      <div v-show="matchTab===3" style="display:flex;flex-direction:column;gap:10px">
         <div style="display:flex;flex-direction:column;gap:6px">
           <div v-for="field in [{k:'self_technical',l:'journal.tech'},{k:'self_tactical',l:'journal.tac'},{k:'self_mental',l:'journal.men'},{k:'self_physical',l:'journal.phy'},{k:'opponent_difficulty',l:'journal.opp_diff'}]" :key="field.k" style="display:flex;align-items:center;gap:8px">
             <span style="font-size:12px;width:130px;flex-shrink:0">{{ t(field.l) }}</span>
@@ -2563,6 +2592,17 @@
           <label style="font-size:12px;color:var(--muted);display:block;margin-bottom:4px">💬 {{ t('journal.free_notes') }}</label>
           <textarea class="input" v-model="matchForm.free_notes" rows="5" style="width:100%;font-size:12px;resize:vertical"></textarea>
         </div>
+      </div>
+
+      <!-- Tab 4: Plan na kolejny raz -->
+      <div v-show="matchTab===4" style="display:flex;flex-direction:column;gap:8px">
+        <label style="font-size:12px;color:var(--muted);display:block">📋 {{ t('journal.next_plan') }}</label>
+        <div v-for="(p,i) in matchForm.next_plan" :key="'p'+i" style="display:flex;align-items:center;gap:6px">
+          <input type="checkbox" v-model="matchForm.next_plan[i].done">
+          <input class="input" v-model="matchForm.next_plan[i].text" style="flex:1;font-size:12px" :style="{textDecoration: p.done ? 'line-through' : 'none', opacity: p.done ? 0.5 : 1}">
+          <button class="btn btn-ghost btn-icon" style="font-size:11px" @click="matchForm.next_plan.splice(i,1)">✕</button>
+        </div>
+        <button class="btn btn-ghost" style="font-size:11px;padding:3px 10px" @click="matchForm.next_plan.push({text:'',done:false})">+ {{ t('journal.add_plan_item') }}</button>
       </div>
 
       <!-- Footer buttons -->
@@ -2578,9 +2618,33 @@
     <div class="modal-sheet" style="max-width:360px">
       <h3 style="margin-bottom:14px">{{ opponentModal.id ? '✏ '+t('journal.edit_opponent') : '+ '+t('journal.new_opponent') }}</h3>
       <div style="display:flex;flex-direction:column;gap:8px">
+        <div style="display:flex;gap:8px">
+          <div style="flex:1">
+            <label style="font-size:12px;color:var(--muted)">Imię</label>
+            <input class="input" v-model="opponentForm.first_name" style="margin-top:4px;width:100%;font-size:12px">
+          </div>
+          <div style="flex:1">
+            <label style="font-size:12px;color:var(--muted)">Nazwisko</label>
+            <input class="input" v-model="opponentForm.second_name" style="margin-top:4px;width:100%;font-size:12px">
+          </div>
+        </div>
         <div>
-          <label style="font-size:12px;color:var(--muted)">{{ t('journal.opponent_name') }}</label>
-          <input class="input" v-model="opponentForm.name" style="margin-top:4px;width:100%;font-size:12px">
+          <label style="font-size:12px;color:var(--muted)">Przydomek <span style="font-weight:400;color:var(--muted)">(opcjonalnie)</span></label>
+          <input class="input" v-model="opponentForm.nickname" style="margin-top:4px;width:100%;font-size:12px" placeholder="np. Szybki, Obrońca...">
+        </div>
+        <div style="display:flex;gap:8px">
+          <div style="flex:1">
+            <label style="font-size:12px;color:var(--muted)">Miejscowość</label>
+            <input class="input" v-model="opponentForm.city" style="margin-top:4px;width:100%;font-size:12px" placeholder="skąd pochodzi lub miejsce meczu">
+          </div>
+          <div style="flex:1">
+            <label style="font-size:12px;color:var(--muted)">Klub</label>
+            <input class="input" v-model="opponentForm.club" style="margin-top:4px;width:100%;font-size:12px" placeholder="jeśli grajacy">
+          </div>
+        </div>
+        <div>
+          <label style="font-size:12px;color:var(--muted)">ELO <span style="color:var(--muted);font-weight:400">(jeśli znane)</span></label>
+          <input type="number" class="input" v-model.number="opponentForm.elo" style="margin-top:4px;width:100%;font-size:12px" placeholder="np. 1250">
         </div>
         <div style="display:flex;gap:8px">
           <div style="flex:1">
@@ -4482,7 +4546,7 @@ const _app = createApp({
     const matchTab = ref(0)
     const matchTabs = computed(() => [
       t('journal.tab_basic'), t('journal.tab_worked'), t('journal.tab_mistakes'),
-      t('journal.tab_plan'), t('journal.tab_ratings')
+      t('journal.tab_ratings'), t('journal.tab_plan')
     ])
     const matchForm = ref({})
     const opponentForm = ref({})
@@ -4542,6 +4606,7 @@ const _app = createApp({
           sets_me: match.sets_me,
           sets_op: match.sets_op,
           set_scores: match.set_scores || [],
+          set_comments: match.set_comments || [],
           what_worked: [...(match.what_worked || [])],
           what_failed: [...(match.what_failed || [])],
           mistakes: (match.mistakes || []).map(m => ({...m})),
@@ -4552,6 +4617,7 @@ const _app = createApp({
           self_mental: match.self_mental,
           self_physical: match.self_physical,
           opponent_difficulty: match.opponent_difficulty,
+          player_overall: match.player_overall || null,
           free_notes: match.free_notes || '',
         }
         matchOpponentSearch.value = match.opponent_name || ''
@@ -4561,13 +4627,14 @@ const _app = createApp({
           opponent_id: presetOpponentId || null,
           match_date: new Date().toISOString().slice(0, 10),
           match_type: 'sparing', tournament_name: '',
-          sets_me: null, sets_op: null, set_scores: [],
+          sets_me: null, sets_op: null, set_scores: [], set_comments: [],
           what_worked: [], what_failed: [],
           mistakes: [], opponent_tactics: [],
           next_plan: [],
           self_technical: null, self_tactical: null,
           self_mental: null, self_physical: null,
           opponent_difficulty: null,
+          player_overall: null,
           free_notes: '',
         }
         if (presetOpponentId) {
@@ -4615,19 +4682,25 @@ const _app = createApp({
     function openOpponentModal(opp) {
       if (opp) {
         opponentForm.value = {
-          id: opp.id, name: opp.name, handedness: opp.handedness || 'right',
+          id: opp.id, name: opp.name,
+          first_name: opp.first_name || '', second_name: opp.second_name || '', nickname: opp.nickname || '',
+          city: opp.city || '', club: opp.club || '', elo: opp.elo || null,
+          handedness: opp.handedness || 'right',
           grip: opp.grip || 'shakehand', style: opp.style || 'allround',
           rubber_fh: opp.rubber_fh || '', rubber_bh: opp.rubber_bh || '',
           rating_level: opp.rating_level || '', general_notes: opp.general_notes || '',
         }
       } else {
-        opponentForm.value = {name:'',handedness:'right',grip:'shakehand',style:'allround',rubber_fh:'',rubber_bh:'',rating_level:'',general_notes:''}
+        opponentForm.value = {name:'',first_name:'',second_name:'',nickname:'',city:'',club:'',elo:null,handedness:'right',grip:'shakehand',style:'allround',rubber_fh:'',rubber_bh:'',rating_level:'',general_notes:''}
       }
       opponentModal.value = opp || {}
     }
 
     async function saveOpponent() {
-      if (!opponentForm.value.name.trim()) return
+      const f = opponentForm.value
+      const name = [f.first_name, f.second_name].filter(Boolean).join(' ').trim() || f.name?.trim()
+      if (!name) return
+      opponentForm.value.name = name
       const pid = selectedPlayerId.value
       const body = {...opponentForm.value}
       const isEdit = !!opponentForm.value.id
@@ -5839,7 +5912,7 @@ const _app = createApp({
 
     // Wszystkie nagrania pogrupowane po nazwie drilla (custom_name || step_name), sortowane po dacie desc
     const recordingsByDrill = computed(() => {
-      const all = [...allRecordings.value, ...ondemandRecordings.value]
+      const all = [...allRecordings.value.filter(r => !r.is_ondemand), ...ondemandRecordings.value]
       const q = histSearch.value.trim().toLowerCase()
       const groups = {}
       for (const r of all) {
