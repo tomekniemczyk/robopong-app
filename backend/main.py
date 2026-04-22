@@ -1204,7 +1204,7 @@ def get_player_favorites(pid: int):
 def add_player_favorite(pid: int, body: dict):
     item_type = body.get("item_type", "")
     item_id = body.get("item_id")
-    if item_type not in ("training", "drill", "exercise") or item_id is None:
+    if item_type not in ("training", "drill", "exercise", "serve") or item_id is None:
         raise HTTPException(400, "item_type and item_id required")
     return db.add_favorite(pid, item_type, item_id)
 

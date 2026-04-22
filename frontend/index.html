@@ -2065,11 +2065,19 @@
           </div>
         </div>
         <!-- Favorite exercises -->
-        <div v-if="favExercises.length">
+        <div v-if="favExercises.length" style="margin-bottom:6px">
           <div style="font-size:10px;color:var(--muted);margin-bottom:3px">{{ t('nav.exercises') }}</div>
           <div v-for="f in favExercises" :key="f.id" style="display:flex;align-items:center;gap:6px;padding:3px 0;font-size:12px">
             <span style="cursor:pointer" @click="toggleFavorite('exercise', f.item_id)">★</span>
             <span style="flex:1">{{ getExerciseName(f.item_id) }}</span>
+          </div>
+        </div>
+        <!-- Favorite serves -->
+        <div v-if="favServes.length">
+          <div style="font-size:10px;color:var(--muted);margin-bottom:3px">{{ t('nav.serves') }}</div>
+          <div v-for="f in favServes" :key="f.id" style="display:flex;align-items:center;gap:6px;padding:3px 0;font-size:12px">
+            <span style="cursor:pointer" @click="toggleFavorite('serve', f.item_id)">★</span>
+            <span style="flex:1">{{ getServeName(f.item_id) }}</span>
           </div>
         </div>
       </div>
@@ -4040,6 +4048,7 @@ const _app = createApp({
     const favTrainings = computed(() => playerFavorites.value.filter(f => f.item_type === 'training'))
     const favDrills = computed(() => playerFavorites.value.filter(f => f.item_type === 'drill'))
     const favExercises = computed(() => playerFavorites.value.filter(f => f.item_type === 'exercise'))
+    const favServes = computed(() => playerFavorites.value.filter(f => f.item_type === 'serve'))
 
     async function loadTrainings() {
       const r = await fetch('/api/trainings')
@@ -4498,6 +4507,15 @@ const _app = createApp({
         }
       }
       return `Exercise #${exId}`
+    }
+
+    function getServeName(svId) {
+      for (const g of (serveTree.value?.groups || [])) {
+        for (const sv of (g.serves || [])) {
+          if (sv.id === svId) return sv.readonly ? tc('serves', sv.name) : sv.name
+        }
+      }
+      return `Serve #${svId}`
     }
 
     async function loadPlayerFavorites(pid) {
@@ -5967,8 +5985,8 @@ const _app = createApp({
       compareMetrics, compareNameA, compareNameB, compare30A, compare30B, openCompare, loadCompareStats,
       videoCompare, vidLeft, vidRight, openVideoCompare, openVideoCompareOndemand, closeVideoCompare, setVideoSpeed, syncVideos, applySyncOffset, toggleBothVideos, restartBothVideos, toggleCompareFullscreen, skipBoth,
       onVideoProgress, onVideoCanPlay, onVideoMetadata, onVideoLoadStart, forceStartCompare, fmtSpeed,
-      favTrainings, favDrills, favExercises,
-      getTrainingSteps, getStepRecording, getDrillName, getExerciseName, getHistoryLabel,
+      favTrainings, favDrills, favExercises, favServes,
+      getTrainingSteps, getStepRecording, getDrillName, getExerciseName, getServeName, getHistoryLabel,
       landingMode, pendingLandings, drillLandings, handleLandingClick, saveLandings,
       getStepVoiceNote, deleteVoiceNote, toggleVoiceRecord, loadPlayerVoiceNotes,
       loadPlayerFavorites, isFavorite, toggleFavorite,

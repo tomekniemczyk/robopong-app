@@ -297,6 +297,15 @@ def test_add_favorite_invalid_type(client):
     assert r2.status_code == 400
 
 
+def test_add_favorite_serve(client):
+    r = client.post("/api/players", json={"name": "Tomek"})
+    pid = r.json()["id"]
+    r2 = client.post(f"/api/players/{pid}/favorites", json={"item_type": "serve", "item_id": 50001})
+    assert r2.status_code == 201
+    assert r2.json()["item_type"] == "serve"
+    assert r2.json()["item_id"] == 50001
+
+
 # ── History detail endpoint ──────────────────────────────────────────────────
 
 def test_get_history_entry(client):
