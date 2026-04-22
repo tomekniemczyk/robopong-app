@@ -471,15 +471,14 @@ async def _handle(msg: dict, ws: WebSocket):
             broadcast("calibration_loaded", {"cal": cal, "calibrated": True, "addr": addr})
 
     elif action == "begin_calibration":
-        _log("Begin calibration — V (reset head)")
-        cal = robot._calibration
-        if cal:
-            await _apply_calibration_with_reset(cal)
-            _log("CAL re-applied after V×2: h=%s osc=%s rot=%s", cal.get("height"), cal.get("oscillation"), cal.get("rotation"))
-        else:
-            await robot.reset_head()
-            await asyncio.sleep(0.5)
-            await robot.reset_head()
+        # V×2 only — like Newgy: V resets firmware U/O/R offsets to 150 (neutral).
+        # Do NOT resend U/O/R here: wizard set_ball uses absolute h/osc/rot values,
+        # adding the offset would overshoot (e.g. h=183 + U=183 → effective=216).
+        # U/O/R are restored only after calibration is committed (apply_calibration).
+        _log("Begin calibration — V×2 (reset head, no U/O/R re-apply)")
+        await robot.reset_head()
+        await asyncio.sleep(0.5)
+        await robot.reset_head()
 
     elif action == "run_scenario":
         s = db.get_scenario(msg["id"])
