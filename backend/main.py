@@ -18,6 +18,7 @@ import camera_config
 import db
 import drills
 import exercises
+import journal
 import serves
 import training
 import players
@@ -1212,6 +1213,113 @@ def add_player_favorite(pid: int, body: dict):
 @app.delete("/api/players/{pid}/favorites", status_code=204)
 def remove_player_favorite(pid: int, item_type: str = "", item_id: int = 0):
     db.remove_favorite(pid, item_type, item_id)
+
+
+# ── Journal: Opponents ────────────────────────────────────────────────────────
+
+@app.get("/api/players/{pid}/opponents")
+def list_opponents(pid: int):
+    return journal.list_opponents(pid)
+
+
+@app.get("/api/players/{pid}/opponents/search")
+def search_opponents(pid: int, q: str = ""):
+    return journal.search_opponents(pid, q)
+
+
+@app.get("/api/players/{pid}/opponents/{oid}")
+def get_opponent(pid: int, oid: int):
+    opp = journal.get_opponent(pid, oid)
+    if not opp:
+        raise HTTPException(404)
+    return opp
+
+
+@app.post("/api/players/{pid}/opponents", status_code=201)
+def create_opponent(pid: int, body: dict):
+    if not body.get("name", "").strip():
+        raise HTTPException(400, "name required")
+    return journal.create_opponent(pid, body)
+
+
+@app.put("/api/players/{pid}/opponents/{oid}")
+def update_opponent(pid: int, oid: int, body: dict):
+    opp = journal.update_opponent(pid, oid, body)
+    if not opp:
+        raise HTTPException(404)
+    return opp
+
+
+@app.delete("/api/players/{pid}/opponents/{oid}", status_code=204)
+def delete_opponent(pid: int, oid: int):
+    journal.delete_opponent(pid, oid)
+
+
+@app.get("/api/players/{pid}/opponents/{oid}/h2h")
+def get_h2h(pid: int, oid: int):
+    return journal.get_h2h(pid, oid)
+
+
+# ── Journal: Match entries ────────────────────────────────────────────────────
+
+@app.get("/api/players/{pid}/journal")
+def list_matches(pid: int, opponent_id: int | None = None, result: str | None = None,
+                 match_type: str | None = None, from_date: str | None = None,
+                 to_date: str | None = None, limit: int = 50, offset: int = 0):
+    return journal.list_matches(pid, opponent_id=opponent_id, result=result,
+                                match_type=match_type, from_date=from_date, to_date=to_date,
+                                limit=limit, offset=offset)
+
+
+@app.get("/api/players/{pid}/journal/stats")
+def get_journal_stats(pid: int):
+    return journal.get_journal_stats(pid)
+
+
+@app.get("/api/players/{pid}/journal/audit")
+def get_journal_audit(pid: int, last_n: int = 20):
+    return journal.get_journal_audit(pid, last_n)
+
+
+@app.get("/api/players/{pid}/journal/export")
+def export_journal(pid: int):
+    return journal.export_journal(pid)
+
+
+@app.get("/api/players/{pid}/journal/{mid}")
+def get_match(pid: int, mid: int):
+    m = journal.get_match(pid, mid)
+    if not m:
+        raise HTTPException(404)
+    return m
+
+
+@app.post("/api/players/{pid}/journal", status_code=201)
+def create_match(pid: int, body: dict):
+    if not body.get("opponent_id") or not body.get("match_date", "").strip():
+        raise HTTPException(400, "opponent_id and match_date required")
+    return journal.create_match(pid, body)
+
+
+@app.put("/api/players/{pid}/journal/{mid}")
+def update_match(pid: int, mid: int, body: dict):
+    m = journal.update_match(pid, mid, body)
+    if not m:
+        raise HTTPException(404)
+    return m
+
+
+@app.delete("/api/players/{pid}/journal/{mid}", status_code=204)
+def delete_match(pid: int, mid: int):
+    journal.delete_match(pid, mid)
+
+
+@app.post("/api/players/{pid}/journal/{mid}/duplicate", status_code=201)
+def duplicate_match(pid: int, mid: int):
+    m = journal.duplicate_match(pid, mid)
+    if not m:
+        raise HTTPException(404)
+    return m
 
 
 # ── Recordings ───────────────────────────────────────────────────────────────

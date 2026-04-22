@@ -2217,6 +2217,419 @@
     </div>
   </div>
 
+  <!-- ── Dziennik ─────────────────────────────────────────────────────── -->
+  <div class="page" v-show="page === 'journal'">
+    <div class="card">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px">
+        <h2 style="flex:1">📓 {{ t('nav.journal') }}</h2>
+        <button class="btn btn-ghost btn-icon" :title="t('journal.opponents')" @click="page='journal-opponents'; loadOpponents()">👥</button>
+        <button class="btn btn-ghost btn-icon" :title="t('journal.stats_title')" @click="showJournalStats=!showJournalStats; if(showJournalStats) loadJournalStats()">📈</button>
+        <button class="btn btn-primary" @click="openMatchModal(null)">+ {{ t('journal.new_match') }}</button>
+      </div>
+
+      <!-- Stats panel -->
+      <div v-if="showJournalStats && journalStats" style="margin-bottom:14px;padding:10px;background:rgba(255,255,255,.04);border-radius:8px">
+        <div style="display:flex;gap:16px;margin-bottom:8px;flex-wrap:wrap">
+          <div style="text-align:center"><div style="font-size:22px;font-weight:700">{{ journalStats.total }}</div><div style="font-size:10px;color:var(--muted)">{{ t('journal.total_matches') }}</div></div>
+          <div style="text-align:center"><div style="font-size:22px;font-weight:700;color:var(--success)">{{ journalStats.wins }}</div><div style="font-size:10px;color:var(--muted)">{{ t('journal.wins') }}</div></div>
+          <div style="text-align:center"><div style="font-size:22px;font-weight:700;color:var(--danger)">{{ journalStats.losses }}</div><div style="font-size:10px;color:var(--muted)">{{ t('journal.losses') }}</div></div>
+          <div style="text-align:center"><div style="font-size:22px;font-weight:700;color:var(--accent)">{{ journalStats.win_rate }}%</div><div style="font-size:10px;color:var(--muted)">{{ t('journal.win_rate') }}</div></div>
+        </div>
+        <!-- Monthly trend -->
+        <div v-if="journalStats.monthly?.length" style="margin-bottom:8px">
+          <div style="font-size:10px;color:var(--muted);margin-bottom:4px">{{ t('journal.monthly_trend') }}</div>
+          <div style="display:flex;gap:4px;align-items:flex-end;height:40px">
+            <div v-for="m in journalStats.monthly.slice().reverse()" :key="m.month" style="flex:1;display:flex;flex-direction:column;gap:1px;cursor:default" :title="m.month+': '+m.wins+'W '+m.losses+'L'">
+              <div :style="{height: ((m.wins/(m.wins+m.losses||1))*36)+'px',background:'var(--success)',borderRadius:'2px 2px 0 0',minHeight:'2px'}"></div>
+              <div :style="{height: ((m.losses/(m.wins+m.losses||1))*36)+'px',background:'var(--danger)',borderRadius:'0',minHeight: m.losses?'2px':'0'}"></div>
+            </div>
+          </div>
+        </div>
+        <!-- Opponents with issues -->
+        <div v-if="journalStats.opponents_with_issues?.length" style="margin-top:6px">
+          <div style="font-size:10px;color:var(--muted);margin-bottom:4px">⚠️ {{ t('journal.opponents_with_issues') }}</div>
+          <div v-for="o in journalStats.opponents_with_issues" :key="o.opponent_id" style="font-size:11px;display:flex;gap:6px;padding:2px 0">
+            <span style="flex:1">{{ o.opponent_name }}</span>
+            <span style="color:var(--danger)">{{ o.wins }}W-{{ o.losses }}L</span>
+            <button class="btn btn-ghost" style="font-size:9px;padding:1px 5px" @click="openOpponent(o.opponent_id)">→</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Filters -->
+      <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px">
+        <input class="input" v-model="journalSearch" :placeholder="t('journal.search')" style="flex:1;min-width:120px;font-size:12px;padding:4px 8px">
+        <select class="input" v-model="journalFilterResult" style="font-size:12px;padding:4px 6px;width:auto">
+          <option value="">{{ t('journal.filter_all') }}</option>
+          <option value="win">✅ {{ t('journal.wins') }}</option>
+          <option value="loss">❌ {{ t('journal.losses') }}</option>
+        </select>
+        <select class="input" v-model="journalFilterType" style="font-size:12px;padding:4px 6px;width:auto">
+          <option value="">{{ t('journal.filter_all_types') }}</option>
+          <option v-for="mt in ['sparing','turniej','liga','towarzyski']" :key="mt" :value="mt">{{ mt }}</option>
+        </select>
+      </div>
+
+      <!-- Match cards -->
+      <div v-if="!filteredMatches.length" style="color:var(--muted);font-size:13px">{{ t('journal.empty') }}</div>
+      <div v-for="m in filteredMatches" :key="m.id" class="card" style="margin-bottom:8px;padding:10px;cursor:pointer" @click="openMatchDetail(m)">
+        <div style="display:flex;align-items:center;gap:8px">
+          <span style="font-size:11px;color:var(--muted)">📅 {{ m.match_date }}</span>
+          <span class="chip" style="font-size:10px;padding:1px 6px">{{ m.match_type }}</span>
+          <span v-if="m.tournament_name" style="font-size:10px;color:var(--muted)">{{ m.tournament_name }}</span>
+          <span style="flex:1"></span>
+          <span :style="{color: m.result==='win' ? 'var(--success)' : m.result==='loss' ? 'var(--danger)' : 'var(--muted)', fontWeight:'700', fontSize:'13px'}">
+            {{ m.result === 'win' ? '✅' : m.result === 'loss' ? '❌' : '—' }}
+            {{ m.sets_me !== null ? m.sets_me+':'+m.sets_op : '' }}
+          </span>
+          <button class="btn btn-ghost btn-icon" style="font-size:11px" @click.stop="openMatchModal(m)">✏</button>
+          <button class="btn btn-ghost btn-icon" style="font-size:11px;color:var(--danger)" @click.stop="deleteMatch(m.id)">✕</button>
+        </div>
+        <div style="font-weight:600;font-size:13px;margin:4px 0">👤 {{ m.opponent_name }}</div>
+        <div v-if="m.set_scores?.length" style="font-size:10px;color:var(--muted)">
+          ({{ m.set_scores.map(s => s[0]+'-'+s[1]).join(', ') }})
+        </div>
+        <div style="display:flex;gap:8px;margin-top:6px;flex-wrap:wrap">
+          <div v-if="m.what_worked?.length" style="font-size:11px">
+            ✅ <span v-for="(w,i) in m.what_worked.slice(0,3)" :key="i" class="chip" style="font-size:10px;padding:1px 5px;background:rgba(52,199,89,.15);border-color:rgba(52,199,89,.3)">{{ w }}</span>
+            <span v-if="m.what_worked.length>3" style="color:var(--muted)">+{{ m.what_worked.length-3 }}</span>
+          </div>
+          <div v-if="m.what_failed?.length" style="font-size:11px">
+            ❌ <span v-for="(f,i) in m.what_failed.slice(0,2)" :key="i" class="chip" style="font-size:10px;padding:1px 5px;background:rgba(255,59,48,.12);border-color:rgba(255,59,48,.3)">{{ f }}</span>
+            <span v-if="m.what_failed.length>2" style="color:var(--muted)">+{{ m.what_failed.length-2 }}</span>
+          </div>
+        </div>
+        <div v-if="m.self_technical || m.self_tactical" style="font-size:10px;color:var(--muted);margin-top:4px">
+          ⭐ {{ t('journal.tech') }}:{{ m.self_technical }}/5 {{ t('journal.tac') }}:{{ m.self_tactical }}/5
+          <span v-if="m.self_mental"> {{ t('journal.men') }}:{{ m.self_mental }}/5</span>
+          <span v-if="m.self_physical"> {{ t('journal.phy') }}:{{ m.self_physical }}/5</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Dziennik: Przeciwnicy ──────────────────────────────────────────── -->
+  <div class="page" v-show="page === 'journal-opponents'">
+    <div class="card">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px">
+        <button class="btn btn-ghost btn-icon" @click="page='journal'">←</button>
+        <h2 style="flex:1">👥 {{ t('journal.opponents') }}</h2>
+        <button class="btn btn-primary" @click="openOpponentModal(null)">+ {{ t('journal.new_opponent') }}</button>
+      </div>
+      <div v-if="!opponents.length" style="color:var(--muted);font-size:13px">{{ t('journal.opponents_empty') }}</div>
+      <div v-for="o in opponents" :key="o.id" class="card" style="margin-bottom:8px;padding:10px;cursor:pointer" @click="openOpponent(o.id)">
+        <div style="display:flex;align-items:center;gap:8px">
+          <div style="flex:1">
+            <div style="font-weight:600;font-size:13px">{{ o.name }}</div>
+            <div style="font-size:11px;color:var(--muted)">{{ o.style }} · {{ o.handedness === 'right' ? t('journal.right_hand') : t('journal.left_hand') }}<span v-if="o.grip"> · {{ o.grip }}</span></div>
+          </div>
+          <div style="text-align:right;font-size:11px">
+            <div v-if="o.h2h.total">
+              <span style="color:var(--success)">{{ o.h2h.wins }}W</span> <span style="color:var(--danger)">{{ o.h2h.losses }}L</span>
+            </div>
+            <div v-else style="color:var(--muted)">{{ t('journal.no_matches') }}</div>
+          </div>
+          <button class="btn btn-ghost btn-icon" style="font-size:11px" @click.stop="openOpponentModal(o)">✏</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Dziennik: Profil przeciwnika ──────────────────────────────────── -->
+  <div class="page" v-show="page === 'journal-opponent'">
+    <div class="card" v-if="selectedOpponent">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px">
+        <button class="btn btn-ghost btn-icon" @click="page='journal-opponents'">←</button>
+        <h2 style="flex:1">{{ selectedOpponent.name }}</h2>
+        <button class="btn btn-primary" @click="openMatchModal(null, selectedOpponent.id)">+ {{ t('journal.new_match') }}</button>
+      </div>
+
+      <!-- H2H summary -->
+      <div v-if="selectedOpponent.h2h" style="margin-bottom:12px;padding:10px;background:rgba(255,255,255,.04);border-radius:8px">
+        <div style="display:flex;gap:16px;margin-bottom:8px">
+          <div style="text-align:center"><div style="font-size:20px;font-weight:700;color:var(--success)">{{ selectedOpponent.h2h.wins }}</div><div style="font-size:10px;color:var(--muted)">{{ t('journal.wins') }}</div></div>
+          <div style="text-align:center"><div style="font-size:20px;font-weight:700;color:var(--danger)">{{ selectedOpponent.h2h.losses }}</div><div style="font-size:10px;color:var(--muted)">{{ t('journal.losses') }}</div></div>
+          <div style="text-align:center"><div style="font-size:20px;font-weight:700">{{ selectedOpponent.h2h.total }}</div><div style="font-size:10px;color:var(--muted)">{{ t('journal.total_matches') }}</div></div>
+          <div v-if="selectedOpponent.h2h.streak" style="text-align:center">
+            <div style="font-size:14px;font-weight:700" :style="{color: selectedOpponent.h2h.streak.result==='win' ? 'var(--success)' : 'var(--danger)'}">{{ selectedOpponent.h2h.streak.count }}×{{ selectedOpponent.h2h.streak.result==='win' ? '✅' : '❌' }}</div>
+            <div style="font-size:10px;color:var(--muted)">{{ t('journal.streak') }}</div>
+          </div>
+        </div>
+        <!-- Pattern analysis -->
+        <div v-if="selectedOpponent.h2h.top_worked?.length" style="margin-bottom:6px">
+          <div style="font-size:10px;color:var(--muted);margin-bottom:3px">✅ {{ t('journal.top_worked') }}</div>
+          <div v-for="p in selectedOpponent.h2h.top_worked" :key="p.text" style="display:flex;gap:6px;font-size:11px;padding:1px 0">
+            <span style="flex:1">{{ p.text }}</span><span style="color:var(--muted)">×{{ p.count }}</span>
+          </div>
+        </div>
+        <div v-if="selectedOpponent.h2h.top_mistakes?.length" style="margin-bottom:6px">
+          <div style="font-size:10px;color:var(--muted);margin-bottom:3px">⚠️ {{ t('journal.top_mistakes') }}</div>
+          <div v-for="p in selectedOpponent.h2h.top_mistakes" :key="p.text" style="display:flex;gap:6px;font-size:11px;padding:1px 0">
+            <span style="flex:1">{{ p.text }}</span><span style="color:var(--muted)">×{{ p.count }}</span>
+          </div>
+        </div>
+        <div v-if="selectedOpponent.h2h.top_tactics?.length">
+          <div style="font-size:10px;color:var(--muted);margin-bottom:3px">🎯 {{ t('journal.top_tactics') }}</div>
+          <div v-for="p in selectedOpponent.h2h.top_tactics" :key="p.text" style="display:flex;gap:6px;font-size:11px;padding:1px 0">
+            <span style="flex:1">{{ p.text }}</span><span style="color:var(--muted)">×{{ p.count }}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Opponent profile info -->
+      <div style="font-size:12px;margin-bottom:10px;padding:8px;background:rgba(255,255,255,.03);border-radius:6px">
+        <div style="display:flex;gap:12px;flex-wrap:wrap">
+          <span>{{ selectedOpponent.handedness === 'right' ? '✋' : '🤚' }} {{ selectedOpponent.handedness === 'right' ? t('journal.right_hand') : t('journal.left_hand') }}</span>
+          <span>🏓 {{ selectedOpponent.style }}</span>
+          <span v-if="selectedOpponent.grip">{{ selectedOpponent.grip }}</span>
+          <span v-if="selectedOpponent.rating_level" style="color:var(--muted)">{{ selectedOpponent.rating_level }}</span>
+        </div>
+        <div v-if="selectedOpponent.rubber_fh || selectedOpponent.rubber_bh" style="margin-top:4px;color:var(--muted)">
+          <span v-if="selectedOpponent.rubber_fh">FH: {{ selectedOpponent.rubber_fh }}</span>
+          <span v-if="selectedOpponent.rubber_bh"> · BH: {{ selectedOpponent.rubber_bh }}</span>
+        </div>
+        <div v-if="selectedOpponent.general_notes" style="margin-top:4px;font-style:italic;color:var(--muted)">{{ selectedOpponent.general_notes }}</div>
+      </div>
+
+      <!-- Matches against this opponent -->
+      <div style="font-size:13px;font-weight:600;margin-bottom:6px">{{ t('journal.match_history') }} ({{ selectedOpponent.h2h?.total || 0 }})</div>
+      <div v-if="!opponentMatches.length" style="color:var(--muted);font-size:12px">{{ t('journal.empty') }}</div>
+      <div v-for="m in opponentMatches" :key="m.id" style="padding:6px 0;border-bottom:1px solid rgba(255,255,255,.05);display:flex;align-items:center;gap:8px;cursor:pointer" @click="openMatchDetail(m)">
+        <span style="font-size:11px;color:var(--muted)">{{ m.match_date }}</span>
+        <span :style="{color: m.result==='win' ? 'var(--success)' : m.result==='loss' ? 'var(--danger)' : 'var(--muted)', fontWeight:'600'}">
+          {{ m.result === 'win' ? '✅' : m.result === 'loss' ? '❌' : '—' }} {{ m.sets_me !== null ? m.sets_me+':'+m.sets_op : '' }}
+        </span>
+        <span style="flex:1;font-size:11px;color:var(--muted)">{{ m.match_type }}</span>
+        <button class="btn btn-ghost" style="font-size:9px;padding:1px 5px" @click.stop="openMatchModal(m)">✏</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Dziennik: Modal nowy/edytuj mecz ───────────────────────────────── -->
+  <div v-if="matchModal" class="modal-overlay" @click.self="matchModal=null" style="z-index:200">
+    <div class="modal-sheet" style="max-width:460px;max-height:90vh;overflow-y:auto">
+      <h3 style="margin-bottom:14px">{{ matchModal.id ? '✏ ' + t('journal.edit_match') : '+ ' + t('journal.new_match') }}</h3>
+
+      <!-- Tab navigation -->
+      <div style="display:flex;gap:2px;margin-bottom:14px;overflow-x:auto">
+        <button v-for="(tab, ti) in matchTabs" :key="tab" class="btn btn-ghost"
+          :style="{fontSize:'11px',padding:'4px 8px',borderRadius:'14px',background: matchTab===ti ? 'rgba(91,124,247,.18)' : 'transparent',borderColor: matchTab===ti ? 'rgba(91,124,247,.5)' : 'var(--border)',color: matchTab===ti ? 'var(--accent)' : 'var(--muted)'}"
+          @click="matchTab=ti">{{ tab }}</button>
+      </div>
+
+      <!-- Tab 0: Podstawowe -->
+      <div v-show="matchTab===0" style="display:flex;flex-direction:column;gap:10px">
+        <div>
+          <label style="font-size:12px;color:var(--muted)">👤 {{ t('journal.opponent') }}</label>
+          <div style="display:flex;gap:6px;margin-top:4px">
+            <div style="position:relative;flex:1">
+              <input class="input" v-model="matchOpponentSearch" @input="searchOpponents(matchOpponentSearch)"
+                :placeholder="t('journal.search_opponent')" style="width:100%;font-size:12px">
+              <div v-if="opponentSuggestions.length && matchOpponentSearch" style="position:absolute;top:100%;left:0;right:0;background:var(--bg2);border:1px solid var(--border);border-radius:6px;z-index:10;max-height:150px;overflow-y:auto">
+                <div v-for="s in opponentSuggestions" :key="s.id" style="padding:6px 10px;cursor:pointer;font-size:12px" @click="selectOpponent(s)">{{ s.name }}</div>
+              </div>
+            </div>
+            <button class="btn btn-ghost btn-icon" @click="openOpponentModal(null)">+</button>
+          </div>
+          <div v-if="matchForm.opponent_id" style="font-size:11px;color:var(--success);margin-top:3px">✓ {{ matchOpponentSearch }}</div>
+        </div>
+        <div>
+          <label style="font-size:12px;color:var(--muted)">📅 {{ t('journal.date') }}</label>
+          <input type="date" class="input" v-model="matchForm.match_date" style="margin-top:4px;width:100%;font-size:12px">
+        </div>
+        <div style="display:flex;gap:8px">
+          <div style="flex:1">
+            <label style="font-size:12px;color:var(--muted)">{{ t('journal.match_type') }}</label>
+            <select class="input" v-model="matchForm.match_type" style="margin-top:4px;width:100%;font-size:12px">
+              <option v-for="mt in ['sparing','turniej','liga','towarzyski']" :key="mt" :value="mt">{{ mt }}</option>
+            </select>
+          </div>
+          <div style="flex:1">
+            <label style="font-size:12px;color:var(--muted)">⏱ {{ t('journal.duration') }}</label>
+            <input type="number" class="input" v-model.number="matchForm.duration_min" :placeholder="t('journal.duration_min')" style="margin-top:4px;width:100%;font-size:12px">
+          </div>
+        </div>
+        <div v-if="matchForm.match_type === 'turniej'">
+          <label style="font-size:12px;color:var(--muted)">🏆 {{ t('journal.tournament') }}</label>
+          <input class="input" v-model="matchForm.tournament_name" style="margin-top:4px;width:100%;font-size:12px">
+        </div>
+        <!-- Score -->
+        <div>
+          <label style="font-size:12px;color:var(--muted);display:block;margin-bottom:4px">🎯 {{ t('journal.score') }}</label>
+          <div style="display:flex;align-items:center;gap:8px">
+            <button class="btn btn-ghost btn-icon" @click="matchForm.sets_me=Math.max(0,(matchForm.sets_me||0)-1)">−</button>
+            <span style="font-size:20px;font-weight:700;min-width:20px;text-align:center">{{ matchForm.sets_me ?? '?' }}</span>
+            <span style="font-size:16px;color:var(--muted)">:</span>
+            <span style="font-size:20px;font-weight:700;min-width:20px;text-align:center">{{ matchForm.sets_op ?? '?' }}</span>
+            <button class="btn btn-ghost btn-icon" @click="matchForm.sets_op=Math.max(0,(matchForm.sets_op||0)-1)">−</button>
+            <span style="font-size:11px;color:var(--muted);margin-left:4px">ty:rywal</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:8px;margin-top:4px">
+            <button class="btn btn-ghost btn-icon" @click="matchForm.sets_me=(matchForm.sets_me||0)+1">+</button>
+            <span style="flex:1;text-align:center;font-size:10px;color:var(--muted)">{{ matchForm.sets_me > matchForm.sets_op ? '✅ '+t('journal.win') : matchForm.sets_me < matchForm.sets_op ? '❌ '+t('journal.loss') : '' }}</span>
+            <button class="btn btn-ghost btn-icon" @click="matchForm.sets_op=(matchForm.sets_op||0)+1">+</button>
+          </div>
+          <!-- Set scores detail -->
+          <div style="margin-top:6px">
+            <div style="font-size:11px;color:var(--muted);margin-bottom:3px">{{ t('journal.set_scores_detail') }}</div>
+            <div v-for="(ss, si) in matchForm.set_scores" :key="si" style="display:flex;align-items:center;gap:4px;margin-bottom:3px">
+              <span style="font-size:10px;color:var(--muted);width:20px">{{ si+1 }}.</span>
+              <input type="number" class="input" v-model.number="matchForm.set_scores[si][0]" style="width:44px;font-size:12px;padding:2px 4px" min="0" max="30">
+              <span style="font-size:11px;color:var(--muted)">:</span>
+              <input type="number" class="input" v-model.number="matchForm.set_scores[si][1]" style="width:44px;font-size:12px;padding:2px 4px" min="0" max="30">
+              <button class="btn btn-ghost btn-icon" style="font-size:10px" @click="matchForm.set_scores.splice(si,1)">✕</button>
+            </div>
+            <button class="btn btn-ghost" style="font-size:10px;padding:2px 8px" @click="matchForm.set_scores.push([0,0])">+ {{ t('journal.add_set') }}</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tab 1: Co działało / Co nie -->
+      <div v-show="matchTab===1" style="display:flex;flex-direction:column;gap:12px">
+        <div>
+          <label style="font-size:12px;color:var(--success);display:block;margin-bottom:4px">✅ {{ t('journal.what_worked') }}</label>
+          <div style="display:flex;flex-wrap:wrap;gap:4px;margin-bottom:6px">
+            <span v-for="(w,i) in matchForm.what_worked" :key="'w'+i" class="chip" style="background:rgba(52,199,89,.15);border-color:rgba(52,199,89,.3);cursor:pointer" @click="matchForm.what_worked.splice(i,1)">{{ w }} ✕</span>
+          </div>
+          <div style="display:flex;gap:4px">
+            <input class="input" v-model="workedInput" @keydown.enter.prevent="addWorked" style="flex:1;font-size:12px" :placeholder="t('journal.add_item')">
+            <button class="btn btn-ghost btn-icon" @click="addWorked">+</button>
+          </div>
+        </div>
+        <div>
+          <label style="font-size:12px;color:var(--danger);display:block;margin-bottom:4px">❌ {{ t('journal.what_failed') }}</label>
+          <div style="display:flex;flex-wrap:wrap;gap:4px;margin-bottom:6px">
+            <span v-for="(f,i) in matchForm.what_failed" :key="'f'+i" class="chip" style="background:rgba(255,59,48,.12);border-color:rgba(255,59,48,.3);cursor:pointer" @click="matchForm.what_failed.splice(i,1)">{{ f }} ✕</span>
+          </div>
+          <div style="display:flex;gap:4px">
+            <input class="input" v-model="failedInput" @keydown.enter.prevent="addFailed" style="flex:1;font-size:12px" :placeholder="t('journal.add_item')">
+            <button class="btn btn-ghost btn-icon" @click="addFailed">+</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tab 2: Błędy + taktyka -->
+      <div v-show="matchTab===2" style="display:flex;flex-direction:column;gap:12px">
+        <div>
+          <label style="font-size:12px;color:var(--muted);display:block;margin-bottom:6px">⚠️ {{ t('journal.mistakes') }}</label>
+          <div v-for="(m,i) in matchForm.mistakes" :key="'m'+i" style="display:flex;gap:6px;margin-bottom:6px;padding:6px;background:rgba(255,255,255,.03);border-radius:6px">
+            <div style="flex:1">
+              <select class="input" v-model="matchForm.mistakes[i].category" style="font-size:11px;padding:2px 4px;width:100%;margin-bottom:4px">
+                <option v-for="cat in ['taktyczny','techniczny','mentalny','fizyczny']" :key="cat" :value="cat">{{ cat }}</option>
+              </select>
+              <input class="input" v-model="matchForm.mistakes[i].description" style="font-size:11px;padding:2px 6px;width:100%" :placeholder="t('journal.mistake_desc')">
+            </div>
+            <button class="btn btn-ghost btn-icon" style="font-size:11px;flex-shrink:0" @click="matchForm.mistakes.splice(i,1)">✕</button>
+          </div>
+          <button class="btn btn-ghost" style="font-size:11px;padding:3px 10px" @click="matchForm.mistakes.push({category:'taktyczny',description:''})">+ {{ t('journal.add_mistake') }}</button>
+        </div>
+        <div>
+          <label style="font-size:12px;color:var(--muted);display:block;margin-bottom:6px">🎯 {{ t('journal.opponent_tactics_label') }}</label>
+          <div v-for="(t2,i) in matchForm.opponent_tactics" :key="'t'+i" style="display:flex;gap:6px;margin-bottom:6px;padding:6px;background:rgba(255,255,255,.03);border-radius:6px">
+            <div style="flex:1">
+              <input class="input" v-model="matchForm.opponent_tactics[i].pattern" style="font-size:11px;padding:2px 6px;width:100%;margin-bottom:4px" :placeholder="t('journal.tactic_pattern')">
+              <select class="input" v-model="matchForm.opponent_tactics[i].frequency" style="font-size:11px;padding:2px 4px;width:100%">
+                <option v-for="f in ['rzadko','czasami','często','zawsze']" :key="f" :value="f">{{ f }}</option>
+              </select>
+            </div>
+            <button class="btn btn-ghost btn-icon" style="font-size:11px;flex-shrink:0" @click="matchForm.opponent_tactics.splice(i,1)">✕</button>
+          </div>
+          <button class="btn btn-ghost" style="font-size:11px;padding:3px 10px" @click="matchForm.opponent_tactics.push({pattern:'',frequency:'czasami'})">+ {{ t('journal.add_tactic') }}</button>
+        </div>
+      </div>
+
+      <!-- Tab 3: Plan -->
+      <div v-show="matchTab===3" style="display:flex;flex-direction:column;gap:8px">
+        <label style="font-size:12px;color:var(--muted);display:block">📋 {{ t('journal.next_plan') }}</label>
+        <div v-for="(p,i) in matchForm.next_plan" :key="'p'+i" style="display:flex;align-items:center;gap:6px">
+          <input type="checkbox" v-model="matchForm.next_plan[i].done">
+          <input class="input" v-model="matchForm.next_plan[i].text" style="flex:1;font-size:12px" :style="{textDecoration: p.done ? 'line-through' : 'none', opacity: p.done ? 0.5 : 1}">
+          <button class="btn btn-ghost btn-icon" style="font-size:11px" @click="matchForm.next_plan.splice(i,1)">✕</button>
+        </div>
+        <button class="btn btn-ghost" style="font-size:11px;padding:3px 10px" @click="matchForm.next_plan.push({text:'',done:false})">+ {{ t('journal.add_plan_item') }}</button>
+      </div>
+
+      <!-- Tab 4: Oceny + notatki -->
+      <div v-show="matchTab===4" style="display:flex;flex-direction:column;gap:10px">
+        <div style="display:flex;flex-direction:column;gap:6px">
+          <div v-for="field in [{k:'self_technical',l:'journal.tech'},{k:'self_tactical',l:'journal.tac'},{k:'self_mental',l:'journal.men'},{k:'self_physical',l:'journal.phy'},{k:'opponent_difficulty',l:'journal.opp_diff'}]" :key="field.k" style="display:flex;align-items:center;gap:8px">
+            <span style="font-size:12px;width:130px;flex-shrink:0">{{ t(field.l) }}</span>
+            <div style="display:flex;gap:4px">
+              <button v-for="n in [1,2,3,4,5]" :key="n" class="btn btn-ghost" :style="{fontSize:'14px',padding:'2px 4px',background: matchForm[field.k]>=n ? 'rgba(255,204,0,.2)' : 'transparent',borderColor: matchForm[field.k]>=n ? 'rgba(255,204,0,.5)' : 'var(--border)'}" @click="matchForm[field.k]=matchForm[field.k]===n?null:n">★</button>
+            </div>
+          </div>
+        </div>
+        <div>
+          <label style="font-size:12px;color:var(--muted);display:block;margin-bottom:4px">💬 {{ t('journal.free_notes') }}</label>
+          <textarea class="input" v-model="matchForm.free_notes" rows="5" style="width:100%;font-size:12px;resize:vertical"></textarea>
+        </div>
+      </div>
+
+      <!-- Footer buttons -->
+      <div style="display:flex;gap:8px;margin-top:16px">
+        <button class="btn btn-ghost" style="flex:1" @click="matchModal=null">{{ t('btn.cancel') }}</button>
+        <button class="btn btn-primary" style="flex:2" @click="saveMatch">{{ t('btn.save') }}</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Dziennik: Modal nowy/edytuj przeciwnik ───────────────────────── -->
+  <div v-if="opponentModal" class="modal-overlay" @click.self="opponentModal=null" style="z-index:210">
+    <div class="modal-sheet" style="max-width:360px">
+      <h3 style="margin-bottom:14px">{{ opponentModal.id ? '✏ '+t('journal.edit_opponent') : '+ '+t('journal.new_opponent') }}</h3>
+      <div style="display:flex;flex-direction:column;gap:8px">
+        <div>
+          <label style="font-size:12px;color:var(--muted)">{{ t('journal.opponent_name') }}</label>
+          <input class="input" v-model="opponentForm.name" style="margin-top:4px;width:100%;font-size:12px">
+        </div>
+        <div style="display:flex;gap:8px">
+          <div style="flex:1">
+            <label style="font-size:12px;color:var(--muted)">{{ t('journal.hand') }}</label>
+            <select class="input" v-model="opponentForm.handedness" style="margin-top:4px;width:100%;font-size:12px">
+              <option value="right">{{ t('journal.right_hand') }}</option>
+              <option value="left">{{ t('journal.left_hand') }}</option>
+            </select>
+          </div>
+          <div style="flex:1">
+            <label style="font-size:12px;color:var(--muted)">{{ t('journal.grip') }}</label>
+            <select class="input" v-model="opponentForm.grip" style="margin-top:4px;width:100%;font-size:12px">
+              <option value="shakehand">shakehand</option>
+              <option value="penhold">penhold</option>
+            </select>
+          </div>
+        </div>
+        <div>
+          <label style="font-size:12px;color:var(--muted)">{{ t('journal.style') }}</label>
+          <select class="input" v-model="opponentForm.style" style="margin-top:4px;width:100%;font-size:12px">
+            <option v-for="s in ['attacker','allround','defender','chopper']" :key="s" :value="s">{{ s }}</option>
+          </select>
+        </div>
+        <div style="display:flex;gap:8px">
+          <div style="flex:1">
+            <label style="font-size:12px;color:var(--muted)">FH</label>
+            <input class="input" v-model="opponentForm.rubber_fh" style="margin-top:4px;width:100%;font-size:12px" placeholder="np. Tenergy 05">
+          </div>
+          <div style="flex:1">
+            <label style="font-size:12px;color:var(--muted)">BH</label>
+            <input class="input" v-model="opponentForm.rubber_bh" style="margin-top:4px;width:100%;font-size:12px" placeholder="np. Rozena">
+          </div>
+        </div>
+        <div>
+          <label style="font-size:12px;color:var(--muted)">{{ t('journal.level') }}</label>
+          <input class="input" v-model="opponentForm.rating_level" style="margin-top:4px;width:100%;font-size:12px" placeholder="np. II liga, okręg, klub">
+        </div>
+        <div>
+          <label style="font-size:12px;color:var(--muted)">{{ t('journal.general_notes') }}</label>
+          <textarea class="input" v-model="opponentForm.general_notes" rows="3" style="margin-top:4px;width:100%;font-size:12px;resize:vertical"></textarea>
+        </div>
+      </div>
+      <div style="display:flex;gap:8px;margin-top:14px">
+        <button class="btn btn-ghost" style="flex:1" @click="opponentModal=null">{{ t('btn.cancel') }}</button>
+        <button class="btn btn-primary" style="flex:2" @click="saveOpponent">{{ t('btn.save') }}</button>
+      </div>
+    </div>
+  </div>
+
   <!-- ── Historia ────────────────────────────────────────────────────── -->
   <div class="page" v-show="page === 'history'">
     <div class="card">
@@ -2832,6 +3245,9 @@
     </button>
     <button :class="{active: page==='serves'}" :style="connected && !isCalibrated ? 'opacity:0.4' : ''" @click="connected && !isCalibrated ? (showToast(t('toast.cal_required')), page='calibration') : page='serves'" :title="connected && !isCalibrated ? t('toast.cal_required') : ''">
       <span class="nav-icon">🎾</span>{{ t('nav.serves') }}
+    </button>
+    <button v-if="selectedPlayerId" :class="{ active: page === 'journal' || page === 'journal-opponent' }" @click="page='journal'; loadJournal()">
+      <span class="nav-icon">📓</span>{{ t('nav.journal') }}
     </button>
     <!-- Players button hidden — access via avatar in topbar -->
     <button :class="{ active: page === 'history' }" @click="page='history'; loadAllHistory()">
@@ -4049,6 +4465,212 @@ const _app = createApp({
     const favDrills = computed(() => playerFavorites.value.filter(f => f.item_type === 'drill'))
     const favExercises = computed(() => playerFavorites.value.filter(f => f.item_type === 'exercise'))
     const favServes = computed(() => playerFavorites.value.filter(f => f.item_type === 'serve'))
+
+    // ── Journal ────────────────────────────────────────────────────────────
+    const matchesList = ref([])
+    const opponents = ref([])
+    const selectedOpponent = ref(null)
+    const opponentMatches = ref([])
+    const journalSearch = ref('')
+    const journalFilterResult = ref('')
+    const journalFilterType = ref('')
+    const showJournalStats = ref(false)
+    const journalStats = ref(null)
+    const matchModal = ref(null)
+    const opponentModal = ref(null)
+    const matchTab = ref(0)
+    const matchTabs = computed(() => [
+      t('journal.tab_basic'), t('journal.tab_worked'), t('journal.tab_mistakes'),
+      t('journal.tab_plan'), t('journal.tab_ratings')
+    ])
+    const matchForm = ref({})
+    const opponentForm = ref({})
+    const workedInput = ref('')
+    const failedInput = ref('')
+    const matchOpponentSearch = ref('')
+    const opponentSuggestions = ref([])
+
+    const filteredMatches = computed(() => {
+      let list = matchesList.value
+      if (journalSearch.value.trim()) {
+        const q = journalSearch.value.toLowerCase()
+        list = list.filter(m => m.opponent_name?.toLowerCase().includes(q) || m.free_notes?.toLowerCase().includes(q))
+      }
+      if (journalFilterResult.value) list = list.filter(m => m.result === journalFilterResult.value)
+      if (journalFilterType.value) list = list.filter(m => m.match_type === journalFilterType.value)
+      return list
+    })
+
+    async function loadJournal() {
+      if (!selectedPlayerId.value) return
+      const r = await fetch(`/api/players/${selectedPlayerId.value}/journal?limit=100`)
+      matchesList.value = await r.json()
+    }
+
+    async function loadOpponents() {
+      if (!selectedPlayerId.value) return
+      const r = await fetch(`/api/players/${selectedPlayerId.value}/opponents`)
+      opponents.value = await r.json()
+    }
+
+    async function loadJournalStats() {
+      if (!selectedPlayerId.value) return
+      const r = await fetch(`/api/players/${selectedPlayerId.value}/journal/stats`)
+      journalStats.value = await r.json()
+    }
+
+    async function openOpponent(oid) {
+      const r = await fetch(`/api/players/${selectedPlayerId.value}/opponents/${oid}`)
+      selectedOpponent.value = await r.json()
+      const r2 = await fetch(`/api/players/${selectedPlayerId.value}/journal?opponent_id=${oid}&limit=50`)
+      opponentMatches.value = await r2.json()
+      page.value = 'journal-opponent'
+    }
+
+    function openMatchModal(match, presetOpponentId = null) {
+      matchTab.value = 0
+      if (match) {
+        matchModal.value = match
+        matchForm.value = {
+          id: match.id,
+          opponent_id: match.opponent_id,
+          match_date: match.match_date,
+          match_type: match.match_type || 'sparing',
+          tournament_name: match.tournament_name || '',
+          duration_min: match.duration_min,
+          sets_me: match.sets_me,
+          sets_op: match.sets_op,
+          set_scores: match.set_scores || [],
+          what_worked: [...(match.what_worked || [])],
+          what_failed: [...(match.what_failed || [])],
+          mistakes: (match.mistakes || []).map(m => ({...m})),
+          opponent_tactics: (match.opponent_tactics || []).map(t => ({...t})),
+          next_plan: (match.next_plan || []).map(p => ({...p})),
+          self_technical: match.self_technical,
+          self_tactical: match.self_tactical,
+          self_mental: match.self_mental,
+          self_physical: match.self_physical,
+          opponent_difficulty: match.opponent_difficulty,
+          free_notes: match.free_notes || '',
+        }
+        matchOpponentSearch.value = match.opponent_name || ''
+      } else {
+        matchModal.value = {}
+        matchForm.value = {
+          opponent_id: presetOpponentId || null,
+          match_date: new Date().toISOString().slice(0, 10),
+          match_type: 'sparing', tournament_name: '',
+          sets_me: null, sets_op: null, set_scores: [],
+          what_worked: [], what_failed: [],
+          mistakes: [], opponent_tactics: [],
+          next_plan: [],
+          self_technical: null, self_tactical: null,
+          self_mental: null, self_physical: null,
+          opponent_difficulty: null,
+          free_notes: '',
+        }
+        if (presetOpponentId) {
+          const opp = opponents.value.find(o => o.id === presetOpponentId)
+          matchOpponentSearch.value = opp?.name || ''
+        } else {
+          matchOpponentSearch.value = ''
+        }
+      }
+    }
+
+    function openMatchDetail(match) {
+      openMatchModal(match)
+    }
+
+    async function saveMatch() {
+      if (!matchForm.value.opponent_id || !matchForm.value.match_date) {
+        showToast(t('journal.err_required'))
+        return
+      }
+      const pid = selectedPlayerId.value
+      const body = {...matchForm.value}
+      delete body.id
+      if (matchForm.value.id) {
+        await fetch(`/api/players/${pid}/journal/${matchForm.value.id}`, {
+          method: 'PUT', headers: {'Content-Type':'application/json'}, body: JSON.stringify(body)
+        })
+      } else {
+        await fetch(`/api/players/${pid}/journal`, {
+          method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify(body)
+        })
+      }
+      matchModal.value = null
+      await loadJournal()
+      if (page.value === 'journal-opponent' && selectedOpponent.value) {
+        await openOpponent(selectedOpponent.value.id)
+      }
+    }
+
+    async function deleteMatch(mid) {
+      await fetch(`/api/players/${selectedPlayerId.value}/journal/${mid}`, {method:'DELETE'})
+      await loadJournal()
+    }
+
+    function openOpponentModal(opp) {
+      if (opp) {
+        opponentForm.value = {
+          id: opp.id, name: opp.name, handedness: opp.handedness || 'right',
+          grip: opp.grip || 'shakehand', style: opp.style || 'allround',
+          rubber_fh: opp.rubber_fh || '', rubber_bh: opp.rubber_bh || '',
+          rating_level: opp.rating_level || '', general_notes: opp.general_notes || '',
+        }
+      } else {
+        opponentForm.value = {name:'',handedness:'right',grip:'shakehand',style:'allround',rubber_fh:'',rubber_bh:'',rating_level:'',general_notes:''}
+      }
+      opponentModal.value = opp || {}
+    }
+
+    async function saveOpponent() {
+      if (!opponentForm.value.name.trim()) return
+      const pid = selectedPlayerId.value
+      const body = {...opponentForm.value}
+      const isEdit = !!opponentForm.value.id
+      if (isEdit) {
+        const oid = body.id; delete body.id
+        await fetch(`/api/players/${pid}/opponents/${oid}`, {
+          method:'PUT', headers:{'Content-Type':'application/json'}, body: JSON.stringify(body)
+        })
+      } else {
+        delete body.id
+        const r = await fetch(`/api/players/${pid}/opponents`, {
+          method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(body)
+        })
+        const created = await r.json()
+        if (matchModal.value !== null && !matchForm.value.opponent_id) {
+          matchForm.value.opponent_id = created.id
+          matchOpponentSearch.value = created.name
+        }
+      }
+      opponentModal.value = null
+      await loadOpponents()
+    }
+
+    async function searchOpponents(q) {
+      if (!q || !selectedPlayerId.value) { opponentSuggestions.value = []; return }
+      const r = await fetch(`/api/players/${selectedPlayerId.value}/opponents/search?q=${encodeURIComponent(q)}`)
+      opponentSuggestions.value = await r.json()
+    }
+
+    function selectOpponent(opp) {
+      matchForm.value.opponent_id = opp.id
+      matchOpponentSearch.value = opp.name
+      opponentSuggestions.value = []
+    }
+
+    function addWorked() {
+      const v = workedInput.value.trim()
+      if (v) { matchForm.value.what_worked.push(v); workedInput.value = '' }
+    }
+
+    function addFailed() {
+      const v = failedInput.value.trim()
+      if (v) { matchForm.value.what_failed.push(v); failedInput.value = '' }
+    }
 
     async function loadTrainings() {
       const r = await fetch('/api/trainings')
@@ -5987,6 +6609,13 @@ const _app = createApp({
       onVideoProgress, onVideoCanPlay, onVideoMetadata, onVideoLoadStart, forceStartCompare, fmtSpeed,
       favTrainings, favDrills, favExercises, favServes,
       getTrainingSteps, getStepRecording, getDrillName, getExerciseName, getServeName, getHistoryLabel,
+      // Journal
+      matchesList, opponents, selectedOpponent, opponentMatches, journalSearch, journalFilterResult, journalFilterType,
+      showJournalStats, journalStats, matchModal, opponentModal, matchTab, matchTabs, matchForm, opponentForm,
+      workedInput, failedInput, matchOpponentSearch, opponentSuggestions, filteredMatches,
+      loadJournal, loadOpponents, loadJournalStats, openOpponent, openMatchModal, openMatchDetail,
+      saveMatch, deleteMatch, openOpponentModal, saveOpponent, searchOpponents, selectOpponent,
+      addWorked, addFailed,
       landingMode, pendingLandings, drillLandings, handleLandingClick, saveLandings,
       getStepVoiceNote, deleteVoiceNote, toggleVoiceRecord, loadPlayerVoiceNotes,
       loadPlayerFavorites, isFavorite, toggleFavorite,

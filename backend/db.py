@@ -135,6 +135,52 @@ def init():
                 updated_at  TIMESTAMP DEFAULT CURRENT_TIMESTAMP
             )
         """)
+        c.execute("""
+            CREATE TABLE IF NOT EXISTS opponents (
+                id                   INTEGER PRIMARY KEY AUTOINCREMENT,
+                created_by_player_id INTEGER NOT NULL,
+                name                 TEXT NOT NULL,
+                handedness           TEXT DEFAULT 'right',
+                grip                 TEXT DEFAULT 'shakehand',
+                style                TEXT DEFAULT 'allround',
+                rubber_fh            TEXT DEFAULT '',
+                rubber_bh            TEXT DEFAULT '',
+                rating_level         TEXT DEFAULT '',
+                general_notes        TEXT DEFAULT '',
+                created_at           TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                updated_at           TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            )
+        """)
+        c.execute("""
+            CREATE TABLE IF NOT EXISTS match_journal (
+                id                   INTEGER PRIMARY KEY AUTOINCREMENT,
+                player_id            INTEGER NOT NULL,
+                opponent_id          INTEGER NOT NULL,
+                match_date           TEXT NOT NULL,
+                match_type           TEXT DEFAULT 'sparing',
+                tournament_name      TEXT DEFAULT '',
+                duration_min         INTEGER,
+                sets_me              INTEGER,
+                sets_op              INTEGER,
+                set_scores           TEXT DEFAULT '[]',
+                result               TEXT DEFAULT '',
+                what_worked          TEXT DEFAULT '[]',
+                what_failed          TEXT DEFAULT '[]',
+                mistakes             TEXT DEFAULT '[]',
+                opponent_tactics     TEXT DEFAULT '[]',
+                next_plan            TEXT DEFAULT '[]',
+                self_technical       INTEGER,
+                self_tactical        INTEGER,
+                self_mental          INTEGER,
+                self_physical        INTEGER,
+                opponent_difficulty  INTEGER,
+                free_notes           TEXT DEFAULT '',
+                video_paths          TEXT DEFAULT '[]',
+                recording_ids        TEXT DEFAULT '[]',
+                created_at           TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                updated_at           TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            )
+        """)
         # ── Migrations ──────────────────────────────────────────
         _migrate(c)
 
@@ -646,6 +692,8 @@ def delete_player_cascade(pid: int):
         c.execute("DELETE FROM voice_notes WHERE player_id=?", (pid,))
         c.execute("DELETE FROM ball_landings WHERE player_id=?", (pid,))
         c.execute("DELETE FROM favorites WHERE player_id=?", (pid,))
+        c.execute("DELETE FROM match_journal WHERE player_id=?", (pid,))
+        c.execute("DELETE FROM opponents WHERE created_by_player_id=?", (pid,))
         c.execute("DELETE FROM players WHERE id=?", (pid,))
     return filenames, voice_files
 
