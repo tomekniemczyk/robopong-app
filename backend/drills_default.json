@@ -3750,7 +3750,7 @@
               "top_speed": -50,
               "bot_speed": 110,
               "oscillation": 150,
-              "height": 175,
+              "height": 180,
               "rotation": 150,
               "wait_ms": 2000
             }
