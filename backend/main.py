@@ -471,13 +471,11 @@ async def _handle(msg: dict, ws: WebSocket):
             broadcast("calibration_loaded", {"cal": cal, "calibrated": True, "addr": addr})
 
     elif action == "begin_calibration":
-        # V×2 only — like Newgy: V resets firmware U/O/R offsets to 150 (neutral).
-        # Do NOT resend U/O/R here: wizard set_ball uses absolute h/osc/rot values,
-        # adding the offset would overshoot (e.g. h=183 + U=183 → effective=216).
-        # U/O/R are restored only after calibration is committed (apply_calibration).
-        _log("Begin calibration — V×2 (reset head, no U/O/R re-apply)")
-        await robot.reset_head()
-        await asyncio.sleep(0.5)
+        # V×1 — identycznie jak Newgy (CalibrationPage.setup): V resetuje firmware
+        # U/O/R do 150 (neutral). NIE wysyłamy U/O/R: wizard set_ball używa absolutnych
+        # wartości h/osc/rot; dodanie offsetu po V dałoby overshoot (h=183+U=183=216).
+        # U/O/R przywracane dopiero po commitcie kalibracji (apply_calibration).
+        _log("Begin calibration — V×1 (Newgy-identical, reset head, no U/O/R re-apply)")
         await robot.reset_head()
 
     elif action == "run_scenario":
