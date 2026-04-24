@@ -1030,7 +1030,7 @@
       <!-- Recording indicator -->
       <span v-if="recordTraining && selectedPlayerId" style="display:inline-flex;align-items:center;gap:3px;font-size:10px;color:#ff3b30;font-weight:700"><span style="width:7px;height:7px;border-radius:50%;background:#ff3b30;animation:recBlink 1s infinite"></span>REC</span>
       <!-- Paused indicator -->
-      <span v-if="drillPaused" style="color:#ff9f0a;font-weight:700;font-size:20px">⏸</span>
+      <span v-if="drillPaused || (trainingRunning && trainingIsPaused)" style="color:#ff9f0a;font-weight:700;font-size:20px">⏸</span>
     </div>
     <!-- Dolny rząd: progress bar + przyciski -->
     <div style="display:flex;align-items:center;gap:8px">
@@ -1038,10 +1038,10 @@
         <div style="font-size:11px;font-weight:600;margin-bottom:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ drillScenario }}</div>
         <div class="progress-bar" style="height:5px"><div class="fill" :style="{width: (drillCount ? drillThrown/drillCount : drillTotal ? drillBall/drillTotal : 0)*100+'%'}"></div></div>
       </div>
-      <button class="btn" style="background:#ff9f0a;color:#fff;padding:8px 14px;font-size:16px" @click="pauseDrill" v-if="!drillPaused && !drillCountdown">⏸</button>
-      <button class="btn" style="background:#5e9eff;color:#fff;padding:8px 14px;font-size:16px" @click="openActiveDrillEdit" v-if="drillPaused" :title="t('drill.edit_params')">✏</button>
-      <button class="btn btn-success" style="padding:8px 14px;font-size:16px" @click="resumeDrill" v-if="drillPaused">▶</button>
-      <button class="btn btn-danger" style="padding:8px 14px;font-size:16px" @click="stopDrill">⏹</button>
+      <button class="btn" style="background:#ff9f0a;color:#fff;padding:8px 14px;font-size:16px" @click="overlayPause" v-if="!overlayIsPaused && !drillCountdown">⏸</button>
+      <button class="btn" style="background:#5e9eff;color:#fff;padding:8px 14px;font-size:16px" @click="openActiveDrillEdit" v-if="drillPaused && !trainingRunning" :title="t('drill.edit_params')">✏</button>
+      <button class="btn btn-success" style="padding:8px 14px;font-size:16px" @click="overlayResume" v-if="overlayIsPaused">▶</button>
+      <button class="btn btn-danger" style="padding:8px 14px;font-size:16px" @click="overlayStop">⏹</button>
     </div>
   </div>
 
@@ -5001,6 +5001,24 @@ const _app = createApp({
     function skipTraining() {
       send({ action: 'skip_training' })
     }
+    // Drill overlay buttons — dispatch to training actions when in training mode
+    // (drill overlay z-index:120 nakrywa training overlay z-index:100, więc to one
+    // dostają klik usera mimo że training też leci — wcześniej pauza tutaj wysyłała
+    // stop_drill, który ubijał drill, a training automatycznie przeskakiwał do
+    // następnego kroku — wyglądało jakby trening startował od początku)
+    const overlayIsPaused = computed(() => trainingRunning.value ? trainingIsPaused.value : drillPaused.value)
+    function overlayPause() {
+      if (trainingRunning.value) pauseTraining()
+      else pauseDrill()
+    }
+    function overlayResume() {
+      if (trainingRunning.value) resumeTraining()
+      else resumeDrill()
+    }
+    function overlayStop() {
+      if (trainingRunning.value) stopTraining()
+      else stopDrill()
+    }
     function totalTrainingTime(training) {
       if (!training.steps?.length) return '0s'
       const totalSec = (training.countdown_sec || 5) + training.steps.reduce((sum, s) => {
@@ -6792,6 +6810,7 @@ const _app = createApp({
       tEditId, tEditName, tEditDesc, tEditCountdown, tEditSteps,
       loadTrainings, addTrainingStep, moveStep,
       pauseTraining, resumeTraining, skipTraining, runExerciseSolo, fmtDur,
+      overlayIsPaused, overlayPause, overlayResume, overlayStop,
       saveTraining, deleteTraining, stopTraining, totalTrainingTime,
       trainingGroups, openTrainingFolders, toggleTrainingFolder, trainingFolderProgress, trainingFolderPct, trainingFilter,
       trainingStatusIcon, lastRunDate, trainingStartModal, selectedPlayerId, recordTraining, recordType, skipWarmup, skipCooldown, showPlayerSelectModal,
