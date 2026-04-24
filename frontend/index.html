@@ -1143,6 +1143,7 @@
       <div style="display:flex;gap:6px;margin-bottom:10px">
         <button class="btn" style="flex:1;background:#ff9f0a;color:#fff;padding:8px" v-if="!trainingIsPaused" @click="pauseTraining">⏸ Pauza</button>
         <button class="btn btn-success" style="flex:1;padding:8px" v-if="trainingIsPaused" @click="resumeTraining">{{ t('drills.resume_btn') }}</button>
+        <button class="btn" style="flex:0 0 auto;background:#5e9eff;color:#fff;padding:8px 12px" v-if="trainingIsPaused && currentTrainingStepDrill" @click="openActiveDrillEdit" :title="t('drill.edit_params')">✏</button>
         <button class="btn" style="flex:1;background:#6366f1;color:#fff;padding:8px" v-if="trainingPhase !== 'countdown'" @click="skipTraining" :title="t('tr.skip_hint')">{{ t('tr.skip') }}</button>
         <button class="btn btn-danger" style="flex:1;padding:8px" @click="stopTraining">⏹ Stop</button>
       </div>
@@ -2140,7 +2141,7 @@
                     </div>
                     <div v-if="historyExpanded.has('pe-'+e.id) && getTrainingSteps(e.training_id)" style="padding:4px 0 4px 18px;background:rgba(255,255,255,.02);border-radius:6px;margin:2px 0">
                       <div v-for="(step, si) in getTrainingSteps(e.training_id)" :key="si" style="display:flex;align-items:center;gap:5px;padding:2px 0;font-size:10px;border-bottom:1px solid rgba(255,255,255,.02)">
-                        <span style="width:14px;text-align:center;flex-shrink:0" :style="{color: si < e.steps_completed ? '#34c759' : 'var(--muted)'}">{{ si < e.steps_completed ? '✓' : '○' }}</span>
+                        <span style="width:14px;text-align:center;flex-shrink:0" :style="{color: stepStatus(e, si) === 'done' ? '#34c759' : stepStatus(e, si) === 'skipped' ? '#ff9f0a' : 'var(--muted)'}">{{ stepStatus(e, si) === 'done' ? '✓' : stepStatus(e, si) === 'skipped' ? '⏭' : '○' }}</span>
                         <span style="flex:1">{{ step.exercise_id ? '🏋 ' + (step.exercise_name || '') : (step.drill_name || 'Drill') }}
                           <span v-if="!step.exercise_id" style="color:var(--muted)">({{ step.count }}p)</span>
                           <span v-if="step.exercise_id" style="color:var(--muted)">({{ fmtDur(step.duration_sec) }})</span>
@@ -2793,7 +2794,7 @@
                     <!-- Expanded: training steps with recording controls -->
                     <div v-if="historyExpanded.has('he-'+e.id) && getTrainingSteps(e.training_id)" style="padding:4px 0 6px 20px;background:rgba(255,255,255,.02);border-radius:6px;margin:2px 0">
                       <div v-for="(step, si) in getTrainingSteps(e.training_id)" :key="si" style="display:flex;align-items:center;gap:5px;padding:2px 0;font-size:10px;border-bottom:1px solid rgba(255,255,255,.02)">
-                        <span style="width:14px;text-align:center;flex-shrink:0" :style="{color: si < e.steps_completed ? '#34c759' : 'var(--muted)'}">{{ si < e.steps_completed ? '✓' : '○' }}</span>
+                        <span style="width:14px;text-align:center;flex-shrink:0" :style="{color: stepStatus(e, si) === 'done' ? '#34c759' : stepStatus(e, si) === 'skipped' ? '#ff9f0a' : 'var(--muted)'}">{{ stepStatus(e, si) === 'done' ? '✓' : stepStatus(e, si) === 'skipped' ? '⏭' : '○' }}</span>
                         <span style="flex:1">{{ step.exercise_id ? '🏋 ' + (step.exercise_name || '') : (step.drill_name || 'Drill') }}
                           <span v-if="!step.exercise_id" style="color:var(--muted)">({{ step.count }}p)</span>
                           <span v-if="step.exercise_id" style="color:var(--muted)">({{ fmtDur(step.duration_sec) }})</span>
@@ -4449,11 +4450,24 @@ const _app = createApp({
       showToast(t('toast.drill_saved'))
     }
 
+    // Drill aktualnie wykonywany w treningu (do edycji w pauzie treningu)
+    const currentTrainingStepDrill = computed(() => {
+      if (!trainingRunning.value || !trainingStepsList.value.length) return null
+      const step = trainingStepsList.value[trainingStep.value - 1]
+      if (!step || !step.drill_id) return null
+      return _findDrill(step.drill_id)
+    })
+
     function openActiveDrillEdit() {
-      if (!activeDrill.value) return
+      // W trybie treningu (pauzie) — edytujemy drill bieżącego stepa
+      // W trybie standalone — activeDrill
+      const drill = (trainingRunning.value && trainingIsPaused.value)
+        ? currentTrainingStepDrill.value
+        : activeDrill.value
+      if (!drill) return
       editingActiveDrill.value = true
-      editParentName.value = activeDrill.value.parent_name || activeDrill.value.name
-      openDrillModal(activeDrill.value, null, true)
+      editParentName.value = drill.parent_name || drill.name
+      openDrillModal(drill, null, true)
     }
 
     function _findDrill(id) {
@@ -4490,7 +4504,13 @@ const _app = createApp({
       showDrillModal.value = false
       editingActiveDrill.value = false
       showToast(t('toast.drill_modified'))
-      _resumeFromZero()
+      // W trybie treningu — wznawiamy training (backend re-resolvuje drill po pauzie).
+      // W standalone — restartujemy drill od 0.
+      if (trainingRunning.value && trainingIsPaused.value) {
+        resumeTraining()
+      } else {
+        _resumeFromZero()
+      }
     }
 
     async function saveAsNewAndContinue() {
@@ -4513,11 +4533,25 @@ const _app = createApp({
       const newDrill = await res.json()
       await loadDrillTree()
       const refreshed = _findDrill(newDrill.id)
-      if (refreshed) activeDrill.value = refreshed
       showDrillModal.value = false
       editingActiveDrill.value = false
       showToast(t('toast.drill_new_created'))
-      _resumeFromZero()
+      if (trainingRunning.value && trainingIsPaused.value) {
+        // W treningu: podmieniamy drill_id w bieżącym kroku scenariusza i wznawiamy.
+        // Backend re-resolvuje drilla po pauzie, więc training pójdzie z nowym drillem.
+        send({ action: 'swap_step_drill', step: trainingStep.value, drill_id: newDrill.id })
+        // Update local trainingStepsList tak żeby UI pokazywał nowy drill
+        const stepIdx = trainingStep.value - 1
+        if (stepIdx >= 0 && stepIdx < trainingStepsList.value.length) {
+          trainingStepsList.value[stepIdx].drill_id = newDrill.id
+          trainingStepsList.value[stepIdx].drill_name = newDrill.name
+        }
+        trainingDrillName.value = newDrill.name
+        resumeTraining()
+      } else {
+        if (refreshed) activeDrill.value = refreshed
+        _resumeFromZero()
+      }
     }
     function openEditor(s) {
       if (s) {
@@ -5216,6 +5250,17 @@ const _app = createApp({
     function getTrainingSteps(trainingId) {
       const tr = trainings.value.find(t => t.id === trainingId)
       return tr?.steps || null
+    }
+
+    // Status pojedynczego stepa w historii: 'done' / 'skipped' / 'pending'
+    // - skipped: orig idx jest na liście steps_skipped (skip warmup/cooldown lub user skip)
+    // - done: orig idx < steps_completed I nie jest skipped
+    // - pending: orig idx >= steps_completed (jeszcze nie wykonane, np. trening stopped)
+    function stepStatus(historyEntry, si) {
+      const skipped = historyEntry.steps_skipped || []
+      if (skipped.includes(si)) return 'skipped'
+      if (si < (historyEntry.steps_completed || 0)) return 'done'
+      return 'pending'
     }
 
     function getStepRecording(h, stepIdx) {
@@ -6778,7 +6823,7 @@ const _app = createApp({
       ballTableX, ballTableY,
       confirmMsg, confirmExtra, confirmOkLabel, confirmOkColor, confirmCb, confirmDownloadCb, runConfirm, runDownloadAndDelete, showConfirm,
       showDrillModal, drillModalId, openDrillModal, saveDrillModal,
-      editingActiveDrill, editParentName, openActiveDrillEdit, saveAndContinue, saveAsNewAndContinue,
+      editingActiveDrill, editParentName, openActiveDrillEdit, saveAndContinue, saveAsNewAndContinue, currentTrainingStepDrill,
       showTrainingModal, openTrainingModal,
       editId, editName, editDesc, editRepeat, editBalls,
       cal, calDirty, isCalibrated,
@@ -6829,7 +6874,7 @@ const _app = createApp({
       videoCompare, vidLeft, vidRight, openVideoCompare, openVideoCompareOndemand, closeVideoCompare, setVideoSpeed, syncVideos, applySyncOffset, toggleBothVideos, restartBothVideos, toggleCompareFullscreen, skipBoth,
       onVideoProgress, onVideoCanPlay, onVideoMetadata, onVideoLoadStart, forceStartCompare, fmtSpeed,
       favTrainings, favDrills, favExercises, favServes,
-      getTrainingSteps, getStepRecording, getDrillName, getExerciseName, getServeName, getHistoryLabel,
+      getTrainingSteps, stepStatus, getStepRecording, getDrillName, getExerciseName, getServeName, getHistoryLabel,
       // Journal
       matchesList, opponents, selectedOpponent, opponentMatches, journalSearch, journalFilterResult, journalFilterType,
       showJournalStats, journalStats, matchModal, opponentModal, matchTab, matchTabs, matchForm, opponentForm,

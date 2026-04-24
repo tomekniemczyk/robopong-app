@@ -352,7 +352,7 @@ async def ws_endpoint(ws: WebSocket):
         _broadcast_sessions()
 
 
-ROBOT_ACTIONS  = {"set_ball", "throw", "throw_ball", "run_scenario", "run_drill", "run_training", "begin_calibration", "apply_calibration", "run_drill_solo", "run_exercise_solo", "run_serve_solo", "run_step_solo", "stop_training", "pause_training", "resume_training", "skip_training"}
+ROBOT_ACTIONS  = {"set_ball", "throw", "throw_ball", "run_scenario", "run_drill", "run_training", "begin_calibration", "apply_calibration", "run_drill_solo", "run_exercise_solo", "run_serve_solo", "run_step_solo", "stop_training", "pause_training", "resume_training", "skip_training", "swap_step_drill"}
 STANDBY_SECS   = 5 * 60
 _last_activity: float = 0.0
 _training_runner = training.TrainingRunner()
@@ -637,6 +637,13 @@ async def _handle(msg: dict, ws: WebSocket):
             _training_runner.set_next_percent(pct)
             _log("Next step percent override: %d%%", pct)
             broadcast("training_percent_changed", {"percent": pct})
+
+    elif action == "swap_step_drill":
+        step = int(msg.get("step", 0))
+        new_id = int(msg.get("drill_id", 0))
+        if _training_runner.running and step > 0 and new_id > 0:
+            ok = _training_runner.swap_step_drill(step, new_id)
+            _log("Swap step %d drill → %d (%s)", step, new_id, "OK" if ok else "FAIL")
 
     elif action == "reset_ble":
         asyncio.create_task(robot.reset_ble())

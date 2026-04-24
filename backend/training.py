@@ -225,6 +225,21 @@ class TrainingRunner:
     def set_next_percent(self, percent: int):
         self._percent_override = max(50, min(150, percent))
 
+    def swap_step_drill(self, step_idx: int, new_drill_id: int) -> bool:
+        """Podmień drill_id w bieżącym scenariuszu (1-indexed step_idx z UI).
+        Używane gdy user w pauzie zapisał drill jako nowy i chce kontynuować
+        z nowym drillem zamiast oryginałem."""
+        if not self._scenario:
+            return False
+        steps = self._scenario.get("steps", [])
+        idx0 = step_idx - 1
+        if idx0 < 0 or idx0 >= len(steps):
+            return False
+        if not steps[idx0].get("drill_id"):
+            return False
+        steps[idx0]["drill_id"] = new_drill_id
+        return True
+
     def _consume_skip(self) -> bool:
         if self._skip:
             self._skip = False
@@ -300,6 +315,10 @@ class TrainingRunner:
     async def _run(self, scenario: dict, robot, broadcast: Callable):
         raw_steps = scenario.get("steps", [])
         steps, skipped_indices, index_map = self._filter_steps(raw_steps, self._skip_warmup, self._skip_cooldown)
+        # Initial skipped (warmup/cooldown) trafia od razu do _steps_skipped, żeby
+        # historia mogła pokazać "⏭" dla pominiętych elementów (a "✓" tylko dla
+        # rzeczywiście wykonanych).
+        self._steps_skipped = list(skipped_indices)
         countdown_sec = scenario.get("countdown_sec", 5)
         total_steps = len(steps)
         start_time = time.monotonic()
@@ -366,13 +385,13 @@ class TrainingRunner:
                 is_exercise = bool(step.get("exercise_id"))
                 if is_exercise:
                     await self._run_exercise_step(step_idx, orig_idx, step, steps, total_steps, broadcast, scenario)
-                    self._steps_completed = step_idx + 1
+                    self._steps_completed = orig_idx + 1
                     continue
 
                 is_serve = bool(step.get("serve_id"))
                 if is_serve:
                     await self._run_serve_step(step_idx, orig_idx, step, steps, total_steps, broadcast, scenario, robot)
-                    self._steps_completed = step_idx + 1
+                    self._steps_completed = orig_idx + 1
                     continue
 
                 drill = self._resolve_drill(step)
@@ -449,9 +468,21 @@ class TrainingRunner:
                         await self._wait_unpaused()
                         if self._stopped or self._skip:
                             break
+                        # Re-resolve drill — user mógł nadpisać override w pauzie
+                        # albo podmienić step.drill_id na nowy custom drill (swap_step_drill).
+                        fresh = self._resolve_drill(step)
+                        if fresh:
+                            drill = fresh
+                            drill_name = drill.get("name", drill_name)
                         logger.info("Drill resumed — restarting with %d remaining balls", remaining)
                         drill_done.clear()
-                        await robot.run_drill(drill["balls"], repeat=0, count=remaining, percent=percent, skip_warmup=False, emit_countdown=False)
+                        # Krótka rozgrzewka silników (1s) zamiast pełnej (3s z countdownem)
+                        # — pause+resume nie powinno zjadać 3 sek na każdą pauzę.
+                        b0 = drill["balls"][0]
+                        bh0, bosc0, brot0 = robot.drill_compensate(b0["height"], b0["oscillation"], b0["rotation"])
+                        await robot.set_ball(b0["top_speed"], b0["bot_speed"], bosc0, bh0, brot0, b0.get("wait_ms", 1000))
+                        await asyncio.sleep(1.0)
+                        await robot.run_drill(drill["balls"], repeat=0, count=remaining, percent=percent, skip_warmup=True, emit_countdown=False)
                         elapsed = 0.0
                         continue
                     break
@@ -472,7 +503,7 @@ class TrainingRunner:
                     "step": step_idx + 1, "total": total_steps,
                     "drill_name": drill_name,
                 })
-                self._steps_completed = step_idx + 1
+                self._steps_completed = orig_idx + 1
                 await asyncio.sleep(1)
 
                 if step_idx < total_steps - 1 and pause_sec > 0 and not skipped:
