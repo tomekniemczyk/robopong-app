@@ -199,6 +199,21 @@ def test_create_custom_drill(tmp_drills_files):
     assert drill["name"] == "My Drill"
 
 
+def test_create_custom_drill_with_parent_ref(tmp_drills_files):
+    data = {
+        "name": "Forhend (mod)",
+        "balls": [{"top_speed": 100, "bot_speed": 0, "oscillation": 150,
+                   "height": 170, "rotation": 150, "wait_ms": 1500}],
+        "repeat": 0,
+        "parent_id": 1234,
+        "parent_name": "Forhend topspin",
+    }
+    drill_id = drills.create_custom_drill(data)
+    drill = drills.get_drill(drill_id)
+    assert drill["parent_id"] == 1234
+    assert drill["parent_name"] == "Forhend topspin"
+
+
 # ── update_custom_drill ──────────────────────────────────────────────────────
 
 def test_update_custom_drill(tmp_drills_files):

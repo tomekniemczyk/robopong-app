@@ -1039,6 +1039,7 @@
         <div class="progress-bar" style="height:5px"><div class="fill" :style="{width: (drillCount ? drillThrown/drillCount : drillTotal ? drillBall/drillTotal : 0)*100+'%'}"></div></div>
       </div>
       <button class="btn" style="background:#ff9f0a;color:#fff;padding:8px 14px;font-size:16px" @click="pauseDrill" v-if="!drillPaused && !drillCountdown">⏸</button>
+      <button class="btn" style="background:#5e9eff;color:#fff;padding:8px 14px;font-size:16px" @click="openActiveDrillEdit" v-if="drillPaused" :title="t('drill.edit_params')">✏</button>
       <button class="btn btn-success" style="padding:8px 14px;font-size:16px" @click="resumeDrill" v-if="drillPaused">▶</button>
       <button class="btn btn-danger" style="padding:8px 14px;font-size:16px" @click="stopDrill">⏹</button>
     </div>
@@ -1326,7 +1327,10 @@
         <div v-for="(drill, idx) in folder.drills" :key="drill.id">
           <div class="drill-row" @click="openDrillPanel(drill, folder)" style="cursor:pointer">
             <span v-if="selectedPlayerId" style="cursor:pointer;margin-right:4px" @click.stop="toggleFavorite('drill', drill.id)">{{ isFavorite('drill', drill.id) ? '★' : '☆' }}</span>
-            <span class="drill-name" :title="drill.readonly ? tc('drill_desc', drill.description) : (drill.description || drill.name)">{{ drill.readonly ? tc('drills', drill.name) : drill.name }}</span>
+            <span class="drill-name" :title="drill.readonly ? tc('drill_desc', drill.description) : (drill.description || drill.name)">
+              {{ drill.readonly ? tc('drills', drill.name) : drill.name }}
+              <small v-if="drill.parent_name" style="color:var(--accent);opacity:0.65;font-size:10px;font-weight:400;margin-left:4px" :title="t('drill.parent_ref')+': '+drill.parent_name">↩ {{ drill.parent_name }}</small>
+            </span>
             <div class="drill-actions" @click.stop>
               <template v-if="!drill.readonly">
                 <button class="btn-xs" @click="moveDrillUp(folder, idx)" :disabled="idx===0">↑</button>
@@ -1442,7 +1446,10 @@
       </div>
       <div v-if="drillSearch || openFolders.has('unfiled')" class="drill-list">
         <div v-for="drill in filteredDrillTree.unfiled" :key="drill.id" class="drill-row">
-          <span class="drill-name">{{ drill.name }}</span>
+          <span class="drill-name">
+            {{ drill.name }}
+            <small v-if="drill.parent_name" style="color:var(--accent);opacity:0.65;font-size:10px;font-weight:400;margin-left:4px" :title="t('drill.parent_ref')+': '+drill.parent_name">↩ {{ drill.parent_name }}</small>
+          </span>
           <div class="drill-actions">
             <button class="btn-xs" @click="showMoveModal(drill)" :title="t('drills.move_to')">→</button>
             <button class="btn-xs" @click="deleteDrillConfirm(drill.id)">🗑</button>
@@ -3125,12 +3132,12 @@
   </div>
 
   <!-- ── Drill editor modal ─────────────────────────────────────────────── -->
-  <div v-if="showDrillModal" class="modal-overlay" @click.self="showDrillModal=false" style="z-index:200;align-items:flex-start;padding-top:20px">
+  <div v-if="showDrillModal" class="modal-overlay" @click.self="showDrillModal=false; editingActiveDrill=false" style="z-index:200;align-items:flex-start;padding-top:20px">
     <div class="modal-sheet" style="max-width:480px;max-height:85vh;overflow-y:auto">
       <div class="row" style="margin-bottom:14px;align-items:center">
-        <span style="font-size:16px;font-weight:700">{{ drillModalId ? t('dm.edit') : t('dm.new') }}</span>
+        <span style="font-size:16px;font-weight:700">{{ editingActiveDrill ? t('drill.edit_params') : (drillModalId ? t('dm.edit') : t('dm.new')) }}</span>
         <div class="spacer"></div>
-        <button class="btn btn-ghost btn-icon" @click="showDrillModal=false">✕</button>
+        <button class="btn btn-ghost btn-icon" @click="showDrillModal=false; editingActiveDrill=false">✕</button>
       </div>
       <div class="field">
         <label>{{ t('dm.name') }}</label>
@@ -3166,7 +3173,23 @@
           </div>
         </div>
       </div>
-      <button class="btn btn-primary" style="width:100%;margin-top:16px;padding:12px"
+      <div v-if="editingActiveDrill && editParentName" style="margin:14px 0 4px;padding:8px 12px;background:rgba(94,158,255,0.1);border:1px solid rgba(94,158,255,0.3);border-radius:6px;font-size:11px;color:var(--accent)">
+        ↩ {{ t('drill.parent_ref') }}: <strong>{{ editParentName }}</strong>
+      </div>
+      <template v-if="editingActiveDrill">
+        <button class="btn btn-success" style="width:100%;margin-top:14px;padding:12px;font-weight:700"
+          :disabled="!editName || editBalls.length === 0" @click="saveAndContinue">
+          {{ t('dm.save_continue') }}
+        </button>
+        <button class="btn btn-primary" style="width:100%;margin-top:8px;padding:12px"
+          :disabled="!editName || editBalls.length === 0" @click="saveAsNewAndContinue">
+          {{ t('dm.save_new_continue') }}
+        </button>
+        <button class="btn btn-ghost" style="width:100%;margin-top:8px;padding:10px" @click="showDrillModal=false; editingActiveDrill=false">
+          {{ t('btn.cancel') }}
+        </button>
+      </template>
+      <button v-else class="btn btn-primary" style="width:100%;margin-top:16px;padding:12px"
         :disabled="!editName || editBalls.length === 0" @click="saveDrillModal">
         {{ t('dm.save') }}
       </button>
@@ -3461,6 +3484,8 @@ const _app = createApp({
     const editDesc   = ref('')
     const editRepeat = ref(1)
     const editBalls  = ref([])
+    const editingActiveDrill = ref(false)
+    const editParentName     = ref('')
 
     const cal            = reactive({ top_speed: 161, bot_speed: 0, oscillation: 150, height: 183, rotation: 150, wait_ms: 1000 })
     const calDirty       = ref(true)
@@ -4394,7 +4419,7 @@ const _app = createApp({
       await fetch(`/api/scenarios/${id}`, { method: 'DELETE' })
       await loadScenarios()
     }
-    function openDrillModal(drill, folder) {
+    function openDrillModal(drill, folder, fromActive=false) {
       if (drill) {
         drillModalId.value = drill.id; editId.value = drill.id
         editName.value = drill.name; editDesc.value = drill.description || ''
@@ -4404,6 +4429,7 @@ const _app = createApp({
         editName.value = ''; editDesc.value = ''
         editRepeat.value = 0; editBalls.value = []
       }
+      if (!fromActive) editingActiveDrill.value = false
       showDrillModal.value = true
     }
     async function saveDrillModal() {
@@ -4421,6 +4447,77 @@ const _app = createApp({
       await loadDrillTree()
       showDrillModal.value = false
       showToast(t('toast.drill_saved'))
+    }
+
+    function openActiveDrillEdit() {
+      if (!activeDrill.value) return
+      editingActiveDrill.value = true
+      editParentName.value = activeDrill.value.parent_name || activeDrill.value.name
+      openDrillModal(activeDrill.value, null, true)
+    }
+
+    function _findDrill(id) {
+      for (const f of drillTree.folders) {
+        const d = (f.drills || []).find(d => d.id === id)
+        if (d) return d
+      }
+      return (drillTree.unfiled || []).find(d => d.id === id) || null
+    }
+
+    function _resumeFromZero() {
+      if (!activeDrill.value) return
+      drillScenario.value  = activeDrill.value.name
+      drillTotal.value     = activeDrill.value.balls.length
+      drillMaxRepeat.value = activeDrill.value.repeat
+      drillBall.value      = 0
+      drillRun.value       = 0
+      drillThrown.value    = 0
+      drillPaused.value    = false
+      send({ action: 'run_drill', id: activeDrill.value.id, count: drillRunCount.value, percent: drillRunPercent.value })
+    }
+
+    async function saveAndContinue() {
+      editBalls.value.forEach(b => {
+        clamp(b,'top_speed',-249,249); clamp(b,'bot_speed',-249,249)
+        clamp(b,'oscillation',0,255); clamp(b,'height',0,255)
+        clamp(b,'rotation',0,255); clamp(b,'wait_ms',200,10000)
+      })
+      const body = { name: editName.value, description: editDesc.value, balls: editBalls.value, repeat: editRepeat.value }
+      await fetch(`/api/drills/${drillModalId.value}`, { method: 'PUT', headers: {'Content-Type':'application/json'}, body: JSON.stringify(body) })
+      await loadDrillTree()
+      const refreshed = _findDrill(drillModalId.value)
+      if (refreshed) activeDrill.value = refreshed
+      showDrillModal.value = false
+      editingActiveDrill.value = false
+      showToast(t('toast.drill_modified'))
+      _resumeFromZero()
+    }
+
+    async function saveAsNewAndContinue() {
+      editBalls.value.forEach(b => {
+        clamp(b,'top_speed',-249,249); clamp(b,'bot_speed',-249,249)
+        clamp(b,'oscillation',0,255); clamp(b,'height',0,255)
+        clamp(b,'rotation',0,255); clamp(b,'wait_ms',200,10000)
+      })
+      let newName = editName.value
+      if (newName === editParentName.value) newName = `${editParentName.value} (mod)`
+      const body = {
+        name: newName,
+        description: editDesc.value,
+        balls: editBalls.value,
+        repeat: editRepeat.value,
+        parent_id: drillModalId.value,
+        parent_name: editParentName.value,
+      }
+      const res = await fetch('/api/drills', { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify(body) })
+      const newDrill = await res.json()
+      await loadDrillTree()
+      const refreshed = _findDrill(newDrill.id)
+      if (refreshed) activeDrill.value = refreshed
+      showDrillModal.value = false
+      editingActiveDrill.value = false
+      showToast(t('toast.drill_new_created'))
+      _resumeFromZero()
     }
     function openEditor(s) {
       if (s) {
@@ -6663,6 +6760,7 @@ const _app = createApp({
       ballTableX, ballTableY,
       confirmMsg, confirmExtra, confirmOkLabel, confirmOkColor, confirmCb, confirmDownloadCb, runConfirm, runDownloadAndDelete, showConfirm,
       showDrillModal, drillModalId, openDrillModal, saveDrillModal,
+      editingActiveDrill, editParentName, openActiveDrillEdit, saveAndContinue, saveAsNewAndContinue,
       showTrainingModal, openTrainingModal,
       editId, editName, editDesc, editRepeat, editBalls,
       cal, calDirty, isCalibrated,

@@ -306,6 +306,10 @@ window.I18N = {
   'dm.rot':        { pl:'Rot',    en:'Rot',    de:'Rot.',  fr:'Rot',   zh:'转' },
   'dm.ms':         { pl:'ms',     en:'ms',     de:'ms',    fr:'ms',    zh:'毫秒' },
   'dm.save':       { pl:'💾 Zapisz drill',  en:'💾 Save drill',  de:'💾 Drill speichern',  fr:'💾 Enregistrer le lancer',  zh:'💾 保存训练方案' },
+  'dm.save_continue':     { pl:'💾 Zapisz i wznów',          en:'💾 Save & resume',           de:'💾 Speichern & fortsetzen',     fr:'💾 Enregistrer & reprendre',          zh:'💾 保存并继续' },
+  'dm.save_new_continue': { pl:'📋 Zapisz jako nowy i wznów', en:'📋 Save as new & resume',     de:'📋 Als neu speichern & fortsetzen', fr:'📋 Enregistrer comme nouveau & reprendre', zh:'📋 另存为新方案并继续' },
+  'drill.edit_params':    { pl:'Edytuj parametry',           en:'Edit parameters',            de:'Parameter bearbeiten',           fr:'Modifier les paramètres',           zh:'编辑参数' },
+  'drill.parent_ref':     { pl:'Modyfikacja drilla',         en:'Modification of drill',      de:'Modifikation von',               fr:'Modification du lancer',            zh:'修改自' },
 
   // ── Training ───────────────────────────────────────────────────────
   'tr.title':      { pl:'Treningi',         en:'Trainings',        de:'Trainings',          fr:'Entraînements',      zh:'训练计划' },
@@ -401,6 +405,8 @@ window.I18N = {
   'toast.training_saved': { pl:'Trening zapisany',                en:'Training saved',                   de:'Training gespeichert',               fr:'Entraînement enregistré',            zh:'训练已保存' },
   'toast.saved':          { pl:'✅ Zapisano!',                    en:'✅ Saved!',                        de:'✅ Gespeichert!',                     fr:'✅ Enregistré !',                     zh:'✅ 已保存！' },
   'toast.drill_saved':    { pl:'✅ Zapisano drill',               en:'✅ Drill saved',                   de:'✅ Drill gespeichert',                fr:'✅ Lancer enregistré',                zh:'✅ 训练方案已保存' },
+  'toast.drill_modified':    { pl:'✅ Zapisano modyfikację — wznawiam', en:'✅ Modification saved — resuming', de:'✅ Änderung gespeichert — fortgesetzt', fr:'✅ Modification enregistrée — reprise', zh:'✅ 修改已保存 — 继续' },
+  'toast.drill_new_created': { pl:'✅ Utworzono nowy drill — start',    en:'✅ New drill created — starting',  de:'✅ Neuer Drill erstellt — Start',       fr:'✅ Nouveau lancer créé — démarrage',     zh:'✅ 已创建新方案 — 开始' },
   'toast.motors_start':   { pl:'⚡ Silniki start',                en:'⚡ Motors started',                de:'⚡ Motoren gestartet',                fr:'⚡ Moteurs démarrés',                 zh:'⚡ 电机启动' },
   'toast.motors_warmup':  { pl:'Rozgrzewka silników…',            en:'Motor warmup…',                   de:'Motor-Aufwärmung…',                  fr:'Préchauffage moteur…',                zh:'电机预热…' },
   'toast.throw':          { pl:'🏓 Rzut!',                       en:'🏓 Throw!',                       de:'🏓 Wurf!',                           fr:'🏓 Lancer !',                        zh:'🏓 发射！' },
