@@ -14,8 +14,12 @@ re/cabinet/
 re/*.msi
 re/*.cab
 .firecrawl/
+.playwright-mcp/
+.claude/*.lock
 backend/.last_device
+backend/.calibration.json
 backend/uvicorn.log
+backend/uvicorn-dev.log
 backend/recordings/
 backend/camera_config.json
 backend/ustreamer.env

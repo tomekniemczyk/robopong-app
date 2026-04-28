@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<title>AcePad — Flow sterowania robotem</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'SF Mono', 'Fira Code', monospace; background: #0d0d14; color: #e0e0e0; padding: 24px; min-height: 100vh; }
+
+  h1 { font-size: 18px; color: #fff; margin-bottom: 6px; font-weight: 700; }
+  .subtitle { font-size: 11px; color: #555; margin-bottom: 28px; }
+
+  .canvas { display: grid; grid-template-columns: 220px 260px 220px 220px; gap: 0; position: relative; }
+
+  /* Column headers */
+  .col-header {
+    font-size: 10px; text-transform: uppercase; letter-spacing: .12em;
+    color: #666; text-align: center; padding: 0 0 14px 0; font-weight: 700;
+  }
+
+  /* Boxes */
+  .box {
+    border-radius: 8px; padding: 10px 12px; font-size: 11px; line-height: 1.55;
+    position: relative; margin: 4px 6px;
+  }
+  .box-title { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; margin-bottom: 5px; }
+  .box-item { color: #bbb; padding: 1px 0; }
+  .box-item code { font-size: 10px; }
+
+  .box-ui    { background: #1a1f35; border: 1px solid #2a3060; }
+  .box-ws    { background: #1a2820; border: 1px solid #2a5040; }
+  .box-back  { background: #1f1a25; border: 1px solid #4a3060; }
+  .box-robot { background: #251a18; border: 1px solid #6a3525; }
+
+  .tag-ws    { background: #1e4a34; color: #4ade80; font-size: 9px; padding: 1px 6px; border-radius: 3px; display: inline-block; margin-bottom: 4px; }
+  .tag-rest  { background: #1e2e4a; color: #60a5fa; font-size: 9px; padding: 1px 6px; border-radius: 3px; display: inline-block; margin-bottom: 4px; }
+  .tag-local { background: #2e2a1a; color: #fbbf24; font-size: 9px; padding: 1px 6px; border-radius: 3px; display: inline-block; margin-bottom: 4px; }
+
+  /* Flow sections */
+  .section { grid-column: 1 / -1; font-size: 10px; font-weight: 700; text-transform: uppercase;
+    letter-spacing: .12em; color: #444; padding: 16px 6px 6px; border-top: 1px solid #1e1e2e; margin-top: 8px; }
+  .section:first-of-type { border-top: none; margin-top: 0; }
+
+  /* Arrow legend */
+  .legend { display: flex; gap: 20px; flex-wrap: wrap; margin-bottom: 22px; }
+  .legend-item { display: flex; align-items: center; gap: 7px; font-size: 10px; color: #777; }
+  .arr { width: 36px; height: 2px; display: inline-block; position: relative; }
+  .arr::after { content: '▶'; position: absolute; right: -6px; top: -6px; font-size: 9px; }
+  .arr-ws   { background: #4ade80; }
+  .arr-ws::after   { color: #4ade80; }
+  .arr-rest { background: #60a5fa; }
+  .arr-rest::after { color: #60a5fa; }
+  .arr-ble  { background: #f97316; }
+  .arr-ble::after  { color: #f97316; }
+  .arr-ev   { background: #a78bfa; border-top: 2px dashed #a78bfa; background: none; }
+  .arr-ev::after   { color: #a78bfa; }
+
+  /* Flow diagram (SVG overlay approach) */
+  .flow-wrap { position: relative; overflow: visible; }
+
+  /* Sequence diagram */
+  .seq { width: 100%; overflow-x: auto; }
+  .seq-table { border-collapse: collapse; width: 100%; min-width: 700px; font-size: 11px; }
+  .seq-table td { padding: 5px 10px; border: none; }
+  .seq-actor { background: #181824; border: 1px solid #2a2a3e; border-radius: 5px; text-align: center;
+    font-size: 10px; font-weight: 700; letter-spacing: .05em; padding: 6px 10px; }
+  .seq-row { position: relative; }
+
+  /* Flow cards layout */
+  .flows { display: flex; flex-direction: column; gap: 10px; }
+  .flow-group { display: flex; align-items: flex-start; gap: 0; }
+
+  .actor-col { width: 130px; flex-shrink: 0; }
+  .actor { background: #181824; border: 1px solid #2a2a3e; border-radius: 6px;
+    text-align: center; font-size: 10px; font-weight: 700; padding: 8px 6px; letter-spacing: .05em; }
+  .actor-ui    { border-color: #3050a0; color: #93c5fd; }
+  .actor-ws    { border-color: #305040; color: #6ee7b7; }
+  .actor-back  { border-color: #503080; color: #c4b5fd; }
+  .actor-robot { border-color: #703020; color: #fca5a5; }
+
+  /* Main layout: actors across top, flows below */
+  .diagram { max-width: 900px; }
+
+  .actors-row { display: flex; gap: 6px; margin-bottom: 0; }
+  .actor-box {
+    flex: 1; text-align: center; padding: 10px 6px; border-radius: 8px 8px 0 0;
+    font-size: 10px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase;
+  }
+  .a-ui    { background: #1a1f35; border: 1px solid #2a3060; border-bottom: none; color: #93c5fd; }
+  .a-main  { background: #1f1a25; border: 1px solid #4a3060; border-bottom: none; color: #c4b5fd; }
+  .a-robot { background: #251a18; border: 1px solid #6a3525; border-bottom: none; color: #fca5a5; }
+  .a-ble   { background: #251e10; border: 1px solid #6a4010; border-bottom: none; color: #fcd34d; }
+
+  .flows-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-top: 10px;
+  }
+
+  .flow-card {
+    border-radius: 8px; padding: 12px 14px;
+    font-size: 11px; line-height: 1.65;
+  }
+  .flow-card h3 { font-size: 10px; font-weight: 700; text-transform: uppercase;
+    letter-spacing: .1em; margin-bottom: 8px; }
+  .flow-card.ws-flow   { background: #131e18; border: 1px solid #2a4a34; }
+  .flow-card.rest-flow { background: #13181e; border: 1px solid #1e2a4a; }
+  .flow-card.seq-flow  { background: #171319; border: 1px solid #3a2a4a; }
+  .flow-card.warn-flow { background: #1e1910; border: 1px solid #4a3a10; }
+
+  .step { display: flex; gap: 8px; align-items: flex-start; padding: 2px 0; }
+  .step-arrow { flex-shrink: 0; font-size: 10px; margin-top: 2px; }
+  .step-text { color: #ccc; }
+  .step-code { color: #6ee7b7; font-size: 10px; }
+  .step-event { color: #c4b5fd; font-size: 10px; }
+  .step-ble   { color: #fcd34d; font-size: 10px; }
+  .step-muted { color: #555; font-size: 10px; }
+  .arr-green { color: #4ade80; }
+  .arr-blue  { color: #60a5fa; }
+  .arr-purple{ color: #a78bfa; }
+  .arr-orange{ color: #fb923c; }
+  .arr-red   { color: #f87171; }
+
+  .divider { border: none; border-top: 1px solid #1e1e2e; margin: 8px 0; }
+
+  .pill {
+    display: inline-block; font-size: 9px; padding: 1px 6px; border-radius: 3px;
+    font-weight: 700; vertical-align: middle; margin-left: 4px;
+  }
+  .pill-ws   { background: #1e4a34; color: #4ade80; }
+  .pill-rest { background: #1e2e4a; color: #60a5fa; }
+  .pill-auto { background: #2e1e2e; color: #d8b4fe; }
+
+  /* Wide card */
+  .flow-card.full { grid-column: 1 / -1; }
+
+  .chip-row { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 4px; }
+  .chip { font-size: 10px; padding: 2px 8px; border-radius: 12px; }
+  .chip-g { background: #1e3a2a; color: #86efac; border: 1px solid #2a5040; }
+  .chip-b { background: #1e2a3a; color: #93c5fd; border: 1px solid #1e3060; }
+  .chip-p { background: #2a1e3a; color: #d8b4fe; border: 1px solid #3a2060; }
+  .chip-o { background: #3a2010; color: #fdba74; border: 1px solid #5a3010; }
+  .chip-r { background: #3a1010; color: #fca5a5; border: 1px solid #5a1a1a; }
+
+  .section-title {
+    font-size: 10px; text-transform: uppercase; letter-spacing: .12em;
+    color: #444; margin: 20px 0 8px; font-weight: 700;
+    padding-bottom: 4px; border-bottom: 1px solid #1e1e2e;
+  }
+</style>
+</head>
+<body>
+
+<h1>AcePad — Flow sterowania robotem</h1>
+<div class="subtitle">Donic Robopong 3050XL · FastAPI + Bleak/FTDI · Vue 3 CDN</div>
+
+<div class="legend">
+  <div class="legend-item"><span class="arr arr-ws"></span> WS → backend (akcja)</div>
+  <div class="legend-item"><span class="arr arr-ev"></span> WS ← backend (event broadcast)</div>
+  <div class="legend-item"><span class="arr arr-rest"></span> REST fetch (CRUD)</div>
+  <div class="legend-item"><span class="arr arr-ble"></span> BLE/USB → robot</div>
+</div>
+
+<div class="diagram">
+
+  <!-- ── ACTORS ─────────────────────────────────────────────────── -->
+  <div class="actors-row">
+    <div class="actor-box a-ui">🖥 Vue 3 UI<br><span style="color:#555;font-size:9px;font-weight:400">przeglądarka</span></div>
+    <div class="actor-box a-main">⚙ FastAPI main.py<br><span style="color:#555;font-size:9px;font-weight:400">WebSocket hub + REST</span></div>
+    <div class="actor-box a-robot">🤖 robot.py<br><span style="color:#555;font-size:9px;font-weight:400">Robot + TransportABC</span></div>
+    <div class="actor-box a-ble">📡 BLE / USB<br><span style="color:#555;font-size:9px;font-weight:400">Bleak / pyserial FTDI</span></div>
+  </div>
+
+  <!-- ── FLOWS GRID ─────────────────────────────────────────────── -->
+  <div class="flows-grid">
+
+    <!-- 1. Połączenie / sesja -->
+    <div class="flow-card seq-flow">
+      <h3 style="color:#c4b5fd">① Połączenie WebSocket + rola</h3>
+      <div class="step"><span class="step-arrow arr-green">→</span><span class="step-text">UI otwiera <span class="step-code">ws://host/ws</span></span></div>
+      <div class="step"><span class="step-arrow arr-purple">←</span><span class="step-text">serwer wysyła <span class="step-event">status</span> (connected, firmware, session_id, <b>role</b>)</span></div>
+      <div class="step"><span class="step-arrow arr-purple">←</span><span class="step-text"><span class="step-event">sessions</span> broadcast do wszystkich klientów</span></div>
+      <hr class="divider">
+      <div style="font-size:10px;color:#888;margin-bottom:4px">Role (jeden kontroler):</div>
+      <div class="chip-row">
+        <span class="chip chip-g">controller — wysyła akcje</span>
+        <span class="chip chip-b">observer — tylko eventy</span>
+        <span class="chip chip-p">pending — czeka na takeover</span>
+      </div>
+      <hr class="divider">
+      <div class="step"><span class="step-arrow arr-red">✕</span><span class="step-text">disconnect kontrolera → <span class="step-ble">robot.stop()</span> + <span class="step-event">TrainingRunner.stop()</span> — auto</span></div>
+      <div class="step" style="padding-left:16px"><span class="step-muted">pierwszy observer → awansuje na controller</span></div>
+    </div>
+
+    <!-- 2. Połączenie z robotem -->
+    <div class="flow-card ws-flow">
+      <h3 style="color:#6ee7b7">② Połączenie z robotem (BLE / USB)</h3>
+      <div class="step"><span class="step-arrow arr-green">→</span><span class="step-text"><span class="step-code">scan</span> — BLE scan (timeout 8s)</span></div>
+      <div class="step"><span class="step-arrow arr-purple">←</span><span class="step-text"><span class="step-event">scan_result</span> [{address, name, rssi}]</span></div>
+      <hr class="divider">
+      <div class="step"><span class="step-arrow arr-green">→</span><span class="step-text"><span class="step-code">connect</span> {address}</span></div>
+      <div class="step" style="padding-left:16px"><span class="step-ble">BLE MLDP connect → firmware query</span></div>
+      <div class="step"><span class="step-arrow arr-purple">←</span><span class="step-text"><span class="step-event">status</span> {connected: true, firmware, device}</span></div>
+      <div class="step"><span class="step-arrow arr-purple">←</span><span class="step-text"><span class="step-event">calibration_loaded</span> {cal} z .calibration.json</span></div>
+      <hr class="divider">
+      <div class="step"><span class="step-arrow arr-green">→</span><span class="step-text"><span class="step-code">usb_scan</span> → <span class="step-event">usb_ports</span></span></div>
+      <div class="step"><span class="step-arrow arr-green">→</span><span class="step-text"><span class="step-code">usb_connect</span> {port} → FTDI init (0x5A×2 @ 9600)</span></div>
+      <hr class="divider">
+      <div style="font-size:10px;color:#888">Auto-mechanizmy (background tasks):</div>
+      <div class="step" style="margin-top:3px"><span class="step-arrow" style="color:#555">⟳</span><span class="step-muted">reconnect_loop co 15s jeśli !connected + znany adres</span></div>
+      <div class="step"><span class="step-arrow" style="color:#555">⏱</span><span class="step-muted">standby_loop co 30s — robot.stop() po 5 min bezczynności</span></div>
+    </div>
+
+    <!-- 3. Kalibracja -->
+    <div class="flow-card seq-flow">
+      <h3 style="color:#c4b5fd">③ Kalibracja</h3>
+      <div class="step"><span class="step-arrow arr-green">→</span><span class="step-text"><span class="step-code">begin_calibration</span> {cal}</span></div>
+      <div class="step" style="padding-left:16px"><span class="step-ble">cmd B/A: top_speed, bot_speed, osc, height, rot</span></div>
+      <div class="step" style="padding-left:16px"><span class="step-muted">silniki kręcą się (tryb "trzymaj")</span></div>
+      <hr class="divider">
+      <div class="step"><span class="step-arrow arr-green">→</span><span class="step-text"><span class="step-code">throw</span> → set_ball + 300ms → T + 1500ms → H (stop)</span></div>
+      <div class="step"><span class="step-arrow arr-purple">←</span><span class="step-text"><span class="step-event">status</span> po throw (motors off)</span></div>
+      <hr class="divider">
+      <div class="step"><span class="step-arrow arr-blue">⬆</span><span class="step-text">REST <span class="step-code">PUT /api/calibration</span> → zapis .calibration.json (per device addr)</span></div>
+    </div>
+
+    <!-- 4. Drill (manualny) -->
+    <div class="flow-card ws-flow">
+      <h3 style="color:#6ee7b7">④ Uruchomienie drilla (bez gracza)</h3>
+      <div class="step"><span class="step-arrow arr-green">→</span><span class="step-text"><span class="step-code">set_ball</span> {top, bot, osc, h, rot, wait_ms}</span></div>
+      <div class="step" style="padding-left:16px"><span class="step-ble">cmd B/A do robota — silniki na żądany poziom</span></div>
+      <hr class="divider">
+      <div class="step"><span class="step-arrow arr-green">→</span><span class="step-text"><span class="step-code">run_drill</span> {id, count, percent}</span></div>
+      <div class="step" style="padding-left:16px"><span class="step-ble">cmd T×count w pętli (percent skaluje wait_ms)</span></div>
+      <div class="step"><span class="step-arrow arr-purple">←</span><span class="step-text"><span class="step-event">drill_progress</span> {ball, total, run} na każdą piłkę</span></div>
+      <div class="step"><span class="step-arrow arr-purple">←</span><span class="step-text"><span class="step-event">drill_ended</span> po ostatniej piłce</span></div>
+      <hr class="divider">
+      <div class="step"><span class="step-arrow arr-green">→</span><span class="step-text"><span class="step-code">stop_drill</span> → robot.stop() → cmd H</span></div>
+      <div style="margin-top:6px;font-size:10px;color:#888">⚠ Nie zapisuje historii — brak gracza</div>
+    </div>
+
+    <!-- 5. Solo drill/exercise -->
+    <div class="flow-card seq-flow">
+      <h3 style="color:#c4b5fd">⑤ Solo drill / exercise (z graczem)</h3>
+      <div class="step"><span class="step-arrow arr-green">→</span><span class="step-text"><span class="step-code">run_drill_solo</span> {drill_id, player_id, record, count}</span></div>
+      <div class="step" style="padding-left:16px"><span class="step-muted">tworzy mini-trening: 3s countdown, 1 krok, pause=0</span></div>
+      <div class="step" style="padding-left:16px"><span class="step-muted">TrainingRunner.start(solo_drill_id=…)</span></div>
+      <div class="step"><span class="step-arrow arr-purple">←</span><span class="step-text"><span class="step-event">training_countdown</span> / <span class="step-event">training_step</span> / <span class="step-event">training_drill_progress</span></span></div>
+      <div class="step"><span class="step-arrow arr-purple">←</span><span class="step-text"><span class="step-event">training_ended</span> → zapis do <b>training_history</b> (solo_drill_id)</span></div>
+      <hr class="divider">
+      <div class="step"><span class="step-arrow arr-green">→</span><span class="step-text"><span class="step-code">run_exercise_solo</span> {exercise_id, player_id, record, duration_sec}</span></div>
+      <div class="step"><span class="step-arrow arr-purple">←</span><span class="step-text"><span class="step-event">training_exercise_progress</span> {sec, total_sec}</span></div>
+      <div class="step"><span class="step-arrow arr-purple">←</span><span class="step-text"><span class="step-event">training_ended</span> → zapis (solo_exercise_id)</span></div>
+    </div>
+
+    <!-- 6. Pełny trening -->
+    <div class="flow-card ws-flow full">
+      <h3 style="color:#6ee7b7">⑥ Pełny trening (TrainingRunner)</h3>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+        <div>
+          <div style="font-size:10px;color:#888;margin-bottom:4px">Start:</div>
+          <div class="step"><span class="step-arrow arr-green">→</span><span class="step-text"><span class="step-code">run_training</span> {id, player_id, record, record_type, start_from_step}</span></div>
+          <div class="step"><span class="step-arrow arr-purple">←</span><span class="step-text"><span class="step-event">training_info</span> {name, total_steps, phase: "countdown"}</span></div>
+          <div class="step"><span class="step-arrow arr-purple">←</span><span class="step-text"><span class="step-event">training_countdown</span> {sec} × countdown_sec</span></div>
+          <hr class="divider">
+          <div style="font-size:10px;color:#888;margin-bottom:4px">Na każdy krok (drill):</div>
+          <div class="step"><span class="step-arrow arr-purple">←</span><span class="step-text"><span class="step-event">training_step</span> {step, total, drill_name, count, percent, balls, est_remaining_sec}</span></div>
+          <div class="step" style="padding-left:16px"><span class="step-ble">robot.run_drill(balls, count, percent)</span></div>
+          <div class="step"><span class="step-arrow arr-purple">←</span><span class="step-text"><span class="step-event">training_drill_progress</span> {ball, total_steps, est_remaining_sec}</span></div>
+          <div class="step"><span class="step-arrow arr-purple">←</span><span class="step-text"><span class="step-event">training_step_done</span></span></div>
+          <div class="step"><span class="step-arrow arr-purple">←</span><span class="step-text"><span class="step-event">training_pause</span> {sec, next_drill} — odliczanie przerwy</span></div>
+        </div>
+        <div>
+          <div style="font-size:10px;color:#888;margin-bottom:4px">Na każdy krok (exercise):</div>
+          <div class="step"><span class="step-arrow arr-purple">←</span><span class="step-text"><span class="step-event">training_step</span> {phase: "exercise", exercise, duration_sec}</span></div>
+          <div class="step"><span class="step-arrow arr-purple">←</span><span class="step-text"><span class="step-event">training_exercise_progress</span> {sec, total_sec, description}</span></div>
+          <div class="step"><span class="step-arrow arr-purple">←</span><span class="step-text"><span class="step-event">training_step_done</span></span></div>
+          <hr class="divider">
+          <div style="font-size:10px;color:#888;margin-bottom:4px">Kontrola w trakcie:</div>
+          <div class="step"><span class="step-arrow arr-green">→</span><span class="step-text"><span class="step-code">pause_training</span> → <span class="step-event">training_paused</span></span></div>
+          <div class="step"><span class="step-arrow arr-green">→</span><span class="step-text"><span class="step-code">resume_training</span> → <span class="step-event">training_resumed</span></span></div>
+          <div class="step"><span class="step-arrow arr-green">→</span><span class="step-text"><span class="step-code">skip_training</span> → pomija krok / przerwę</span></div>
+          <div class="step"><span class="step-arrow arr-green">→</span><span class="step-text"><span class="step-code">training_note</span> {step, note} — notatka do kroku</span></div>
+          <div class="step"><span class="step-arrow arr-green">→</span><span class="step-text"><span class="step-code">set_next_percent</span> {percent} → <span class="step-event">training_percent_changed</span></span></div>
+          <div class="step"><span class="step-arrow arr-green">→</span><span class="step-text"><span class="step-code">stop_training</span> → status "stopped"</span></div>
+          <hr class="divider">
+          <div class="step"><span class="step-arrow arr-purple">←</span><span class="step-text"><span class="step-event">training_ended</span> {elapsed_sec} → zapis training_history</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 7. Protokół robota -->
+    <div class="flow-card warn-flow">
+      <h3 style="color:#fcd34d">⑦ Protokół robota (BLE / USB)</h3>
+      <div style="font-size:10px;color:#888;margin-bottom:6px">Komendy wysyłane przez transport:</div>
+
+      <div style="display:grid;grid-template-columns:auto 1fr;gap:3px 10px;font-size:10px">
+        <code style="color:#fcd34d">B/A</code><span style="color:#ccc">set_ball — prędkości + osc + height + rot</span>
+        <code style="color:#fcd34d">T</code><span style="color:#ccc">throw — rzut jednej piłki (trigger)</span>
+        <code style="color:#fcd34d">H</code><span style="color:#ccc">stop — wyłącz silniki</span>
+        <code style="color:#fcd34d">wTA</code><span style="color:#ccc">firmware ≥ 701: konfiguracja silników górnych</span>
+        <code style="color:#fcd34d">?V</code><span style="color:#ccc">zapytanie o wersję firmware</span>
+      </div>
+      <hr class="divider">
+      <div style="font-size:10px;color:#888;margin-bottom:4px">Kluczowe wartości:</div>
+      <div class="chip-row">
+        <span class="chip chip-o">centrum = 150 (nie 128!)</span>
+        <span class="chip chip-o">osc 127–173</span>
+        <span class="chip chip-o">height 75–210</span>
+        <span class="chip chip-o">rot 90–210</span>
+      </div>
+      <div class="chip-row">
+        <span class="chip chip-o">speed_raw × 4.016 = PWM</span>
+        <span class="chip chip-o">BLE: \r · USB: \r\n</span>
+        <span class="chip chip-o">USB init: 0x5A × 2 @ 9600</span>
+      </div>
+    </div>
+
+    <!-- 8. REST CRUD -->
+    <div class="flow-card rest-flow">
+      <h3 style="color:#93c5fd">⑧ REST API — tylko CRUD (bez sterowania)</h3>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:0 12px;font-size:10px">
+        <div>
+          <div style="color:#555;margin-bottom:3px">Drille / ćwiczenia:</div>
+          <div class="step"><span class="step-arrow arr-blue">→</span><span class="step-text"><span class="step-code">GET /api/drills/tree</span></span></div>
+          <div class="step"><span class="step-arrow arr-blue">→</span><span class="step-text"><span class="step-code">POST/PUT/DELETE /api/drills</span></span></div>
+          <div class="step"><span class="step-arrow arr-blue">→</span><span class="step-text"><span class="step-code">GET /api/exercises</span></span></div>
+          <div style="color:#555;margin:6px 0 3px">Treningi:</div>
+          <div class="step"><span class="step-arrow arr-blue">→</span><span class="step-text"><span class="step-code">GET/POST/PUT/DELETE /api/trainings</span></span></div>
+          <div class="step"><span class="step-arrow arr-blue">→</span><span class="step-text"><span class="step-code">POST /api/trainings/{id}/duplicate</span></span></div>
+          <div style="color:#555;margin:6px 0 3px">Historia:</div>
+          <div class="step"><span class="step-arrow arr-blue">→</span><span class="step-text"><span class="step-code">GET /api/training-history</span></span></div>
+          <div class="step"><span class="step-arrow arr-blue">→</span><span class="step-text"><span class="step-code">PUT /api/training-history/{id}/comment</span></span></div>
+        </div>
+        <div>
+          <div style="color:#555;margin-bottom:3px">Gracze:</div>
+          <div class="step"><span class="step-arrow arr-blue">→</span><span class="step-text"><span class="step-code">GET/POST/PUT/DELETE /api/players</span></span></div>
+          <div class="step"><span class="step-arrow arr-blue">→</span><span class="step-text"><span class="step-code">GET /api/players/{id}/history</span></span></div>
+          <div class="step"><span class="step-arrow arr-blue">→</span><span class="step-text"><span class="step-code">GET/POST/DELETE /api/players/{id}/favorites</span></span></div>
+          <div style="color:#555;margin:6px 0 3px">Nagrania / presety:</div>
+          <div class="step"><span class="step-arrow arr-blue">→</span><span class="step-text"><span class="step-code">GET /api/recordings</span></span></div>
+          <div class="step"><span class="step-arrow arr-blue">→</span><span class="step-text"><span class="step-code">GET/POST/PUT/DELETE /api/presets</span></span></div>
+          <div class="step"><span class="step-arrow arr-blue">→</span><span class="step-text"><span class="step-code">GET/PUT /api/calibration</span></span></div>
+        </div>
+      </div>
+      <hr class="divider">
+      <div style="font-size:10px;color:#666">Blokady: readonly drille/foldery → 403. Readonly treningi → 403.</div>
+    </div>
+
+    <!-- 9. Takeover -->
+    <div class="flow-card seq-flow full" style="grid-column: 1 / -1">
+      <h3 style="color:#c4b5fd">⑨ Przejęcie kontroli (multi-klient)</h3>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;font-size:10px">
+        <div>
+          <div style="color:#888;margin-bottom:4px">Klient B chce przejąć:</div>
+          <div class="step"><span class="step-arrow arr-green">→</span><span class="step-text"><span class="step-code">request_takeover</span></span></div>
+          <div class="step" style="padding-left:16px"><span class="step-muted">B → role: pending</span></div>
+          <div class="step"><span class="step-arrow arr-purple">←</span><span class="step-text"><span class="step-event">takeover_request</span> → do kontrolera A</span></div>
+        </div>
+        <div>
+          <div style="color:#888;margin-bottom:4px">Kontroler A odpowiada:</div>
+          <div class="step"><span class="step-arrow arr-green">→</span><span class="step-text"><span class="step-code">respond_takeover</span> {accepted: true/false}</span></div>
+          <div class="step" style="padding-left:16px"><span class="step-muted">accepted: A→observer, B→controller</span></div>
+          <div class="step" style="padding-left:16px"><span class="step-muted">rejected: B→observer</span></div>
+        </div>
+        <div>
+          <div style="color:#888;margin-bottom:4px">Timeout / rezygnacja:</div>
+          <div class="step"><span class="step-arrow arr-green">→</span><span class="step-text"><span class="step-code">cancel_takeover</span> → B→observer</span></div>
+          <div class="step"><span class="step-arrow arr-green">→</span><span class="step-text"><span class="step-code">release_control</span> → A→observer, pierwszy pending→controller</span></div>
+          <div class="step"><span class="step-arrow arr-purple">←</span><span class="step-text"><span class="step-event">sessions</span> broadcast po każdej zmianie ról</span></div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /flows-grid -->
+</div><!-- /diagram -->
+
+</body>
+</html>
