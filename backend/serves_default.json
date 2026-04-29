@@ -461,7 +461,7 @@
           "placement": {"x": 0.30, "y": 0.77},
           "duration_sec": 1200,
           "signature_players": ["Hugo Calderano", "Ma Long", "Jun Mizutani"],
-          "youtube_id": "emXu07v8uVY",
+          "youtube_id": "",
           "responses": [
             {"name": "Mistimed push", "description": "Opponent mistimed the extra spin — weak push to middle, attack.", "balls": [{"top_speed": 30, "bot_speed": 95, "oscillation": 150, "height": 120, "rotation": 150, "wait_ms": 6500}]},
             {"name": "Flick high", "description": "Over-committed flick goes high — easy put-away.", "balls": [{"top_speed": 90, "bot_speed": 15, "oscillation": 152, "height": 165, "rotation": 150, "wait_ms": 5500}]}
@@ -477,7 +477,7 @@
           "placement": {"x": 0.20, "y": 0.95},
           "duration_sec": 1500,
           "signature_players": ["Liang Jingkun", "Hugo Calderano"],
-          "youtube_id": "emXu07v8uVY",
+          "youtube_id": "",
           "responses": [
             {"name": "Late block", "description": "Late block to middle — step around FH loop.", "balls": [{"top_speed": 75, "bot_speed": 20, "oscillation": 150, "height": 122, "rotation": 150, "wait_ms": 5000}]},
             {"name": "Rushed counter", "description": "Rushed counter-loop goes into net or long — attack recovery.", "balls": [{"top_speed": 140, "bot_speed": 45, "oscillation": 145, "height": 145, "rotation": 150, "wait_ms": 4500}]}
@@ -493,7 +493,7 @@
           "placement": {"x": 0.40, "y": 0.80},
           "duration_sec": 1200,
           "signature_players": ["Jan-Ove Waldner", "Ma Long"],
-          "youtube_id": "emXu07v8uVY",
+          "youtube_id": "",
           "responses": [
             {"name": "Float pops up", "description": "Opponent treats as heavy spin, pops up — smash.", "balls": [{"top_speed": 85, "bot_speed": 15, "oscillation": 150, "height": 175, "rotation": 150, "wait_ms": 5500}]},
             {"name": "Cautious push", "description": "Extra-cautious short push — flick BH or attack short.", "balls": [{"top_speed": 18, "bot_speed": 85, "oscillation": 148, "height": 90, "rotation": 150, "wait_ms": 7000}]}
@@ -516,7 +516,7 @@
           "placement": {"x": 0.50, "y": 0.72},
           "duration_sec": 1200,
           "signature_players": ["Ma Lin"],
-          "youtube_id": "J7gJwbsXEFM",
+          "youtube_id": "",
           "responses": [
             {"name": "Heavy defensive push", "description": "Opponent makes desperate backspin push long — loop over spin.", "balls": [{"top_speed": 15, "bot_speed": 160, "oscillation": 148, "height": 100, "rotation": 150, "wait_ms": 7000}]},
             {"name": "Flick attempt high", "description": "Risky flick goes high and slow — smash.", "balls": [{"top_speed": 75, "bot_speed": 25, "oscillation": 152, "height": 170, "rotation": 150, "wait_ms": 5500}]}
