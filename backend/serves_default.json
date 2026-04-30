@@ -12,14 +12,60 @@
           "spin_type": "sidespin",
           "spin_strength": 3,
           "length": "short",
-          "placement": {"x": 0.30, "y": 0.75},
+          "placement": {
+            "x": 0.3,
+            "y": 0.75
+          },
           "duration_sec": 1200,
-          "signature_players": ["Ma Long", "Fan Zhendong", "Timo Boll"],
+          "signature_players": [
+            "Ma Long",
+            "Fan Zhendong",
+            "Timo Boll"
+          ],
           "youtube_id": "twNlkfRRafw",
           "responses": [
-            {"name": "Push long to BH", "description": "Opponent pushes long with backspin to your backhand — prepare to attack with BH loop/flip.", "balls": [{"top_speed": 30, "bot_speed": 100, "oscillation": 140, "height": 110, "rotation": 150, "wait_ms": 6000}]},
-            {"name": "Push short middle", "description": "Opponent pushes short to middle — step in and flick or push short again.", "balls": [{"top_speed": 20, "bot_speed": 90, "oscillation": 150, "height": 90, "rotation": 150, "wait_ms": 6500}]},
-            {"name": "Flip attack to FH", "description": "Opponent reads spin and flicks aggressively to your forehand — block or counter-attack.", "balls": [{"top_speed": 130, "bot_speed": 20, "oscillation": 162, "height": 130, "rotation": 150, "wait_ms": 5500}]}
+            {
+              "name": "Push long to BH",
+              "description": "Opponent pushes long with backspin to your backhand — prepare to attack with BH loop/flip.",
+              "balls": [
+                {
+                  "top_speed": 30,
+                  "bot_speed": 100,
+                  "oscillation": 140,
+                  "height": 110,
+                  "rotation": 150,
+                  "wait_ms": 6000
+                }
+              ]
+            },
+            {
+              "name": "Push short middle",
+              "description": "Opponent pushes short to middle — step in and flick or push short again.",
+              "balls": [
+                {
+                  "top_speed": 20,
+                  "bot_speed": 90,
+                  "oscillation": 150,
+                  "height": 90,
+                  "rotation": 150,
+                  "wait_ms": 6500
+                }
+              ]
+            },
+            {
+              "name": "Flip attack to FH",
+              "description": "Opponent reads spin and flicks aggressively to your forehand — block or counter-attack.",
+              "balls": [
+                {
+                  "top_speed": 130,
+                  "bot_speed": 20,
+                  "oscillation": 162,
+                  "height": 130,
+                  "rotation": 150,
+                  "wait_ms": 5500
+                }
+              ]
+            }
           ]
         },
         {
@@ -29,14 +75,60 @@
           "spin_type": "sidespin_backspin",
           "spin_strength": 4,
           "length": "short",
-          "placement": {"x": 0.25, "y": 0.78},
+          "placement": {
+            "x": 0.25,
+            "y": 0.78
+          },
           "duration_sec": 1200,
-          "signature_players": ["Sun Yingsha", "Ma Lin", "Wang Hao"],
+          "signature_players": [
+            "Sun Yingsha",
+            "Ma Lin",
+            "Wang Hao"
+          ],
           "youtube_id": "3oRpomibvQc",
           "responses": [
-            {"name": "Push long heavy BH", "description": "Heavy backspin push long to your backhand — open with BH loop over spin.", "balls": [{"top_speed": 20, "bot_speed": 140, "oscillation": 140, "height": 105, "rotation": 150, "wait_ms": 6500}]},
-            {"name": "Push short tight", "description": "Opponent controls with a short push to your forehand — flick or push short back.", "balls": [{"top_speed": 15, "bot_speed": 100, "oscillation": 160, "height": 85, "rotation": 150, "wait_ms": 7000}]},
-            {"name": "Lift into net", "description": "Opponent misreads backspin and lifts — ball floats high, easy put-away.", "balls": [{"top_speed": 60, "bot_speed": 40, "oscillation": 150, "height": 160, "rotation": 150, "wait_ms": 5500}]}
+            {
+              "name": "Push long heavy BH",
+              "description": "Heavy backspin push long to your backhand — open with BH loop over spin.",
+              "balls": [
+                {
+                  "top_speed": 20,
+                  "bot_speed": 140,
+                  "oscillation": 140,
+                  "height": 105,
+                  "rotation": 150,
+                  "wait_ms": 6500
+                }
+              ]
+            },
+            {
+              "name": "Push short tight",
+              "description": "Opponent controls with a short push to your forehand — flick or push short back.",
+              "balls": [
+                {
+                  "top_speed": 15,
+                  "bot_speed": 100,
+                  "oscillation": 160,
+                  "height": 85,
+                  "rotation": 150,
+                  "wait_ms": 7000
+                }
+              ]
+            },
+            {
+              "name": "Lift into net",
+              "description": "Opponent misreads backspin and lifts — ball floats high, easy put-away.",
+              "balls": [
+                {
+                  "top_speed": 60,
+                  "bot_speed": 40,
+                  "oscillation": 150,
+                  "height": 160,
+                  "rotation": 150,
+                  "wait_ms": 5500
+                }
+              ]
+            }
           ]
         },
         {
@@ -46,14 +138,60 @@
           "spin_type": "no_spin",
           "spin_strength": 0,
           "length": "short",
-          "placement": {"x": 0.40, "y": 0.78},
+          "placement": {
+            "x": 0.4,
+            "y": 0.78
+          },
           "duration_sec": 1200,
-          "signature_players": ["Ma Long", "Jan-Ove Waldner", "Fan Zhendong"],
+          "signature_players": [
+            "Ma Long",
+            "Jan-Ove Waldner",
+            "Fan Zhendong"
+          ],
           "youtube_id": "3oRpomibvQc",
           "responses": [
-            {"name": "Float return high", "description": "Opponent reads spin wrong — ball floats high and slow, easy smash to open corner.", "balls": [{"top_speed": 70, "bot_speed": 20, "oscillation": 150, "height": 170, "rotation": 150, "wait_ms": 5500}]},
-            {"name": "Push long BH", "description": "Careful opponent pushes long to BH — attack with BH loop.", "balls": [{"top_speed": 40, "bot_speed": 80, "oscillation": 140, "height": 115, "rotation": 150, "wait_ms": 6000}]},
-            {"name": "Flick BH", "description": "Skilled opponent flicks despite the trick — counter or block.", "balls": [{"top_speed": 120, "bot_speed": 20, "oscillation": 142, "height": 125, "rotation": 150, "wait_ms": 5500}]}
+            {
+              "name": "Float return high",
+              "description": "Opponent reads spin wrong — ball floats high and slow, easy smash to open corner.",
+              "balls": [
+                {
+                  "top_speed": 70,
+                  "bot_speed": 20,
+                  "oscillation": 150,
+                  "height": 170,
+                  "rotation": 150,
+                  "wait_ms": 5500
+                }
+              ]
+            },
+            {
+              "name": "Push long BH",
+              "description": "Careful opponent pushes long to BH — attack with BH loop.",
+              "balls": [
+                {
+                  "top_speed": 40,
+                  "bot_speed": 80,
+                  "oscillation": 140,
+                  "height": 115,
+                  "rotation": 150,
+                  "wait_ms": 6000
+                }
+              ]
+            },
+            {
+              "name": "Flick BH",
+              "description": "Skilled opponent flicks despite the trick — counter or block.",
+              "balls": [
+                {
+                  "top_speed": 120,
+                  "bot_speed": 20,
+                  "oscillation": 142,
+                  "height": 125,
+                  "rotation": 150,
+                  "wait_ms": 5500
+                }
+              ]
+            }
           ]
         },
         {
@@ -63,13 +201,46 @@
           "spin_type": "topspin",
           "spin_strength": 2,
           "length": "long",
-          "placement": {"x": 0.75, "y": 0.95},
+          "placement": {
+            "x": 0.75,
+            "y": 0.95
+          },
           "duration_sec": 1500,
-          "signature_players": ["Ma Long", "Hugo Calderano", "Wang Chuqin"],
+          "signature_players": [
+            "Ma Long",
+            "Hugo Calderano",
+            "Wang Chuqin"
+          ],
           "youtube_id": "lb1CR7WBPNY",
           "responses": [
-            {"name": "Block to middle", "description": "Opponent blocks the fast serve back to middle — step around and loop with FH.", "balls": [{"top_speed": 90, "bot_speed": 30, "oscillation": 150, "height": 125, "rotation": 150, "wait_ms": 5000}]},
-            {"name": "Counter-attack to BH", "description": "Strong opponent counter-loops to your backhand — block or counter with BH.", "balls": [{"top_speed": 150, "bot_speed": 40, "oscillation": 138, "height": 135, "rotation": 150, "wait_ms": 4500}]}
+            {
+              "name": "Block to middle",
+              "description": "Opponent blocks the fast serve back to middle — step around and loop with FH.",
+              "balls": [
+                {
+                  "top_speed": 90,
+                  "bot_speed": 30,
+                  "oscillation": 150,
+                  "height": 125,
+                  "rotation": 150,
+                  "wait_ms": 5000
+                }
+              ]
+            },
+            {
+              "name": "Counter-attack to BH",
+              "description": "Strong opponent counter-loops to your backhand — block or counter with BH.",
+              "balls": [
+                {
+                  "top_speed": 150,
+                  "bot_speed": 40,
+                  "oscillation": 138,
+                  "height": 135,
+                  "rotation": 150,
+                  "wait_ms": 4500
+                }
+              ]
+            }
           ]
         },
         {
@@ -79,13 +250,45 @@
           "spin_type": "sidespin_topspin",
           "spin_strength": 2,
           "length": "long",
-          "placement": {"x": 0.20, "y": 0.95},
+          "placement": {
+            "x": 0.2,
+            "y": 0.95
+          },
           "duration_sec": 1500,
-          "signature_players": ["Timo Boll", "Dimitrij Ovtcharov"],
+          "signature_players": [
+            "Timo Boll",
+            "Dimitrij Ovtcharov"
+          ],
           "youtube_id": "twNlkfRRafw",
           "responses": [
-            {"name": "BH block cross", "description": "Opponent blocks BH cross-court to your BH — counter-topspin.", "balls": [{"top_speed": 85, "bot_speed": 25, "oscillation": 140, "height": 120, "rotation": 150, "wait_ms": 5000}]},
-            {"name": "BH loop down-the-line", "description": "Strong BH loop down-the-line to your FH — step around or block.", "balls": [{"top_speed": 145, "bot_speed": 35, "oscillation": 168, "height": 135, "rotation": 150, "wait_ms": 4500}]}
+            {
+              "name": "BH block cross",
+              "description": "Opponent blocks BH cross-court to your BH — counter-topspin.",
+              "balls": [
+                {
+                  "top_speed": 85,
+                  "bot_speed": 25,
+                  "oscillation": 140,
+                  "height": 120,
+                  "rotation": 150,
+                  "wait_ms": 5000
+                }
+              ]
+            },
+            {
+              "name": "BH loop down-the-line",
+              "description": "Strong BH loop down-the-line to your FH — step around or block.",
+              "balls": [
+                {
+                  "top_speed": 145,
+                  "bot_speed": 35,
+                  "oscillation": 168,
+                  "height": 135,
+                  "rotation": 150,
+                  "wait_ms": 4500
+                }
+              ]
+            }
           ]
         }
       ]
@@ -102,14 +305,60 @@
           "spin_type": "sidespin",
           "spin_strength": 3,
           "length": "short",
-          "placement": {"x": 0.22, "y": 0.78},
+          "placement": {
+            "x": 0.22,
+            "y": 0.78
+          },
           "duration_sec": 1200,
-          "signature_players": ["Zhang Jike", "Fan Zhendong", "Wang Chuqin"],
+          "signature_players": [
+            "Zhang Jike",
+            "Fan Zhendong",
+            "Wang Chuqin"
+          ],
           "youtube_id": "Gmj_pOs1dY0",
           "responses": [
-            {"name": "Push long to FH", "description": "Opponent's push drifts right (from your view) and lands on your forehand long — open with FH loop.", "balls": [{"top_speed": 30, "bot_speed": 110, "oscillation": 165, "height": 115, "rotation": 150, "wait_ms": 6000}]},
-            {"name": "Push short to middle", "description": "Controlled short push to middle — step around and flick FH.", "balls": [{"top_speed": 20, "bot_speed": 100, "oscillation": 150, "height": 90, "rotation": 150, "wait_ms": 6500}]},
-            {"name": "Flip long to FH", "description": "Aggressive flip targeting your wide forehand — counter-attack.", "balls": [{"top_speed": 140, "bot_speed": 30, "oscillation": 170, "height": 135, "rotation": 150, "wait_ms": 5000}]}
+            {
+              "name": "Push long to FH",
+              "description": "Opponent's push drifts right (from your view) and lands on your forehand long — open with FH loop.",
+              "balls": [
+                {
+                  "top_speed": 30,
+                  "bot_speed": 110,
+                  "oscillation": 165,
+                  "height": 115,
+                  "rotation": 150,
+                  "wait_ms": 6000
+                }
+              ]
+            },
+            {
+              "name": "Push short to middle",
+              "description": "Controlled short push to middle — step around and flick FH.",
+              "balls": [
+                {
+                  "top_speed": 20,
+                  "bot_speed": 100,
+                  "oscillation": 150,
+                  "height": 90,
+                  "rotation": 150,
+                  "wait_ms": 6500
+                }
+              ]
+            },
+            {
+              "name": "Flip long to FH",
+              "description": "Aggressive flip targeting your wide forehand — counter-attack.",
+              "balls": [
+                {
+                  "top_speed": 140,
+                  "bot_speed": 30,
+                  "oscillation": 170,
+                  "height": 135,
+                  "rotation": 150,
+                  "wait_ms": 5000
+                }
+              ]
+            }
           ]
         },
         {
@@ -119,13 +368,46 @@
           "spin_type": "sidespin_backspin",
           "spin_strength": 4,
           "length": "short",
-          "placement": {"x": 0.25, "y": 0.78},
+          "placement": {
+            "x": 0.25,
+            "y": 0.78
+          },
           "duration_sec": 1200,
-          "signature_players": ["Zhang Jike", "Timo Boll", "Tomokazu Harimoto"],
+          "signature_players": [
+            "Zhang Jike",
+            "Timo Boll",
+            "Tomokazu Harimoto"
+          ],
           "youtube_id": "W_YYLpkVUBc",
           "responses": [
-            {"name": "Push long heavy FH", "description": "Heavy backspin push to your forehand long — loop with FH over heavy spin.", "balls": [{"top_speed": 20, "bot_speed": 140, "oscillation": 165, "height": 105, "rotation": 150, "wait_ms": 6500}]},
-            {"name": "Short push to BH", "description": "Opponent pushes tight short to your backhand — flick with BH or push short.", "balls": [{"top_speed": 15, "bot_speed": 95, "oscillation": 140, "height": 88, "rotation": 150, "wait_ms": 7000}]}
+            {
+              "name": "Push long heavy FH",
+              "description": "Heavy backspin push to your forehand long — loop with FH over heavy spin.",
+              "balls": [
+                {
+                  "top_speed": 20,
+                  "bot_speed": 140,
+                  "oscillation": 165,
+                  "height": 105,
+                  "rotation": 150,
+                  "wait_ms": 6500
+                }
+              ]
+            },
+            {
+              "name": "Short push to BH",
+              "description": "Opponent pushes tight short to your backhand — flick with BH or push short.",
+              "balls": [
+                {
+                  "top_speed": 15,
+                  "bot_speed": 95,
+                  "oscillation": 140,
+                  "height": 88,
+                  "rotation": 150,
+                  "wait_ms": 7000
+                }
+              ]
+            }
           ]
         },
         {
@@ -135,13 +417,45 @@
           "spin_type": "sidespin",
           "spin_strength": 3,
           "length": "short",
-          "placement": {"x": 0.50, "y": 0.80},
+          "placement": {
+            "x": 0.5,
+            "y": 0.8
+          },
           "duration_sec": 1200,
-          "signature_players": ["Fan Zhendong", "Timo Boll"],
+          "signature_players": [
+            "Fan Zhendong",
+            "Timo Boll"
+          ],
           "youtube_id": "Gmj_pOs1dY0",
           "responses": [
-            {"name": "Rushed BH flick", "description": "Opponent indecisive — weak BH flick to middle, easy attack.", "balls": [{"top_speed": 90, "bot_speed": 20, "oscillation": 150, "height": 130, "rotation": 150, "wait_ms": 5500}]},
-            {"name": "Push long to middle", "description": "Opponent pushes long to middle — loop with FH from around the body.", "balls": [{"top_speed": 40, "bot_speed": 100, "oscillation": 150, "height": 115, "rotation": 150, "wait_ms": 6000}]}
+            {
+              "name": "Rushed BH flick",
+              "description": "Opponent indecisive — weak BH flick to middle, easy attack.",
+              "balls": [
+                {
+                  "top_speed": 90,
+                  "bot_speed": 20,
+                  "oscillation": 150,
+                  "height": 130,
+                  "rotation": 150,
+                  "wait_ms": 5500
+                }
+              ]
+            },
+            {
+              "name": "Push long to middle",
+              "description": "Opponent pushes long to middle — loop with FH from around the body.",
+              "balls": [
+                {
+                  "top_speed": 40,
+                  "bot_speed": 100,
+                  "oscillation": 150,
+                  "height": 115,
+                  "rotation": 150,
+                  "wait_ms": 6000
+                }
+              ]
+            }
           ]
         },
         {
@@ -151,13 +465,45 @@
           "spin_type": "sidespin_topspin",
           "spin_strength": 2,
           "length": "long",
-          "placement": {"x": 0.80, "y": 0.93},
+          "placement": {
+            "x": 0.8,
+            "y": 0.93
+          },
           "duration_sec": 1500,
-          "signature_players": ["Tomokazu Harimoto", "Dimitrij Ovtcharov"],
+          "signature_players": [
+            "Tomokazu Harimoto",
+            "Dimitrij Ovtcharov"
+          ],
           "youtube_id": "W_YYLpkVUBc",
           "responses": [
-            {"name": "Block short to BH", "description": "Opponent blocks short to BH — step in and BH flick.", "balls": [{"top_speed": 70, "bot_speed": 20, "oscillation": 138, "height": 115, "rotation": 150, "wait_ms": 5000}]},
-            {"name": "Counter loop to FH", "description": "Strong counter-loop to your forehand — block or counter-loop.", "balls": [{"top_speed": 160, "bot_speed": 40, "oscillation": 165, "height": 140, "rotation": 150, "wait_ms": 4500}]}
+            {
+              "name": "Block short to BH",
+              "description": "Opponent blocks short to BH — step in and BH flick.",
+              "balls": [
+                {
+                  "top_speed": 70,
+                  "bot_speed": 20,
+                  "oscillation": 138,
+                  "height": 115,
+                  "rotation": 150,
+                  "wait_ms": 5000
+                }
+              ]
+            },
+            {
+              "name": "Counter loop to FH",
+              "description": "Strong counter-loop to your forehand — block or counter-loop.",
+              "balls": [
+                {
+                  "top_speed": 160,
+                  "bot_speed": 40,
+                  "oscillation": 165,
+                  "height": 140,
+                  "rotation": 150,
+                  "wait_ms": 4500
+                }
+              ]
+            }
           ]
         }
       ]
@@ -174,13 +520,46 @@
           "spin_type": "sidespin",
           "spin_strength": 3,
           "length": "short",
-          "placement": {"x": 0.72, "y": 0.76},
+          "placement": {
+            "x": 0.72,
+            "y": 0.76
+          },
           "duration_sec": 1200,
-          "signature_players": ["Dimitrij Ovtcharov", "Kenta Matsudaira", "Alexis Lebrun"],
+          "signature_players": [
+            "Dimitrij Ovtcharov",
+            "Kenta Matsudaira",
+            "Alexis Lebrun"
+          ],
           "youtube_id": "hHqUS1xCpqU",
           "responses": [
-            {"name": "Push long to BH", "description": "Opponent pushes long to your backhand — BH loop or flick opportunity.", "balls": [{"top_speed": 30, "bot_speed": 110, "oscillation": 140, "height": 115, "rotation": 150, "wait_ms": 6000}]},
-            {"name": "Flick to middle", "description": "Aggressive flick to middle — hard to decide FH/BH, step around early.", "balls": [{"top_speed": 130, "bot_speed": 25, "oscillation": 150, "height": 130, "rotation": 150, "wait_ms": 5500}]}
+            {
+              "name": "Push long to BH",
+              "description": "Opponent pushes long to your backhand — BH loop or flick opportunity.",
+              "balls": [
+                {
+                  "top_speed": 30,
+                  "bot_speed": 110,
+                  "oscillation": 140,
+                  "height": 115,
+                  "rotation": 150,
+                  "wait_ms": 6000
+                }
+              ]
+            },
+            {
+              "name": "Flick to middle",
+              "description": "Aggressive flick to middle — hard to decide FH/BH, step around early.",
+              "balls": [
+                {
+                  "top_speed": 130,
+                  "bot_speed": 25,
+                  "oscillation": 150,
+                  "height": 130,
+                  "rotation": 150,
+                  "wait_ms": 5500
+                }
+              ]
+            }
           ]
         },
         {
@@ -190,13 +569,45 @@
           "spin_type": "sidespin",
           "spin_strength": 3,
           "length": "short",
-          "placement": {"x": 0.50, "y": 0.78},
+          "placement": {
+            "x": 0.5,
+            "y": 0.78
+          },
           "duration_sec": 1200,
-          "signature_players": ["Kenta Matsudaira", "Vladimir Samsonov"],
+          "signature_players": [
+            "Kenta Matsudaira",
+            "Vladimir Samsonov"
+          ],
           "youtube_id": "hHqUS1xCpqU",
           "responses": [
-            {"name": "Rushed push middle", "description": "Opponent pushes softly to middle from crossover — attack with FH loop.", "balls": [{"top_speed": 35, "bot_speed": 90, "oscillation": 150, "height": 115, "rotation": 150, "wait_ms": 6500}]},
-            {"name": "BH flick short", "description": "Short flick BH from middle — step in and counter-loop.", "balls": [{"top_speed": 110, "bot_speed": 20, "oscillation": 148, "height": 120, "rotation": 150, "wait_ms": 5500}]}
+            {
+              "name": "Rushed push middle",
+              "description": "Opponent pushes softly to middle from crossover — attack with FH loop.",
+              "balls": [
+                {
+                  "top_speed": 35,
+                  "bot_speed": 90,
+                  "oscillation": 150,
+                  "height": 115,
+                  "rotation": 150,
+                  "wait_ms": 6500
+                }
+              ]
+            },
+            {
+              "name": "BH flick short",
+              "description": "Short flick BH from middle — step in and counter-loop.",
+              "balls": [
+                {
+                  "top_speed": 110,
+                  "bot_speed": 20,
+                  "oscillation": 148,
+                  "height": 120,
+                  "rotation": 150,
+                  "wait_ms": 5500
+                }
+              ]
+            }
           ]
         },
         {
@@ -206,13 +617,45 @@
           "spin_type": "sidespin_topspin",
           "spin_strength": 2,
           "length": "long",
-          "placement": {"x": 0.20, "y": 0.95},
+          "placement": {
+            "x": 0.2,
+            "y": 0.95
+          },
           "duration_sec": 1500,
-          "signature_players": ["Dimitrij Ovtcharov", "Wang Liqin"],
+          "signature_players": [
+            "Dimitrij Ovtcharov",
+            "Wang Liqin"
+          ],
           "youtube_id": "hHqUS1xCpqU",
           "responses": [
-            {"name": "Block to FH", "description": "Block to your forehand — loop with FH.", "balls": [{"top_speed": 80, "bot_speed": 20, "oscillation": 165, "height": 125, "rotation": 150, "wait_ms": 5000}]},
-            {"name": "Counter-attack BH", "description": "Counter-attack to your backhand — counter-loop or block.", "balls": [{"top_speed": 150, "bot_speed": 40, "oscillation": 140, "height": 140, "rotation": 150, "wait_ms": 4500}]}
+            {
+              "name": "Block to FH",
+              "description": "Block to your forehand — loop with FH.",
+              "balls": [
+                {
+                  "top_speed": 80,
+                  "bot_speed": 20,
+                  "oscillation": 165,
+                  "height": 125,
+                  "rotation": 150,
+                  "wait_ms": 5000
+                }
+              ]
+            },
+            {
+              "name": "Counter-attack BH",
+              "description": "Counter-attack to your backhand — counter-loop or block.",
+              "balls": [
+                {
+                  "top_speed": 150,
+                  "bot_speed": 40,
+                  "oscillation": 140,
+                  "height": 140,
+                  "rotation": 150,
+                  "wait_ms": 4500
+                }
+              ]
+            }
           ]
         }
       ]
@@ -229,13 +672,46 @@
           "spin_type": "sidespin_backspin",
           "spin_strength": 3,
           "length": "short",
-          "placement": {"x": 0.70, "y": 0.78},
+          "placement": {
+            "x": 0.7,
+            "y": 0.78
+          },
           "duration_sec": 1200,
-          "signature_players": ["Ding Ning", "Kenta Matsudaira", "Koki Niwa"],
+          "signature_players": [
+            "Ding Ning",
+            "Kenta Matsudaira",
+            "Koki Niwa"
+          ],
           "youtube_id": "2GZRr6pVQzc",
           "responses": [
-            {"name": "Push long to BH diagonal", "description": "Reverse sidespin pulls push toward BH — attack with BH loop or step-around FH.", "balls": [{"top_speed": 30, "bot_speed": 105, "oscillation": 138, "height": 112, "rotation": 150, "wait_ms": 6000}]},
-            {"name": "Confused flick", "description": "Opponent mistimes flick thinking it's tomahawk — pops up high, easy smash.", "balls": [{"top_speed": 80, "bot_speed": 20, "oscillation": 155, "height": 165, "rotation": 150, "wait_ms": 5500}]}
+            {
+              "name": "Push long to BH diagonal",
+              "description": "Reverse sidespin pulls push toward BH — attack with BH loop or step-around FH.",
+              "balls": [
+                {
+                  "top_speed": 30,
+                  "bot_speed": 105,
+                  "oscillation": 138,
+                  "height": 112,
+                  "rotation": 150,
+                  "wait_ms": 6000
+                }
+              ]
+            },
+            {
+              "name": "Confused flick",
+              "description": "Opponent mistimes flick thinking it's tomahawk — pops up high, easy smash.",
+              "balls": [
+                {
+                  "top_speed": 80,
+                  "bot_speed": 20,
+                  "oscillation": 155,
+                  "height": 165,
+                  "rotation": 150,
+                  "wait_ms": 5500
+                }
+              ]
+            }
           ]
         },
         {
@@ -245,13 +721,45 @@
           "spin_type": "sidespin_topspin",
           "spin_strength": 2,
           "length": "long",
-          "placement": {"x": 0.18, "y": 0.93},
+          "placement": {
+            "x": 0.18,
+            "y": 0.93
+          },
           "duration_sec": 1500,
-          "signature_players": ["Ding Ning", "Koki Niwa"],
+          "signature_players": [
+            "Ding Ning",
+            "Koki Niwa"
+          ],
           "youtube_id": "cuaDkFSKb6g",
           "responses": [
-            {"name": "BH block cross", "description": "Opponent blocks BH cross — counter-loop with FH.", "balls": [{"top_speed": 80, "bot_speed": 25, "oscillation": 140, "height": 120, "rotation": 150, "wait_ms": 5000}]},
-            {"name": "Late BH loop", "description": "Late loop attempt lands short on your FH — attack.", "balls": [{"top_speed": 110, "bot_speed": 25, "oscillation": 165, "height": 125, "rotation": 150, "wait_ms": 5200}]}
+            {
+              "name": "BH block cross",
+              "description": "Opponent blocks BH cross — counter-loop with FH.",
+              "balls": [
+                {
+                  "top_speed": 80,
+                  "bot_speed": 25,
+                  "oscillation": 140,
+                  "height": 120,
+                  "rotation": 150,
+                  "wait_ms": 5000
+                }
+              ]
+            },
+            {
+              "name": "Late BH loop",
+              "description": "Late loop attempt lands short on your FH — attack.",
+              "balls": [
+                {
+                  "top_speed": 110,
+                  "bot_speed": 25,
+                  "oscillation": 165,
+                  "height": 125,
+                  "rotation": 150,
+                  "wait_ms": 5200
+                }
+              ]
+            }
           ]
         }
       ]
@@ -268,14 +776,60 @@
           "spin_type": "sidespin",
           "spin_strength": 3,
           "length": "short",
-          "placement": {"x": 0.50, "y": 0.78},
+          "placement": {
+            "x": 0.5,
+            "y": 0.78
+          },
           "duration_sec": 1200,
-          "signature_players": ["Wang Chuqin", "Dimitrij Ovtcharov", "Tomokazu Harimoto"],
+          "signature_players": [
+            "Wang Chuqin",
+            "Dimitrij Ovtcharov",
+            "Tomokazu Harimoto"
+          ],
           "youtube_id": "V_QaDx51vQM",
           "responses": [
-            {"name": "Push long to BH", "description": "Opponent pushes long to your BH — BH loop opening.", "balls": [{"top_speed": 30, "bot_speed": 100, "oscillation": 140, "height": 110, "rotation": 150, "wait_ms": 6000}]},
-            {"name": "Flick to FH", "description": "Opponent flicks to your forehand — counter-attack.", "balls": [{"top_speed": 130, "bot_speed": 30, "oscillation": 165, "height": 130, "rotation": 150, "wait_ms": 5500}]},
-            {"name": "Short push BH", "description": "Controlled short push back — flick or push short.", "balls": [{"top_speed": 20, "bot_speed": 90, "oscillation": 145, "height": 88, "rotation": 150, "wait_ms": 7000}]}
+            {
+              "name": "Push long to BH",
+              "description": "Opponent pushes long to your BH — BH loop opening.",
+              "balls": [
+                {
+                  "top_speed": 30,
+                  "bot_speed": 100,
+                  "oscillation": 140,
+                  "height": 110,
+                  "rotation": 150,
+                  "wait_ms": 6000
+                }
+              ]
+            },
+            {
+              "name": "Flick to FH",
+              "description": "Opponent flicks to your forehand — counter-attack.",
+              "balls": [
+                {
+                  "top_speed": 130,
+                  "bot_speed": 30,
+                  "oscillation": 165,
+                  "height": 130,
+                  "rotation": 150,
+                  "wait_ms": 5500
+                }
+              ]
+            },
+            {
+              "name": "Short push BH",
+              "description": "Controlled short push back — flick or push short.",
+              "balls": [
+                {
+                  "top_speed": 20,
+                  "bot_speed": 90,
+                  "oscillation": 145,
+                  "height": 88,
+                  "rotation": 150,
+                  "wait_ms": 7000
+                }
+              ]
+            }
           ]
         },
         {
@@ -285,13 +839,45 @@
           "spin_type": "no_spin",
           "spin_strength": 0,
           "length": "short",
-          "placement": {"x": 0.45, "y": 0.80},
+          "placement": {
+            "x": 0.45,
+            "y": 0.8
+          },
           "duration_sec": 1200,
-          "signature_players": ["Timo Boll", "Dimitrij Ovtcharov"],
+          "signature_players": [
+            "Timo Boll",
+            "Dimitrij Ovtcharov"
+          ],
           "youtube_id": "V_QaDx51vQM",
           "responses": [
-            {"name": "Float return high", "description": "Opponent reads spin wrong — ball floats high, easy smash.", "balls": [{"top_speed": 80, "bot_speed": 20, "oscillation": 150, "height": 170, "rotation": 150, "wait_ms": 5500}]},
-            {"name": "Short flick BH", "description": "Skilled opponent flicks short to BH — step in and loop.", "balls": [{"top_speed": 100, "bot_speed": 20, "oscillation": 138, "height": 120, "rotation": 150, "wait_ms": 5500}]}
+            {
+              "name": "Float return high",
+              "description": "Opponent reads spin wrong — ball floats high, easy smash.",
+              "balls": [
+                {
+                  "top_speed": 80,
+                  "bot_speed": 20,
+                  "oscillation": 150,
+                  "height": 170,
+                  "rotation": 150,
+                  "wait_ms": 5500
+                }
+              ]
+            },
+            {
+              "name": "Short flick BH",
+              "description": "Skilled opponent flicks short to BH — step in and loop.",
+              "balls": [
+                {
+                  "top_speed": 100,
+                  "bot_speed": 20,
+                  "oscillation": 138,
+                  "height": 120,
+                  "rotation": 150,
+                  "wait_ms": 5500
+                }
+              ]
+            }
           ]
         },
         {
@@ -301,13 +887,45 @@
           "spin_type": "topspin",
           "spin_strength": 2,
           "length": "long",
-          "placement": {"x": 0.15, "y": 0.95},
+          "placement": {
+            "x": 0.15,
+            "y": 0.95
+          },
           "duration_sec": 1500,
-          "signature_players": ["Dimitrij Ovtcharov", "Wang Chuqin"],
+          "signature_players": [
+            "Dimitrij Ovtcharov",
+            "Wang Chuqin"
+          ],
           "youtube_id": "wXX5Di9bJxo",
           "responses": [
-            {"name": "Passive block BH", "description": "Opponent blocks passively to BH — BH loop or step around FH loop.", "balls": [{"top_speed": 70, "bot_speed": 20, "oscillation": 140, "height": 115, "rotation": 150, "wait_ms": 5000}]},
-            {"name": "Counter-attack FH", "description": "Strong counter to FH — block or counter-loop.", "balls": [{"top_speed": 155, "bot_speed": 40, "oscillation": 165, "height": 135, "rotation": 150, "wait_ms": 4500}]}
+            {
+              "name": "Passive block BH",
+              "description": "Opponent blocks passively to BH — BH loop or step around FH loop.",
+              "balls": [
+                {
+                  "top_speed": 70,
+                  "bot_speed": 20,
+                  "oscillation": 140,
+                  "height": 115,
+                  "rotation": 150,
+                  "wait_ms": 5000
+                }
+              ]
+            },
+            {
+              "name": "Counter-attack FH",
+              "description": "Strong counter to FH — block or counter-loop.",
+              "balls": [
+                {
+                  "top_speed": 155,
+                  "bot_speed": 40,
+                  "oscillation": 165,
+                  "height": 135,
+                  "rotation": 150,
+                  "wait_ms": 4500
+                }
+              ]
+            }
           ]
         },
         {
@@ -317,14 +935,60 @@
           "spin_type": "backspin",
           "spin_strength": 5,
           "length": "short",
-          "placement": {"x": 0.40, "y": 0.82},
+          "placement": {
+            "x": 0.4,
+            "y": 0.82
+          },
           "duration_sec": 1200,
-          "signature_players": ["Joo Sae-hyuk", "Ruwen Filus", "Timo Boll"],
+          "signature_players": [
+            "Joo Sae-hyuk",
+            "Ruwen Filus",
+            "Timo Boll"
+          ],
           "youtube_id": "Moe9igcf4ZI",
           "responses": [
-            {"name": "Heavy push long BH", "description": "Heavy backspin push to your backhand — loop over spin with BH.", "balls": [{"top_speed": 15, "bot_speed": 150, "oscillation": 140, "height": 102, "rotation": 150, "wait_ms": 6500}]},
-            {"name": "Lift into net", "description": "Opponent misreads and lifts — pops up high, put-away smash.", "balls": [{"top_speed": 55, "bot_speed": 35, "oscillation": 150, "height": 175, "rotation": 150, "wait_ms": 5500}]},
-            {"name": "Push short tight", "description": "Defensive short push — flick or push back short.", "balls": [{"top_speed": 18, "bot_speed": 100, "oscillation": 145, "height": 90, "rotation": 150, "wait_ms": 7000}]}
+            {
+              "name": "Heavy push long BH",
+              "description": "Heavy backspin push to your backhand — loop over spin with BH.",
+              "balls": [
+                {
+                  "top_speed": 15,
+                  "bot_speed": 150,
+                  "oscillation": 140,
+                  "height": 102,
+                  "rotation": 150,
+                  "wait_ms": 6500
+                }
+              ]
+            },
+            {
+              "name": "Lift into net",
+              "description": "Opponent misreads and lifts — pops up high, put-away smash.",
+              "balls": [
+                {
+                  "top_speed": 55,
+                  "bot_speed": 35,
+                  "oscillation": 150,
+                  "height": 175,
+                  "rotation": 150,
+                  "wait_ms": 5500
+                }
+              ]
+            },
+            {
+              "name": "Push short tight",
+              "description": "Defensive short push — flick or push back short.",
+              "balls": [
+                {
+                  "top_speed": 18,
+                  "bot_speed": 100,
+                  "oscillation": 145,
+                  "height": 90,
+                  "rotation": 150,
+                  "wait_ms": 7000
+                }
+              ]
+            }
           ]
         }
       ]
@@ -341,13 +1005,46 @@
           "spin_type": "sidespin",
           "spin_strength": 3,
           "length": "short",
-          "placement": {"x": 0.72, "y": 0.78},
+          "placement": {
+            "x": 0.72,
+            "y": 0.78
+          },
           "duration_sec": 1200,
-          "signature_players": ["Liu Shiwen", "Mima Ito", "Lucjan Błaszczyk"],
+          "signature_players": [
+            "Liu Shiwen",
+            "Mima Ito",
+            "Lucjan Błaszczyk"
+          ],
           "youtube_id": "rXoAFp4yjK0",
           "responses": [
-            {"name": "Push long to BH", "description": "Opponent pushes long diagonal to BH — BH loop opening.", "balls": [{"top_speed": 30, "bot_speed": 105, "oscillation": 140, "height": 115, "rotation": 150, "wait_ms": 6000}]},
-            {"name": "Flick short middle", "description": "Risky flick from FH wide position — counter-attack middle.", "balls": [{"top_speed": 115, "bot_speed": 20, "oscillation": 150, "height": 125, "rotation": 150, "wait_ms": 5500}]}
+            {
+              "name": "Push long to BH",
+              "description": "Opponent pushes long diagonal to BH — BH loop opening.",
+              "balls": [
+                {
+                  "top_speed": 30,
+                  "bot_speed": 105,
+                  "oscillation": 140,
+                  "height": 115,
+                  "rotation": 150,
+                  "wait_ms": 6000
+                }
+              ]
+            },
+            {
+              "name": "Flick short middle",
+              "description": "Risky flick from FH wide position — counter-attack middle.",
+              "balls": [
+                {
+                  "top_speed": 115,
+                  "bot_speed": 20,
+                  "oscillation": 150,
+                  "height": 125,
+                  "rotation": 150,
+                  "wait_ms": 5500
+                }
+              ]
+            }
           ]
         },
         {
@@ -357,13 +1054,46 @@
           "spin_type": "sidespin_topspin",
           "spin_strength": 3,
           "length": "long",
-          "placement": {"x": 0.18, "y": 0.95},
+          "placement": {
+            "x": 0.18,
+            "y": 0.95
+          },
           "duration_sec": 1500,
-          "signature_players": ["Wang Liqin", "Wang Hao", "Jim Butler"],
+          "signature_players": [
+            "Wang Liqin",
+            "Wang Hao",
+            "Jim Butler"
+          ],
           "youtube_id": "FivF-6no_mI",
           "responses": [
-            {"name": "BH block late", "description": "Late BH block to middle — step around and FH loop.", "balls": [{"top_speed": 75, "bot_speed": 20, "oscillation": 150, "height": 120, "rotation": 150, "wait_ms": 5000}]},
-            {"name": "BH counter-loop", "description": "Strong counter-loop to your FH — block or counter.", "balls": [{"top_speed": 150, "bot_speed": 40, "oscillation": 168, "height": 140, "rotation": 150, "wait_ms": 4500}]}
+            {
+              "name": "BH block late",
+              "description": "Late BH block to middle — step around and FH loop.",
+              "balls": [
+                {
+                  "top_speed": 75,
+                  "bot_speed": 20,
+                  "oscillation": 150,
+                  "height": 120,
+                  "rotation": 150,
+                  "wait_ms": 5000
+                }
+              ]
+            },
+            {
+              "name": "BH counter-loop",
+              "description": "Strong counter-loop to your FH — block or counter.",
+              "balls": [
+                {
+                  "top_speed": 150,
+                  "bot_speed": 40,
+                  "oscillation": 168,
+                  "height": 140,
+                  "rotation": 150,
+                  "wait_ms": 4500
+                }
+              ]
+            }
           ]
         }
       ]
@@ -380,13 +1110,46 @@
           "spin_type": "backspin",
           "spin_strength": 4,
           "length": "short",
-          "placement": {"x": 0.50, "y": 0.82},
+          "placement": {
+            "x": 0.5,
+            "y": 0.82
+          },
           "duration_sec": 1200,
-          "signature_players": ["Xu Xin", "Ma Long", "Jan-Ove Waldner"],
+          "signature_players": [
+            "Xu Xin",
+            "Ma Long",
+            "Jan-Ove Waldner"
+          ],
           "youtube_id": "r9KQPlfpJZE",
           "responses": [
-            {"name": "Heavy push long BH", "description": "Opponent pushes long with heavy backspin — loop over spin with BH.", "balls": [{"top_speed": 15, "bot_speed": 150, "oscillation": 140, "height": 100, "rotation": 150, "wait_ms": 6500}]},
-            {"name": "Lift into high ball", "description": "Opponent misreads and lifts — ball pops up, easy smash.", "balls": [{"top_speed": 50, "bot_speed": 30, "oscillation": 150, "height": 175, "rotation": 150, "wait_ms": 5500}]}
+            {
+              "name": "Heavy push long BH",
+              "description": "Opponent pushes long with heavy backspin — loop over spin with BH.",
+              "balls": [
+                {
+                  "top_speed": 15,
+                  "bot_speed": 150,
+                  "oscillation": 140,
+                  "height": 100,
+                  "rotation": 150,
+                  "wait_ms": 6500
+                }
+              ]
+            },
+            {
+              "name": "Lift into high ball",
+              "description": "Opponent misreads and lifts — ball pops up, easy smash.",
+              "balls": [
+                {
+                  "top_speed": 50,
+                  "bot_speed": 30,
+                  "oscillation": 150,
+                  "height": 175,
+                  "rotation": 150,
+                  "wait_ms": 5500
+                }
+              ]
+            }
           ]
         },
         {
@@ -396,13 +1159,46 @@
           "spin_type": "no_spin",
           "spin_strength": 1,
           "length": "long",
-          "placement": {"x": 0.50, "y": 0.92},
+          "placement": {
+            "x": 0.5,
+            "y": 0.92
+          },
           "duration_sec": 1500,
-          "signature_players": ["Mima Ito", "Xu Xin", "Werner Schlager"],
+          "signature_players": [
+            "Mima Ito",
+            "Xu Xin",
+            "Werner Schlager"
+          ],
           "youtube_id": "r9KQPlfpJZE",
           "responses": [
-            {"name": "Passive push long", "description": "Opponent pushes without spin — loop easily.", "balls": [{"top_speed": 40, "bot_speed": 50, "oscillation": 145, "height": 130, "rotation": 150, "wait_ms": 5500}]},
-            {"name": "Flat hit to FH", "description": "Opponent smashes flat to FH — block or counter.", "balls": [{"top_speed": 170, "bot_speed": 30, "oscillation": 165, "height": 145, "rotation": 150, "wait_ms": 4500}]}
+            {
+              "name": "Passive push long",
+              "description": "Opponent pushes without spin — loop easily.",
+              "balls": [
+                {
+                  "top_speed": 40,
+                  "bot_speed": 50,
+                  "oscillation": 145,
+                  "height": 130,
+                  "rotation": 150,
+                  "wait_ms": 5500
+                }
+              ]
+            },
+            {
+              "name": "Flat hit to FH",
+              "description": "Opponent smashes flat to FH — block or counter.",
+              "balls": [
+                {
+                  "top_speed": 170,
+                  "bot_speed": 30,
+                  "oscillation": 165,
+                  "height": 145,
+                  "rotation": 150,
+                  "wait_ms": 4500
+                }
+              ]
+            }
           ]
         }
       ]
@@ -419,13 +1215,45 @@
           "spin_type": "sidespin",
           "spin_strength": 5,
           "length": "short",
-          "placement": {"x": 0.30, "y": 0.77},
+          "placement": {
+            "x": 0.3,
+            "y": 0.77
+          },
           "duration_sec": 1200,
-          "signature_players": ["Werner Schlager", "Cai Zhenhua"],
+          "signature_players": [
+            "Werner Schlager",
+            "Cai Zhenhua"
+          ],
           "youtube_id": "",
           "responses": [
-            {"name": "Push drifts long FH", "description": "Push curves and lands on your FH long — FH loop over spin.", "balls": [{"top_speed": 25, "bot_speed": 110, "oscillation": 165, "height": 115, "rotation": 150, "wait_ms": 6000}]},
-            {"name": "Short flick BH", "description": "Opponent flicks BH short — step in and counter.", "balls": [{"top_speed": 120, "bot_speed": 20, "oscillation": 140, "height": 125, "rotation": 150, "wait_ms": 5500}]}
+            {
+              "name": "Push drifts long FH",
+              "description": "Push curves and lands on your FH long — FH loop over spin.",
+              "balls": [
+                {
+                  "top_speed": 25,
+                  "bot_speed": 110,
+                  "oscillation": 165,
+                  "height": 115,
+                  "rotation": 150,
+                  "wait_ms": 6000
+                }
+              ]
+            },
+            {
+              "name": "Short flick BH",
+              "description": "Opponent flicks BH short — step in and counter.",
+              "balls": [
+                {
+                  "top_speed": 120,
+                  "bot_speed": 20,
+                  "oscillation": 140,
+                  "height": 125,
+                  "rotation": 150,
+                  "wait_ms": 5500
+                }
+              ]
+            }
           ]
         },
         {
@@ -435,13 +1263,44 @@
           "spin_type": "sidespin_topspin",
           "spin_strength": 3,
           "length": "long",
-          "placement": {"x": 0.30, "y": 0.94},
+          "placement": {
+            "x": 0.3,
+            "y": 0.94
+          },
           "duration_sec": 1500,
-          "signature_players": ["Werner Schlager"],
+          "signature_players": [
+            "Werner Schlager"
+          ],
           "youtube_id": "",
           "responses": [
-            {"name": "Block short to BH", "description": "Opponent blocks short to BH — step in and BH flick.", "balls": [{"top_speed": 70, "bot_speed": 20, "oscillation": 140, "height": 115, "rotation": 150, "wait_ms": 5000}]},
-            {"name": "Counter-loop FH", "description": "Aggressive counter-loop to FH — counter or block.", "balls": [{"top_speed": 160, "bot_speed": 40, "oscillation": 165, "height": 140, "rotation": 150, "wait_ms": 4500}]}
+            {
+              "name": "Block short to BH",
+              "description": "Opponent blocks short to BH — step in and BH flick.",
+              "balls": [
+                {
+                  "top_speed": 70,
+                  "bot_speed": 20,
+                  "oscillation": 140,
+                  "height": 115,
+                  "rotation": 150,
+                  "wait_ms": 5000
+                }
+              ]
+            },
+            {
+              "name": "Counter-loop FH",
+              "description": "Aggressive counter-loop to FH — counter or block.",
+              "balls": [
+                {
+                  "top_speed": 160,
+                  "bot_speed": 40,
+                  "oscillation": 165,
+                  "height": 140,
+                  "rotation": 150,
+                  "wait_ms": 4500
+                }
+              ]
+            }
           ]
         }
       ]
@@ -458,13 +1317,46 @@
           "spin_type": "sidespin",
           "spin_strength": 5,
           "length": "short",
-          "placement": {"x": 0.30, "y": 0.77},
+          "placement": {
+            "x": 0.3,
+            "y": 0.77
+          },
           "duration_sec": 1200,
-          "signature_players": ["Hugo Calderano", "Ma Long", "Jun Mizutani"],
-          "youtube_id": "",
+          "signature_players": [
+            "Hugo Calderano",
+            "Ma Long",
+            "Jun Mizutani"
+          ],
+          "youtube_id": "uea68fN7B0Q",
           "responses": [
-            {"name": "Mistimed push", "description": "Opponent mistimed the extra spin — weak push to middle, attack.", "balls": [{"top_speed": 30, "bot_speed": 95, "oscillation": 150, "height": 120, "rotation": 150, "wait_ms": 6500}]},
-            {"name": "Flick high", "description": "Over-committed flick goes high — easy put-away.", "balls": [{"top_speed": 90, "bot_speed": 15, "oscillation": 152, "height": 165, "rotation": 150, "wait_ms": 5500}]}
+            {
+              "name": "Mistimed push",
+              "description": "Opponent mistimed the extra spin — weak push to middle, attack.",
+              "balls": [
+                {
+                  "top_speed": 30,
+                  "bot_speed": 95,
+                  "oscillation": 150,
+                  "height": 120,
+                  "rotation": 150,
+                  "wait_ms": 6500
+                }
+              ]
+            },
+            {
+              "name": "Flick high",
+              "description": "Over-committed flick goes high — easy put-away.",
+              "balls": [
+                {
+                  "top_speed": 90,
+                  "bot_speed": 15,
+                  "oscillation": 152,
+                  "height": 165,
+                  "rotation": 150,
+                  "wait_ms": 5500
+                }
+              ]
+            }
           ]
         },
         {
@@ -474,13 +1366,45 @@
           "spin_type": "sidespin_topspin",
           "spin_strength": 3,
           "length": "long",
-          "placement": {"x": 0.20, "y": 0.95},
+          "placement": {
+            "x": 0.2,
+            "y": 0.95
+          },
           "duration_sec": 1500,
-          "signature_players": ["Liang Jingkun", "Hugo Calderano"],
-          "youtube_id": "",
+          "signature_players": [
+            "Liang Jingkun",
+            "Hugo Calderano"
+          ],
+          "youtube_id": "xvFFCUmr5e8",
           "responses": [
-            {"name": "Late block", "description": "Late block to middle — step around FH loop.", "balls": [{"top_speed": 75, "bot_speed": 20, "oscillation": 150, "height": 122, "rotation": 150, "wait_ms": 5000}]},
-            {"name": "Rushed counter", "description": "Rushed counter-loop goes into net or long — attack recovery.", "balls": [{"top_speed": 140, "bot_speed": 45, "oscillation": 145, "height": 145, "rotation": 150, "wait_ms": 4500}]}
+            {
+              "name": "Late block",
+              "description": "Late block to middle — step around FH loop.",
+              "balls": [
+                {
+                  "top_speed": 75,
+                  "bot_speed": 20,
+                  "oscillation": 150,
+                  "height": 122,
+                  "rotation": 150,
+                  "wait_ms": 5000
+                }
+              ]
+            },
+            {
+              "name": "Rushed counter",
+              "description": "Rushed counter-loop goes into net or long — attack recovery.",
+              "balls": [
+                {
+                  "top_speed": 140,
+                  "bot_speed": 45,
+                  "oscillation": 145,
+                  "height": 145,
+                  "rotation": 150,
+                  "wait_ms": 4500
+                }
+              ]
+            }
           ]
         },
         {
@@ -490,13 +1414,45 @@
           "spin_type": "no_spin",
           "spin_strength": 0,
           "length": "short",
-          "placement": {"x": 0.40, "y": 0.80},
+          "placement": {
+            "x": 0.4,
+            "y": 0.8
+          },
           "duration_sec": 1200,
-          "signature_players": ["Jan-Ove Waldner", "Ma Long"],
-          "youtube_id": "",
+          "signature_players": [
+            "Jan-Ove Waldner",
+            "Ma Long"
+          ],
+          "youtube_id": "joZh6Kb7TPM",
           "responses": [
-            {"name": "Float pops up", "description": "Opponent treats as heavy spin, pops up — smash.", "balls": [{"top_speed": 85, "bot_speed": 15, "oscillation": 150, "height": 175, "rotation": 150, "wait_ms": 5500}]},
-            {"name": "Cautious push", "description": "Extra-cautious short push — flick BH or attack short.", "balls": [{"top_speed": 18, "bot_speed": 85, "oscillation": 148, "height": 90, "rotation": 150, "wait_ms": 7000}]}
+            {
+              "name": "Float pops up",
+              "description": "Opponent treats as heavy spin, pops up — smash.",
+              "balls": [
+                {
+                  "top_speed": 85,
+                  "bot_speed": 15,
+                  "oscillation": 150,
+                  "height": 175,
+                  "rotation": 150,
+                  "wait_ms": 5500
+                }
+              ]
+            },
+            {
+              "name": "Cautious push",
+              "description": "Extra-cautious short push — flick BH or attack short.",
+              "balls": [
+                {
+                  "top_speed": 18,
+                  "bot_speed": 85,
+                  "oscillation": 148,
+                  "height": 90,
+                  "rotation": 150,
+                  "wait_ms": 7000
+                }
+              ]
+            }
           ]
         }
       ]
@@ -513,13 +1469,44 @@
           "spin_type": "backspin",
           "spin_strength": 5,
           "length": "short",
-          "placement": {"x": 0.50, "y": 0.72},
+          "placement": {
+            "x": 0.5,
+            "y": 0.72
+          },
           "duration_sec": 1200,
-          "signature_players": ["Ma Lin"],
-          "youtube_id": "",
+          "signature_players": [
+            "Ma Lin"
+          ],
+          "youtube_id": "pVAq8EDUidA",
           "responses": [
-            {"name": "Heavy defensive push", "description": "Opponent makes desperate backspin push long — loop over spin.", "balls": [{"top_speed": 15, "bot_speed": 160, "oscillation": 148, "height": 100, "rotation": 150, "wait_ms": 7000}]},
-            {"name": "Flick attempt high", "description": "Risky flick goes high and slow — smash.", "balls": [{"top_speed": 75, "bot_speed": 25, "oscillation": 152, "height": 170, "rotation": 150, "wait_ms": 5500}]}
+            {
+              "name": "Heavy defensive push",
+              "description": "Opponent makes desperate backspin push long — loop over spin.",
+              "balls": [
+                {
+                  "top_speed": 15,
+                  "bot_speed": 160,
+                  "oscillation": 148,
+                  "height": 100,
+                  "rotation": 150,
+                  "wait_ms": 7000
+                }
+              ]
+            },
+            {
+              "name": "Flick attempt high",
+              "description": "Risky flick goes high and slow — smash.",
+              "balls": [
+                {
+                  "top_speed": 75,
+                  "bot_speed": 25,
+                  "oscillation": 152,
+                  "height": 170,
+                  "rotation": 150,
+                  "wait_ms": 5500
+                }
+              ]
+            }
           ]
         },
         {
@@ -529,13 +1516,46 @@
           "spin_type": "corkspin",
           "spin_strength": 4,
           "length": "long",
-          "placement": {"x": 0.60, "y": 0.90},
+          "placement": {
+            "x": 0.6,
+            "y": 0.9
+          },
           "duration_sec": 1500,
-          "signature_players": ["He Zhi Wen (Juanito)", "Ma Lin", "Jiang Jialiang"],
+          "signature_players": [
+            "He Zhi Wen (Juanito)",
+            "Ma Lin",
+            "Jiang Jialiang"
+          ],
           "youtube_id": "Bdt5YBY_82E",
           "responses": [
-            {"name": "Push jumps sideways", "description": "Opponent tries to push — ball jumps off racket sideways into net.", "balls": [{"top_speed": 25, "bot_speed": 100, "oscillation": 168, "height": 110, "rotation": 150, "wait_ms": 6500}]},
-            {"name": "Flat smash into axis", "description": "Flat smash hits the spin axis — ball returns straight to server.", "balls": [{"top_speed": 90, "bot_speed": 25, "oscillation": 150, "height": 135, "rotation": 150, "wait_ms": 5000}]}
+            {
+              "name": "Push jumps sideways",
+              "description": "Opponent tries to push — ball jumps off racket sideways into net.",
+              "balls": [
+                {
+                  "top_speed": 25,
+                  "bot_speed": 100,
+                  "oscillation": 168,
+                  "height": 110,
+                  "rotation": 150,
+                  "wait_ms": 6500
+                }
+              ]
+            },
+            {
+              "name": "Flat smash into axis",
+              "description": "Flat smash hits the spin axis — ball returns straight to server.",
+              "balls": [
+                {
+                  "top_speed": 90,
+                  "bot_speed": 25,
+                  "oscillation": 150,
+                  "height": 135,
+                  "rotation": 150,
+                  "wait_ms": 5000
+                }
+              ]
+            }
           ]
         },
         {
@@ -545,13 +1565,44 @@
           "spin_type": "sidespin",
           "spin_strength": 3,
           "length": "short",
-          "placement": {"x": 0.50, "y": 0.78},
+          "placement": {
+            "x": 0.5,
+            "y": 0.78
+          },
           "duration_sec": 1200,
-          "signature_players": ["Alexis Lebrun"],
+          "signature_players": [
+            "Alexis Lebrun"
+          ],
           "youtube_id": "",
           "responses": [
-            {"name": "Confused flick", "description": "Opponent misreads phase, flick goes long — counter.", "balls": [{"top_speed": 115, "bot_speed": 25, "oscillation": 150, "height": 130, "rotation": 150, "wait_ms": 5500}]},
-            {"name": "Push to wrong side", "description": "Opponent pushes expecting wrong spin direction — attack open side.", "balls": [{"top_speed": 35, "bot_speed": 95, "oscillation": 165, "height": 115, "rotation": 150, "wait_ms": 6000}]}
+            {
+              "name": "Confused flick",
+              "description": "Opponent misreads phase, flick goes long — counter.",
+              "balls": [
+                {
+                  "top_speed": 115,
+                  "bot_speed": 25,
+                  "oscillation": 150,
+                  "height": 130,
+                  "rotation": 150,
+                  "wait_ms": 5500
+                }
+              ]
+            },
+            {
+              "name": "Push to wrong side",
+              "description": "Opponent pushes expecting wrong spin direction — attack open side.",
+              "balls": [
+                {
+                  "top_speed": 35,
+                  "bot_speed": 95,
+                  "oscillation": 165,
+                  "height": 115,
+                  "rotation": 150,
+                  "wait_ms": 6000
+                }
+              ]
+            }
           ]
         }
       ]
