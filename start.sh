@@ -32,8 +32,13 @@ if ss -tln 2>/dev/null | awk '{print $4}' | grep -qE ":$PORT\$"; then
   exit 1
 fi
 
-nohup venv/bin/uvicorn main:app --host 0.0.0.0 --port "$PORT" \
-  </dev/null >"$LOGFILE" 2>&1 &
+if command -v setsid >/dev/null 2>&1; then
+  setsid venv/bin/uvicorn main:app --host 0.0.0.0 --port "$PORT" \
+    </dev/null >"$LOGFILE" 2>&1 &
+else
+  nohup venv/bin/uvicorn main:app --host 0.0.0.0 --port "$PORT" \
+    </dev/null >"$LOGFILE" 2>&1 &
+fi
 
 echo $! > "$PIDFILE"
 echo "Serwer dev uruchomiony (PID $!, port $PORT)"

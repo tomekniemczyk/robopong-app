@@ -2,7 +2,7 @@
 # Zatrzymuje dev server uruchomiony przez start.sh.
 set -e
 
-PORT="${PORT:-8000}"
+PORT="${PORT:-8001}"
 PIDFILE="/tmp/robopong-dev.pid"
 
 stopped=0
