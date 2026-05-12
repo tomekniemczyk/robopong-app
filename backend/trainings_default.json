@@ -6186,13 +6186,13 @@
               "pause_after_sec": 5
             },
             {
-              "drill_id": 1006,
+              "drill_id": 3005,
               "count": 40,
               "percent": 90,
               "pause_after_sec": 20
             },
             {
-              "drill_id": 2026,
+              "drill_id": 3018,
               "count": 40,
               "percent": 90,
               "pause_after_sec": 20
@@ -6210,7 +6210,7 @@
               "pause_after_sec": 20
             },
             {
-              "drill_id": 1006,
+              "drill_id": 3005,
               "count": 30,
               "percent": 95,
               "pause_after_sec": 15
@@ -6263,7 +6263,7 @@
               "pause_after_sec": 5
             },
             {
-              "drill_id": 1006,
+              "drill_id": 3005,
               "count": 30,
               "percent": 90,
               "pause_after_sec": 15
@@ -6281,7 +6281,7 @@
               "pause_after_sec": 25
             },
             {
-              "drill_id": 2032,
+              "drill_id": 4030,
               "count": 30,
               "percent": 90,
               "pause_after_sec": 20
@@ -6370,7 +6370,7 @@
               "pause_after_sec": 25
             },
             {
-              "drill_id": 2032,
+              "drill_id": 4030,
               "count": 20,
               "percent": 90,
               "pause_after_sec": 20
@@ -6436,13 +6436,13 @@
               "pause_after_sec": 5
             },
             {
-              "drill_id": 1005,
+              "drill_id": 3013,
               "count": 40,
               "percent": 90,
               "pause_after_sec": 20
             },
             {
-              "drill_id": 2026,
+              "drill_id": 3018,
               "count": 40,
               "percent": 90,
               "pause_after_sec": 20
@@ -6454,13 +6454,13 @@
               "pause_after_sec": 25
             },
             {
-              "drill_id": 2032,
+              "drill_id": 4030,
               "count": 30,
               "percent": 90,
               "pause_after_sec": 20
             },
             {
-              "drill_id": 1005,
+              "drill_id": 3013,
               "count": 30,
               "percent": 95,
               "pause_after_sec": 15
@@ -6513,19 +6513,19 @@
               "pause_after_sec": 5
             },
             {
-              "drill_id": 1005,
+              "drill_id": 3013,
               "count": 30,
               "percent": 90,
               "pause_after_sec": 15
             },
             {
-              "drill_id": 2032,
+              "drill_id": 4030,
               "count": 35,
               "percent": 90,
               "pause_after_sec": 20
             },
             {
-              "drill_id": 2032,
+              "drill_id": 4030,
               "count": 30,
               "percent": 90,
               "pause_after_sec": 25
@@ -6537,13 +6537,13 @@
               "pause_after_sec": 20
             },
             {
-              "drill_id": 2032,
+              "drill_id": 4030,
               "count": 25,
               "percent": 95,
               "pause_after_sec": 20
             },
             {
-              "drill_id": 2032,
+              "drill_id": 4030,
               "count": 25,
               "percent": 95,
               "pause_after_sec": 15
@@ -6596,13 +6596,13 @@
               "pause_after_sec": 5
             },
             {
-              "drill_id": 2032,
+              "drill_id": 4030,
               "count": 25,
               "percent": 90,
               "pause_after_sec": 15
             },
             {
-              "drill_id": 2032,
+              "drill_id": 4030,
               "count": 25,
               "percent": 90,
               "pause_after_sec": 20
@@ -6981,13 +6981,13 @@
           "countdown_sec": 5,
           "steps": [
             {
-              "drill_id": 1010,
+              "drill_id": 3011,
               "count": 40,
               "percent": 90,
               "pause_after_sec": 15
             },
             {
-              "drill_id": 1010,
+              "drill_id": 3011,
               "count": 40,
               "percent": 90,
               "pause_after_sec": 15
@@ -7005,7 +7005,7 @@
               "pause_after_sec": 20
             },
             {
-              "drill_id": 1010,
+              "drill_id": 3011,
               "count": 30,
               "percent": 95,
               "pause_after_sec": 10
@@ -7018,7 +7018,7 @@
           "countdown_sec": 5,
           "steps": [
             {
-              "drill_id": 1009,
+              "drill_id": 3001,
               "count": 40,
               "percent": 90,
               "pause_after_sec": 15
@@ -7099,19 +7099,19 @@
           "countdown_sec": 5,
           "steps": [
             {
-              "drill_id": 2003,
+              "drill_id": 3003,
               "count": 40,
               "percent": 85,
               "pause_after_sec": 15
             },
             {
-              "drill_id": 1003,
+              "drill_id": 3003,
               "count": 35,
               "percent": 90,
               "pause_after_sec": 15
             },
             {
-              "drill_id": 1004,
+              "drill_id": 3003,
               "count": 35,
               "percent": 90,
               "pause_after_sec": 15
@@ -7123,7 +7123,7 @@
               "pause_after_sec": 20
             },
             {
-              "drill_id": 2003,
+              "drill_id": 3003,
               "count": 30,
               "percent": 95,
               "pause_after_sec": 10
@@ -7173,31 +7173,31 @@
           "countdown_sec": 5,
           "steps": [
             {
-              "drill_id": 2008,
+              "drill_id": 4028,
               "count": 30,
               "percent": 85,
               "pause_after_sec": 15
             },
             {
-              "drill_id": 2014,
+              "drill_id": 4028,
               "count": 35,
               "percent": 90,
               "pause_after_sec": 20
             },
             {
-              "drill_id": 2013,
+              "drill_id": 3013,
               "count": 35,
               "percent": 90,
               "pause_after_sec": 20
             },
             {
-              "drill_id": 2013,
+              "drill_id": 3013,
               "count": 30,
               "percent": 90,
               "pause_after_sec": 15
             },
             {
-              "drill_id": 2014,
+              "drill_id": 4028,
               "count": 30,
               "percent": 90,
               "pause_after_sec": 10
@@ -7217,37 +7217,37 @@
           "countdown_sec": 5,
           "steps": [
             {
-              "drill_id": 1005,
+              "drill_id": 3013,
               "count": 35,
               "percent": 90,
               "pause_after_sec": 15
             },
             {
-              "drill_id": 1006,
+              "drill_id": 3005,
               "count": 35,
               "percent": 90,
               "pause_after_sec": 15
             },
             {
-              "drill_id": 1005,
+              "drill_id": 3013,
               "count": 30,
               "percent": 90,
               "pause_after_sec": 15
             },
             {
-              "drill_id": 1006,
+              "drill_id": 3005,
               "count": 30,
               "percent": 90,
               "pause_after_sec": 15
             },
             {
-              "drill_id": 2026,
+              "drill_id": 3018,
               "count": 25,
               "percent": 90,
               "pause_after_sec": 15
             },
             {
-              "drill_id": 2026,
+              "drill_id": 3018,
               "count": 25,
               "percent": 90,
               "pause_after_sec": 10
@@ -7260,19 +7260,19 @@
           "countdown_sec": 5,
           "steps": [
             {
-              "drill_id": 2027,
+              "drill_id": 3032,
               "count": 35,
               "percent": 90,
               "pause_after_sec": 15
             },
             {
-              "drill_id": 2024,
+              "drill_id": 3027,
               "count": 30,
               "percent": 90,
               "pause_after_sec": 15
             },
             {
-              "drill_id": 2025,
+              "drill_id": 3028,
               "count": 30,
               "percent": 90,
               "pause_after_sec": 15
@@ -7309,7 +7309,7 @@
               "pause_after_sec": 15
             },
             {
-              "drill_id": 1017,
+              "drill_id": 3014,
               "count": 30,
               "percent": 85,
               "pause_after_sec": 20
@@ -7321,7 +7321,7 @@
               "pause_after_sec": 20
             },
             {
-              "drill_id": 2026,
+              "drill_id": 3018,
               "count": 25,
               "percent": 90,
               "pause_after_sec": 15
@@ -7333,7 +7333,7 @@
               "pause_after_sec": 15
             },
             {
-              "drill_id": 1017,
+              "drill_id": 3014,
               "count": 25,
               "percent": 90,
               "pause_after_sec": 10
@@ -7471,25 +7471,25 @@
           "countdown_sec": 5,
           "steps": [
             {
-              "drill_id": 1005,
+              "drill_id": 3013,
               "count": 35,
               "percent": 90,
               "pause_after_sec": 15
             },
             {
-              "drill_id": 1006,
+              "drill_id": 3005,
               "count": 35,
               "percent": 90,
               "pause_after_sec": 15
             },
             {
-              "drill_id": 1007,
+              "drill_id": 3013,
               "count": 30,
               "percent": 90,
               "pause_after_sec": 15
             },
             {
-              "drill_id": 1008,
+              "drill_id": 3005,
               "count": 30,
               "percent": 90,
               "pause_after_sec": 15
@@ -7508,13 +7508,13 @@
           "countdown_sec": 5,
           "steps": [
             {
-              "drill_id": 1013,
+              "drill_id": 4030,
               "count": 35,
               "percent": 90,
               "pause_after_sec": 15
             },
             {
-              "drill_id": 1014,
+              "drill_id": 4030,
               "count": 35,
               "percent": 90,
               "pause_after_sec": 15
@@ -7532,7 +7532,7 @@
               "pause_after_sec": 20
             },
             {
-              "drill_id": 2032,
+              "drill_id": 4030,
               "count": 25,
               "percent": 85,
               "pause_after_sec": 10
@@ -7545,25 +7545,25 @@
           "countdown_sec": 5,
           "steps": [
             {
-              "drill_id": 1013,
+              "drill_id": 4030,
               "count": 35,
               "percent": 90,
               "pause_after_sec": 15
             },
             {
-              "drill_id": 1014,
+              "drill_id": 4030,
               "count": 35,
               "percent": 90,
               "pause_after_sec": 15
             },
             {
-              "drill_id": 1015,
+              "drill_id": 4030,
               "count": 30,
               "percent": 90,
               "pause_after_sec": 15
             },
             {
-              "drill_id": 1016,
+              "drill_id": 4030,
               "count": 30,
               "percent": 90,
               "pause_after_sec": 15
@@ -7589,7 +7589,7 @@
           "countdown_sec": 5,
           "steps": [
             {
-              "drill_id": 1009,
+              "drill_id": 3001,
               "count": 30,
               "percent": 80,
               "pause_after_sec": 10
@@ -7613,7 +7613,7 @@
               "pause_after_sec": 25
             },
             {
-              "drill_id": 2012,
+              "drill_id": 4012,
               "count": 20,
               "percent": 80,
               "pause_after_sec": 10
@@ -7650,7 +7650,7 @@
               "pause_after_sec": 15
             },
             {
-              "drill_id": 2012,
+              "drill_id": 4012,
               "count": 25,
               "percent": 85,
               "pause_after_sec": 10
@@ -7707,25 +7707,25 @@
           "countdown_sec": 5,
           "steps": [
             {
-              "drill_id": 1009,
+              "drill_id": 3001,
               "count": 35,
               "percent": 90,
               "pause_after_sec": 15
             },
             {
-              "drill_id": 1010,
+              "drill_id": 3011,
               "count": 35,
               "percent": 90,
               "pause_after_sec": 15
             },
             {
-              "drill_id": 1011,
+              "drill_id": 3010,
               "count": 30,
               "percent": 90,
               "pause_after_sec": 15
             },
             {
-              "drill_id": 1012,
+              "drill_id": 3011,
               "count": 30,
               "percent": 90,
               "pause_after_sec": 15
@@ -7744,7 +7744,7 @@
           "countdown_sec": 5,
           "steps": [
             {
-              "drill_id": 2032,
+              "drill_id": 4030,
               "count": 30,
               "percent": 85,
               "pause_after_sec": 15
@@ -7762,13 +7762,13 @@
               "pause_after_sec": 20
             },
             {
-              "drill_id": 2015,
+              "drill_id": 4009,
               "count": 25,
               "percent": 85,
               "pause_after_sec": 20
             },
             {
-              "drill_id": 2032,
+              "drill_id": 4030,
               "count": 25,
               "percent": 90,
               "pause_after_sec": 10
@@ -7825,31 +7825,31 @@
           "countdown_sec": 5,
           "steps": [
             {
-              "drill_id": 2020,
+              "drill_id": 3012,
               "count": 30,
               "percent": 90,
               "pause_after_sec": 15
             },
             {
-              "drill_id": 2021,
+              "drill_id": 3016,
               "count": 30,
               "percent": 90,
               "pause_after_sec": 15
             },
             {
-              "drill_id": 2014,
+              "drill_id": 4028,
               "count": 25,
               "percent": 90,
               "pause_after_sec": 20
             },
             {
-              "drill_id": 2013,
+              "drill_id": 3013,
               "count": 25,
               "percent": 90,
               "pause_after_sec": 20
             },
             {
-              "drill_id": 2020,
+              "drill_id": 3012,
               "count": 25,
               "percent": 95,
               "pause_after_sec": 10
@@ -7943,13 +7943,13 @@
           "countdown_sec": 5,
           "steps": [
             {
-              "drill_id": 1009,
+              "drill_id": 3001,
               "count": 30,
               "percent": 85,
               "pause_after_sec": 15
             },
             {
-              "drill_id": 1010,
+              "drill_id": 3011,
               "count": 30,
               "percent": 85,
               "pause_after_sec": 15
@@ -7973,7 +7973,7 @@
               "pause_after_sec": 20
             },
             {
-              "drill_id": 1009,
+              "drill_id": 3001,
               "count": 20,
               "percent": 90,
               "pause_after_sec": 10
@@ -8078,13 +8078,13 @@
           "countdown_sec": 5,
           "steps": [
             {
-              "drill_id": 1009,
+              "drill_id": 3001,
               "count": 25,
               "percent": 85,
               "pause_after_sec": 15
             },
             {
-              "drill_id": 1010,
+              "drill_id": 3011,
               "count": 25,
               "percent": 85,
               "pause_after_sec": 15
@@ -8133,7 +8133,7 @@
               "pause_after_sec": 15
             },
             {
-              "drill_id": 1009,
+              "drill_id": 3001,
               "count": 20,
               "percent": 80,
               "pause_after_sec": 15
